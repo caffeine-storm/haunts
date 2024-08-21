@@ -1,8 +1,8 @@
 package house
 
 import (
-  "github.com/MobRulesGames/glop/gui"
-  "github.com/MobRulesGames/glop/util/algorithm"
+  "github.com/runningwild/glop/gui"
+  "github.com/runningwild/glop/util/algorithm"
   "github.com/MobRulesGames/mathgl"
   "math"
   "reflect"

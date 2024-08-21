@@ -1,7 +1,7 @@
 package game
 
 import (
-  "github.com/MobRulesGames/glop/gui"
+  "github.com/runningwild/glop/gui"
 )
 
 // SUPER simple scrolling region

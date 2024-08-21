@@ -6,7 +6,7 @@
 package sound
 
 import (
-  "github.com/MobRulesGames/glop/sprite"
+  "github.com/runningwild/glop/sprite"
   "github.com/MobRulesGames/haunts/base"
 )
 

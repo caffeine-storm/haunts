@@ -3,7 +3,7 @@ package base
 import (
   "fmt"
   "strings"
-  "github.com/MobRulesGames/glop/gin"
+  "github.com/runningwild/glop/gin"
 )
 
 type KeyBinds map[string]string

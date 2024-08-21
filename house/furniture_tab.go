@@ -2,9 +2,9 @@ package house
 
 import (
   "image"
-  "github.com/MobRulesGames/glop/gin"
-  "github.com/MobRulesGames/glop/gui"
-  "github.com/MobRulesGames/glop/util/algorithm"
+  "github.com/runningwild/glop/gin"
+  "github.com/runningwild/glop/gui"
+  "github.com/runningwild/glop/util/algorithm"
   "github.com/MobRulesGames/haunts/base"
 )
 

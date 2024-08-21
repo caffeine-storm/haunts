@@ -1,8 +1,8 @@
 package base
 
 import (
-  "github.com/MobRulesGames/glop/gin"
-  "github.com/MobRulesGames/glop/gui"
+  "github.com/runningwild/glop/gin"
+  "github.com/runningwild/glop/gui"
   "bufio"
   "github.com/MobRulesGames/opengl/gl"
   "strings"

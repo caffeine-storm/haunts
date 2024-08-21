@@ -3,8 +3,8 @@ package game
 import (
   "encoding/gob"
   gl "github.com/MobRulesGames/gogl/gl21"
-  "github.com/MobRulesGames/glop/sprite"
-  "github.com/MobRulesGames/glop/util/algorithm"
+  "github.com/runningwild/glop/sprite"
+  "github.com/runningwild/glop/util/algorithm"
   "github.com/MobRulesGames/haunts/base"
   "github.com/MobRulesGames/haunts/game/status"
   "github.com/MobRulesGames/haunts/house"

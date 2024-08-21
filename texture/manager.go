@@ -1,7 +1,7 @@
 package texture
 
 import (
-  "github.com/MobRulesGames/glop/render"
+  "github.com/runningwild/glop/render"
   "github.com/MobRulesGames/haunts/base"
   "github.com/MobRulesGames/mathgl"
   "github.com/MobRulesGames/memory"

@@ -3,7 +3,7 @@ package house
 import (
   "sort"
   "github.com/MobRulesGames/GoLLRB/llrb"
-  "github.com/MobRulesGames/glop/util/algorithm"
+  "github.com/runningwild/glop/util/algorithm"
   "github.com/MobRulesGames/haunts/base"
 )
 

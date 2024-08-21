@@ -2,9 +2,9 @@ package actions
 
 import (
   "encoding/gob"
-  "github.com/MobRulesGames/glop/gin"
-  "github.com/MobRulesGames/glop/gui"
-  "github.com/MobRulesGames/glop/sprite"
+  "github.com/runningwild/glop/gin"
+  "github.com/runningwild/glop/gui"
+  "github.com/runningwild/glop/sprite"
   "github.com/MobRulesGames/haunts/base"
   "github.com/MobRulesGames/haunts/game"
   "github.com/MobRulesGames/haunts/game/status"

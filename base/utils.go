@@ -7,7 +7,7 @@ import (
   "encoding/gob"
   "encoding/json"
   "fmt"
-  "github.com/MobRulesGames/glop/gui"
+  "github.com/runningwild/glop/gui"
   "github.com/MobRulesGames/opengl/gl"
   "image/color"
   "io"

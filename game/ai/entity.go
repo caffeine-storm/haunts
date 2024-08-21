@@ -2,7 +2,7 @@ package ai
 
 import (
   "fmt"
-  "github.com/MobRulesGames/glop/util/algorithm"
+  "github.com/runningwild/glop/util/algorithm"
   "github.com/MobRulesGames/haunts/base"
   "github.com/MobRulesGames/haunts/game"
   "github.com/MobRulesGames/haunts/game/actions"

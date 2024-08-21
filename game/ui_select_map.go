@@ -1,7 +1,7 @@
 package game
 
 import (
-  "github.com/MobRulesGames/glop/gui"
+  "github.com/runningwild/glop/gui"
   "github.com/MobRulesGames/haunts/house"
   "github.com/MobRulesGames/haunts/game/hui"
   "github.com/MobRulesGames/haunts/base"

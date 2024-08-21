@@ -6,7 +6,7 @@ Haunts - The Manse Macabre (tm)
 The original and contributed source code (including Go code and Lua scripts) 
 for this software is licensed for anyone to use under the 
 Gnu Affero General Public License v3. 
-AGPL.txt contains the full license text.
+LICENSE.AGPL.txt contains the full license text.
 
 The original and contributed media (images, audio, animation, and other JSON) 
 is licensed for anyone to use under the 

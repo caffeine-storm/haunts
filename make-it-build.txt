@@ -1,0 +1,33 @@
+... ummm licensing much?
+	- e.g. github.com/MobRulesGames/xyz doesn't have license files => all rights
+	  reserved must be assumed => can't use it! not even locally
+		- but lots of github.com/runningwild/xyz _does_ have a license!
+	- what does the GNU Affero let me do?
+		- modify/copy/distribute with replication+honouring of original AGPL
+			- a.k.a. copy left
+	- need to start at the top and prune out what isn't open source
+		- Need a tool to scrape imports inside haunts/ and find/fetch/verify
+		  license files
+			- go-licenses
+	- is it legit to get non-open stuff building and use that as a local
+	  comparison/sanity check?
+		- NOPE! https://opensource.stackexchange.com/questions/1720/what-can-i-assume-if-a-publicly-published-project-has-no-license
+
+
+go-licenses doesn't detect the license in freetype; we can use either the
+freetype license or GPLv2
+
+repos that aren't licensed :(
+	- mrg/cmwc nor rw/cmwc
+		- it's a RNG; can probably use an alternative
+	- janky for /fmod ; can re-write go-bindings over fmod c-code, though
+  - fsnotify: get events when things happen in the filesystem
+  - opengl: mayb go-gl-legacy? otherwise, more bindings on top of opengl (though, should note that gl21 seems to be the right version)
+	- rw/glop is unknown according to go-licenses?
+		- it's BSD-3-clause as of bcbcf49
+	- rw/yedparse is unknown
+		- some xml parsing for output from yFiles; deserializing graphs
+
+
+??? should we keep ref'ing outside repos or fork-to-fix?
+	- just make sure to fork from a useable license point 😅

@@ -5,7 +5,7 @@ import (
   "unsafe"
   "path/filepath"
   "io/ioutil"
-  "github.com/MobRulesGames/glop/render"
+  "github.com/runningwild/glop/render"
   gl "github.com/MobRulesGames/gogl/gl21"
 )
 

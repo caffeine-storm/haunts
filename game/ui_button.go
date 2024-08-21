@@ -1,8 +1,8 @@
 package game
 
 import (
-  "github.com/MobRulesGames/glop/gin"
-  "github.com/MobRulesGames/glop/gui"
+  "github.com/runningwild/glop/gin"
+  "github.com/runningwild/glop/gui"
   "github.com/MobRulesGames/haunts/base"
   "github.com/MobRulesGames/haunts/sound"
   "github.com/MobRulesGames/haunts/texture"

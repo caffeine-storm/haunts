@@ -1,8 +1,8 @@
 package game
 
 import (
-  "github.com/MobRulesGames/glop/gui"
-  "github.com/MobRulesGames/glop/util/algorithm"
+  "github.com/runningwild/glop/gui"
+  "github.com/runningwild/glop/util/algorithm"
   "github.com/MobRulesGames/haunts/base"
   "path/filepath"
 )
