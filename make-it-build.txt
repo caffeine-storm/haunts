@@ -29,5 +29,11 @@ repos that aren't licensed :(
 		- some xml parsing for output from yFiles; deserializing graphs
 
 
+WORK-IN-PROGRESS: see test/licences/check-licences.sh
+
 ??? should we keep ref'ing outside repos or fork-to-fix?
 	- just make sure to fork from a useable license point 😅
+
+
+
+glop needs help; plan: fork from licence-added and make-it-work
