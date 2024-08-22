@@ -1,7 +1,5 @@
 github.com/MobRulesGames/GoLLRB v0.0.0-20121115013357-10dddd6fc70e h1:4XpSQUQZcCSogCXNTsAy8OzVxOoFYWWz6Ab1nixnL9U=
 github.com/MobRulesGames/GoLLRB v0.0.0-20121115013357-10dddd6fc70e/go.mod h1:AGsFtjlVF1dLxRwVFDIkAP/vcRiPfD9eNuSWZGJQsAY=
-github.com/MobRulesGames/cmwc v0.0.0-20121115013357-3397f2a36e17 h1:WtD+Yc1u0xOjFB7p9wc6ouM8iuuZfhMgMlNM8Nu3Jyw=
-github.com/MobRulesGames/cmwc v0.0.0-20121115013357-3397f2a36e17/go.mod h1:HV8R2YPg5OM73tLFlcNb8kQp3PS6kzMunplS1NiHtLc=
 github.com/MobRulesGames/fmod v0.0.0-20121207023041-90f897047d59 h1:liMev5j3+XXrPwj4Cw47bHvUFDvwLB7C5AuFv+mR2Io=
 github.com/MobRulesGames/fmod v0.0.0-20121207023041-90f897047d59/go.mod h1:6X6o4I+6yNjDUZpbmGIK94Ia6BCrRkxCK/No4CaifWw=
 github.com/MobRulesGames/fsnotify v0.0.0-20121110053322-1b2bc1227408 h1:wdcx9XfxtL1WHzALG+Iht+wvWpMT8zH551YykTGIxVg=
@@ -16,8 +14,6 @@ github.com/MobRulesGames/memory v0.0.0-20120626004817-db5bb35fd894 h1:26ZCnKDg9v
 github.com/MobRulesGames/memory v0.0.0-20120626004817-db5bb35fd894/go.mod h1:w5jrl1aXV+AZaP1ye7wO8xB3ne7U2CkweE0atB7FPwk=
 github.com/MobRulesGames/opengl v0.0.0-20121115013359-5beafb9fb3b3 h1:0Gh/6v/TMLPaho7LjvcYXBX0yFed0AJi5Pscy1p5mvo=
 github.com/MobRulesGames/opengl v0.0.0-20121115013359-5beafb9fb3b3/go.mod h1:5lEWNJrwRD33Sb0ScERpH7bkXfd+UUcMtvEcg2p0I9o=
-github.com/MobRulesGames/stringz v0.0.0-20121115013359-1e8b7efed92b h1:ppAkvT9GhkhPEVfGjSUwwDUOXNXQjgMJhq1yNhQP7mk=
-github.com/MobRulesGames/stringz v0.0.0-20121115013359-1e8b7efed92b/go.mod h1:WeBP2utisYgXqq9MMzjzASVRgutZVCVcS/73p/f0EZc=
 github.com/chsc/gogl v0.0.0-20131111203533-c411acc846b6 h1:GHNbGLo1VfjsT+Lf7i1beWEvSHbN/GIi7pzkWAnL2zk=
 github.com/chsc/gogl v0.0.0-20131111203533-c411acc846b6/go.mod h1:82yD5XkINXAhjoaZjStP4a8vZSO3c7aAWQS3OJtBg+s=
 github.com/golang/freetype v0.0.0-20120725121025-28cc5fbc5d0b h1:Wz3T/RQZq290dBxQ5Iu2Ot5KIyMWkSJWWp2NMvV7OYE=

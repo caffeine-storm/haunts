@@ -4,16 +4,17 @@ import (
   "bytes"
   "encoding/gob"
   "errors"
-  gl "github.com/MobRulesGames/gogl/gl21"
-  "github.com/MobRulesGames/cmwc"
-  "github.com/runningwild/glop/sprite"
-  "github.com/runningwild/glop/util/algorithm"
-  "github.com/MobRulesGames/haunts/base"
-  "github.com/MobRulesGames/haunts/house"
-  "github.com/MobRulesGames/haunts/mrgnet"
+  "math/rand"
   "reflect"
   "regexp"
   "time"
+
+  gl "github.com/MobRulesGames/gogl/gl21"
+  "github.com/MobRulesGames/haunts/base"
+  "github.com/MobRulesGames/haunts/house"
+  "github.com/MobRulesGames/haunts/mrgnet"
+  "github.com/runningwild/glop/sprite"
+  "github.com/runningwild/glop/util/algorithm"
 )
 
 type Purpose int
@@ -196,7 +197,8 @@ type gameDataGobbable struct {
 
   // PRNG, need it here so that we serialize it along with everything
   // else so that replays work properly.
-  Rand *cmwc.Cmwc
+  // TODO(tmckee): I doubt that a 'rand.Source' is gobbable
+  Rand rand.Source
 
   // Waypoints, used for signaling things to the player on the map
   Waypoints []waypoint
@@ -813,8 +815,7 @@ func makeGame(h *house.HouseDef) *Game {
   g.House = h
   g.House.Normalize()
   g.viewer = house.MakeHouseViewer(g.House, 62)
-  g.Rand = cmwc.MakeCmwc(4285415527, 3)
-  g.Rand.SeedWithDevRand()
+  g.Rand = rand.New(rand.NewSource(4285415527))
 
   // This way an unset id will be invalid
   g.Entity_id = 1
