@@ -36,4 +36,6 @@ WORK-IN-PROGRESS: see test/licences/check-licences.sh
 
 
 
-glop needs help; plan: fork from licence-added and make-it-work
+glop needs help
+	- fork from licence-added
+	- make-it-work

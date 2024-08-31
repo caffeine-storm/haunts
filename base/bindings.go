@@ -28,37 +28,51 @@ func getKeysFromString(str string) []gin.KeyId {
     var kid gin.KeyId
     switch {
     case len(part) == 1: // Single character - should be ascii
-      kid = gin.KeyId(part[0])
+      kid = gin.KeyId{
+        Device: gin.DeviceId{
+          Type: gin.DeviceTypeKeyboard,
+          Index: gin.DeviceIndexAny,
+        },
+        Index: gin.KeyIndex(part[0]),
+      }
 
     case part == "ctrl":
-      kid = gin.EitherControl
+      // TODO(tmckee): gin distinguishes between left/right but we want an 'any
+      // control'.
+      kid = gin.AnyLeftControl
 
     case part == "shift":
-      kid = gin.EitherShift
+      // TODO(tmckee): gin distinguishes between left/right but we want an 'any
+      // shift'.
+      kid = gin.AnyLeftShift
 
     case part == "alt":
-      kid = gin.EitherAlt
+      // TODO(tmckee): gin distinguishes between left/right but we want an 'any
+      // alt'.
+      kid = gin.AnyLeftAlt
 
     case part == "gui":
-      kid = gin.EitherGui
+      // TODO(tmckee): gin distinguishes between left/right but we want an 'any
+      // gui'.
+      kid = gin.AnyLeftGui
 
     case part == "space":
-      kid = gin.Space
+      kid = gin.AnySpace
 
     case part == "rmouse":
-      kid = gin.MouseRButton
+      kid = gin.AnyMouseRButton
 
     case part == "lmouse":
-      kid = gin.MouseLButton
+      kid = gin.AnyMouseLButton
 
     case part == "vwheel":
-      kid = gin.MouseWheelVertical
+      kid = gin.AnyMouseWheelVertical
 
     case part == "up":
-      kid = gin.Up
+      kid = gin.AnyUp
 
     case part == "down":
-      kid = gin.Down
+      kid = gin.AnyDown
 
     default:
       key := gin.In().GetKeyByName(part)

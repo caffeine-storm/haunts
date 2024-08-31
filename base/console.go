@@ -61,23 +61,23 @@ func (c *Console) Respond(ui *gui.Gui, group gui.EventGroup) bool {
     }
     return true
   }
-  if found, event := group.FindEvent(gin.Left); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyLeft); found && event.Type == gin.Press {
     c.xscroll += 250
   }
-  if found, event := group.FindEvent(gin.Right); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyRight); found && event.Type == gin.Press {
     c.xscroll -= 250
   }
   if c.xscroll > 0 {
     c.xscroll = 0
   }
-  if found, event := group.FindEvent(gin.Space); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnySpace); found && event.Type == gin.Press {
     c.xscroll = 0
   }
 
   if group.Events[0].Type == gin.Press {
-    r := rune(group.Events[0].Key.Id())
+    r := rune(group.Events[0].Key.Id().Index)
     if r < 256 {
-      if gin.In().GetKey(gin.EitherShift).IsDown() {
+      if gin.In().GetKey(gin.AnyLeftShift).IsDown() || gin.In().GetKey(gin.AnyRightShift).IsDown() {
         r = unicode.ToUpper(r)
       }
       c.cmd = append(c.cmd, byte(r))
