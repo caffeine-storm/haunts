@@ -9,7 +9,7 @@ import (
   "regexp"
   "time"
 
-  gl "github.com/MobRulesGames/gogl/gl21"
+  "github.com/go-gl-legacy/gl"
   "github.com/MobRulesGames/haunts/base"
   "github.com/MobRulesGames/haunts/house"
   "github.com/MobRulesGames/haunts/mrgnet"

@@ -1,7 +1,7 @@
 package game
 
 import (
-  gl "github.com/MobRulesGames/gogl/gl21"
+  "github.com/go-gl-legacy/gl"
   "github.com/runningwild/glop/gui"
   "github.com/MobRulesGames/haunts/base"
   "time"

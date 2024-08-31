@@ -8,7 +8,7 @@ import (
   "runtime/debug"
   "runtime/pprof"
   "math/rand"
-  gl "github.com/MobRulesGames/gogl/gl21"
+  "github.com/go-gl-legacy/gl"
   "github.com/runningwild/glop/gin"
   "github.com/runningwild/glop/gos"
   "github.com/runningwild/glop/gui"

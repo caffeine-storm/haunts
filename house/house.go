@@ -1,7 +1,7 @@
 package house
 
 import (
-  gl "github.com/MobRulesGames/gogl/gl21"
+  "github.com/go-gl-legacy/gl"
   "github.com/runningwild/glop/gin"
   "github.com/runningwild/glop/gui"
   "github.com/runningwild/glop/util/algorithm"

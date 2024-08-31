@@ -2,7 +2,7 @@ package game
 
 import (
   "encoding/gob"
-  gl "github.com/MobRulesGames/gogl/gl21"
+  "github.com/go-gl-legacy/gl"
   "github.com/runningwild/glop/sprite"
   "github.com/runningwild/glop/util/algorithm"
   "github.com/MobRulesGames/haunts/base"

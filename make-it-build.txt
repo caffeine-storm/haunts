@@ -31,11 +31,11 @@ repos that aren't licensed :(
 
 WORK-IN-PROGRESS: see test/licences/check-licences.sh
 
-??? should we keep ref'ing outside repos or fork-to-fix?
-	- just make sure to fork from a useable license point 😅
 
+--------
+- Make `go build ./...` work
+	- glop's 'gui.MakeDictionary' has been removed
+		- for text rendering
+		- we can still load from files, there's some in data/fonts/*.gob
 
-
-glop needs help
-	- fork from licence-added
-	- make-it-work
+- Use glop to render some text

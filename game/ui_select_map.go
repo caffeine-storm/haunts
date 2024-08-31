@@ -6,7 +6,7 @@ import (
   "github.com/MobRulesGames/haunts/game/hui"
   "github.com/MobRulesGames/haunts/base"
   "github.com/MobRulesGames/haunts/texture"
-  gl "github.com/MobRulesGames/gogl/gl21"
+  "github.com/go-gl-legacy/gl"
   "path/filepath"
 )
 
