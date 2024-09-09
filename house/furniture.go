@@ -123,14 +123,14 @@ func (f *Furniture) Color() (r, g, b, a byte) {
 }
 
 func (f *Furniture) Render(pos mathgl.Vec2, width float32) {
-  var rgba [4]gl.Double
-  gl.GetDoublev(gl.CURRENT_COLOR, &rgba[0])
+  var rgba [4]float64
+  gl.GetDoublev(gl.CURRENT_COLOR, rgba[:])
   gl.PushAttrib(gl.CURRENT_BIT)
   if !f.Blocks_los || !f.alpha_enabled {
     f.alpha = 1
   }
-  var tff gl.Double = 255
-  gl.Color4ub(gl.Ubyte(tff*rgba[0]), gl.Ubyte(tff*rgba[1]), gl.Ubyte(tff*rgba[2]), gl.Ubyte(tff*rgba[3]*gl.Double(f.alpha)))
+  var tff float64 = 255
+  gl.Color4ub(uint8(tff*rgba[0]), uint8(tff*rgba[1]), uint8(tff*rgba[2]), uint8(tff*rgba[3]*f.alpha))
   orientation := f.Orientations[f.Rotation]
   dy := width * float32(orientation.Texture.Data().Dy()) / float32(orientation.Texture.Data().Dx())
   // orientation.Texture.Data().Render(float64(pos.X), float64(pos.Y), float64(width), float64(dy))

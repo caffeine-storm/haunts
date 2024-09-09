@@ -32,11 +32,11 @@ type wallTextureGlIds struct {
   vbuffer uint32
 
   left_buffer  uint32
-  left_count   gl.Sizei
+  left_count   gl.GLsizei
   right_buffer uint32
-  right_count  gl.Sizei
+  right_count  gl.GLsizei
   floor_buffer uint32
-  floor_count  gl.Sizei
+  floor_count  gl.GLsizei
 }
 
 type wallTextureState struct {
@@ -90,10 +90,10 @@ func (wt *WallTexture) Render() {
 
 func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, gl_ids *wallTextureGlIds) {
   if gl_ids.vbuffer != 0 {
-    gl.DeleteBuffers(1, (*gl.Uint)(&gl_ids.vbuffer))
-    gl.DeleteBuffers(1, (*gl.Uint)(&gl_ids.left_buffer))
-    gl.DeleteBuffers(1, (*gl.Uint)(&gl_ids.right_buffer))
-    gl.DeleteBuffers(1, (*gl.Uint)(&gl_ids.floor_buffer))
+    gl.Buffer(gl_ids.vbuffer).Delete()
+    gl.Buffer(gl_ids.left_buffer).Delete()
+    gl.Buffer(gl_ids.right_buffer).Delete()
+    gl.Buffer(gl_ids.floor_buffer).Delete()
     gl_ids.vbuffer = 0
     gl_ids.left_buffer = 0
     gl_ids.right_buffer = 0
@@ -153,10 +153,12 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, gl_ids *wallTextureGlIds) 
       is = append(is, uint16(len(vs)+i))
       is = append(is, uint16(len(vs)+i+1))
     }
-    gl.GenBuffers(1, (*gl.Uint)(&gl_ids.floor_buffer))
-    gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.Uint(gl_ids.floor_buffer))
-    gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, gl.Sizeiptr(int(unsafe.Sizeof(is[0]))*len(is)), gl.Pointer(&is[0]), gl.STATIC_DRAW)
-    gl_ids.floor_count = gl.Sizei(len(is))
+    // TODO(tmckee): don't store uint32 and cast-to-buffer; just store a
+    // gl.Buffer
+    gl_ids.floor_buffer = uint32(gl.GenBuffer())
+    gl.Buffer(gl_ids.floor_buffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
+    gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, (int(unsafe.Sizeof(is[0]))*len(is)), gl.Pointer(&is[0]), gl.STATIC_DRAW)
+    gl_ids.floor_count = gl.GLsizei(len(is))
 
     run.Inverse()
     for i := range p {
@@ -204,10 +206,10 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, gl_ids *wallTextureGlIds) 
       is = append(is, uint16(len(vs)+i))
       is = append(is, uint16(len(vs)+i+1))
     }
-    gl.GenBuffers(1, (*gl.Uint)(&gl_ids.left_buffer))
-    gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.Uint(gl_ids.left_buffer))
-    gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, gl.Sizeiptr(int(unsafe.Sizeof(is[0]))*len(is)), gl.Pointer(&is[0]), gl.STATIC_DRAW)
-    gl_ids.left_count = gl.Sizei(len(is))
+    gl_ids.left_buffer = uint32(gl.GenBuffer())
+    gl.Buffer(gl_ids.left_buffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
+    gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), gl.Pointer(&is[0]), gl.STATIC_DRAW)
+    gl_ids.left_count = gl.GLsizei(len(is))
 
     run.Inverse()
     for i := range p {

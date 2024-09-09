@@ -167,7 +167,7 @@ type doorGlIds struct {
   vbuffer uint32
 
   floor_buffer uint32
-  floor_count  gl.Sizei
+  floor_count  gl.GLsizei
 }
 
 func (d *Door) setupGlStuff(room *Room) {
