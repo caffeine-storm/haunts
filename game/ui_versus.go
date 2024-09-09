@@ -24,7 +24,7 @@ func makeChooserFromOptionBasicsFile(path string) (*Chooser, <-chan []string, er
     return nil, nil, err
   }
   var opts []Option
-  algorithm.Map2(bops, &opts, func(ob OptionBasic) Option { return &ob })
+  algorithm.Map(bops, &opts, func(ob OptionBasic) Option { return &ob })
   return MakeChooser(opts)
 }
 

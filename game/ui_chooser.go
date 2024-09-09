@@ -215,7 +215,7 @@ func InsertMapChooser(ui gui.WidgetParent, chosen func(string), resert func(ui g
     return err
   }
   var opts []Option
-  algorithm.Map2(bops, &opts, func(ob OptionBasic) Option { return &ob })
+  algorithm.Map(bops, &opts, func(ob OptionBasic) Option { return &ob })
   for _, opt := range opts {
     base.Log().Printf(opt.String())
   }

@@ -59,7 +59,7 @@ func makeFurniturePanel(room *roomDef, viewer *RoomViewer) *FurniturePanel {
   fp.wall_path = gui.MakeFileWidget(room.Wall.Path.String(), imagePathFilter)
 
   var args[]string
-  algorithm.Map2(tags.RoomSizes, &args, func(a RoomSize) string { return a.String() })
+  algorithm.Map(tags.RoomSizes, &args, func(a RoomSize) string { return a.String() })
   fp.room_size = gui.MakeComboTextBox(args, 300)
   for i := range tags.RoomSizes {
     if tags.RoomSizes[i].String() == room.Size.String() {

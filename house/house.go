@@ -527,7 +527,7 @@ func (f *Floor) RoomFurnSpawnAtPos(x, y int) (room *Room, furn *Furniture, spawn
 
 func (f *Floor) render(region gui.Region, focusx, focusy, angle, zoom float32, drawables []Drawable, los_tex *LosTexture, floor_drawers []FloorDrawer) {
   var ros []RectObject
-  algorithm.Map2(f.Rooms, &ros, func(r *Room) RectObject { return r })
+  algorithm.Map(f.Rooms, &ros, func(r *Room) RectObject { return r })
   // Do not include temporary objects in the ordering, since they will likely
   // overlap with other objects and make it difficult to determine the proper
   // ordering.  Just draw the temporary ones last.

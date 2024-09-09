@@ -246,7 +246,7 @@ func (a *Move) findPath(ent *game.Entity, x, y int) {
     if len(path) <= 1 {
       return
     }
-    algorithm.Map2(path, &a.path, func(a int) [2]int {
+    algorithm.Map(path, &a.path, func(a int) [2]int {
       _, x, y := g.FromVertex(a)
       return [2]int{int(x), int(y)}
     })
@@ -276,7 +276,7 @@ func (a *Move) HandleInput(group gui.EventGroup, g *game.Game) (bool, game.Actio
       if a.cost <= a.ent.Stats.ApCur() {
         var exec moveExec
         exec.SetBasicData(a.ent, a)
-        algorithm.Map2(a.path, &exec.Path, func(v [2]int) int {
+        algorithm.Map(a.path, &exec.Path, func(v [2]int) int {
           return g.ToVertex(v[0], v[1])
         })
         return true, &exec
@@ -335,7 +335,7 @@ func (a *Move) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Mainten
       }
       return game.Complete
     }
-    algorithm.Map2(exec.Path, &a.path, func(v int) [2]int {
+    algorithm.Map(exec.Path, &a.path, func(v int) [2]int {
       _, x, y := g.FromVertex(v)
       return [2]int{x, y}
     })
