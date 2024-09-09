@@ -163,20 +163,25 @@ func (rc *RosterChooser) Think(ui *gui.Gui, t int64) {
   }
   rc.focus_pos = (1-rc.layout.Speed)*rc.focus_pos + rc.layout.Speed*float64(rc.focus)
 
-  rc.mouse.X, rc.mouse.Y = gin.In().GetCursor("Mouse").Point()
+  // TODO(tmckee): need to query a glop.System object or consult a cache;
+  // gui.CursorPos() might be a decent option...
+  // rc.mouse.X, rc.mouse.Y = gin.In().GetCursorPos()
+  rc.mouse.X, rc.mouse.Y = 0, 0
 }
 
 func (rc *RosterChooser) Respond(ui *gui.Gui, group gui.EventGroup) bool {
   base.Log().Printf("RosterChooser.Respond")
-  if found, event := group.FindEvent('l'); found && event.Type == gin.Press {
+  // TODO(tmckee): upper case 'L' vs lower case 'l'? Originally a rune, 'l'.
+  if found, event := group.FindEvent(gin.AnyKeyL); found && event.Type == gin.Press {
     rc.focus += rc.layout.Num_options
     return true
   }
-  if found, event := group.FindEvent('o'); found && event.Type == gin.Press {
+  // TODO(tmckee): upper case 'O' vs lower case 'o'? Originally a rune, 'o'.
+  if found, event := group.FindEvent(gin.AnyKeyO); found && event.Type == gin.Press {
     rc.focus -= rc.layout.Num_options
     return true
   }
-  if found, event := group.FindEvent(gin.MouseLButton); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
     x, y := event.Key.Cursor().Point()
     gp := gui.Point{x, y}
     if gp.Inside(rc.render.down) {
