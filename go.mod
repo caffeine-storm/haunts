@@ -21,6 +21,6 @@ replace code.google.com/p/freetype-go => github.com/golang/freetype v0.0.0-20120
 
 replace github.com/runningwild/glop => github.com/caffeine-storm/glop v0.0.0-20240909134216-33e44f57a401
 
-replace github.com/go-gl-legacy/gl => github.com/caffeine-storm/gl v0.0.0-20240901153421-ffd1b6683995
+replace github.com/go-gl-legacy/gl => github.com/caffeine-storm/gl v0.0.0-20240909160157-d1b38f2deb16
 
 replace github.com/go-gl-legacy/glu => github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c
