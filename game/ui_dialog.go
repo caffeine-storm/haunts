@@ -236,7 +236,7 @@ func (mdb *MediumDialogBox) Respond(g *gui.Gui, group gui.EventGroup) bool {
     }
   }
 
-  if found, event := group.FindEvent(gin.MouseLButton); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
     for _, button := range mdb.buttons {
       if button.handleClick(mdb.mx, mdb.my, mdb) {
         return true

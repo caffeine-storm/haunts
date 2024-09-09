@@ -174,7 +174,7 @@ func (gp *GamePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
     }
   }
 
-  if found, event := group.FindEvent(gin.Escape); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyEscape); found && event.Type == gin.Press {
     if gp.game.selected_ent != nil {
       switch gp.game.Action_state {
       case noAction:
@@ -194,7 +194,7 @@ func (gp *GamePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
   }
 
   if gp.game.Action_state == noAction {
-    if found, _ := group.FindEvent(gin.MouseLButton); found {
+    if found, _ := group.FindEvent(gin.AnyMouseLButton); found {
       if gp.game.hovered_ent != nil && gp.game.hovered_ent.Side() == gp.game.Side {
         if gp.game.selected_ent != nil {
           gp.game.selected_ent.selected = false
@@ -223,8 +223,8 @@ func (gp *GamePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
     return false
   }
   if gp.game.Action_state == noAction || gp.game.Action_state == preppingAction {
-    if len(group.Events) == 1 && group.Events[0].Key.Id() >= '1' && group.Events[0].Key.Id() <= '9' {
-      index := int(group.Events[0].Key.Id() - '1')
+    if len(group.Events) == 1 && group.Events[0].Key.Id().Index >= '1' && group.Events[0].Key.Id().Index <= '9' {
+      index := int(group.Events[0].Key.Id().Index - '1')
       if index >= 0 && index < len(gp.game.selected_ent.Actions) {
         action := gp.game.selected_ent.Actions[index]
         if action != gp.game.current_action && action.Prep(gp.game.selected_ent, gp.game) {

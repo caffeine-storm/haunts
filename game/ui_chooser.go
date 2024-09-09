@@ -26,14 +26,14 @@ type Option interface {
 }
 
 type colorOption struct {
-  r, g, b, a gl.Ubyte
+  r, g, b, a byte
 }
 
 func (co *colorOption) String() string {
   return fmt.Sprintf("ColorOption(%d, %d, %d, %d)", co.r, co.g, co.b, co.a)
 }
 func (co *colorOption) Think(hovered, selected, selectable bool, dt int64) {
-  var target gl.Ubyte
+  var target byte
   switch {
   case selected:
     target = 255
@@ -53,20 +53,20 @@ func (co *colorOption) Draw(x, y, dx int) {
   gl.Disable(gl.TEXTURE_2D)
   gl.Color4ub(co.r, co.g, co.b, co.a)
   gl.Begin(gl.QUADS)
-  gl.Vertex2i(gl.Int(x), gl.Int(y))
-  gl.Vertex2i(gl.Int(x), gl.Int(y+co.Height()))
-  gl.Vertex2i(gl.Int(x+dx), gl.Int(y+co.Height()))
-  gl.Vertex2i(gl.Int(x+dx), gl.Int(y))
+  gl.Vertex2i(x, y)
+  gl.Vertex2i(x, y+co.Height())
+  gl.Vertex2i(x+dx, y+co.Height())
+  gl.Vertex2i(x+dx, y)
   gl.End()
 }
 func (co *colorOption) DrawInfo(x, y, dx, dy int) {
   gl.Disable(gl.TEXTURE_2D)
   gl.Color4ub(co.r, co.g, co.b, co.a)
   gl.Begin(gl.QUADS)
-  gl.Vertex2i(gl.Int(x), gl.Int(y))
-  gl.Vertex2i(gl.Int(x), gl.Int(y+dy))
-  gl.Vertex2i(gl.Int(x+dx), gl.Int(y+dy))
-  gl.Vertex2i(gl.Int(x+dx), gl.Int(y))
+  gl.Vertex2i(x, y)
+  gl.Vertex2i(x, y+dy)
+  gl.Vertex2i(x+dx, y+dy)
+  gl.Vertex2i(x+dx, y)
   gl.End()
 }
 
@@ -156,7 +156,7 @@ func (ob *OptionBasic) String() string {
   return ob.Id
 }
 func (ob *OptionBasic) Draw(x, y, dx int) {
-  gl.Color4ub(255, 255, 255, gl.Ubyte(ob.alpha))
+  gl.Color4ub(255, 255, 255, ob.alpha)
   ob.Small.Data().RenderNatural(x, y)
 }
 func (ob *OptionBasic) DrawInfo(x, y, dx, dy int) {
@@ -392,7 +392,9 @@ func (c *Chooser) Think(g *gui.Gui, t int64) {
   c.layout.Options.Height = c.optionsHeight()
   c.layout.Options.Think(dt)
   if c.mx == 0 && c.my == 0 {
-    c.mx, c.my = gin.In().GetCursor("Mouse").Point()
+    // TODO(tmckee): ask the gui for a cursor pos
+    // c.mx, c.my = gin.In().GetCursor("Mouse").Point()
+    c.mx, c.my = 0, 0
   }
   buttons := c.buttons
   if c.optionsHeight() <= c.layout.Options.Dy {
@@ -410,7 +412,7 @@ func (c *Chooser) Respond(g *gui.Gui, group gui.EventGroup) bool {
   if cursor != nil {
     c.mx, c.my = cursor.Point()
   }
-  if found, event := group.FindEvent(gin.MouseLButton); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
     buttons := c.buttons
     if c.optionsHeight() <= c.layout.Options.Dy {
       buttons = c.non_scroll_buttons

@@ -86,7 +86,9 @@ func (cm *CreditsMenu) Think(g *gui.Gui, t int64) {
   dt := t - cm.last_t
   cm.last_t = t
   if cm.mx == 0 && cm.my == 0 {
-    cm.mx, cm.my = gin.In().GetCursor("Mouse").Point()
+    // TODO(tmckee): need to ask the gui for a cursor pos
+    // cm.mx, cm.my = gin.In().GetCursor("Mouse").Point()
+    cm.mx, cm.my = 0, 0
   }
   cm.layout.Credits.Scroll.Think(dt)
   for _, button := range cm.buttons {
@@ -99,7 +101,7 @@ func (cm *CreditsMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
   if cursor != nil {
     cm.mx, cm.my = cursor.Point()
   }
-  if found, event := group.FindEvent(gin.MouseLButton); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
     for _, button := range cm.buttons {
       if button.handleClick(cm.mx, cm.my, nil) {
         return true

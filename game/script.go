@@ -1065,7 +1065,7 @@ type iconWithText struct {
 }
 
 func (c *iconWithText) Draw(hovered, selected, selectable bool, region gui.Region) {
-  var f gl.Double
+  var f float64
   switch {
   case selected:
     f = 1.0
@@ -1084,10 +1084,10 @@ func (c *iconWithText) Draw(hovered, selected, selectable bool, region gui.Regio
     }
     gl.Disable(gl.TEXTURE_2D)
     gl.Begin(gl.LINES)
-    x := gl.Int(region.X + 1)
-    y := gl.Int(region.Y + 1)
-    x2 := gl.Int(region.X + region.Dx - 1)
-    y2 := gl.Int(region.Y + region.Dy - 1)
+    x := region.X + 1
+    y := region.Y + 1
+    x2 := region.X + region.Dx - 1
+    y2 := region.Y + region.Dy - 1
 
     gl.Vertex2i(x, y)
     gl.Vertex2i(x, y2)

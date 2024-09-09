@@ -132,6 +132,13 @@ func (te *TextEntry) setCursor(mx, my int) bool {
   return true
 }
 
+func isDeleteOrBackspace(keyId gin.KeyId) bool {
+  if keyId == gin.AnyBackspace {
+    return true
+  }
+  return keyId == gin.AnyKeyDelete
+}
+
 func (te *TextEntry) Respond(group gui.EventGroup, data interface{}) bool {
   if te.Button.Respond(group, data) {
     return true
@@ -142,9 +149,12 @@ func (te *TextEntry) Respond(group gui.EventGroup, data interface{}) bool {
   for _, event := range group.Events {
     if event.Type == gin.Press {
       id := event.Key.Id()
-      if id <= 255 && valid_keys[byte(id)] {
-        b := byte(id)
-        if gin.In().GetKey(gin.EitherShift).CurPressAmt() > 0 {
+      if id.Index <= 255 && valid_keys[byte(id.Index)] {
+        b := byte(id.Index)
+        if gin.In().GetKey(gin.AnyLeftShift).CurPressAmt() > 0 {
+          b = shift_keys[b]
+        }
+        if gin.In().GetKey(gin.AnyRightShift).CurPressAmt() > 0 {
           b = shift_keys[b]
         }
         t := te.Entry.text
@@ -152,27 +162,27 @@ func (te *TextEntry) Respond(group gui.EventGroup, data interface{}) bool {
         t = t[0:index] + string([]byte{b}) + t[index:]
         te.Entry.text = t
         te.Entry.cursor.index++
-      } else if event.Key.Id() == gin.DeleteOrBackspace {
+      } else if isDeleteOrBackspace(event.Key.Id()) {
         if te.Entry.cursor.index > 0 {
           index := te.Entry.cursor.index
           t := te.Entry.text
           te.Entry.text = t[0:index-1] + t[index:]
           te.Entry.cursor.index--
         }
-      } else if event.Key.Id() == gin.Left {
+      } else if event.Key.Id() == gin.AnyLeft {
         if te.Entry.cursor.index > 0 {
           te.Entry.cursor.index--
         }
-      } else if event.Key.Id() == gin.Right {
+      } else if event.Key.Id() == gin.AnyRight {
         if te.Entry.cursor.index < len(te.Entry.text) {
           te.Entry.cursor.index++
         }
-      } else if event.Key.Id() == gin.Return {
+      } else if event.Key.Id() == gin.AnyReturn {
         te.Entry.entering = false
         if te.Button.f != nil {
           te.Button.f(nil)
         }
-      } else if event.Key.Id() == gin.Escape {
+      } else if event.Key.Id() == gin.AnyEscape {
         te.Entry.entering = false
         te.Entry.text = te.Entry.prev
         te.Entry.prev = ""
@@ -191,7 +201,9 @@ func (te *TextEntry) Think(x, y, mx, my int, dt int64) {
     te.Entry.Default = ""
   }
   te.Button.Think(x, y, mx, my, dt)
-  te.setCursor(gin.In().GetCursor("Mouse").Point())
+  // TODO(tmckee): need to ask the gui for a cursor pos
+  // te.setCursor(gin.In().GetCursor("Mouse").Point())
+  te.setCursor(0, 0)
 }
 
 func (te *TextEntry) RenderAt(x, y int) {

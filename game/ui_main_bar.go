@@ -205,9 +205,11 @@ func MakeMainBar(game *Game) (*MainBar, error) {
   }
   mb.layout.EndTurn.f = buttonFuncEndTurn
   mb.layout.UnitRight.f = buttonFuncUnitRight
-  mb.layout.UnitRight.key = gin.Tab
+  mb.layout.UnitRight.key = gin.AnyTab
   mb.layout.UnitLeft.f = buttonFuncUnitLeft
-  mb.layout.UnitLeft.key = gin.ShiftTab
+  // TODO(tmckee): This only binds left-shift but right-shift needs to be bound
+  // too, right?
+  mb.layout.UnitLeft.key = gin.AnyLeftShift
   mb.layout.ActionLeft.f = buttonFuncActionLeft
   mb.layout.ActionRight.f = buttonFuncActionRight
   mb.game = game
@@ -383,7 +385,7 @@ func (m *MainBar) Respond(g *gui.Gui, group gui.EventGroup) bool {
     }
   }
 
-  if found, event := group.FindEvent(gin.MouseLButton); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
     for _, button := range buttons {
       if button.handleClick(m.mx, m.my, m) {
         return true
@@ -397,7 +399,7 @@ func (m *MainBar) Respond(g *gui.Gui, group gui.EventGroup) bool {
     }
   }
 
-  if found, event := group.FindEvent(gin.MouseWheelVertical); found {
+  if found, event := group.FindEvent(gin.AnyMouseWheelVertical); found {
     x := int(m.layout.Conditions.X)
     y := int(m.layout.Conditions.Y)
     x2 := int(m.layout.Conditions.X + m.layout.Conditions.Width)

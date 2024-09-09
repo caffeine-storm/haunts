@@ -98,7 +98,9 @@ func (sm *StartMenu) Think(g *gui.Gui, t int64) {
   sm.last_t = t
 
   if sm.mx == 0 && sm.my == 0 {
-    sm.mx, sm.my = gin.In().GetCursor("Mouse").Point()
+    // TODO(tmckee): need to ask the gui for a cursor pos
+    // sm.mx, sm.my = gin.In().GetCursor("Mouse").Point()
+    sm.mx, sm.my = 0, 0
   }
   for _, button := range sm.buttons {
     button.Think(sm.region.X, sm.region.Y, sm.mx, sm.my, dt)
@@ -111,7 +113,7 @@ func (sm *StartMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
     sm.mx, sm.my = cursor.Point()
   }
 
-  if found, event := group.FindEvent(gin.MouseLButton); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
     hit := false
     for _, button := range sm.buttons {
       if button.handleClick(sm.mx, sm.my, nil) {

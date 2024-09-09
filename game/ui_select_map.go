@@ -25,7 +25,7 @@ type MapOption struct {
 }
 
 func (mo *MapOption) Draw(hovered, selected, selectable bool, region gui.Region) {
-  var s gl.Ubyte
+  var s byte
   switch {
   case selected:
     s = 255

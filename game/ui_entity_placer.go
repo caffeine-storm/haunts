@@ -156,7 +156,9 @@ func (ep *EntityPlacer) Think(g *gui.Gui, t int64) {
   dt := t - ep.last_t
   ep.last_t = t
   if ep.mx == 0 && ep.my == 0 {
-    ep.mx, ep.my = gin.In().GetCursor("Mouse").Point()
+    // TODO(tmckee): need to ask the gui for a cursor pos
+    // ep.mx, ep.my = gin.In().GetCursor("Mouse").Point()
+    ep.mx, ep.my = 0, 0
   }
   for _, button := range ep.buttons {
     button.Think(ep.region.X, ep.region.Y, ep.mx, ep.my, dt)
@@ -191,7 +193,7 @@ func (ep *EntityPlacer) Respond(g *gui.Gui, group gui.EventGroup) bool {
     ep.game.new_ent.X, ep.game.new_ent.Y = float64(bx), float64(by)
   }
 
-  if found, event := group.FindEvent(gin.MouseLButton); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
     for _, button := range ep.buttons {
       if button.handleClick(ep.mx, ep.my, nil) {
         return true
@@ -199,7 +201,7 @@ func (ep *EntityPlacer) Respond(g *gui.Gui, group gui.EventGroup) bool {
     }
   }
 
-  if found, event := group.FindEvent(gin.MouseLButton); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
     if pointInsideRect(ep.mx, ep.my, ep.region.X, ep.region.Y, ep.region.Dx, ep.region.Dy) {
       return true
     }
@@ -209,7 +211,7 @@ func (ep *EntityPlacer) Respond(g *gui.Gui, group gui.EventGroup) bool {
     return false
   }
 
-  if found, event := group.FindEvent(gin.MouseLButton); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
     ent := ep.game.new_ent
     if ep.game.placeEntity(ep.pattern) {
       cost := ep.roster[ent.Name]

@@ -81,13 +81,13 @@ func (o *Overlay) Draw(region gui.Region) {
 
     gl.Begin(gl.QUADS)
     gl.TexCoord2i(0, 1)
-    gl.Vertex2i(gl.Int(cx1), gl.Int(cy1))
+    gl.Vertex2i(cx1, cy1)
     gl.TexCoord2i(0, 0)
-    gl.Vertex2i(gl.Int(cx2), gl.Int(cy2))
+    gl.Vertex2i(cx2, cy2)
     gl.TexCoord2i(1, 0)
-    gl.Vertex2i(gl.Int(cx3), gl.Int(cy3))
+    gl.Vertex2i(cx3, cy3)
     gl.TexCoord2i(1, 1)
-    gl.Vertex2i(gl.Int(cx4), gl.Int(cy4))
+    gl.Vertex2i(cx4, cy4)
     gl.End()
 
     base.EnableShader("")
