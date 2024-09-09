@@ -14,12 +14,10 @@ github.com/MobRulesGames/opengl v0.0.0-20121115013359-5beafb9fb3b3 h1:0Gh/6v/TML
 github.com/MobRulesGames/opengl v0.0.0-20121115013359-5beafb9fb3b3/go.mod h1:5lEWNJrwRD33Sb0ScERpH7bkXfd+UUcMtvEcg2p0I9o=
 github.com/caffeine-storm/gl v0.0.0-20240829181653-d21bb18bf8dc h1:WB6FYY9FuGBuNbcRzlotMt0E3ZR10Gt9tonnRzaHFMI=
 github.com/caffeine-storm/gl v0.0.0-20240829181653-d21bb18bf8dc/go.mod h1:5WNXbhdBMLerIscVkSVTRwGcsRywYKYHRKFEBZOUBEA=
-github.com/caffeine-storm/glop v0.0.0-20240829175403-6d58433b728b h1:ItExEJ9hEaGubdEXoVoxL5fr5rybvk8wz3qgpM/vDw4=
-github.com/caffeine-storm/glop v0.0.0-20240829175403-6d58433b728b/go.mod h1:2LLtzdIGaxqU4vQ1a9qZ5TBV2eFYn2gU+N0xI3f05MA=
+github.com/caffeine-storm/glop v0.0.0-20240909134216-33e44f57a401 h1:cy4jdUlhPXah4NQPYo/tomIkGCVMeAOu9Nre+GEAU84=
+github.com/caffeine-storm/glop v0.0.0-20240909134216-33e44f57a401/go.mod h1:7VyrR7DKBpoMg3GM2wvMX3HkPqYpilOeN6kIY1AloFw=
 github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c h1:KqJxBrec/mnKQ+QgBu3/iJvaiurKpNDsXLrrXSau73U=
 github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c/go.mod h1:ntYmIr0ULu7QxKlmOE6cC87X4pWDG8jO/wSUBn2ZzJY=
-github.com/chsc/gogl v0.0.0-20131111203533-c411acc846b6 h1:GHNbGLo1VfjsT+Lf7i1beWEvSHbN/GIi7pzkWAnL2zk=
-github.com/chsc/gogl v0.0.0-20131111203533-c411acc846b6/go.mod h1:82yD5XkINXAhjoaZjStP4a8vZSO3c7aAWQS3OJtBg+s=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

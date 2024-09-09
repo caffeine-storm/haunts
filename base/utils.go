@@ -93,6 +93,8 @@ func loadFont() (*truetype.Font, error) {
   return font, nil
 }
 
+/*
+ * TODO(tmckee): apparently not called?
 func setupFontDictionaries(sizes ...int) {
   dictionary_mutex.Lock()
   defer dictionary_mutex.Unlock()
@@ -120,6 +122,7 @@ func setupFontDictionaries(sizes ...int) {
     }
   }
 }
+*/
 
 func loadDictionaryFromFile(size int) (*gui.Dictionary, error) {
   name := fmt.Sprintf("dict_%d.gob", size)
