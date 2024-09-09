@@ -120,14 +120,18 @@ func (w *FurniturePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
   // On escape we want to revert the furniture we're moving back to where it was
   // and what state it was in before we selected it.  If we don't have any
   // furniture selected then we don't do anything.
-  if found, event := group.FindEvent(gin.Escape); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyEscape); found && event.Type == gin.Press {
     w.onEscape()
     return true
   }
 
   // If we hit delete then we want to remove the furniture we're moving around
   // from the room.  If we're not moving anything around then nothing happens.
-  if found, event := group.FindEvent(gin.DeleteOrBackspace); found && event.Type == gin.Press {
+  found, event := group.FindEvent(gin.AnyBackspace)
+  if !found {
+    found, event = group.FindEvent(gin.AnyKeyDelete)
+  }
+  if found && event.Type == gin.Press {
     algorithm.Choose(&w.Room.Furniture, func(f *Furniture) bool {
       return f != w.furniture
     })
@@ -151,7 +155,7 @@ func (w *FurniturePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
       w.furniture.Flip = !w.furniture.Flip
     }
   }
-  if found, event := group.FindEvent(gin.MouseLButton); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
     if w.furniture != nil {
       if !w.furniture.invalid {
         w.furniture.temporary = false
@@ -194,7 +198,9 @@ func (w *FurniturePanel) Reload() {
 
 func (w *FurniturePanel) Think(ui *gui.Gui, t int64) {
   if w.furniture != nil {
-    mx, my := gin.In().GetCursor("Mouse").Point()
+    // TODO(tmckee): need to ask the gui where the mouse is.
+    // mx, my := gin.In().GetCursor("Mouse").Point()
+    mx, my := 0, 0
     bx, by := w.RoomViewer.WindowToBoard(mx, my)
     f := w.furniture
     f.X = roundDown(bx - w.drag_anchor.x + 0.5)

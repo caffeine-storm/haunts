@@ -188,14 +188,14 @@ func (d *Door) setupGlStuff(room *Room) {
   }
   d.state = state
   if d.threshold_glids.vbuffer != 0 {
-    gl.DeleteBuffers(1, (*gl.Uint)(&d.threshold_glids.vbuffer))
-    gl.DeleteBuffers(1, (*gl.Uint)(&d.threshold_glids.floor_buffer))
+    gl.Buffer(d.threshold_glids.vbuffer).Delete()
+    gl.Buffer(d.threshold_glids.floor_buffer).Delete()
     d.threshold_glids.vbuffer = 0
     d.threshold_glids.floor_buffer = 0
   }
   if d.door_glids.vbuffer != 0 {
-    gl.DeleteBuffers(1, (*gl.Uint)(&d.door_glids.vbuffer))
-    gl.DeleteBuffers(1, (*gl.Uint)(&d.door_glids.floor_buffer))
+    gl.Buffer(d.door_glids.vbuffer).Delete()
+    gl.Buffer(d.door_glids.floor_buffer).Delete()
     d.door_glids.vbuffer = 0
     d.door_glids.floor_buffer = 0
   }
@@ -307,22 +307,22 @@ func (d *Door) setupGlStuff(room *Room) {
       los_v: los_v2,
     })
   }
-  gl.GenBuffers(1, (*gl.Uint)(&d.threshold_glids.vbuffer))
-  gl.BindBuffer(gl.ARRAY_BUFFER, gl.Uint(d.threshold_glids.vbuffer))
+  d.threshold_glids.vbuffer = uint32(gl.GenBuffer())
+  gl.Buffer(d.threshold_glids.vbuffer).Bind(gl.ARRAY_BUFFER)
   size := int(unsafe.Sizeof(roomVertex{}))
-  gl.BufferData(gl.ARRAY_BUFFER, gl.Sizeiptr(size*len(vs)), gl.Pointer(&vs[0].x), gl.STATIC_DRAW)
+  gl.BufferData(gl.ARRAY_BUFFER, size*len(vs), gl.Pointer(&vs[0].x), gl.STATIC_DRAW)
 
   is := []uint16{0, 1, 2, 0, 2, 3}
-  gl.GenBuffers(1, (*gl.Uint)(&d.threshold_glids.floor_buffer))
-  gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.Uint(d.threshold_glids.floor_buffer))
-  gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, gl.Sizeiptr(int(unsafe.Sizeof(is[0]))*len(is)), gl.Pointer(&is[0]), gl.STATIC_DRAW)
+  d.threshold_glids.floor_buffer = uint32(gl.GenBuffer())
+  gl.Buffer(d.threshold_glids.floor_buffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
+  gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), gl.Pointer(&is[0]), gl.STATIC_DRAW)
   d.threshold_glids.floor_count = 6
 
   if d.Facing == FarLeft || d.Facing == FarRight {
     is2 := []uint16{4, 5, 6, 4, 6, 7}
-    gl.GenBuffers(1, (*gl.Uint)(&d.door_glids.floor_buffer))
-    gl.BindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.Uint(d.door_glids.floor_buffer))
-    gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, gl.Sizeiptr(int(unsafe.Sizeof(is[0]))*len(is2)), gl.Pointer(&is2[0]), gl.STATIC_DRAW)
+    d.door_glids.floor_buffer = uint32(gl.GenBuffer())
+    gl.Buffer(d.door_glids.floor_buffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
+    gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is2), gl.Pointer(&is2[0]), gl.STATIC_DRAW)
     d.door_glids.floor_count = 6
   }
 }
@@ -758,7 +758,9 @@ func makeHouseDataTab(house *HouseDef, viewer *HouseViewer) *houseDataTab {
 }
 func (hdt *houseDataTab) Think(ui *gui.Gui, t int64) {
   if hdt.temp_room != nil {
-    mx, my := gin.In().GetCursor("Mouse").Point()
+    // TODO(tmckee): need to ask the gui for cursor pos
+    // mx, my := gin.In().GetCursor("Mouse").Point()
+    mx, my := 0, 0
     bx, by := hdt.viewer.WindowToBoard(mx, my)
     cx, cy := hdt.temp_room.Pos()
     hdt.temp_room.X = int(bx - hdt.drag_anchor.x)
@@ -808,12 +810,16 @@ func (hdt *houseDataTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
     return true
   }
 
-  if found, event := group.FindEvent(gin.Escape); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyEscape); found && event.Type == gin.Press {
     hdt.onEscape()
     return true
   }
 
-  if found, event := group.FindEvent(gin.DeleteOrBackspace); found && event.Type == gin.Press {
+  found, event := group.FindEvent(gin.AnyBackspace)
+  if !found {
+    found, event = group.FindEvent(gin.AnyKeyDelete)
+  }
+  if found && event.Type == gin.Press {
     if hdt.temp_room != nil {
       spawns := make(map[*SpawnPoint]bool)
       for i := range hdt.temp_spawns {
@@ -833,7 +839,7 @@ func (hdt *houseDataTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
   }
 
   floor := hdt.house.Floors[hdt.current_floor]
-  if found, event := group.FindEvent(gin.MouseLButton); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
     if hdt.temp_room != nil {
       if !hdt.temp_room.invalid {
         hdt.temp_room.temporary = false
@@ -949,12 +955,16 @@ func (hdt *houseDoorTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
     return true
   }
 
-  if found, event := group.FindEvent(gin.Escape); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyEscape); found && event.Type == gin.Press {
     hdt.onEscape()
     return true
   }
 
-  if found, event := group.FindEvent(gin.DeleteOrBackspace); found && event.Type == gin.Press {
+  found, event := group.FindEvent(gin.AnyBackspace)
+  if !found {
+    found, event = group.FindEvent(gin.AnyKeyDelete)
+  }
+  if found && event.Type == gin.Press {
     algorithm.Choose(&hdt.temp_room.Doors, func(d *Door) bool {
       return d != hdt.temp_door
     })
@@ -989,7 +999,7 @@ func (hdt *houseDoorTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
   }
 
   floor := hdt.house.Floors[hdt.current_floor]
-  if found, event := group.FindEvent(gin.MouseLButton); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
     if hdt.temp_door != nil {
       other_room, other_door := floor.findRoomForDoor(hdt.temp_room, hdt.temp_door)
       if other_room != nil {
@@ -1109,22 +1119,25 @@ func (hdt *houseRelicsTab) markTempSpawnValidity() {
 
 func (hdt *houseRelicsTab) Think(ui *gui.Gui, t int64) {
   defer hdt.VerticalTable.Think(ui, t)
-  rbx, rby := hdt.viewer.WindowToBoard(gin.In().GetCursor("Mouse").Point())
+  // TODO(tmckee): need to ask the gui for cursor pos
+  // mx, my := gin.In().GetCursor("Mouse").Point()
+  mx, my := 0, 0
+  rbx, rby := hdt.viewer.WindowToBoard(mx, my)
   bx := roundDown(rbx - hdt.drag_anchor.x + 0.5)
   by := roundDown(rby - hdt.drag_anchor.y + 0.5)
   if hdt.temp_relic != nil {
     hdt.temp_relic.X = bx
     hdt.temp_relic.Y = by
-    hdt.temp_relic.Dx += gin.In().GetKey(gin.Right).FramePressCount()
-    hdt.temp_relic.Dx -= gin.In().GetKey(gin.Left).FramePressCount()
+    hdt.temp_relic.Dx += gin.In().GetKey(gin.AnyRight).FramePressCount()
+    hdt.temp_relic.Dx -= gin.In().GetKey(gin.AnyLeft).FramePressCount()
     if hdt.temp_relic.Dx < 1 {
       hdt.temp_relic.Dx = 1
     }
     if hdt.temp_relic.Dx > 10 {
       hdt.temp_relic.Dx = 10
     }
-    hdt.temp_relic.Dy += gin.In().GetKey(gin.Up).FramePressCount()
-    hdt.temp_relic.Dy -= gin.In().GetKey(gin.Down).FramePressCount()
+    hdt.temp_relic.Dy += gin.In().GetKey(gin.AnyUp).FramePressCount()
+    hdt.temp_relic.Dy -= gin.In().GetKey(gin.AnyDown).FramePressCount()
     if hdt.temp_relic.Dy < 1 {
       hdt.temp_relic.Dy = 1
     }
@@ -1143,7 +1156,9 @@ func (hdt *houseRelicsTab) Think(ui *gui.Gui, t int64) {
     }
   }
 
-  if hdt.temp_relic == nil && gin.In().GetKey('n').FramePressCount() > 0 && ui.FocusWidget() == nil {
+  // TODO(tmckee): do we need to distinguish between 'N' and 'n'? This was
+  // originally 'n'.
+  if hdt.temp_relic == nil && gin.In().GetKey(gin.AnyKeyN).FramePressCount() > 0 && ui.FocusWidget() == nil {
     hdt.newSpawn()
   }
 }
@@ -1161,12 +1176,16 @@ func (hdt *houseRelicsTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
     return true
   }
 
-  if found, event := group.FindEvent(gin.Escape); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyEscape); found && event.Type == gin.Press {
     hdt.onEscape()
     return true
   }
 
-  if found, event := group.FindEvent(gin.DeleteOrBackspace); found && event.Type == gin.Press {
+  found, event := group.FindEvent(gin.AnyBackspace)
+  if !found {
+    found, event = group.FindEvent(gin.AnyKeyDelete)
+  }
+  if found && event.Type == gin.Press {
     algorithm.Choose(&hdt.house.Floors[0].Spawns, func(s *SpawnPoint) bool {
       return s != hdt.temp_relic
     })
@@ -1177,7 +1196,7 @@ func (hdt *houseRelicsTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 
   cursor := group.Events[0].Key.Cursor()
   floor := hdt.house.Floors[hdt.current_floor]
-  if found, event := group.FindEvent(gin.MouseLButton); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
     if hdt.temp_relic != nil {
       if !hdt.temp_relic.invalid {
         hdt.temp_relic.temporary = false
