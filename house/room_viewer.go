@@ -941,7 +941,9 @@ func (rv *RoomViewer) Think(*gui.Gui, int64) {
     rv.size = rv.room.Size
     rv.makeMat()
   }
-  mx, my := rv.WindowToBoard(gin.In().GetCursor("Mouse").Point())
+  // TODO(tmckee): ask the gui for the cursor pos
+  // mx, my := rv.WindowToBoard(gin.In().GetCursor("Mouse").Point())
+  mx, my := 0, 0
   rv.mx = int(mx)
   rv.my = int(my)
 }

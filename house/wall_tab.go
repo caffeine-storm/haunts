@@ -84,7 +84,11 @@ func (w *WallPanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
     return true
   }
 
-  if found, event := group.FindEvent(gin.DeleteOrBackspace); found && event.Type == gin.Press {
+  found, event := group.FindEvent(gin.AnyBackspace)
+  if !found {
+    found, event = group.FindEvent(gin.AnyKeyDelete)
+  }
+  if found && event.Type == gin.Press {
     algorithm.Choose(&w.room.WallTextures, func(wt *WallTexture) bool {
       return wt != w.wall_texture
     })
@@ -93,7 +97,7 @@ func (w *WallPanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
     return true
   }
 
-  if found, event := group.FindEvent(gin.Escape); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyEscape); found && event.Type == gin.Press {
     w.onEscape()
     return true
   }
@@ -104,12 +108,12 @@ func (w *WallPanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
     }
     return true
   }
-  if found, event := group.FindEvent(gin.MouseWheelVertical); found {
-    if w.wall_texture != nil && gin.In().GetKey(gin.Space).CurPressAmt() == 0 {
+  if found, event := group.FindEvent(gin.AnyMouseWheelVertical); found {
+    if w.wall_texture != nil && gin.In().GetKey(gin.AnySpace).CurPressAmt() == 0 {
       w.wall_texture.Rot += float32(event.Key.CurPressAmt() / 100)
     }
   }
-  if found, event := group.FindEvent(gin.MouseLButton); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
     if w.wall_texture != nil {
       w.wall_texture.temporary = false
       w.wall_texture = nil
@@ -133,7 +137,9 @@ func (w *WallPanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 
 func (w *WallPanel) Think(ui *gui.Gui, t int64) {
   if w.wall_texture != nil {
-    px, py := gin.In().GetCursor("Mouse").Point()
+    // TODO(tmckee): need to ask the gui for cursor pos
+    // px, py := gin.In().GetCursor("Mouse").Point()
+    px, py := 0, 0
     tx := float32(px) - w.drag_anchor.X
     ty := float32(py) - w.drag_anchor.Y
     bx, by := w.viewer.WindowToBoardf(tx, ty)
