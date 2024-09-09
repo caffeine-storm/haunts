@@ -92,8 +92,8 @@ func draggingAndZooming(dz draggerZoomer) {
   }
 
   var zoom float64
-  if gin.In().GetKey(gin.Space).FramePressAmt() > 0 {
-    zoom = gin.In().GetKey(gin.MouseWheelVertical).FramePressAmt()
+  if gin.In().GetKey(gin.AnySpace).FramePressAmt() > 0 {
+    zoom = gin.In().GetKey(gin.AnyMouseWheelVertical).FramePressAmt()
   }
   dz.Zoom(zoom / 100)
 
@@ -104,8 +104,8 @@ func draggingAndZooming(dz draggerZoomer) {
     dragging = !dragging
   }
   if dragging {
-    mx := gin.In().GetKey(gin.MouseXAxis).FramePressAmt()
-    my := gin.In().GetKey(gin.MouseYAxis).FramePressAmt()
+    mx := gin.In().GetKey(gin.AnyMouseXAxis).FramePressAmt()
+    my := gin.In().GetKey(gin.AnyMouseYAxis).FramePressAmt()
     if mx != 0 || my != 0 {
       dz.Drag(-mx, my)
     }
@@ -179,8 +179,11 @@ func editMode() {
       }
     }
     if ok_to_select {
+      numericKeyId := gin.AnyKeyPad0
       for i := 1; i <= 9; i++ {
-        if gin.In().GetKey(gin.KeyId('0'+i)).FramePressCount() > 0 {
+        idx := int(gin.AnyKeyPad0.Index) + i
+        numericKeyId.Index = gin.KeyIndex(idx)
+        if gin.In().GetKey(numericKeyId).FramePressCount() > 0 {
           editor.SelectTab(i - 1)
         }
       }
@@ -206,6 +209,8 @@ func main() {
       fmt.Printf("PANIC: %s\n", string(data))
     }
   }()
+
+  // If 'Version' isn't found, try running 'go -C tools/ run version.go'
   base.Log().Printf("Version %s", Version())
   sys.Startup()
   sound.Init()
@@ -214,7 +219,9 @@ func main() {
     sys.CreateWindow(10, 10, wdx, wdy)
     sys.EnableVSync(true)
     err := gl.Init()
-    if err != nil {
+    // TODO(tmckee): 0 is from glew.h's GLEW_OK; we should expose a symbol to
+    // check and/or a MustInit from the gl package.
+    if err != 0 {
       panic(err)
     }
     gl.Enable(gl.BLEND)

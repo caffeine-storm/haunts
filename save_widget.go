@@ -27,7 +27,7 @@ func MakeSaveWidget(on_save func(string)) *SaveWidget {
 }
 
 func (sw *SaveWidget) Respond(ui *gui.Gui, event_group gui.EventGroup) bool {
-  if found, event := event_group.FindEvent(gin.Return); found && event.Type == gin.Press {
+  if found, event := event_group.FindEvent(gin.AnyReturn); found && event.Type == gin.Press {
     sw.on_save(sw.filename.GetText())
     return true
   }
