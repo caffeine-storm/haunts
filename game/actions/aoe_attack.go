@@ -154,7 +154,11 @@ func (a *AoeAttack) Prep(ent *game.Entity, g *game.Game) bool {
     return false
   }
   a.ent = ent
-  bx, by := g.GetViewer().WindowToBoard(gin.In().GetCursor("Mouse").Point())
+
+  // TODO(tmckee): need to ask the gui for a cursor pos
+  // bx, by := g.GetViewer().WindowToBoard(gin.In().GetCursor("Mouse").Point())
+  mx, my := 0, 0
+  bx, by := g.GetViewer().WindowToBoard(mx, my)
   a.tx = int(bx)
   a.ty = int(by)
   return true
@@ -166,7 +170,7 @@ func (a *AoeAttack) HandleInput(group gui.EventGroup, g *game.Game) (bool, game.
     a.tx = int(bx)
     a.ty = int(by)
   }
-  if found, event := group.FindEvent(gin.MouseLButton); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
     ex, ey := a.ent.Pos()
     if dist(ex, ey, a.tx, a.ty) <= a.Range && a.ent.HasLos(a.tx, a.ty, 1, 1) {
       var exec aoeExec

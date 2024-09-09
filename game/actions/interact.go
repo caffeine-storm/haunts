@@ -349,8 +349,11 @@ func (a *Interact) Prep(ent *game.Entity, g *game.Game) bool {
   return false
 }
 func (a *Interact) HandleInput(group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
-  if found, event := group.FindEvent(gin.MouseLButton); found && event.Type == gin.Press {
-    bx, by := g.GetViewer().WindowToBoard(gin.In().GetCursor("Mouse").Point())
+  if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
+    // TODO(tmckee): need to ask the gui for a cursor pos
+    // bx, by := g.GetViewer().WindowToBoard(gin.In().GetCursor("Mouse").Point())
+    mx, my := 0, 0
+    bx, by := g.GetViewer().WindowToBoard(mx, my)
     room_num := a.ent.CurrentRoom()
     room := g.House.Floors[0].Rooms[room_num]
     for door_num, door := range room.Doors {
@@ -369,7 +372,7 @@ func (a *Interact) HandleInput(group gui.EventGroup, g *game.Game) (bool, game.A
   if target == nil {
     return false, nil
   }
-  if found, event := group.FindEvent(gin.MouseLButton); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
     for i := range a.targets {
       if a.targets[i] == target && distBetweenEnts(a.ent, target) <= a.Range {
         var exec interactExec

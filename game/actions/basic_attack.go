@@ -245,7 +245,7 @@ func (a *BasicAttack) makeExec(ent, target *game.Entity) *basicAttackExec {
 }
 func (a *BasicAttack) HandleInput(group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
   target := g.HoveredEnt()
-  if found, event := group.FindEvent(gin.MouseLButton); found && event.Type == gin.Press {
+  if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
     if target == nil || !a.validTarget(a.ent, target) {
       return true, nil
     }

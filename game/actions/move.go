@@ -260,7 +260,10 @@ func (a *Move) Preppable(ent *game.Entity, g *game.Game) bool {
 }
 func (a *Move) Prep(ent *game.Entity, g *game.Game) bool {
   a.ent = ent
-  fx, fy := g.GetViewer().WindowToBoard(gin.In().GetCursor("Mouse").Point())
+  // TODO(tmckee): need to ask the gui for a cursor pos
+  // fx, fy := g.GetViewer().WindowToBoard(gin.In().GetCursor("Mouse").Point())
+  mx, my := 0, 0
+  fx, fy := g.GetViewer().WindowToBoard(mx, my)
   a.findPath(ent, int(fx), int(fy))
   a.threshold = a.ent.Stats.ApCur()
   return true
@@ -271,7 +274,7 @@ func (a *Move) HandleInput(group gui.EventGroup, g *game.Game) (bool, game.Actio
     fx, fy := g.GetViewer().WindowToBoard(cursor.Point())
     a.findPath(a.ent, int(fx), int(fy))
   }
-  if found, _ := group.FindEvent(gin.MouseLButton); found {
+  if found, _ := group.FindEvent(gin.AnyMouseLButton); found {
     if len(a.path) > 0 {
       if a.cost <= a.ent.Stats.ApCur() {
         var exec moveExec
