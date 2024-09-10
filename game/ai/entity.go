@@ -1,14 +1,16 @@
 package ai
 
 import (
+  "errors"
   "fmt"
-  "github.com/runningwild/glop/util/algorithm"
+  "sort"
+
+  "github.com/MobRulesGames/golua/lua"
   "github.com/MobRulesGames/haunts/base"
   "github.com/MobRulesGames/haunts/game"
   "github.com/MobRulesGames/haunts/game/actions"
   "github.com/MobRulesGames/haunts/house"
-  "github.com/MobRulesGames/golua/lua"
-  "sort"
+  "github.com/runningwild/glop/util/algorithm"
 )
 
 func (a *Ai) addEntityContext() {
@@ -517,9 +519,10 @@ func NearestNEntitiesFunc(me *game.Entity) lua.LuaGoFunction {
     if !valid_kinds[kind] {
       err_str := fmt.Sprintf("NearestNEntities expects kind in the set ['intruder' 'denizen' 'servitor' 'master' 'minion'], got %s.", kind)
       base.Warn().Printf(err_str)
-      L.PushString(err_str)
-      L.Error()
-      return 0
+      // TODO(tmckee): my _guess_ is that we want crash... so let's crash :p
+      // L.PushString(err_str)
+      // L.Error()
+      panic(errors.New(err_str))
     }
     var eds entityDistSlice
     for _, ent := range g.Ents {
