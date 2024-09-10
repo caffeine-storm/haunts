@@ -126,10 +126,10 @@ func (a *Interact) Push(L *lua.State) {
   L.PushString("Interact")
   L.SetTable(-3)
   L.PushString("Ap")
-  L.PushInteger(a.Ap)
+  L.PushInteger(int64(a.Ap))
   L.SetTable(-3)
   L.PushString("Range")
-  L.PushInteger(a.Range)
+  L.PushInteger(int64(a.Range))
   L.SetTable(-3)
 }
 

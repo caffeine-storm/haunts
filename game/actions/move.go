@@ -113,7 +113,7 @@ func (exec *moveExec) Push(L *lua.State, g *game.Game) {
   L.PushString("Path")
   L.NewTable()
   for i := range exec.Path {
-    L.PushInteger(i + 1)
+    L.PushInteger(int64(i) + 1)
     _, x, y := g.FromVertex(exec.Path[i])
     game.LuaPushPoint(L, x, y)
     L.SetTable(-3)

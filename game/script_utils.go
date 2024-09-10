@@ -236,7 +236,7 @@ func LuaPushEntity(L *lua.State, _ent *Entity) {
   L.PushString(_ent.Name)
   L.SetTable(-3)
   L.PushString("id")
-  L.PushInteger(int(_ent.Id))
+  L.PushInteger(int64(_ent.Id))
   L.SetTable(-3)
   L.PushString("type")
   L.PushString("Entity")
@@ -322,27 +322,27 @@ func LuaPushEntity(L *lua.State, _ent *Entity) {
     },
     "Corpus": func() {
       ent := _ent.Game().EntityById(id)
-      L.PushInteger(ent.Stats.Corpus())
+      L.PushInteger(int64(ent.Stats.Corpus()))
     },
     "Ego": func() {
       ent := _ent.Game().EntityById(id)
-      L.PushInteger(ent.Stats.Ego())
+      L.PushInteger(int64(ent.Stats.Ego()))
     },
     "HpCur": func() {
       ent := _ent.Game().EntityById(id)
-      L.PushInteger(ent.Stats.HpCur())
+      L.PushInteger(int64(ent.Stats.HpCur()))
     },
     "HpMax": func() {
       ent := _ent.Game().EntityById(id)
-      L.PushInteger(ent.Stats.HpMax())
+      L.PushInteger(int64(ent.Stats.HpMax()))
     },
     "ApCur": func() {
       ent := _ent.Game().EntityById(id)
-      L.PushInteger(ent.Stats.ApCur())
+      L.PushInteger(int64(ent.Stats.ApCur()))
     },
     "ApMax": func() {
       ent := _ent.Game().EntityById(id)
-      L.PushInteger(ent.Stats.ApMax())
+      L.PushInteger(int64(ent.Stats.ApMax()))
     },
     "Info": func() {
       ent := _ent.Game().EntityById(id)
@@ -361,20 +361,20 @@ func LuaPushEntity(L *lua.State, _ent *Entity) {
 func LuaPushPoint(L *lua.State, x, y int) {
   L.NewTable()
   L.PushString("X")
-  L.PushInteger(x)
+  L.PushInteger(int64(x))
   L.SetTable(-3)
   L.PushString("Y")
-  L.PushInteger(y)
+  L.PushInteger(int64(y))
   L.SetTable(-3)
 }
 
 func LuaPushDims(L *lua.State, dx, dy int) {
   L.NewTable()
   L.PushString("Dx")
-  L.PushInteger(dx)
+  L.PushInteger(int64(dx))
   L.SetTable(-3)
   L.PushString("Dy")
-  L.PushInteger(dy)
+  L.PushInteger(int64(dy))
   L.SetTable(-3)
 }
 
@@ -399,10 +399,10 @@ func LuaPushRoom(L *lua.State, game *Game, room *house.Room) {
         L.PushString("room")
         L.SetTable(-3)
         L.PushString("floor")
-        L.PushInteger(fi)
+        L.PushInteger(int64(fi))
         L.SetTable(-3)
         L.PushString("room")
-        L.PushInteger(ri)
+        L.PushInteger(int64(ri))
         L.SetTable(-3)
         L.PushString("Pos")
         LuaPushPoint(L, room.X, room.Y)
@@ -447,13 +447,13 @@ func LuaPushDoor(L *lua.State, game *Game, door *house.Door) {
           L.PushString("door")
           L.SetTable(-3)
           L.PushString("floor")
-          L.PushInteger(fi)
+          L.PushInteger(int64(fi))
           L.SetTable(-3)
           L.PushString("room")
-          L.PushInteger(ri)
+          L.PushInteger(int64(ri))
           L.SetTable(-3)
           L.PushString("door")
-          L.PushInteger(di)
+          L.PushInteger(int64(di))
           L.SetTable(-3)
           return
         }
@@ -512,7 +512,7 @@ func LuaPushSpawnPoint(L *lua.State, game *Game, sp *house.SpawnPoint) {
   x, y := sp.Pos()
   dx, dy := sp.Dims()
   L.PushString("id")
-  L.PushInteger(index)
+  L.PushInteger(int64(index))
   L.SetTable(-3)
   L.PushString("type")
   L.PushString("SpawnPoint")

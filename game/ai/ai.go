@@ -155,7 +155,7 @@ func (a *Ai) setupLuaState() error {
       base.Error().Printf("Can't call randN with a value <= 0.")
       return 0
     }
-    L.PushInteger(rand.Intn(val) + 1)
+    L.PushInteger(int64(rand.Intn(val)) + 1)
     return 1
   })
   a.L.DoString(a.Prog)

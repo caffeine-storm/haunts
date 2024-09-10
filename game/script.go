@@ -145,8 +145,8 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 
   if game_key == "" {
     res := gp.script.L.DoString(string(prog))
-    if !res {
-      base.Error().Printf("There was an error running script %s:\n%s", path, prog)
+    if res != nil {
+      base.Error().Printf("There was an error running script %s:\n%s\n%s", path, prog, res)
     }
   }
 
@@ -185,8 +185,8 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
           prog = resp.Game.Script
         }
         res := gp.script.L.DoString(string(prog))
-        if !res {
-          base.Error().Printf("There was an error running script %s:\n%s", path, prog)
+        if res != nil {
+          base.Error().Printf("There was an error running script %s:\n%s\n%s", path, prog, res)
           return
         }
         if len(resp.Game.Execs) > 0 {
@@ -354,7 +354,7 @@ func (gs *gameScript) OnRound(g *Game) {
         exec.Push(gs.L, g)
         gs.L.NewTable()
         for i := range vpath {
-          gs.L.PushInteger(i + 1)
+          gs.L.PushInteger(int64(i) + 1)
           _, x, y := g.FromVertex(vpath[i])
           LuaPushPoint(gs.L, x, y)
           gs.L.SetTable(-3)
@@ -443,7 +443,7 @@ func (gp *GamePanel) scriptThinkOnce() {
   }
 }
 
-func startScript(gp *GamePanel, player *Player) lua.GoFunction {
+func startScript(gp *GamePanel, player *Player) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "StartScript", LuaString) {
       return 0
@@ -456,7 +456,7 @@ func startScript(gp *GamePanel, player *Player) lua.GoFunction {
     gp.script.syncEnd()
     res := gp.script.L.DoString("Script.SaveStore()")
     gp.script.syncStart()
-    if !res {
+    if res != nil {
       base.Error().Printf("Unable to properly autosave.")
     }
     startGameScript(gp, script, player, nil, gp.game.net.key)
@@ -464,7 +464,7 @@ func startScript(gp *GamePanel, player *Player) lua.GoFunction {
   }
 }
 
-func selectHouse(gp *GamePanel) lua.GoFunction {
+func selectHouse(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "SelectHouse") {
       return 0
@@ -494,7 +494,7 @@ type totalState struct {
   Store []byte
 }
 
-func saveGameState(gp *GamePanel) lua.GoFunction {
+func saveGameState(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "SaveGameState") {
       return 0
@@ -523,7 +523,7 @@ func saveGameState(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func doGameOnRound(gp *GamePanel) lua.GoFunction {
+func doGameOnRound(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "GameOnRound") {
       return 0
@@ -594,7 +594,7 @@ func loadGameStateRaw(gp *GamePanel, L *lua.State, state string) {
   gp.AnchorBox.AddChild(MakeOverlay(gp.game), gui.Anchor{0.5, 0.5, 0.5, 0.5})
 }
 
-func loadGameState(gp *GamePanel) lua.GoFunction {
+func loadGameState(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "LoadGameState", LuaString) {
       return 0
@@ -606,7 +606,7 @@ func loadGameState(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func doExec(gp *GamePanel) lua.GoFunction {
+func doExec(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "DoExec", LuaTable) {
       return 0
@@ -654,7 +654,7 @@ func doExec(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func selectEnt(gp *GamePanel) lua.GoFunction {
+func selectEnt(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "SelectEnt", LuaEntity) {
       return 0
@@ -675,7 +675,7 @@ func selectEnt(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func focusPos(gp *GamePanel) lua.GoFunction {
+func focusPos(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "FocusPos", LuaPoint) {
       return 0
@@ -688,7 +688,7 @@ func focusPos(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func focusZoom(gp *GamePanel) lua.GoFunction {
+func focusZoom(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "FocusZoom", LuaFloat) {
       return 0
@@ -700,7 +700,7 @@ func focusZoom(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func chooserFromFile(gp *GamePanel) lua.GoFunction {
+func chooserFromFile(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "ChooserFromFile", LuaString) {
       return 0
@@ -719,7 +719,7 @@ func chooserFromFile(gp *GamePanel) lua.GoFunction {
     res := <-done
     L.NewTable()
     for i, s := range res {
-      L.PushInteger(i + 1)
+      L.PushInteger(int64(i) + 1)
       L.PushString(s)
       L.SetTable(-3)
     }
@@ -729,7 +729,7 @@ func chooserFromFile(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func loadHouse(gp *GamePanel) lua.GoFunction {
+func loadHouse(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "LoadHouse", LuaString) {
       return 0
@@ -757,7 +757,7 @@ func loadHouse(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func showMainBar(gp *GamePanel, player *Player) lua.GoFunction {
+func showMainBar(gp *GamePanel, player *Player) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "ShowMainBar", LuaBoolean) {
       return 0
@@ -793,7 +793,7 @@ func showMainBar(gp *GamePanel, player *Player) lua.GoFunction {
   }
 }
 
-func spawnEntityAtPosition(gp *GamePanel) lua.GoFunction {
+func spawnEntityAtPosition(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "SpawnEntityAtPosition", LuaString, LuaPoint) {
       return 0
@@ -812,7 +812,7 @@ func spawnEntityAtPosition(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func getSpawnPointsMatching(gp *GamePanel) lua.GoFunction {
+func getSpawnPointsMatching(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "GetSpawnPointsMatching", LuaString) {
       return 0
@@ -832,7 +832,7 @@ func getSpawnPointsMatching(gp *GamePanel) lua.GoFunction {
         continue
       }
       count++
-      L.PushInteger(count)
+      L.PushInteger(int64(count))
       LuaPushSpawnPoint(L, gp.game, sp)
       L.SetTable(-3)
     }
@@ -840,7 +840,7 @@ func getSpawnPointsMatching(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func spawnEntitySomewhereInSpawnPoints(gp *GamePanel) lua.GoFunction {
+func spawnEntitySomewhereInSpawnPoints(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "SpawnEntitySomewhereInSpawnPoints", LuaString, LuaArray, LuaBoolean) {
       return 0
@@ -905,7 +905,7 @@ func spawnEntitySomewhereInSpawnPoints(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func isSpawnPointInLos(gp *GamePanel) lua.GoFunction {
+func isSpawnPointInLos(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "IsSpawnPointInLos", LuaSpawnPoint, LuaString) {
       return 0
@@ -927,7 +927,7 @@ func isSpawnPointInLos(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func placeEntities(gp *GamePanel) lua.GoFunction {
+func placeEntities(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "PlaceEntities", LuaString, LuaTable, LuaInteger, LuaInteger) {
       return 0
@@ -960,7 +960,7 @@ func placeEntities(gp *GamePanel) lua.GoFunction {
     ents := <-done
     L.NewTable()
     for i := range ents {
-      L.PushInteger(i + 1)
+      L.PushInteger(int64(i) + 1)
       LuaPushEntity(L, ents[i])
       L.SetTable(-3)
     }
@@ -970,7 +970,7 @@ func placeEntities(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func roomAtPos(gp *GamePanel) lua.GoFunction {
+func roomAtPos(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "RoomAtPos", LuaPoint) {
       return 0
@@ -981,7 +981,7 @@ func roomAtPos(gp *GamePanel) lua.GoFunction {
     room, _, _ := gp.game.House.Floors[0].RoomFurnSpawnAtPos(x, y)
     for i, r := range gp.game.House.Floors[0].Rooms {
       if r == room {
-        L.PushInteger(i)
+        L.PushInteger(int64(i))
         return 1
       }
     }
@@ -990,7 +990,7 @@ func roomAtPos(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func getAllEnts(gp *GamePanel) lua.GoFunction {
+func getAllEnts(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "GetAllEnts") {
       return 0
@@ -999,7 +999,7 @@ func getAllEnts(gp *GamePanel) lua.GoFunction {
     defer gp.script.syncEnd()
     L.NewTable()
     for i := range gp.game.Ents {
-      L.PushInteger(i + 1)
+      L.PushInteger(int64(i) + 1)
       LuaPushEntity(L, gp.game.Ents[i])
       L.SetTable(-3)
     }
@@ -1007,7 +1007,7 @@ func getAllEnts(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func dialogBox(gp *GamePanel) lua.GoFunction {
+func dialogBox(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if L.GetTop() == 1 {
       if !LuaCheckParamsOk(L, "DialogBox", LuaString) {
@@ -1050,7 +1050,7 @@ func dialogBox(gp *GamePanel) lua.GoFunction {
     gp.AnchorBox.RemoveChild(box)
     L.NewTable()
     for i, choice := range choices {
-      L.PushInteger(i + 1)
+      L.PushInteger(int64(i) + 1)
       L.PushString(choice)
       L.SetTable(-3)
     }
@@ -1106,7 +1106,7 @@ func (c *iconWithText) Draw(hovered, selected, selectable bool, region gui.Regio
 func (c *iconWithText) Think(dt int64) {
 }
 
-func pickFromN(gp *GamePanel) lua.GoFunction {
+func pickFromN(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "PickFromN", LuaInteger, LuaInteger, LuaTable) {
       return 0
@@ -1145,7 +1145,7 @@ func pickFromN(gp *GamePanel) lua.GoFunction {
       for i := range options {
         if m[i] {
           count++
-          L.PushInteger(count)
+          L.PushInteger(int64(count))
           L.PushString(option_names[i])
           L.SetTable(-3)
         }
@@ -1161,7 +1161,7 @@ func pickFromN(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func setGear(gp *GamePanel) lua.GoFunction {
+func setGear(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "SetGear", LuaEntity, LuaString) {
       return 0
@@ -1186,7 +1186,7 @@ func setGear(gp *GamePanel) lua.GoFunction {
 // bindAi(ent, "fudgecake.lua")
 // special sources: "human", "inactive", and in the future: "net"
 // special targets: "denizen", "intruder", "minions", or an entity table
-func bindAi(gp *GamePanel) lua.GoFunction {
+func bindAi(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "BindAi", LuaAnything, LuaString) {
       return 0
@@ -1259,7 +1259,7 @@ func bindAi(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func setVisibility(gp *GamePanel) lua.GoFunction {
+func setVisibility(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "SetVisibility", LuaString) {
       return 0
@@ -1283,7 +1283,7 @@ func setVisibility(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func endPlayerInteraction(gp *GamePanel) lua.GoFunction {
+func endPlayerInteraction(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "EndPlayerInteraction") {
       return 0
@@ -1295,7 +1295,7 @@ func endPlayerInteraction(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func saveStore(gp *GamePanel, player *Player) lua.GoFunction {
+func saveStore(gp *GamePanel, player *Player) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "SaveStore") {
       return 0
@@ -1318,7 +1318,7 @@ func saveStore(gp *GamePanel, player *Player) lua.GoFunction {
   }
 }
 
-func getLos(gp *GamePanel) lua.GoFunction {
+func getLos(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "GetLos", LuaEntity) {
       return 0
@@ -1338,7 +1338,7 @@ func getLos(gp *GamePanel) lua.GoFunction {
       for y := range ent.los.grid[x] {
         if ent.los.grid[x][y] {
           count++
-          L.PushInteger(count)
+          L.PushInteger(int64(count))
           LuaPushPoint(L, x, y)
           L.SetTable(-3)
         }
@@ -1348,7 +1348,7 @@ func getLos(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func setVisibleSpawnPoints(gp *GamePanel) lua.GoFunction {
+func setVisibleSpawnPoints(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "SetVisibleSpawnPoints", LuaString, LuaString) {
       return 0
@@ -1366,7 +1366,7 @@ func setVisibleSpawnPoints(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func setCondition(gp *GamePanel) lua.GoFunction {
+func setCondition(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "SetCondition", LuaEntity, LuaString, LuaBoolean) {
       return 0
@@ -1392,7 +1392,7 @@ func setCondition(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func setPosition(gp *GamePanel) lua.GoFunction {
+func setPosition(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "SetPosition", LuaEntity, LuaPoint) {
       return 0
@@ -1411,7 +1411,7 @@ func setPosition(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func setHp(gp *GamePanel) lua.GoFunction {
+func setHp(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "SetHp", LuaEntity, LuaInteger) {
       return 0
@@ -1432,7 +1432,7 @@ func setHp(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func setAp(gp *GamePanel) lua.GoFunction {
+func setAp(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "SetAp", LuaEntity, LuaInteger) {
       return 0
@@ -1453,7 +1453,7 @@ func setAp(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func removeEnt(gp *GamePanel) lua.GoFunction {
+func removeEnt(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "RemoveEnt", LuaEntity) {
       return 0
@@ -1480,7 +1480,7 @@ func removeEnt(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func playAnimations(gp *GamePanel) lua.GoFunction {
+func playAnimations(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "PlayAnimations", LuaEntity, LuaArray) {
       return 0
@@ -1505,7 +1505,7 @@ func playAnimations(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func playMusic(gp *GamePanel) lua.GoFunction {
+func playMusic(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "PlayMusic", LuaString) {
       return 0
@@ -1515,7 +1515,7 @@ func playMusic(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func stopMusic(gp *GamePanel) lua.GoFunction {
+func stopMusic(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "StopMusic", LuaString) {
       return 0
@@ -1525,7 +1525,7 @@ func stopMusic(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func setMusicParam(gp *GamePanel) lua.GoFunction {
+func setMusicParam(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "SetMusicParam", LuaString, LuaFloat) {
       return 0
@@ -1535,7 +1535,7 @@ func setMusicParam(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func playSound(gp *GamePanel) lua.GoFunction {
+func playSound(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "PlaySound", LuaString) {
       return 0
@@ -1545,7 +1545,7 @@ func playSound(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func removeWaypoint(gp *GamePanel) lua.GoFunction {
+func removeWaypoint(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "RemoveWaypoint", LuaString) {
       return 0
@@ -1571,7 +1571,7 @@ func removeWaypoint(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func setWaypoint(gp *GamePanel) lua.GoFunction {
+func setWaypoint(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "SetWaypoint", LuaString, LuaString, LuaPoint, LuaFloat) {
       return 0
@@ -1604,7 +1604,7 @@ func setWaypoint(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func setLosMode(gp *GamePanel) lua.GoFunction {
+func setLosMode(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "SetLosMode", LuaString, LuaAnything) {
       return 0
@@ -1664,18 +1664,18 @@ func setLosMode(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func randFunc(gp *GamePanel) lua.GoFunction {
+func randFunc(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "Rand", LuaInteger) {
       return 0
     }
     n := L.ToInteger(-1)
-    L.PushInteger(int(gp.game.Rand.Int63()%int64(n)) + 1)
+    L.PushInteger(int64(gp.game.Rand.Int63()%int64(n)) + 1)
     return 1
   }
 }
 
-func sleepFunc(gp *GamePanel) lua.GoFunction {
+func sleepFunc(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "Sleep", LuaFloat) {
       return 0
@@ -1686,7 +1686,7 @@ func sleepFunc(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func endGameFunc(gp *GamePanel) lua.GoFunction {
+func endGameFunc(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "EndGame") {
       return 0
@@ -1698,7 +1698,7 @@ func endGameFunc(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func netSideFunc(gp *GamePanel) lua.GoFunction {
+func netSideFunc(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "Side") {
       return 0
@@ -1724,7 +1724,7 @@ func netSideFunc(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func updateStateFunc(gp *GamePanel) lua.GoFunction {
+func updateStateFunc(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "UpdateState", LuaString) {
       return 0
@@ -1754,7 +1754,7 @@ func updateStateFunc(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func updateExecsFunc(gp *GamePanel) lua.GoFunction {
+func updateExecsFunc(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "UpdateExecs", LuaString, LuaArray) {
       return 0
@@ -1791,7 +1791,7 @@ func updateExecsFunc(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func netWaitFunc(gp *GamePanel) lua.GoFunction {
+func netWaitFunc(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "Wait") {
       return 0
@@ -1831,7 +1831,7 @@ func netWaitFunc(gp *GamePanel) lua.GoFunction {
   }
 }
 
-func netLatestStateAndExecsFunc(gp *GamePanel) lua.GoFunction {
+func netLatestStateAndExecsFunc(gp *GamePanel) lua.LuaGoFunction {
   return func(L *lua.State) int {
     if !LuaCheckParamsOk(L, "LatestStateAndExecs") {
       return 0
