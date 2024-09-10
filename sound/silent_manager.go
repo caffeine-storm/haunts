@@ -7,11 +7,13 @@ package sound
 
 import (
   "github.com/runningwild/glop/sprite"
-  "github.com/MobRulesGames/haunts/base"
 )
 
 func Init()                                 {}
 func MapSounds(m map[string]string)         {}
 func trigger(s *sprite.Sprite, name string) {}
-func PlaySound(p base.Path)                 {}
+func PlaySound(string, float64)             {}
 func SetBackgroundMusic(file string)        {}
+func PlayMusic(string)                      {}
+func StopMusic()                            {}
+func SetMusicParam(string, float64)         {}

@@ -32,6 +32,13 @@ repos that aren't licensed :(
 WORK-IN-PROGRESS: see test/licences/check-licences.sh
 
 
+NOTES:
+- glop: ubuntu: need to install multi-lib support for C/C++
+	- sudo apt install gcc-multilib g++-multilib
+
+- gl:
+	- make the type check in gl.go's "ptr" static; pls!
+
 --------
 - Make `go build ./...` work
 	- glop's 'gui.MakeDictionary' has been removed
@@ -39,3 +46,10 @@ WORK-IN-PROGRESS: see test/licences/check-licences.sh
 		- we can still load from files, there's some in data/fonts/*.gob
 
 - Use glop to render some text
+	- 'defer' seems to have been ... misused
+
+- Do we need to worry about building in devel mode? build-tag: // +build !release
+
+- golua doesn't link; confusion ensues
+
+- can punt on sound with 'go build -o haunts -tags nosound --ldflags "-extldflags \"-L /path/to/libglop.so\"" main.go GEN_version'
