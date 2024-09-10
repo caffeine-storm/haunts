@@ -33,11 +33,14 @@ WORK-IN-PROGRESS: see test/licences/check-licences.sh
 
 
 NOTES:
-- glop: ubuntu: need to install multi-lib support for C/C++
+- glop: ubuntu: do we _need_ to install multi-lib support for C/C++?
 	- sudo apt install gcc-multilib g++-multilib
 
 - gl:
 	- make the type check in gl.go's "ptr" static; pls!
+
+- golua: ubuntu: need to install liblua5.1
+	- sudo apt-get intall liblua5.1-dev
 
 --------
 - Make `go build ./...` work
@@ -49,7 +52,3 @@ NOTES:
 	- 'defer' seems to have been ... misused
 
 - Do we need to worry about building in devel mode? build-tag: // +build !release
-
-- golua doesn't link; confusion ensues
-
-- can punt on sound with 'go build -o haunts -tags nosound --ldflags "-extldflags \"-L /path/to/libglop.so\"" main.go GEN_version'

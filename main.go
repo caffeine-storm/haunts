@@ -60,8 +60,7 @@ func init() {
   sys = system.Make(gos.GetSystemInterface())
 
   rand.Seed(100)
-  // TODO: This should not be OS-specific
-  datadir = filepath.Join(os.Args[0], "..", "..")
+  datadir = "data-runtime"
   base.SetDatadir(datadir)
   base.Log().Printf("Setting datadir: %s", datadir)
   err := house.SetDatadir(datadir)

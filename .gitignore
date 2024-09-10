@@ -14,3 +14,4 @@ data/store
 *.fsb
 haunts.exe
 haunts
+data-runtime/
