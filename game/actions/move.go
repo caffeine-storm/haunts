@@ -11,7 +11,7 @@ import (
   "github.com/MobRulesGames/haunts/game/status"
   "github.com/MobRulesGames/haunts/house"
   "github.com/MobRulesGames/haunts/texture"
-  lua "github.com/MobRulesGames/golua"
+  "github.com/MobRulesGames/golua/lua"
   "math"
   "path/filepath"
 )

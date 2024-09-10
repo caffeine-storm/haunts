@@ -8,7 +8,7 @@ import (
   "github.com/MobRulesGames/haunts/base"
   "github.com/MobRulesGames/haunts/texture"
   "github.com/MobRulesGames/haunts/house"
-  lua "github.com/MobRulesGames/golua"
+  "github.com/MobRulesGames/golua/lua"
 )
 
 var action_map map[string]func() Action

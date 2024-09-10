@@ -13,7 +13,7 @@ import (
   "github.com/MobRulesGames/haunts/mrgnet"
   "github.com/MobRulesGames/haunts/sound"
   "github.com/MobRulesGames/haunts/texture"
-  lua "github.com/MobRulesGames/golua"
+  "github.com/MobRulesGames/golua/lua"
   "io/ioutil"
   "path/filepath"
   "regexp"

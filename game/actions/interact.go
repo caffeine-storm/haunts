@@ -10,7 +10,7 @@ import (
   "github.com/MobRulesGames/haunts/house"
   "github.com/MobRulesGames/haunts/texture"
   "github.com/MobRulesGames/haunts/game/status"
-  lua "github.com/MobRulesGames/golua"
+  "github.com/MobRulesGames/golua/lua"
 )
 
 func registerInteracts() map[string]func() game.Action {

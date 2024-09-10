@@ -4,8 +4,6 @@ github.com/MobRulesGames/fmod v0.0.0-20121207023041-90f897047d59 h1:liMev5j3+XXr
 github.com/MobRulesGames/fmod v0.0.0-20121207023041-90f897047d59/go.mod h1:6X6o4I+6yNjDUZpbmGIK94Ia6BCrRkxCK/No4CaifWw=
 github.com/MobRulesGames/fsnotify v0.0.0-20121110053322-1b2bc1227408 h1:wdcx9XfxtL1WHzALG+Iht+wvWpMT8zH551YykTGIxVg=
 github.com/MobRulesGames/fsnotify v0.0.0-20121110053322-1b2bc1227408/go.mod h1:OEDqSJUPW/UJ6q25GvbR9CiCUNEutiy1VyBd2GbsTxY=
-github.com/MobRulesGames/golua v0.0.0-20120622212636-5a5ec5615e86 h1:dyvn2yZrPZHqdFFy/C9k4KkVw1Y2rRgMq8Qgz1u7wNY=
-github.com/MobRulesGames/golua v0.0.0-20120622212636-5a5ec5615e86/go.mod h1:rssLrxruUVO+6SAH+bWvwxJbkDiqrZhIO2v3xKdweII=
 github.com/MobRulesGames/mathgl v0.0.0-20120424214601-79bd4ce3042d h1:Rh3yrqrbhJpaxmPYreA73YB5yBl7f9ULUMeZcaHmEag=
 github.com/MobRulesGames/mathgl v0.0.0-20120424214601-79bd4ce3042d/go.mod h1:wXL75i6wDmeUURnQnNtW2xpiuPmDzPk2JnpQbm7Esu0=
 github.com/MobRulesGames/memory v0.0.0-20120626004817-db5bb35fd894 h1:26ZCnKDg9vNxiOK0VZ/tN2tg34DfrhKB0Xg5jUWkO8A=
@@ -18,6 +16,8 @@ github.com/caffeine-storm/glop v0.0.0-20240909134216-33e44f57a401 h1:cy4jdUlhPXa
 github.com/caffeine-storm/glop v0.0.0-20240909134216-33e44f57a401/go.mod h1:7VyrR7DKBpoMg3GM2wvMX3HkPqYpilOeN6kIY1AloFw=
 github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c h1:KqJxBrec/mnKQ+QgBu3/iJvaiurKpNDsXLrrXSau73U=
 github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c/go.mod h1:ntYmIr0ULu7QxKlmOE6cC87X4pWDG8jO/wSUBn2ZzJY=
+github.com/caffeine-storm/golua v0.0.0-20240910150920-bb0104c032e4 h1:zTOKTYGNmZCZVDgvjsTEXhaFIcTWiccPHKBFaWQzo80=
+github.com/caffeine-storm/golua v0.0.0-20240910150920-bb0104c032e4/go.mod h1:W2FXrOPfx0i3wMe8N+ExY0xSvdN/VcY2/SmVHKMloqA=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

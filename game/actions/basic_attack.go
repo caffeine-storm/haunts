@@ -10,7 +10,7 @@ import (
   "github.com/MobRulesGames/haunts/game/status"
   "github.com/MobRulesGames/haunts/texture"
   "github.com/MobRulesGames/opengl/gl"
-  lua "github.com/MobRulesGames/golua"
+  "github.com/MobRulesGames/golua/lua"
   "path/filepath"
 )
 

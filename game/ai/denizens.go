@@ -3,7 +3,7 @@ package ai
 import (
   "fmt"
   "github.com/MobRulesGames/haunts/game"
-  lua "github.com/MobRulesGames/golua"
+  "github.com/MobRulesGames/golua/lua"
 )
 
 func (a *Ai) addDenizensContext() {

@@ -7,7 +7,7 @@ require (
 	github.com/MobRulesGames/GoLLRB v0.0.0-20121115013357-10dddd6fc70e
 	github.com/MobRulesGames/fmod v0.0.0-20121207023041-90f897047d59
 	github.com/MobRulesGames/fsnotify v0.0.0-20121110053322-1b2bc1227408
-	github.com/MobRulesGames/golua v0.0.0-20120622212636-5a5ec5615e86
+	github.com/MobRulesGames/golua v0.0.0-00010101000000-000000000000
 	github.com/MobRulesGames/mathgl v0.0.0-20120424214601-79bd4ce3042d
 	github.com/MobRulesGames/memory v0.0.0-20120626004817-db5bb35fd894
 	github.com/MobRulesGames/opengl v0.0.0-20121115013359-5beafb9fb3b3
@@ -24,3 +24,5 @@ replace github.com/runningwild/glop => github.com/caffeine-storm/glop v0.0.0-202
 replace github.com/go-gl-legacy/gl => github.com/caffeine-storm/gl v0.0.0-20240909160157-d1b38f2deb16
 
 replace github.com/go-gl-legacy/glu => github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c
+
+replace github.com/MobRulesGames/golua => github.com/caffeine-storm/golua v0.0.0-20240910150920-bb0104c032e4

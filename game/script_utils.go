@@ -6,7 +6,7 @@ import (
   "fmt"
   "github.com/MobRulesGames/haunts/base"
   "github.com/MobRulesGames/haunts/house"
-  lua "github.com/MobRulesGames/golua"
+  "github.com/MobRulesGames/golua/lua"
   "io"
   "sort"
 )

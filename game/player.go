@@ -12,7 +12,7 @@ import (
   "path/filepath"
   "github.com/MobRulesGames/haunts/base"
   "encoding/gob"
-  lua "github.com/MobRulesGames/golua"
+  "github.com/MobRulesGames/golua/lua"
 )
 
 type Player struct {

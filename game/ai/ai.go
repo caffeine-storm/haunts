@@ -7,7 +7,7 @@ import (
   "github.com/MobRulesGames/fsnotify"
   "github.com/MobRulesGames/haunts/base"
   "github.com/MobRulesGames/haunts/game"
-  lua "github.com/MobRulesGames/golua"
+  "github.com/MobRulesGames/golua/lua"
   "io/ioutil"
   "math/rand"
   "os"
