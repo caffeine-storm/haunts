@@ -596,7 +596,6 @@ func luaMakeSigniature(name string, params []LuaType) string {
 }
 
 func LuaCheckParamsOk(L *lua.State, name string, params ...LuaType) bool {
-	fmt.Sprintf("%s(")
 	n := L.GetTop()
 	if n != len(params) {
 		LuaDoError(L, fmt.Sprintf("Got %d parameters to %s.", n, luaMakeSigniature(name, params)))

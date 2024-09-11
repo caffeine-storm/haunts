@@ -71,7 +71,7 @@ func (bae BasicActionExec) ActionIndex() int {
 func (bae BasicActionExec) Push(L *lua.State, g *Game) {
 	ent := g.EntityById(bae.Ent)
 	if bae.Index < 0 || bae.Index >= len(ent.Actions) {
-		base.Error().Printf("Tried to push an exec for an invalid action index: '%s' %d.", ent.Name)
+		base.Error().Printf("Tried to push an exec for an invalid action index: '%s' %d.", ent.Name, bae.Index)
 		L.PushNil()
 		return
 	}
