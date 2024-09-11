@@ -153,14 +153,14 @@ func (hv *HouseViewer) boardToModelview(mx, my float32) (x, y, z float32) {
 }
 
 func (hv *HouseViewer) WindowToBoard(wx, wy int) (float32, float32) {
-	hv.floor, hv.ifloor, _, _, _, _ = makeRoomMats(&roomDef{}, hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
+	hv.floor, hv.ifloor, _, _, _, _ = makeRoomMats(&Room{}, hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
 
 	fx, fy, _ := hv.modelviewToBoard(float32(wx), float32(wy))
 	return fx, fy
 }
 
 func (hv *HouseViewer) BoardToWindow(bx, by float32) (int, int) {
-	hv.floor, hv.ifloor, _, _, _, _ = makeRoomMats(&roomDef{}, hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
+	hv.floor, hv.ifloor, _, _, _, _ = makeRoomMats(&Room{}, hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
 
 	fx, fy, _ := hv.boardToModelview(bx, by)
 	return int(fx), int(fy)

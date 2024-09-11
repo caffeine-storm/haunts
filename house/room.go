@@ -20,7 +20,7 @@ func GetAllRoomNames() []string {
 
 func LoadAllRoomsInDir(dir string) {
 	base.RemoveRegistry("rooms")
-	base.RegisterRegistry("rooms", make(map[string]*roomDef))
+	base.RegisterRegistry("rooms", make(map[string]*RoomDef))
 	base.RegisterAllObjectsInDir("rooms", dir, ".room", "json")
 }
 
@@ -62,7 +62,7 @@ type Tags struct {
 	Decor      []string
 }
 
-type roomDef struct {
+type RoomDef struct {
 	Name string
 	Size RoomSize
 
@@ -679,11 +679,11 @@ func (room *Room) setupGlStuff() {
 	room.floor_count = len(is)
 }
 
-func (room *roomDef) Dims() (dx, dy int) {
+func (room *RoomDef) Dims() (dx, dy int) {
 	return room.Size.Dx, room.Size.Dy
 }
 
-func (r *roomDef) Resize(size RoomSize) {
+func (r *RoomDef) Resize(size RoomSize) {
 	r.Size = size
 }
 
@@ -720,7 +720,7 @@ type RoomEditorPanel struct {
 		wall      *WallPanel
 	}
 
-	room   roomDef
+	room   Room
 	viewer *RoomViewer
 }
 
@@ -775,6 +775,7 @@ func MakeRoomEditorPanel() Editor {
 	var rep RoomEditorPanel
 
 	rep.HorizontalTable = gui.MakeHorizontalTable()
+	rep.room.RoomDef = new(RoomDef)
 	rep.viewer = MakeRoomViewer(&rep.room, 65)
 	rep.AddChild(rep.viewer)
 
@@ -796,8 +797,8 @@ func MakeRoomEditorPanel() Editor {
 }
 
 func (rep *RoomEditorPanel) Load(path string) error {
-	var room roomDef
-	err := base.LoadAndProcessObject(path, "json", &room)
+	var room Room
+	err := base.LoadAndProcessObject(path, "json", &room.RoomDef)
 	if err == nil {
 		rep.room = room
 		for _, tab := range rep.widgets {

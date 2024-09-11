@@ -20,7 +20,7 @@ func GetAllWallTextureNames() []string {
 
 func LoadAllWallTexturesInDir(dir string) {
 	base.RemoveRegistry("wall_textures")
-	base.RegisterRegistry("wall_textures", make(map[string]*wallTextureDef))
+	base.RegisterRegistry("wall_textures", make(map[string]*WallTextureDef))
 	base.RegisterAllObjectsInDir("wall_textures", dir, ".json", "json")
 }
 
@@ -50,7 +50,7 @@ type wallTextureState struct {
 
 type WallTexture struct {
 	Defname string
-	*wallTextureDef
+	*WallTextureDef
 
 	// Position of the texture in floor coordinates.  If these coordinates exceed
 	// either the dx or dy of the room, then this texture will be drawn, at least
@@ -67,7 +67,7 @@ type WallTexture struct {
 	temporary bool
 }
 
-type wallTextureDef struct {
+type WallTextureDef struct {
 	// Name of this texture as it appears in the editor, should be unique among
 	// all WallTextures
 	Name string

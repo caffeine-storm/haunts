@@ -101,10 +101,10 @@ func (rv *RoomViewer) String() string {
 	return "viewer"
 }
 
-func MakeRoomViewer(room *roomDef, angle float32) *RoomViewer {
+func MakeRoomViewer(room *Room, angle float32) *RoomViewer {
 	var rv RoomViewer
 	rv.EmbeddedWidget = &gui.BasicWidget{CoreWidget: &rv}
-	rv.room = &Room{roomDef: room}
+	rv.room = room
 	rv.angle = angle
 	rv.fx = float32(rv.room.Size.Dx / 2)
 	rv.fy = float32(rv.room.Size.Dy / 2)
@@ -139,10 +139,10 @@ func (rv *RoomViewer) Drag(dx, dy float64) {
 }
 
 func (rv *RoomViewer) makeMat() {
-	rv.mat, rv.imat, rv.left_wall_mat, rv.left_wall_imat, rv.right_wall_mat, rv.right_wall_imat = makeRoomMats(rv.room.roomDef, rv.Render_region, rv.fx, rv.fy, rv.angle, rv.zoom)
+	rv.mat, rv.imat, rv.left_wall_mat, rv.left_wall_imat, rv.right_wall_mat, rv.right_wall_imat = makeRoomMats(rv.room, rv.Render_region, rv.fx, rv.fy, rv.angle, rv.zoom)
 }
 
-func makeRoomMats(room *roomDef, region gui.Region, focusx, focusy, angle, zoom float32) (floor, ifloor, left, ileft, right, iright mathgl.Mat4) {
+func makeRoomMats(room *Room, region gui.Region, focusx, focusy, angle, zoom float32) (floor, ifloor, left, ileft, right, iright mathgl.Mat4) {
 	var m mathgl.Mat4
 	floor.Translation(float32(region.Dx/2+region.X), float32(region.Dy/2+region.Y), 0)
 

@@ -10,10 +10,10 @@ import (
 
 type Shader struct {
 	Defname string
-	*shaderDef
+	*ShaderDef
 }
 
-type shaderDef struct {
+type ShaderDef struct {
 	// Name of this texture as it appears in the editor, should be unique among
 	// all WallTextures
 	Name string
@@ -77,7 +77,7 @@ func InitShaders() {
 		shader_progs = make(map[string]gl.Program)
 		warned_names = make(map[string]bool)
 		RemoveRegistry("shaders")
-		RegisterRegistry("shaders", make(map[string]*shaderDef))
+		RegisterRegistry("shaders", make(map[string]*ShaderDef))
 		RegisterAllObjectsInDir("shaders", filepath.Join(GetDataDir(), "shaders"), ".json", "json")
 		names := GetAllNamesInRegistry("shaders")
 		for _, name := range names {

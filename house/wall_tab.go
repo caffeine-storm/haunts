@@ -9,7 +9,7 @@ import (
 
 type WallPanel struct {
 	*gui.VerticalTable
-	room   *roomDef
+	room   *Room
 	viewer *RoomViewer
 
 	wall_texture      *WallTexture
@@ -18,7 +18,7 @@ type WallPanel struct {
 	selected_walls    map[int]bool
 }
 
-func MakeWallPanel(room *roomDef, viewer *RoomViewer) *WallPanel {
+func MakeWallPanel(room *Room, viewer *RoomViewer) *WallPanel {
 	var wp WallPanel
 	wp.room = room
 	wp.viewer = viewer

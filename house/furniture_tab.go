@@ -15,7 +15,7 @@ type FurniturePanel struct {
 	floor_path *gui.FileWidget
 	wall_path  *gui.FileWidget
 
-	Room       *roomDef
+	Room       *Room
 	RoomViewer *RoomViewer
 
 	// If we're in the middle of moving an object and this widget gets collapsed
@@ -38,7 +38,7 @@ func (w *FurniturePanel) Expand() {
 	w.RoomViewer.SetEditMode(editFurniture)
 }
 
-func makeFurniturePanel(room *roomDef, viewer *RoomViewer) *FurniturePanel {
+func makeFurniturePanel(room *Room, viewer *RoomViewer) *FurniturePanel {
 	var fp FurniturePanel
 	fp.Room = room
 	fp.RoomViewer = viewer

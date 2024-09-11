@@ -13,9 +13,10 @@ import (
 	"unsafe"
 )
 
+// TODO(tmckee): ??? why is this not in house/room.go?
 type Room struct {
 	Defname string
-	*roomDef
+	*RoomDef
 
 	// The placement of doors in this room
 	Doors []*Door `registry:"loadfrom-doors"`
@@ -88,7 +89,7 @@ func GetAllDoorNames() []string {
 
 func LoadAllDoorsInDir(dir string) {
 	base.RemoveRegistry("doors")
-	base.RegisterRegistry("doors", make(map[string]*doorDef))
+	base.RegisterRegistry("doors", make(map[string]*DoorDef))
 	base.RegisterAllObjectsInDir("doors", dir, ".json", "json")
 }
 
@@ -96,7 +97,7 @@ func (d *Door) Load() {
 	base.GetObject("doors", d)
 }
 
-type doorDef struct {
+type DoorDef struct {
 	// Name of this texture as it appears in the editor, should be unique among
 	// all Doors
 	Name string
@@ -117,7 +118,7 @@ type doorDef struct {
 
 type Door struct {
 	Defname string
-	*doorDef
+	*DoorDef
 
 	// Which wall the door is on
 	Facing WallFacing
@@ -139,11 +140,11 @@ type Door struct {
 }
 
 func (d *Door) AlwaysOpen() bool {
-	return d.doorDef.Always_open
+	return d.DoorDef.Always_open
 }
 
 func (d *Door) IsOpened() bool {
-	return d.doorDef.Always_open || d.Opened
+	return d.DoorDef.Always_open || d.Opened
 }
 
 func (d *Door) SetOpened(opened bool) {
@@ -176,8 +177,8 @@ func (d *Door) setupGlStuff(room *Room) {
 	state.pos = d.Pos
 	state.room.x = room.X
 	state.room.y = room.Y
-	state.room.dx = room.roomDef.Size.Dx
-	state.room.dy = room.roomDef.Size.Dy
+	state.room.dx = room.Size.Dx
+	state.room.dy = room.Size.Dy
 	if state == d.state {
 		return
 	}
@@ -210,8 +211,8 @@ func (d *Door) setupGlStuff(room *Room) {
 		var y1 float32 = -0.25
 		var y2 float32 = 0.25
 		if d.Facing == FarLeft {
-			y1 = float32(room.roomDef.Size.Dy)
-			y2 = float32(room.roomDef.Size.Dy) - 0.25
+			y1 = float32(room.Size.Dy)
+			y2 = float32(room.Size.Dy) - 0.25
 		}
 		// los_x1 := (x1 + float32(room.X)) / LosTextureSize
 		vs = append(vs, roomVertex{x: x1, y: y1})
@@ -229,8 +230,8 @@ func (d *Door) setupGlStuff(room *Room) {
 		var x1 float32 = -0.25
 		var x2 float32 = 0.25
 		if d.Facing == FarRight {
-			x1 = float32(room.roomDef.Size.Dx)
-			x2 = float32(room.roomDef.Size.Dx) - 0.25
+			x1 = float32(room.Size.Dx)
+			x2 = float32(room.Size.Dx) - 0.25
 		}
 		// los_y1 := (y1 + float32(room.Y)) / LosTextureSize
 		vs = append(vs, roomVertex{x: x1, y: y1})
@@ -244,7 +245,7 @@ func (d *Door) setupGlStuff(room *Room) {
 	}
 	dz := -float32(d.Width*d.TextureData().Dy()) / float32(d.TextureData().Dx())
 	if d.Facing == FarRight {
-		x := float32(room.roomDef.Size.Dx)
+		x := float32(room.Size.Dx)
 		y1 := float32(d.Pos + d.Width)
 		y2 := float32(d.Pos)
 		los_v := (float32(room.X) + x - 0.5) / LosTextureSize
@@ -278,7 +279,7 @@ func (d *Door) setupGlStuff(room *Room) {
 	if d.Facing == FarLeft {
 		x1 := float32(d.Pos)
 		x2 := float32(d.Pos + d.Width)
-		y := float32(room.roomDef.Size.Dy)
+		y := float32(room.Size.Dy)
 		los_v1 := (float32(room.X) + x1) / LosTextureSize
 		los_v2 := (float32(room.X) + x2) / LosTextureSize
 		los_u := (float32(room.Y) + y - 0.5) / LosTextureSize
@@ -619,7 +620,7 @@ func (f *Floor) render(region gui.Region, focusx, focusy, angle, zoom float32, d
 		room := ros[i].(*Room)
 		fx := focusx - float32(room.X)
 		fy := focusy - float32(room.Y)
-		floor, _, left, _, right, _ := makeRoomMats(room.roomDef, region, fx, fy, angle, zoom)
+		floor, _, left, _, right, _ := makeRoomMats(room, region, fx, fy, angle, zoom)
 		v := alpha_map[room]
 		if los_map[room] > 5 {
 			room.render(floor, left, right, zoom, v, drawables, los_tex, floor_drawers)

@@ -19,13 +19,13 @@ func GetAllFurnitureNames() []string {
 
 func LoadAllFurnitureInDir(dir string) {
 	base.RemoveRegistry("furniture")
-	base.RegisterRegistry("furniture", make(map[string]*furnitureDef))
+	base.RegisterRegistry("furniture", make(map[string]*FurnitureDef))
 	base.RegisterAllObjectsInDir("furniture", dir, ".json", "json")
 }
 
 type Furniture struct {
 	Defname string
-	*furnitureDef
+	*FurnitureDef
 
 	// Position of this object in board coordinates.
 	X, Y int
@@ -90,7 +90,7 @@ type furnitureOrientation struct {
 }
 
 // All instances of the same piece of furniture have this data in common
-type furnitureDef struct {
+type FurnitureDef struct {
 	// Name of the object - should be unique among all furniture
 	Name string
 
