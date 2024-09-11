@@ -1,0 +1,5 @@
+- verify licenses
+	- see test/licenses
+
+- Do we need to worry about building in devel mode?
+	- build-tag: // +build !release
