@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"image/color"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -81,7 +80,7 @@ func loadFont() (*truetype.Font, error) {
 	if err != nil {
 		return nil, err
 	}
-	data, err := ioutil.ReadAll(f)
+	data, err := io.ReadAll(f)
 	f.Close()
 	if err != nil {
 		return nil, err
@@ -254,7 +253,7 @@ func LoadJson(path string, target interface{}) error {
 		return err
 	}
 	defer f.Close()
-	data, err := ioutil.ReadAll(f)
+	data, err := io.ReadAll(f)
 	if err != nil {
 		return err
 	}

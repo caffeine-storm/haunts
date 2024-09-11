@@ -7,7 +7,6 @@ import (
 	"encoding/gob"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"math/big"
 	"net/http"
 	"net/url"
@@ -49,15 +48,13 @@ func DoAction(name string, input, output interface{}) error {
 		gzr, err = gzip.NewReader(r.Body)
 		if err != nil {
 			panic(err.Error())
-			return nil
 		}
 	} else {
 		gzr = r.Body
 	}
-	data, err := ioutil.ReadAll(gzr)
+	data, err := io.ReadAll(gzr)
 	if err != nil {
 		panic(err.Error())
-		return nil
 	}
 	dec := gob.NewDecoder(bytes.NewBuffer(data))
 	return dec.Decode(output)

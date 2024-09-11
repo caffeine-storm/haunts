@@ -3,6 +3,11 @@ package game
 import (
 	"bytes"
 	"fmt"
+	"os"
+	"path/filepath"
+	"regexp"
+	"time"
+
 	"github.com/MobRulesGames/golua/lua"
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game/hui"
@@ -14,10 +19,6 @@ import (
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/util/algorithm"
-	"io/ioutil"
-	"path/filepath"
-	"regexp"
-	"time"
 )
 
 type gameScript struct {
@@ -50,7 +51,7 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 	var prog []byte
 	var err error
 	if path != "" {
-		prog, err = ioutil.ReadFile(path)
+		prog, err = os.ReadFile(path)
 		if err != nil {
 			base.Error().Printf("Unable to load game script file %s: %v", path, err)
 			return

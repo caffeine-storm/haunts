@@ -1,10 +1,11 @@
 package base
 
 import (
+	"os"
+	"path/filepath"
+
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/render"
-	"io/ioutil"
-	"path/filepath"
 )
 
 type Shader struct {
@@ -83,12 +84,12 @@ func InitShaders() {
 			// Load the shader files
 			shader := Shader{Defname: name}
 			GetObject("shaders", &shader)
-			vdata, err := ioutil.ReadFile(filepath.Join(GetDataDir(), shader.Vertex_path))
+			vdata, err := os.ReadFile(filepath.Join(GetDataDir(), shader.Vertex_path))
 			if err != nil {
 				Error().Printf("Unable to load vertex shader '%s': %v", shader.Vertex_path, err)
 				continue
 			}
-			fdata, err := ioutil.ReadFile(filepath.Join(GetDataDir(), shader.Fragment_path))
+			fdata, err := os.ReadFile(filepath.Join(GetDataDir(), shader.Fragment_path))
 			if err != nil {
 				Error().Printf("Unable to load fragment shader '%s': %v", shader.Fragment_path, err)
 				continue

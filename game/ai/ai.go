@@ -4,15 +4,16 @@ import (
 	"encoding/gob"
 	"errors"
 	"fmt"
-	"github.com/MobRulesGames/fsnotify"
-	"github.com/MobRulesGames/golua/lua"
-	"github.com/MobRulesGames/haunts/base"
-	"github.com/MobRulesGames/haunts/game"
-	"io/ioutil"
+	"io"
 	"math/rand"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/MobRulesGames/fsnotify"
+	"github.com/MobRulesGames/golua/lua"
+	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/game"
 )
 
 // The Ai struct contains a glop.AiGraph object as well as a few channels for
@@ -100,7 +101,7 @@ func makeAi(path string, g *game.Game, ent *game.Entity, dst_iface *game.Ai, kin
 
 func (a *Ai) setupLuaState() error {
 	base.CheckPathCasing(a.path)
-	prog, err := ioutil.ReadFile(a.path)
+	prog, err := os.ReadFile(a.path)
 	if err != nil {
 		return errors.New(fmt.Sprintf("Unable to load ai file %s: %v", a.path, err))
 	}
@@ -174,7 +175,7 @@ func (a *Ai) loadUtils(dir string) {
 			if err != nil {
 				return nil
 			}
-			data, err := ioutil.ReadAll(f)
+			data, err := io.ReadAll(f)
 			f.Close()
 			if err != nil {
 				return nil
