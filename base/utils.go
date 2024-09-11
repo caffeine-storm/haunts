@@ -2,13 +2,10 @@ package base
 
 import (
   "bytes"
-  "code.google.com/p/freetype-go/freetype/truetype"
   "encoding/base64"
   "encoding/gob"
   "encoding/json"
   "fmt"
-  "github.com/runningwild/glop/gui"
-  "github.com/MobRulesGames/opengl/gl"
   "image/color"
   "io"
   "io/ioutil"
@@ -17,7 +14,10 @@ import (
   "path/filepath"
   "strings"
   "sync"
-  "time"
+
+  "code.google.com/p/freetype-go/freetype/truetype"
+  "github.com/MobRulesGames/opengl/gl"
+  "github.com/runningwild/glop/gui"
 )
 
 var datadir string
@@ -40,7 +40,7 @@ func setupLogger() {
   os.Mkdir(filepath.Join(datadir, "logs"), 0777)
   logger = nil
   var err error
-  name := time.Now().Format("2006-01-02-15-04-05") + ".log"
+  name := "haunts.log"
   log_out, err = os.Create(filepath.Join(datadir, "logs", name))
   if err != nil {
     fmt.Printf("Unable to open log file: %v\nLogging to stdout...\n", err.Error())
