@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/stretchr/testify/assert"
 )
 
 type TestEntity struct {
@@ -17,12 +18,24 @@ type TestPayload struct {
 	Name string
 }
 
-func TestRegistry(t *testing.T) {
-	t.Run("GetObject-CanAssignPayload", func(t *testing.T) {
-		// TODO(tmckee): we should either inject the logging dependency into
-		// registry things or make logging initialization transparent.
-		base.SetDatadir("go-test-data")
+type InvalidEntity struct {
+	Defname string
+	*invalidPayloadField
+	Discriminator int
+}
 
+// Using an 'unexported' type for the embedded payload will not work because
+// golang reflection refuses to assign through unexported fields.
+type invalidPayloadField struct {
+	Name string
+}
+
+func TestRegistry(t *testing.T) {
+	// TODO(tmckee): we should either inject the logging dependency into
+	// registry things or make logging initialization transparent.
+	base.SetDatadir("go-test-data")
+
+	t.Run("GetObject-CanAssignPayload", func(t *testing.T) {
 		aPayload := &TestPayload{
 			Name: "a payload",
 		}
@@ -42,5 +55,26 @@ func TestRegistry(t *testing.T) {
 		if lookup.TestPayload != aPayload {
 			t.Error("expected 'base.GetObject' to update the TestPayload field from nil to", aPayload, "but got", lookup.TestPayload)
 		}
+	})
+
+	t.Run("GetObject-CannotAssignToUnexportedPayloadField", func(t *testing.T) {
+		aPayload := &invalidPayloadField{
+			Name: "an invalid payload",
+		}
+
+		regMap := map[string]*invalidPayloadField{
+			"testkey": aPayload,
+		}
+		base.RegisterRegistry("test-reg", regMap)
+
+		lookup := InvalidEntity{
+			Defname:             "testkey",
+			invalidPayloadField: nil,
+			Discriminator:       42,
+		}
+
+		assert.Panics(t, func() {
+			base.GetObject("test-reg", &lookup)
+		}, "expected the registry to be unable to assign through an unexported field")
 	})
 }

@@ -15,6 +15,7 @@ require (
 	github.com/howeyc/fsnotify v0.9.0 // indirect
 	github.com/orfjackal/gospec v0.0.0-20140731185859-a21081619255
 	github.com/runningwild/glop v0.0.0-20130331194942-bcbcf4982510
+	github.com/stretchr/testify v1.9.0
 )
 
 replace code.google.com/p/freetype-go => github.com/golang/freetype v0.0.0-20120725121025-28cc5fbc5d0b

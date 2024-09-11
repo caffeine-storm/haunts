@@ -131,6 +131,7 @@ func GetObject(registry_name string, object interface{}) {
 	if !field.IsValid() {
 		Error().Printf("Expected type %v to embed a %v", object_val.Elem().Type(), cur_val.Type())
 	}
+	Log().Printf("got a field by name %q\n", cur_val.Elem().Type().Name())
 	field.Set(cur_val)
 }
 
