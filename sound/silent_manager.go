@@ -1,12 +1,13 @@
 // Stubbed version of the sound manager - lets us test things without having
 // to link in fmod.
 
+//go:build nosound
 // +build nosound
 
 package sound
 
 import (
-  "github.com/runningwild/glop/sprite"
+	"github.com/runningwild/glop/sprite"
 )
 
 func Init()                                 {}

@@ -27,7 +27,12 @@ ${RUNTIME_DATADIR}: ${SRC_DATADIR}
 clean:
 	rm -rf ${RUNTIME_DATADIR}
 
+fmt:
+	go fmt ./...
+
 # Let go tooling decide if things are out-of-date
 .PHONY: haunts
 
 .PHONY: clean
+
+.PHONY: fmt
