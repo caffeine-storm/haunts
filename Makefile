@@ -30,9 +30,14 @@ clean:
 fmt:
 	go fmt ./...
 
+test:
+	go test -tags nosound ./...
+
 # Let go tooling decide if things are out-of-date
 .PHONY: haunts
 
 .PHONY: clean
 
 .PHONY: fmt
+
+.PHONY: test
