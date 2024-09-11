@@ -205,6 +205,7 @@ func main() {
 			base.Error().Printf("PANIC: %v\n", r)
 			base.Error().Printf("PANIC: %s\n", string(data))
 			base.CloseLog()
+			fmt.Printf("PANIC: %v\n", r)
 			fmt.Printf("PANIC: %s\n", string(data))
 		}
 	}()
