@@ -1,6 +1,7 @@
 package base
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -127,11 +128,15 @@ func GetObject(registry_name string, object interface{}) {
 	if !cur_val.IsValid() {
 		Error().Printf("Tried to load an object, '%s', that doesn't exist in the registry '%s'", object_name.String(), registry_name)
 	}
-	field := object_val.Elem().FieldByName(cur_val.Elem().Type().Name())
+	fieldName := cur_val.Elem().Type().Name()
+	field := object_val.Elem().FieldByName(fieldName)
 	if !field.IsValid() {
 		Error().Printf("Expected type %v to embed a %v", object_val.Elem().Type(), cur_val.Type())
 	}
-	Log().Printf("got a field by name %q\n", cur_val.Elem().Type().Name())
+	Log().Printf("got a field by name %q\n", fieldName)
+	if !field.CanSet() {
+		panic(fmt.Errorf("can't set value through field named %q", fieldName))
+	}
 	field.Set(cur_val)
 }
 
