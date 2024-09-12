@@ -1,3 +1,6 @@
+- add tooling to run revive
+	https://github.com/mgechev/revive
+
 - verify licenses
 	- see test/licenses
 
