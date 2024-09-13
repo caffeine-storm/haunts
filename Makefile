@@ -7,6 +7,12 @@ it: haunts
 go: haunts ${RUNTIME_DATADIR}
 	./haunts
 
+dlv: devhaunts
+	dlv exec $^
+
+devhaunts:
+	go build -x -modfile dev.go.mod -o devhaunts -tags nosound -ldflags "-extldflags \"-L ./lib/linux/ -Wl,-rpath,\$${ORIGIN}/lib/linux\"" main.go GEN_version.go
+
 haunts: lib/linux/libglop.so GEN_version.go
 	go build -x -o haunts -tags nosound -ldflags "-extldflags \"-L ./lib/linux/ -Wl,-rpath,\$${ORIGIN}/lib/linux\"" main.go GEN_version.go
 
@@ -35,6 +41,7 @@ test:
 
 # Let go tooling decide if things are out-of-date
 .PHONY: haunts
+.PHONY: devhaunts
 
 .PHONY: clean
 
