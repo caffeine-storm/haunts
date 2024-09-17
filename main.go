@@ -198,15 +198,19 @@ func (llt *lowerLeftTable) AddChild(w gui.Widget) {
 	llt.AnchorBox.AddChild(w, gui.Anchor{0, 0, 0, 0})
 }
 
+func onHauntsPanic(recoveredValue interface{}) {
+	data := debug.Stack()
+	base.Error().Printf("PANIC: %v\n", recoveredValue)
+	base.Error().Printf("PANIC: %s\n", string(data))
+	base.CloseLog()
+	fmt.Printf("PANIC: %v\n", recoveredValue)
+	fmt.Printf("PANIC: %s\n", string(data))
+}
+
 func main() {
 	defer func() {
 		if r := recover(); r != nil {
-			data := debug.Stack()
-			base.Error().Printf("PANIC: %v\n", r)
-			base.Error().Printf("PANIC: %s\n", string(data))
-			base.CloseLog()
-			fmt.Printf("PANIC: %v\n", r)
-			fmt.Printf("PANIC: %s\n", string(data))
+			onHauntsPanic(r)
 		}
 	}()
 
