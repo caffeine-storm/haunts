@@ -1,3 +1,9 @@
+ifneq "${testrun}" ""
+testrunargs:=-run ${testrun}
+else
+testrunargs:=
+endif
+
 SRC_DATADIR:=data
 RUNTIME_DATADIR:=data-runtime
 
@@ -37,14 +43,15 @@ fmt:
 	go fmt ./...
 
 test:
-	go test -tags nosound ./...
+	go test ${testrunargs} -tags nosound ./...
+
+devtest:
+	go test ${testrunargs} -modfile dev.go.mod -tags nosound ./...
 
 # Let go tooling decide if things are out-of-date
 .PHONY: haunts
 .PHONY: devhaunts
-
 .PHONY: clean
-
 .PHONY: fmt
-
 .PHONY: test
+.PHONY: devtest
