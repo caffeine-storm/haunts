@@ -87,7 +87,7 @@ type draggerZoomer interface {
 	Zoom(float64)
 }
 
-func draggingAndZooming(dz draggerZoomer) {
+func draggingAndZooming(ui *gui.Gui, dz draggerZoomer) {
 	if ui.FocusWidget() != nil {
 		dragging = false
 		zooming = false
@@ -121,17 +121,17 @@ func draggingAndZooming(dz draggerZoomer) {
 	}
 }
 
-func gameMode() {
+func gameMode(ui *gui.Gui) {
 	if game_panel == nil {
 		return
 	}
 	if game_panel.Active() {
-		draggingAndZooming(game_panel.GetViewer())
+		draggingAndZooming(ui, game_panel.GetViewer())
 	}
 }
 
-func editMode() {
-	draggingAndZooming(editor.GetViewer())
+func editMode(ui *gui.Gui) {
+	draggingAndZooming(ui, editor.GetViewer())
 	if ui.FocusWidget() == nil {
 		for name := range editors {
 			if key_map[fmt.Sprintf("%s editor", name)].FramePressCount() > 0 && ui.FocusWidget() == nil {
@@ -292,7 +292,10 @@ func main() {
 	var profile_output *os.File
 	heap_prof_count := 0
 
-	for key_map["quit"].FramePressCount() == 0 {
+	for {
+		if key_map["quit"].FramePressCount() != 0 {
+			break
+		}
 		sys.Think()
 		render.Queue(func() {
 			sys.SwapBuffers()
@@ -381,9 +384,9 @@ func main() {
 			}
 
 			if edit_mode {
-				editMode()
+				editMode(ui)
 			} else {
-				gameMode()
+				gameMode(ui)
 			}
 		}
 		// Draw a cursor at the cursor - for testing an osx bug in glop.
