@@ -2,6 +2,15 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"log"
+	"math/rand"
+	"os"
+	"path/filepath"
+	"runtime"
+	"runtime/debug"
+	"runtime/pprof"
+
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/house"
@@ -13,12 +22,6 @@ import (
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/system"
-	"math/rand"
-	"os"
-	"path/filepath"
-	"runtime"
-	"runtime/debug"
-	"runtime/pprof"
 
 	// Need to pull in all of the actions we define here and not in
 	// haunts/game because haunts/game/actions depends on it
@@ -58,6 +61,8 @@ func loadAllRegistries() {
 func init() {
 	runtime.LockOSThread()
 	sys = system.Make(gos.GetSystemInterface())
+
+	gin.In().SetLogger(log.New(io.Discard, "gin.In> ", 0))
 
 	rand.Seed(100)
 	datadir = "data-runtime"
