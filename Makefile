@@ -14,7 +14,7 @@ go: haunts ${RUNTIME_DATADIR}
 	./haunts
 
 dlv: devhaunts
-	dlv exec $^
+	LD_LIBRARY_PATH=./lib/linux/ dlv debug --build-flags='-modfile dev.go.mod -tags nosound' .
 
 devhaunts:
 	go build -x -modfile dev.go.mod -o devhaunts -tags nosound -ldflags "-extldflags \"-L ./lib/linux/ -Wl,-rpath,\$${ORIGIN}/lib/linux\"" main.go GEN_version.go
