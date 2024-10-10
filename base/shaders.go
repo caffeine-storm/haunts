@@ -70,7 +70,7 @@ func SetUniformF(shader, variable string, f float32) {
 	loc.Uniform1f(f)
 }
 
-func InitShaders() {
+func InitShaders(render render.RenderQueue) {
 	render.Queue(func() {
 		vertex_shaders = make(map[string]gl.Shader)
 		fragment_shaders = make(map[string]gl.Shader)

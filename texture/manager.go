@@ -1,12 +1,6 @@
 package texture
 
 import (
-	"github.com/MobRulesGames/haunts/base"
-	"github.com/MobRulesGames/mathgl"
-	"github.com/MobRulesGames/memory"
-	"github.com/MobRulesGames/opengl/gl"
-	"github.com/MobRulesGames/opengl/glu"
-	"github.com/runningwild/glop/render"
 	"image"
 	"image/draw"
 	_ "image/jpeg"
@@ -14,6 +8,13 @@ import (
 	"os"
 	"sync"
 	"time"
+
+	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/mathgl"
+	"github.com/MobRulesGames/memory"
+	"github.com/MobRulesGames/opengl/gl"
+	"github.com/MobRulesGames/opengl/glu"
+	"github.com/runningwild/glop/render"
 )
 
 type Object struct {
@@ -52,7 +53,7 @@ var textureListSync sync.Once
 
 func setupTextureList() {
 	textureListSync.Do(func() {
-		render.Queue(func() {
+		manager.renderQueue.Queue(func() {
 			textureList = gl.GenLists(1)
 			gl.NewList(textureList, gl.COMPILE)
 			gl.Begin(gl.QUADS)
@@ -145,28 +146,6 @@ func (d *Data) Bind() {
 	}
 }
 
-var (
-	manager Manager
-)
-
-func init() {
-	manager.registry = make(map[string]*Data)
-	manager.deleted = make(map[string]*Data)
-	go manager.Scavenger()
-}
-
-type Manager struct {
-	// Currently loaded/loading textures are in the registry
-	registry map[string]*Data
-
-	// If a texture has been deleted it is moved here so that if it gets
-	// reloaded it will be loaded into the same texture object it was in
-	// before.
-	deleted map[string]*Data
-
-	mutex sync.RWMutex
-}
-
 // Instead of keeping track of access time, we just keep track of how many
 // times the scavenger has seen something without it being accessed.
 // generation is incremented every time the scavenger loop runs, and any
@@ -201,7 +180,7 @@ func (m *Manager) Scavenger() {
 			m.deleted[s] = m.registry[s]
 			delete(m.registry, s)
 		}
-		render.Queue(func() {
+		manager.renderQueue.Queue(func() {
 			for _, d := range unused_data {
 				d.texture.Delete()
 				d.texture = 0
@@ -212,6 +191,10 @@ func (m *Manager) Scavenger() {
 }
 
 func LoadFromPath(path string) *Data {
+	if manager == nil {
+		panic("need to call texure.Init before texture.LoadFromPath")
+	}
+
 	return manager.LoadFromPath(path)
 }
 
@@ -226,7 +209,34 @@ var load_mutex sync.Mutex
 
 const load_threshold = 1000 * 1000
 
-func init() {
+type Manager struct {
+	// Currently loaded/loading textures are in the registry
+	registry map[string]*Data
+
+	// If a texture has been deleted it is moved here so that if it gets
+	// reloaded it will be loaded into the same texture object it was in
+	// before.
+	deleted map[string]*Data
+
+	// Rendering queue/context that will be used for all gl operations.
+	renderQueue render.RenderQueue
+
+	mutex sync.RWMutex
+}
+
+var (
+	manager *Manager
+)
+
+func Init(renderQueue render.RenderQueue) {
+	manager = &Manager {
+		registry: make(map[string]*Data),
+		deleted: make(map[string]*Data),
+		renderQueue: renderQueue,
+	}
+
+	go manager.Scavenger()
+
 	load_requests = make(chan loadRequest, 10)
 	pipe := make(chan loadRequest, 10)
 	// We want to be able to handle any number of incoming load requests, so
@@ -315,7 +325,7 @@ func handleLoadRequest(req loadRequest) {
 	} else {
 		manual_unlock = true
 	}
-	render.Queue(func() {
+	manager.renderQueue.Queue(func() {
 		{
 			gl.Enable(gl.TEXTURE_2D)
 			req.data.texture = gl.GenTexture()
@@ -373,4 +383,14 @@ func (m *Manager) LoadFromPath(path string) *Data {
 
 	load_requests <- loadRequest{path, data}
 	return data
+}
+
+// TODO(tmckee): this is horrible; not as horrible as exposing the
+// module-global directly but still, pretty bad.
+func GetRenderQueue() render.RenderQueue {
+	if manager == nil {
+		panic("need to call texture.Init before texture.GetRenderQueue")
+	}
+
+	return manager.renderQueue
 }

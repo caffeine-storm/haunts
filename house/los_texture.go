@@ -1,9 +1,11 @@
 package house
 
 import (
+	"runtime"
+
+	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/opengl/gl"
 	"github.com/runningwild/glop/render"
-	"runtime"
 )
 
 const LosMinVisibility = 32
@@ -26,8 +28,8 @@ type LosTexture struct {
 	rec chan gl.Texture
 }
 
-func losTextureFinalize(lt *LosTexture) {
-	render.Queue(func() {
+func losTextureFinalize(lt *LosTexture, renderQueue render.RenderQueue) {
+	renderQueue.Queue(func() {
 		gl.Enable(gl.TEXTURE_2D)
 		lt.tex.Delete()
 	})
@@ -43,7 +45,9 @@ func MakeLosTexture() *LosTexture {
 		lt.p2d[i] = lt.pix[i*LosTextureSize : (i+1)*LosTextureSize]
 	}
 
-	render.Queue(func() {
+	// TODO(tmckee): there must be a better way...
+	renderQueue := texture.GetRenderQueue()
+	renderQueue.Queue(func() {
 		gl.Enable(gl.TEXTURE_2D)
 		tex := gl.GenTexture()
 		tex.Bind(gl.TEXTURE_2D)
@@ -54,7 +58,9 @@ func MakeLosTexture() *LosTexture {
 		gl.TexParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT)
 		gl.TexImage2D(gl.TEXTURE_2D, 0, gl.ALPHA, len(lt.p2d), len(lt.p2d), 0, gl.ALPHA, gl.BYTE, lt.pix)
 		lt.rec <- tex
-		runtime.SetFinalizer(&lt, losTextureFinalize)
+		runtime.SetFinalizer(&lt, func(lt *LosTexture) {
+			losTextureFinalize(lt, renderQueue)
+		})
 	})
 
 	return &lt
@@ -80,7 +86,8 @@ func (lt *LosTexture) Remap() {
 	if !lt.ready() {
 		return
 	}
-	render.Queue(func() {
+	renderQueue := texture.GetRenderQueue()
+	renderQueue.Queue(func() {
 		gl.Enable(gl.TEXTURE_2D)
 		lt.tex.Bind(gl.TEXTURE_2D)
 		gl.TexSubImage2D(gl.TEXTURE_2D, 0, 0, 0, len(lt.p2d), len(lt.p2d), gl.ALPHA, lt.pix)

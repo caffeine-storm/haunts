@@ -15,6 +15,7 @@ import (
 	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/sound"
+	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/memory"
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/gin"
@@ -223,7 +224,9 @@ func main() {
 	base.Log().Printf("Version %s", Version())
 	sys.Startup()
 	sound.Init()
-	render.Init()
+	render := render.MakeQueue()
+	base.InitDictionaries(render)
+	texture.Init(render)
 	render.Queue(func() {
 		sys.CreateWindow(10, 10, wdx, wdy)
 		sys.EnableVSync(true)
@@ -236,7 +239,7 @@ func main() {
 		gl.Enable(gl.BLEND)
 		gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 	})
-	base.InitShaders()
+	base.InitShaders(render)
 	runtime.GOMAXPROCS(8)
 	ui, err := gui.Make(gin.In(), gui.Dims{wdx, wdy}, filepath.Join(datadir, "fonts", "skia.ttf"))
 	if err != nil {

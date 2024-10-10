@@ -17,6 +17,7 @@ import (
 	"code.google.com/p/freetype-go/freetype/truetype"
 	"github.com/MobRulesGames/opengl/gl"
 	"github.com/runningwild/glop/gui"
+	"github.com/runningwild/glop/render"
 )
 
 var datadir string
@@ -73,7 +74,16 @@ func CloseLog() {
 }
 
 var font_dict map[int]*gui.Dictionary
+var render_queue render.RenderQueue
 var dictionary_mutex sync.Mutex
+
+func InitDictionaries(renderQueue render.RenderQueue) {
+	if font_dict != nil {
+		panic("must not call InitDictionaries multiple times!")
+	}
+	font_dict = make(map[int]*gui.Dictionary)
+	render_queue = renderQueue
+}
 
 func loadFont() (*truetype.Font, error) {
 	f, err := os.Open(filepath.Join(datadir, "fonts", "tomnr.ttf"))
@@ -92,43 +102,12 @@ func loadFont() (*truetype.Font, error) {
 	return font, nil
 }
 
-/*
- * TODO(tmckee): apparently not called?
-func setupFontDictionaries(sizes ...int) {
-  dictionary_mutex.Lock()
-  defer dictionary_mutex.Unlock()
-  if font_dict == nil {
-    font_dict = make(map[int]*gui.Dictionary)
-  }
-
-  font, err := loadFont()
-  if err != nil {
-    Error().Fatalf("Failed to load font: %v", err)
-  }
-  // render.Init()
-
-  for _, size := range sizes {
-    d, err := loadDictionaryFromFile(size)
-    if err == nil {
-      font_dict[size] = d
-    } else {
-      d = gui.MakeDictionary(font, size)
-      font_dict[size] = d
-      err = saveDictionaryToFile(d, size)
-      if err != nil {
-        Warn().Printf("Unable to save dictionary (%d) to file: %v\n", size, err)
-      }
-    }
-  }
-}
-*/
-
-func loadDictionaryFromFile(size int) (*gui.Dictionary, error) {
+func loadDictionaryFromFile(size int, renderQueue render.RenderQueue) (*gui.Dictionary, error) {
 	name := fmt.Sprintf("dict_%d.gob", size)
 	f, err := os.Open(filepath.Join(datadir, "fonts", name))
 	var d *gui.Dictionary
 	if err == nil {
-		d, err = gui.LoadDictionary(f)
+		d, err = gui.LoadDictionary(f, renderQueue)
 		f.Close()
 	}
 	return d, err
@@ -148,10 +127,10 @@ func GetDictionary(size int) *gui.Dictionary {
 	dictionary_mutex.Lock()
 	defer dictionary_mutex.Unlock()
 	if font_dict == nil {
-		font_dict = make(map[int]*gui.Dictionary)
+		panic("need to call base.InitDictionaries first")
 	}
 	if _, ok := font_dict[size]; !ok {
-		d, err := loadDictionaryFromFile(size)
+		d, err := loadDictionaryFromFile(size, render_queue)
 		if err == nil {
 			font_dict[size] = d
 		} else {
