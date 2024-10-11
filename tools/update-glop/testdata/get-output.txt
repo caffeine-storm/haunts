@@ -1,0 +1,3 @@
+go: github.com/caffeine-storm/glop@upgrade (v0.0.0-20241010144107-015f009dded2) requires github.com/caffeine-storm/glop@v0.0.0-20241010144107-015f009dded2: parsing go.mod:
+	module declares its path as: github.com/runningwild/glop
+	        but was required as: github.com/caffeine-storm/glop
