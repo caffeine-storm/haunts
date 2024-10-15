@@ -137,7 +137,7 @@ func (e *Entity) LoadAi() {
 // Does some basic setup that is common to both creating a new entity and to
 // loading one from a saved game.
 func (e *Entity) Load(g *Game) {
-	e.sprite.Load(e.Sprite_path.String())
+	e.sprite.Load(e.Sprite_path.String(), g.GetSpriteManager())
 	e.Sprite().SetTriggerFunc(func(s *sprite.Sprite, name string) {
 		x, y := e.Pos()
 		dx, dy := e.Dims()
@@ -215,8 +215,8 @@ type spriteContainer struct {
 func (sc *spriteContainer) Sprite() *sprite.Sprite {
 	return sc.sp
 }
-func (sc *spriteContainer) Load(path string) {
-	sc.sp, sc.err = sprite.LoadSprite(path)
+func (sc *spriteContainer) Load(path string, spriteManager *sprite.Manager) {
+	sc.sp, sc.err = spriteManager.LoadSprite(path)
 	if sc.err != nil {
 		base.Error().Printf("Unable to load sprite: %s:%v", path, sc.err)
 	}

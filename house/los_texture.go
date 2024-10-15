@@ -28,7 +28,7 @@ type LosTexture struct {
 	rec chan gl.Texture
 }
 
-func losTextureFinalize(lt *LosTexture, renderQueue render.RenderQueue) {
+func losTextureFinalize(lt *LosTexture, renderQueue render.RenderQueueInterface) {
 	renderQueue.Queue(func() {
 		gl.Enable(gl.TEXTURE_2D)
 		lt.tex.Delete()

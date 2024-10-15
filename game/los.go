@@ -238,6 +238,11 @@ type Game struct {
 	gameDataTransient
 	gameDataPrivate
 	gameDataGobbable
+	spriteManager *sprite.Manager
+}
+
+func (g *Game) GetSpriteManager() *sprite.Manager {
+	return g.spriteManager
 }
 
 func (g *Game) GobDecode(data []byte) error {
@@ -811,13 +816,14 @@ func (g *Game) setup() {
 	g.Ai.intruders = inactiveAi{}
 }
 
-func makeGame(h *house.HouseDef) *Game {
+func makeGame(h *house.HouseDef, spriteManager *sprite.Manager) *Game {
 	var g Game
 	g.Side = SideExplorers
 	g.House = h
 	g.House.Normalize()
 	g.viewer = house.MakeHouseViewer(g.House, 62)
 	g.Rand = rand.New(rand.NewSource(4285415527))
+	g.spriteManager = spriteManager
 
 	// This way an unset id will be invalid
 	g.Entity_id = 1

@@ -744,7 +744,7 @@ func loadHouse(gp *GamePanel) lua.LuaGoFunction {
 			base.Error().Printf("No house exists with the name '%s'.", name)
 			return 0
 		}
-		gp.game = makeGame(def)
+		gp.game = makeGame(def, gp.game.GetSpriteManager())
 		gp.game.viewer.Edit_mode = true
 		gp.game.script = gp.script
 		base.Log().Printf("script = %p", gp.game.script)

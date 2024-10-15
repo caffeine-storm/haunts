@@ -74,10 +74,10 @@ func CloseLog() {
 }
 
 var font_dict map[int]*gui.Dictionary
-var render_queue render.RenderQueue
+var render_queue render.RenderQueueInterface
 var dictionary_mutex sync.Mutex
 
-func InitDictionaries(renderQueue render.RenderQueue) {
+func InitDictionaries(renderQueue render.RenderQueueInterface) {
 	if font_dict != nil {
 		panic("must not call InitDictionaries multiple times!")
 	}
@@ -102,7 +102,7 @@ func loadFont() (*truetype.Font, error) {
 	return font, nil
 }
 
-func loadDictionaryFromFile(size int, renderQueue render.RenderQueue) (*gui.Dictionary, error) {
+func loadDictionaryFromFile(size int, renderQueue render.RenderQueueInterface) (*gui.Dictionary, error) {
 	name := fmt.Sprintf("dict_%d.gob", size)
 	f, err := os.Open(filepath.Join(datadir, "fonts", name))
 	var d *gui.Dictionary

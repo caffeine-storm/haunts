@@ -219,7 +219,7 @@ type Manager struct {
 	deleted map[string]*Data
 
 	// Rendering queue/context that will be used for all gl operations.
-	renderQueue render.RenderQueue
+	renderQueue render.RenderQueueInterface
 
 	mutex sync.RWMutex
 }
@@ -228,7 +228,7 @@ var (
 	manager *Manager
 )
 
-func Init(renderQueue render.RenderQueue) {
+func Init(renderQueue render.RenderQueueInterface) {
 	manager = &Manager {
 		registry: make(map[string]*Data),
 		deleted: make(map[string]*Data),
@@ -387,7 +387,7 @@ func (m *Manager) LoadFromPath(path string) *Data {
 
 // TODO(tmckee): this is horrible; not as horrible as exposing the
 // module-global directly but still, pretty bad.
-func GetRenderQueue() render.RenderQueue {
+func GetRenderQueue() render.RenderQueueInterface {
 	if manager == nil {
 		panic("need to call texture.Init before texture.GetRenderQueue")
 	}
