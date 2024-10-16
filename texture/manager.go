@@ -229,9 +229,9 @@ var (
 )
 
 func Init(renderQueue render.RenderQueueInterface) {
-	manager = &Manager {
-		registry: make(map[string]*Data),
-		deleted: make(map[string]*Data),
+	manager = &Manager{
+		registry:    make(map[string]*Data),
+		deleted:     make(map[string]*Data),
 		renderQueue: renderQueue,
 	}
 
