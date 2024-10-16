@@ -220,6 +220,8 @@ type gameDataGobbable struct {
 	// Stores the current acting entity - if it is an Ai controlled entity
 	ai_ent *Entity
 
+	// TODO(tmckee): this _is_ exported contrary to a comment above. Need to find
+	// out if it shouldn't be exported or what.
 	Ai struct {
 		Path struct {
 			Minions, Denizens, Intruders string
