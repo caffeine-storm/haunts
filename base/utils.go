@@ -107,7 +107,7 @@ func loadDictionaryFromFile(size int, renderQueue render.RenderQueueInterface) (
 	f, err := os.Open(filepath.Join(datadir, "fonts", name))
 	var d *gui.Dictionary
 	if err == nil {
-		d, err = gui.LoadDictionary(f, renderQueue)
+		d, err = gui.LoadDictionary(f, renderQueue, logger)
 		f.Close()
 	}
 	return d, err
