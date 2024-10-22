@@ -1,3 +1,22 @@
+[wsl]: sometimes startup breaks:
+	$> make it go
+		go build -x -o haunts -tags nosound -ldflags "-extldflags \"-L ./lib/linux/ -Wl,-rpath,\${ORIGIN}/lib/linux\"" main.go GEN_version.go
+		WORK=/tmp/go-build3229977924
+		cat /home/tmckee/.cache/go-build/f0/f098d11c7554f7ef560350e8f1a4c311d2fc0d449f80f16c915a4ac1974249f4-d  # internal
+		# github.com/runningwild/glop/gos
+		/usr/bin/ld: cannot find -lglop: No such file or directory
+		collect2: error: ld returned 1 exit status
+		./haunts
+		MESA: error: ZINK: failed to choose pdev
+		glx: failed to create drisw screen
+		WARN: glop.cpp: GlopEnableVSync: unimplemented
+		^Cmake: *** [Makefile:14: go] Interrupt
+
+Console is getting spammed by log messages in glop
+
+base.Log messages don't uniquely identify the file
+
 Can get locked up by repeatedly opening/closing the same door.
+
 Can have a door not connected to a room.
 
