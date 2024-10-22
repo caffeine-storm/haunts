@@ -12,8 +12,6 @@
 		WARN: glop.cpp: GlopEnableVSync: unimplemented
 		^Cmake: *** [Makefile:14: go] Interrupt
 
-Console is getting spammed by log messages in glop
-
 base.Log messages don't uniquely identify the file
 
 Can get locked up by repeatedly opening/closing the same door.
