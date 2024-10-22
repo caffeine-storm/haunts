@@ -1,3 +1,11 @@
+- The main menu doesn't render the buttons we'd expect
+
+- Trying to open the console only paints a pink layer on top of everything
+	- Note that the 'error texture' from glop's sprite manager is a
+	  semi-transparent pink rectangle.
+
+- The 'game mode' screen doesn't render its text correctly
+
 [wsl]: sometimes startup breaks:
 	$> make it go
 		go build -x -o haunts -tags nosound -ldflags "-extldflags \"-L ./lib/linux/ -Wl,-rpath,\${ORIGIN}/lib/linux\"" main.go GEN_version.go
