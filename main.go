@@ -124,6 +124,7 @@ func draggingAndZooming(ui *gui.Gui, dz draggerZoomer) {
 
 func gameMode(ui *gui.Gui) {
 	if game_panel == nil {
+		base.Log().Printf("SNH")
 		return
 	}
 	if game_panel.Active() {
