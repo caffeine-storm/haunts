@@ -1,3 +1,8 @@
+tmckee: sometimes startup breaks:
+	- the problem is that we can end up calling renderQueue.Purge from a job
+	  running in the render queue; Purge won't return until the renderloop pumps
+	  but the loop won't make progress until Purge returns.
+
 - The main menu doesn't render the buttons we'd expect
 
 - Trying to open the console only paints a pink layer on top of everything
@@ -5,20 +10,6 @@
 	  semi-transparent pink rectangle.
 
 - The 'game mode' screen doesn't render its text correctly
-
-[wsl]: sometimes startup breaks:
-	$> make it go
-		go build -x -o haunts -tags nosound -ldflags "-extldflags \"-L ./lib/linux/ -Wl,-rpath,\${ORIGIN}/lib/linux\"" main.go GEN_version.go
-		WORK=/tmp/go-build3229977924
-		cat /home/tmckee/.cache/go-build/f0/f098d11c7554f7ef560350e8f1a4c311d2fc0d449f80f16c915a4ac1974249f4-d  # internal
-		# github.com/runningwild/glop/gos
-		/usr/bin/ld: cannot find -lglop: No such file or directory
-		collect2: error: ld returned 1 exit status
-		./haunts
-		MESA: error: ZINK: failed to choose pdev
-		glx: failed to create drisw screen
-		WARN: glop.cpp: GlopEnableVSync: unimplemented
-		^Cmake: *** [Makefile:14: go] Interrupt
 
 base.Log messages don't uniquely identify the file
 

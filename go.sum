@@ -12,8 +12,8 @@ github.com/MobRulesGames/opengl v0.0.0-20121115013359-5beafb9fb3b3 h1:0Gh/6v/TML
 github.com/MobRulesGames/opengl v0.0.0-20121115013359-5beafb9fb3b3/go.mod h1:5lEWNJrwRD33Sb0ScERpH7bkXfd+UUcMtvEcg2p0I9o=
 github.com/caffeine-storm/gl v0.0.0-20240909160157-d1b38f2deb16 h1:lHq5YECDcjZKieQW2YWLh8AjJ9Gs/2jIiXcJjbsJGqU=
 github.com/caffeine-storm/gl v0.0.0-20240909160157-d1b38f2deb16/go.mod h1:5WNXbhdBMLerIscVkSVTRwGcsRywYKYHRKFEBZOUBEA=
-github.com/caffeine-storm/glop v0.0.0-20241022175507-fde1f7766126 h1:UfKGQeOLI3F3AvYfho37rcvq7oS8DXTf+Da5ZUdR/to=
-github.com/caffeine-storm/glop v0.0.0-20241022175507-fde1f7766126/go.mod h1:7VyrR7DKBpoMg3GM2wvMX3HkPqYpilOeN6kIY1AloFw=
+github.com/caffeine-storm/glop v0.0.0-20241024144224-955e3282e521 h1:nob4ZRGxFBUw6jT6+RGdi/ERgoIuHnG1OYGIRxUzRjY=
+github.com/caffeine-storm/glop v0.0.0-20241024144224-955e3282e521/go.mod h1:7VyrR7DKBpoMg3GM2wvMX3HkPqYpilOeN6kIY1AloFw=
 github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c h1:KqJxBrec/mnKQ+QgBu3/iJvaiurKpNDsXLrrXSau73U=
 github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c/go.mod h1:ntYmIr0ULu7QxKlmOE6cC87X4pWDG8jO/wSUBn2ZzJY=
 github.com/caffeine-storm/golua v0.0.0-20240910150920-bb0104c032e4 h1:zTOKTYGNmZCZVDgvjsTEXhaFIcTWiccPHKBFaWQzo80=
