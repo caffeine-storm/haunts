@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os/exec"
+	"path"
+	"path/filepath"
 
 	updateglop "github.com/caffeine-storm/update-glop"
 )
@@ -15,7 +17,7 @@ func main() {
 
 	oldRepo := "github.com/runningwild/glop"
 	cstormRepo := "github.com/caffeine-storm/glop"
-	cmd := exec.Command("go", "get", "-u", cstormRepo)
+	cmd := exec.Command("go", "get", "-u", cstormRepo + "@latest")
 
 	data, err := cmd.CombinedOutput()
 	// We _EXPECT_ the go get to fail
@@ -29,6 +31,11 @@ func main() {
 	}
 
 	replaceStr := fmt.Sprintf("-replace=%s=%s@%s", oldRepo, cstormRepo, rev)
+	target, err := filepath.Abs("../../go.mod")
+	if err != nil {
+		panic(fmt.Errorf("couldn't abspath: %w", err))
+	}
+	fmt.Printf("targeting go.mod file: %q\n", path.Clean(target))
 	cmd = exec.Command("go", "mod", "edit", replaceStr, "../../go.mod")
 	fmt.Printf("running command: %v\n", cmd)
 	data, err = cmd.CombinedOutput()
