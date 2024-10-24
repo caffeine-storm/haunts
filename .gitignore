@@ -17,3 +17,4 @@ haunts
 data-runtime/
 lib/linux/libglop.so
 devhaunts
+__debug_bin*
