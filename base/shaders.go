@@ -141,4 +141,5 @@ func InitShaders(render render.RenderQueueInterface) {
 			shader_progs[shader.Name] = glProgram
 		}
 	})
+	render.Purge()
 }
