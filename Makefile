@@ -48,6 +48,9 @@ test:
 devtest:
 	go test ${testrunargs} -modfile dev.go.mod -tags nosound ./...
 
+update-glop:
+	go -C tools/update-glop/ run cmd/main.go
+
 # Let go tooling decide if things are out-of-date
 .PHONY: haunts
 .PHONY: devhaunts
@@ -55,3 +58,4 @@ devtest:
 .PHONY: fmt
 .PHONY: test
 .PHONY: devtest
+.PHONY: update-glop
