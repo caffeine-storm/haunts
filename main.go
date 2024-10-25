@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
-	"log"
+	"log/slog"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -63,7 +63,7 @@ func init() {
 	runtime.LockOSThread()
 	sys = system.Make(gos.GetSystemInterface())
 
-	gin.In().SetLogger(log.New(io.Discard, "gin.In> ", 0))
+	gin.In().SetLogger(slog.New(slog.NewTextHandler(io.Discard, nil)))
 
 	rand.Seed(100)
 	datadir = "data-runtime"

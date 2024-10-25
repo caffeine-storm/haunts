@@ -9,6 +9,7 @@ import (
 	"image/color"
 	"io"
 	"log"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"strings"
@@ -21,7 +22,14 @@ import (
 )
 
 var datadir string
+
+// Until we migrate lots of old log.Logger calls, we'll keep a log.Logger
+// around.
+// TODO(tmckee): delegate logging from 'logger' to 'slogger' so that all logs
+// are structured/leveled conveniently.
 var logger *log.Logger
+var slogger *slog.Logger
+
 var log_reader io.Reader
 var log_out *os.File
 var log_console *bytes.Buffer
@@ -49,23 +57,50 @@ func setupLogger() {
 	log_console = bytes.NewBuffer(nil)
 	log_writer := io.MultiWriter(log_console, log_out)
 	logger = log.New(log_writer, "> ", log.Ltime|log.Lshortfile)
+
+	opts := &slog.HandlerOptions{
+		AddSource: true,
+	}
+	slogger = slog.New(slog.NewTextHandler(log_writer, opts))
+
+	base_logger = baseLogger{
+		logger,
+		slogger,
+	}
+}
+
+type sloggy = *slog.Logger
+type baseLogger struct {
+	*log.Logger
+	sloggy
+}
+var base_logger baseLogger
+
+// Equivalent to slog.Logger.Error
+func (*baseLogger) Error(msg string, args ...interface{}) {
+	slogger.Error(msg, args...)
+}
+
+// Equivalent to slog.Logger.Info
+func (*baseLogger) Info(msg string, args ...interface{}) {
+	slogger.Info(msg, args...)
 }
 
 // TODO: This probably isn't the best way to do things - different go-routines
 // can call these and screw up prefixes for each other.
-func Log() *log.Logger {
+func Log() *baseLogger {
 	logger.SetPrefix("LOG  > ")
-	return logger
+	return &base_logger
 }
 
-func Warn() *log.Logger {
+func Warn() *baseLogger {
 	logger.SetPrefix("WARN > ")
-	return logger
+	return &base_logger
 }
 
-func Error() *log.Logger {
+func Error() *baseLogger {
 	logger.SetPrefix("ERROR> ")
-	return logger
+	return &base_logger
 }
 
 func CloseLog() {
@@ -107,7 +142,7 @@ func loadDictionaryFromFile(size int, renderQueue render.RenderQueueInterface) (
 	f, err := os.Open(filepath.Join(datadir, "fonts", name))
 	var d *gui.Dictionary
 	if err == nil {
-		d, err = gui.LoadDictionary(f, renderQueue, logger)
+		d, err = gui.LoadDictionary(f, renderQueue, slogger)
 		f.Close()
 	}
 	return d, err
@@ -134,15 +169,15 @@ func GetDictionary(size int) *gui.Dictionary {
 		if err == nil {
 			font_dict[size] = d
 		} else {
-			Warn().Printf("Unable to load dictionary (%d) from file: %v", size, err)
+			Log().Warn("Unable to load dictionary", "size", size, "err", err)
 			font, err := loadFont()
 			if err != nil {
-				Error().Fatalf("Unable to load font: %v", err)
+				panic(fmt.Errorf("unable to load font: size %d: err: %w", size, err))
 			}
 			d = gui.MakeDictionary(font, size)
 			err = saveDictionaryToFile(d, size)
 			if err != nil {
-				Warn().Printf("Unable to save dictionary (%d) to file: %v", size, err)
+				Log().Warn("Unable to save dictionary", "size", size, "err", err)
 			}
 			font_dict[size] = d
 		}
@@ -184,7 +219,7 @@ func CheckPathCasing(path string) {
 	base := GetDataDir()
 	rel, err := filepath.Rel(base, path)
 	if err != nil {
-		Error().Printf("Unable to CheckPathCasing(%s, %s): %v", base, path, err)
+		Log().Error("filepath.Rel(base, path) failed", "base", base, "path", path, "err", err)
 		return
 	}
 	parts := strings.Split(rel, string(filepath.Separator))
@@ -193,13 +228,13 @@ func CheckPathCasing(path string) {
 	for _, part := range parts {
 		f, err := os.Open(running)
 		if err != nil {
-			Error().Printf("Unable to open '%s': %v", running, err)
+			Log().Error("os.Open(path) failed", "path", running, "err", err)
 			return
 		}
 		names, err := f.Readdirnames(10000)
 		f.Close()
 		if err != nil {
-			Error().Printf("Unable to Readdirnames on '%s': %v", running, err)
+			Log().Error("f.Readdirnames(10000) failed", "path", running, "err", err)
 			return
 		}
 		found := false
@@ -213,10 +248,10 @@ func CheckPathCasing(path string) {
 			final := filepath.Join(running, part)
 			_, err := os.Stat(final)
 			if err != nil {
-				Error().Printf("Unable to stat '%s': %v", final, err)
+				Log().Error("os.Stat(final) failed", "final", final, "err", err)
 				return
 			}
-			Error().Printf("Improper casing: '%s' should end with '%s'", running, part)
+			Log().Error("bad casing", "given", running, "should-end-with", part)
 			return
 		}
 		running = filepath.Join(running, part)

@@ -86,9 +86,10 @@ func OrderRectObjects(ra []RectObject) []RectObject {
 }
 
 func order(input []RectObject) []int {
+	// TODO(tmckee): let's just crash instead
 	defer func() {
 		if err := recover(); err != nil {
-			base.Error().Printf("Failure in sorting: %v", err)
+			base.Log().Error("order failed", "err", err)
 		}
 	}()
 	var minx, miny int

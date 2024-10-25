@@ -69,12 +69,12 @@ func LoadAllEntities() {
 // pattern is a regexp that matches only the names of all valid spawn points.
 func (g *Game) placeEntity(pattern string) bool {
 	if g.new_ent == nil {
-		base.Log().Printf("No new ent")
+		base.Log().Info("No new ent")
 		return false
 	}
 	re, err := regexp.Compile(pattern)
 	if err != nil {
-		base.Error().Printf("Failed to compile regexp: '%s': %v", pattern, err)
+		base.Log().Info("regexp compilation fail", "pattern", pattern, "err", err)
 		return false
 	}
 	g.new_ent.Info.RoomsExplored[g.new_ent.CurrentRoom()] = true
@@ -121,16 +121,16 @@ func (e *Entity) LoadAi() {
 		filename = e.Ai_file_override.String()
 	}
 	if filename == "" {
-		base.Log().Printf("No ai for %s", e.Name)
+		base.Log().Info("missing ai", "e.Name", e.Name)
 		e.Ai = inactiveAi{}
 		return
 	}
 	ai_maker(filename, e.Game(), e, &e.Ai, EntityAi)
 	if e.Ai == nil {
 		e.Ai = inactiveAi{}
-		base.Log().Printf("Failed to make Ai for '%s' with %s", e.Name, filename)
+		base.Log().Info("Failed to make Ai", "e.Name", e.Name, "filename", filename)
 	} else {
-		base.Log().Printf("Made Ai for '%s' with %s", e.Name, filename)
+		base.Log().Info("Made Ai for", "e.Name", e.Name, "filename", filename)
 	}
 }
 
@@ -218,7 +218,7 @@ func (sc *spriteContainer) Sprite() *sprite.Sprite {
 func (sc *spriteContainer) Load(path string, spriteManager *sprite.Manager) {
 	sc.sp, sc.err = spriteManager.LoadSprite(path)
 	if sc.err != nil {
-		base.Error().Printf("Unable to load sprite: %s:%v", path, sc.err)
+		base.Log().Error("Unable to load sprite", "path", path, "sc.err", sc.err)
 	}
 }
 
@@ -277,7 +277,7 @@ func (ei *entityDef) Side() Side {
 		types++
 	}
 	if types > 1 {
-		base.Error().Printf("Entity '%s' must specify exactly zero or one ent type.", ei.Name)
+		base.Log().Error("too many ent types", "types", types, "ei.Name", ei.Name)
 		return SideNone
 	}
 
@@ -291,7 +291,7 @@ func (ei *entityDef) Side() Side {
 		case LevelMaster:
 		case LevelServitor:
 		default:
-			base.Error().Printf("Entity '%s' speciied unknown level '%s'.", ei.Name, ei.HauntEnt.Level)
+			base.Log().Error("unknown level", "ei.Name", ei.Name, "ei.HauntEnt.Level", ei.HauntEnt.Level)
 		}
 		return SideHaunt
 

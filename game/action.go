@@ -16,7 +16,7 @@ var action_map map[string]func() Action
 func MakeAction(name string) Action {
 	f, ok := action_map[name]
 	if !ok {
-		base.Error().Printf("Unable to find an Action named '%s'", name)
+		base.Log().Error("Unable to find an Action", "name", name)
 	}
 	return f()
 }
@@ -71,7 +71,7 @@ func (bae BasicActionExec) ActionIndex() int {
 func (bae BasicActionExec) Push(L *lua.State, g *Game) {
 	ent := g.EntityById(bae.Ent)
 	if bae.Index < 0 || bae.Index >= len(ent.Actions) {
-		base.Error().Printf("Tried to push an exec for an invalid action index: '%s' %d.", ent.Name, bae.Index)
+		base.Log().Error("Push an exec fail: invalid action index", "ent.Name", ent.Name, "bae.Index", bae.Index)
 		L.PushNil()
 		return
 	}
@@ -96,7 +96,7 @@ func (bae *BasicActionExec) SetBasicData(ent *Entity, action Action) {
 		}
 	}
 	if bae.Index == -1 {
-		base.Error().Printf("Action '%v' was unable to find itself in Entity %v's Actions: %v", action, ent, ent.Actions)
+		base.Log().Error("SetBasicData: can't find action", "action", action, "ent", ent, "ent.Actions", ent.Actions)
 	}
 }
 
@@ -120,7 +120,7 @@ func encodeActionExec(ae ActionExec) []byte {
 	enc := gob.NewEncoder(b)
 	err := enc.Encode(ae)
 	if err != nil {
-		base.Error().Printf("Failed to gob an ActionExec: %v", err)
+		base.Log().Error("Failed to gob an ActionExec", "err", err)
 		return nil
 	}
 	return b.Bytes()
@@ -131,7 +131,7 @@ func decodeActionExec(b []byte) ActionExec {
 	dec := gob.NewDecoder(bytes.NewReader(b))
 	err := dec.Decode(&ae)
 	if err != nil {
-		base.Error().Printf("Failed to ungob an ActionExec: %v", err)
+		base.Log().Error("Failed to ungob an ActionExec", "err", err)
 		return nil
 	}
 	return ae

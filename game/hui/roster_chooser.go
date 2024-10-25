@@ -129,7 +129,7 @@ func MakeRosterChooser(options []Option, selector Selector, on_complete func(map
 	rc.options = options
 	err := base.LoadAndProcessObject(filepath.Join(base.GetDataDir(), "ui", "widgets", "roster_chooser.json"), "json", &rc.layout)
 	if err != nil {
-		base.Error().Printf("Failed to create RosterChooser: %v", err)
+		base.Log().Error("MakeRosterChooser failed", "err", err)
 		return nil
 	}
 	rc.Request_dims = gui.Dims{
@@ -170,7 +170,7 @@ func (rc *RosterChooser) Think(ui *gui.Gui, t int64) {
 }
 
 func (rc *RosterChooser) Respond(ui *gui.Gui, group gui.EventGroup) bool {
-	base.Log().Printf("RosterChooser.Respond")
+	base.Log().Info("RosterChooser.Respond")
 	// TODO(tmckee): upper case 'L' vs lower case 'l'? Originally a rune, 'l'.
 	if found, event := group.FindEvent(gin.AnyKeyL); found && event.Type == gin.Press {
 		rc.focus += rc.layout.Num_options
@@ -199,7 +199,7 @@ func (rc *RosterChooser) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 			}
 		} else if gp.Inside(rc.render.done) {
 			if rc.selector(-1, rc.selected, false) {
-				base.Log().Printf("calling on-complete")
+				base.Log().Info("calling on-complete")
 				rc.on_complete(rc.selected)
 			}
 			return true

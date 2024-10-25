@@ -1311,7 +1311,7 @@ func (he *HouseEditor) Load(path string) error {
 	if err != nil {
 		return err
 	}
-	base.Log().Printf("Loaded %s\n", path)
+	base.Log().Info("Load success", "path", path)
 	house.Normalize()
 	he.house = *house
 	he.viewer.SetBounds()
