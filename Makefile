@@ -13,7 +13,7 @@ it: haunts
 go: haunts ${RUNTIME_DATADIR}
 	./haunts
 
-dlv: devhaunts
+dlv: devhaunts ${RUNTIME_DATADIR}
 	LD_LIBRARY_PATH=./lib/linux/ dlv debug --build-flags='-modfile dev.go.mod -tags nosound' .
 
 devhaunts:
