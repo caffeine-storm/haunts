@@ -174,7 +174,7 @@ func GetDictionary(size int) *gui.Dictionary {
 			if err != nil {
 				panic(fmt.Errorf("unable to load font: size %d: err: %w", size, err))
 			}
-			d = gui.MakeDictionary(font, size)
+			d = gui.MakeDictionary(font, size, render_queue)
 			err = saveDictionaryToFile(d, size)
 			if err != nil {
 				Log().Warn("Unable to save dictionary", "size", size, "err", err)

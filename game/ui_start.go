@@ -138,11 +138,14 @@ func (sm *StartMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 }
 
 func (sm *StartMenu) Draw(region gui.Region) {
+	base.Log().Debug("StartMenu.Draw", "region", region)
 	sm.region = region
 	gl.Color4ub(255, 255, 255, 255)
 	sm.layout.Background.Data().RenderNatural(sm.region.X, sm.region.Y)
 	sm.layout.Menu.Texture.Data().RenderNatural(sm.region.X+sm.layout.Menu.X, sm.region.Y+sm.layout.Menu.Y)
+	base.Log().Info("StartMenu.Draw: about to render buttons", "numbuttons", len(sm.buttons))
 	for _, button := range sm.buttons {
+		base.Log().Info("StartMenu.Draw: render buttons", "X", sm.region.X, "Y", sm.region.Y)
 		button.RenderAt(sm.region.X, sm.region.Y)
 	}
 }

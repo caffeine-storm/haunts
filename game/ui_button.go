@@ -113,7 +113,7 @@ func (b *Button) RenderAt(x, y int) {
 		d := base.GetDictionary(b.Text.Size)
 		b.bounds.x = b.X + x
 		b.bounds.y = b.Y + y
-		b.bounds.dx = int(d.StringWidth(b.Text.String))
+		b.bounds.dx = int(d.StringPixelWidth(b.Text.String))
 		b.bounds.dy = int(d.MaxHeight())
 		var just gui.Justification
 		switch b.Text.Justification {

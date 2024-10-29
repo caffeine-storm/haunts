@@ -116,7 +116,7 @@ func (te *TextEntry) setCursor(mx, my int) bool {
 	last_dx := 0
 	te.Entry.ghost.index = -1
 	for i := range te.Entry.text {
-		w := int(d.StringWidth(te.Entry.text[0 : i+1]))
+		w := int(d.StringPixelWidth(te.Entry.text[0 : i+1]))
 		avg := (last_dx + w) / 2
 		if pointInsideRect(mx, my, te.Entry.bounds.x, te.Entry.bounds.y, avg, te.Entry.bounds.dy) {
 			te.Entry.ghost.offset = last_dx
@@ -126,7 +126,7 @@ func (te *TextEntry) setCursor(mx, my int) bool {
 		last_dx = w
 	}
 	if te.Entry.ghost.index < 0 {
-		te.Entry.ghost.offset = int(d.StringWidth(te.Entry.text))
+		te.Entry.ghost.offset = int(d.StringPixelWidth(te.Entry.text))
 		te.Entry.ghost.index = len(te.Entry.text)
 	}
 	return true
@@ -189,7 +189,7 @@ func (te *TextEntry) Respond(group gui.EventGroup, data interface{}) bool {
 				te.Entry.cursor.index = 0
 			}
 			d := base.GetDictionary(te.Button.Text.Size)
-			te.Entry.cursor.offset = int(d.StringWidth(te.Entry.text[0:te.Entry.cursor.index]))
+			te.Entry.cursor.offset = int(d.StringPixelWidth(te.Entry.text[0:te.Entry.cursor.index]))
 		}
 	}
 	return false

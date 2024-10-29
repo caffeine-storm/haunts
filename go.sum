@@ -12,8 +12,8 @@ github.com/MobRulesGames/opengl v0.0.0-20121115013359-5beafb9fb3b3 h1:0Gh/6v/TML
 github.com/MobRulesGames/opengl v0.0.0-20121115013359-5beafb9fb3b3/go.mod h1:5lEWNJrwRD33Sb0ScERpH7bkXfd+UUcMtvEcg2p0I9o=
 github.com/caffeine-storm/gl v0.0.0-20240909160157-d1b38f2deb16 h1:lHq5YECDcjZKieQW2YWLh8AjJ9Gs/2jIiXcJjbsJGqU=
 github.com/caffeine-storm/gl v0.0.0-20240909160157-d1b38f2deb16/go.mod h1:5WNXbhdBMLerIscVkSVTRwGcsRywYKYHRKFEBZOUBEA=
-github.com/caffeine-storm/glop v0.0.0-20241024173609-fb891a79eabe h1:ynGNga9/mumNx3alkmo91FlLbD1iF72FlQ4jbw39xvU=
-github.com/caffeine-storm/glop v0.0.0-20241024173609-fb891a79eabe/go.mod h1:7VyrR7DKBpoMg3GM2wvMX3HkPqYpilOeN6kIY1AloFw=
+github.com/caffeine-storm/glop v0.0.0-20241029182818-87ae0f0b0a15 h1:05j2pRo7odzDrpfVYMLS3I0UqPyWJni1V9eo5CpFEkA=
+github.com/caffeine-storm/glop v0.0.0-20241029182818-87ae0f0b0a15/go.mod h1:83sHMVycHIrBuPLs8slAYKw+F2U5ue7qhwec+XiyPtI=
 github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c h1:KqJxBrec/mnKQ+QgBu3/iJvaiurKpNDsXLrrXSau73U=
 github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c/go.mod h1:ntYmIr0ULu7QxKlmOE6cC87X4pWDG8jO/wSUBn2ZzJY=
 github.com/caffeine-storm/golua v0.0.0-20240910150920-bb0104c032e4 h1:zTOKTYGNmZCZVDgvjsTEXhaFIcTWiccPHKBFaWQzo80=
@@ -31,7 +31,6 @@ github.com/orfjackal/nanospec.go v0.0.0-20120727230329-de4694c1d701 h1:yOXfzNV7q
 github.com/orfjackal/nanospec.go v0.0.0-20120727230329-de4694c1d701/go.mod h1:VtBIF1XX0c1nKkeAPk8i4aXkYopqQgfDqolHUIHPwNI=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
-github.com/runningwild/memory v0.0.0-20120626004817-db5bb35fd894/go.mod h1:4vpJ5d17O5eEwNBIYIPQeccmFDM2/P/4LBqCtPwTTU4=
 github.com/runningwild/polish v0.0.0-20120524023733-9d9a1194cd81/go.mod h1:BjqYe08obgSdkjNk2t3EpfJq4ITaQ27tAJoOxv0KXq0=
 github.com/runningwild/yedparse v0.0.0-20120306014153-f7df1db2f9d9 h1:aSky3KZJsEt7N0/MEJJ8Sz1ytHoSLnxld3G8c2xfQ5Q=
 github.com/runningwild/yedparse v0.0.0-20120306014153-f7df1db2f9d9/go.mod h1:45ANiHU8dW6oYKaeXXnhuCYG/vjboJhTYtTmUXC91Z8=

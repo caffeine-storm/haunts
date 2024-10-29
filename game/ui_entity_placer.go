@@ -266,7 +266,7 @@ func (ep *EntityPlacer) Draw(region gui.Region) {
 		x := float64(ep.layout.Points_remaining.X)
 		y := float64(ep.layout.Points_remaining.Y)
 		d.RenderString(ep.layout.Points_remaining.String, x, y, 0, d.MaxHeight(), gui.Left)
-		w := d.StringWidth(ep.layout.Points_remaining.String)
+		w := d.StringPixelWidth(ep.layout.Points_remaining.String)
 		d.RenderString(fmt.Sprintf("%d", ep.points), x+w, y, 0, d.MaxHeight(), gui.Right)
 	}
 }
