@@ -48,6 +48,14 @@ var (
 	zooming, dragging, hiding bool
 )
 
+type applicationMode int
+
+const (
+	applicationStartupMode applicationMode = iota
+	applicationGameMode
+	applicationEditMode
+)
+
 func loadAllRegistries() {
 	house.LoadAllFurnitureInDir(filepath.Join(datadir, "furniture"))
 	house.LoadAllWallTexturesInDir(filepath.Join(datadir, "textures"))
@@ -123,10 +131,6 @@ func draggingAndZooming(ui *gui.Gui, dz draggerZoomer) {
 }
 
 func gameMode(ui *gui.Gui) {
-	if game_panel == nil {
-		base.Log().Printf("SNH")
-		return
-	}
 	if game_panel.Active() {
 		draggingAndZooming(ui, game_panel.GetViewer())
 	}
@@ -271,7 +275,7 @@ func main() {
 	editor_name = "room"
 	editor = editors[editor_name]
 
-	edit_mode := false
+	currentMode := applicationStartupMode
 	game.Restart = func() {
 		base.Log().Printf("Restarting...")
 		ui.RemoveChild(game_box)
@@ -357,15 +361,20 @@ func main() {
 			}
 
 			if key_map["game mode"].FramePressCount()%2 == 1 {
-				base.Log().Printf("Game mode change: %t", edit_mode)
-				if edit_mode {
-					ui.RemoveChild(editor)
-					ui.AddChild(game_box)
-				} else {
+				base.Log().Printf("Game mode change: %+v", currentMode)
+				switch currentMode {
+				case applicationStartupMode:
+				case applicationGameMode:
 					ui.RemoveChild(game_box)
 					ui.AddChild(editor)
+					currentMode = applicationEditMode
+				case applicationEditMode:
+					ui.RemoveChild(editor)
+					ui.AddChild(game_box)
+					currentMode = applicationGameMode
+				default:
+					panic(fmt.Errorf("bad applicationMode: %+v", currentMode))
 				}
-				edit_mode = !edit_mode
 
 				if key_map["row up"].FramePressCount() > 0 {
 					house.Num_rows += 25
@@ -390,10 +399,13 @@ func main() {
 				}
 			}
 
-			if edit_mode {
+			switch currentMode {
+			case applicationEditMode:
 				editMode(ui)
-			} else {
+			case applicationGameMode:
 				gameMode(ui)
+			case applicationStartupMode:
+
 			}
 		}
 		// Draw a cursor at the cursor - for testing an osx bug in glop.
