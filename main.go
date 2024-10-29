@@ -361,9 +361,10 @@ func main() {
 			}
 
 			if key_map["game mode"].FramePressCount()%2 == 1 {
-				base.Log().Printf("Game mode change: %+v", currentMode)
+				base.Log().Info("Game mode change", "currentMode", currentMode)
 				switch currentMode {
 				case applicationStartupMode:
+					fallthrough
 				case applicationGameMode:
 					ui.RemoveChild(game_box)
 					ui.AddChild(editor)
