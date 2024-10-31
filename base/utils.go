@@ -74,6 +74,7 @@ type baseLogger struct {
 	*log.Logger
 	sloggy
 }
+
 var base_logger baseLogger
 
 // Equivalent to slog.Logger.Error
@@ -139,13 +140,20 @@ func loadFont() (*truetype.Font, error) {
 
 func loadDictionaryFromFile(size int, renderQueue render.RenderQueueInterface) (*gui.Dictionary, error) {
 	name := fmt.Sprintf("dict_%d.gob", size)
-	f, err := os.Open(filepath.Join(datadir, "fonts", name))
-	var d *gui.Dictionary
-	if err == nil {
-		d, err = gui.LoadDictionary(f, renderQueue, slogger)
-		f.Close()
+
+	filename := filepath.Join(datadir, "fonts", name)
+	f, err := os.Open(filename)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't open file %q: %w", filename, err)
 	}
-	return d, err
+	defer f.Close()
+
+	d, err := gui.LoadDictionary(f, renderQueue, slogger)
+	if err != nil {
+		return nil, fmt.Errorf("gui.LoadDictionary failed: %w", err)
+	}
+
+	return d, nil
 }
 
 func saveDictionaryToFile(d *gui.Dictionary, size int) error {
