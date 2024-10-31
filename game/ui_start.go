@@ -23,6 +23,8 @@ type startLayout struct {
 
 type StartMenu struct {
 	layout  startLayout
+	// TODO(tmckee): clean: I don't think we need this; we're told the region to
+	// render into each frame, no?
 	region  gui.Region
 	buttons []ButtonLike
 	mx, my  int

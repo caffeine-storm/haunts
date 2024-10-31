@@ -18,6 +18,7 @@ type ButtonLike interface {
 
 type Button struct {
 	X, Y    int
+	// TODO(tmckee): clean: split button into TextButton and TextureButton
 	Texture texture.Object
 	Text    struct {
 		String        string
@@ -42,6 +43,7 @@ type Button struct {
 	// Key that can be bound to have the same effect as clicking this button
 	key gin.KeyId
 
+	// TODO(tmckee): clean: this should just be a gui.Region, no?
 	bounds struct {
 		x, y, dx, dy int
 	}
