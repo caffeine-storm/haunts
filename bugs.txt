@@ -1,8 +1,3 @@
-tmckee: sometimes startup breaks:
-	- the problem is that we can end up calling renderQueue.Purge from a job
-	  running in the render queue; Purge won't return until the renderloop pumps
-	  but the loop won't make progress until Purge returns.
-
 - The main menu doesn't render the buttons we'd expect
 
 - Trying to open the console only paints a pink layer on top of everything
