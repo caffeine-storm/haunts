@@ -1,5 +1,7 @@
 - The main menu doesn't render the buttons we'd expect
 
+- glop logging has a 'source' attribute that is way too long
+
 - Trying to open the console only paints a pink layer on top of everything
 	- Note that the 'error texture' from glop's sprite manager is a
 	  semi-transparent pink rectangle.
