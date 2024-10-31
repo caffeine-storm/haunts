@@ -131,7 +131,7 @@ func draggingAndZooming(ui *gui.Gui, dz draggerZoomer) {
 }
 
 func gameMode(ui *gui.Gui) {
-	if game_panel.Active() {
+	if game_panel != nil && game_panel.Active() {
 		draggingAndZooming(ui, game_panel.GetViewer())
 	}
 }
