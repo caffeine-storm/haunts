@@ -44,7 +44,7 @@ func (mo *MapOption) Draw(hovered, selected, selectable bool, region gui.Region)
 	icon.RenderNatural(region.X, region.Y)
 	gl.Color4ub(0, 0, 0, 255)
 	d := base.GetDictionary(15)
-	d.RenderString(mo.house_def.Name, float64(region.X), float64(region.Y), 0, d.MaxHeight(), gui.Left)
+	d.RenderString(mo.house_def.Name, region.X, region.Y, 0, d.MaxHeight(), gui.Left)
 }
 func (mo *MapOption) Think(dt int64) {
 }

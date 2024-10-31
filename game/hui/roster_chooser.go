@@ -273,9 +273,9 @@ func (rc *RosterChooser) Draw(r gui.Region) {
 	{ // Text
 		d := base.GetDictionary(15)
 		x := r.X
-		y := float64(r.Y) + d.MaxHeight()/2
-		x1 := float64(x + r.Dx/3)
-		x2 := float64(x + (2*r.Dx)/3)
+		y := r.Y + d.MaxHeight()/2
+		x1 := x + r.Dx/3
+		x2 := x + 2*r.Dx/3
 
 		rc.render.done = gui.Region{
 			gui.Point{x, r.Y},

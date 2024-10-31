@@ -386,7 +386,7 @@ func (sm *OnlineMenu) Think(g *gui.Gui, t int64) {
 					glb.games = append(glb.games, gameField{&b, nil, name, list.Game_keys[j], list.Games[j]})
 				}
 			}
-			glb.Scroll.Height = int(base.GetDictionary(sm.layout.Text.Size).MaxHeight() * float64(len(list.Games)))
+			glb.Scroll.Height = base.GetDictionary(sm.layout.Text.Size).MaxHeight() * len(list.Games)
 
 		default:
 		}
@@ -492,8 +492,8 @@ func (sm *OnlineMenu) Draw(region gui.Region) {
 	d := base.GetDictionary(sm.layout.Text.Size)
 	for _, glb := range []*gameListBox{&sm.layout.Active, &sm.layout.Unstarted} {
 		title_d := base.GetDictionary(glb.Title.Size)
-		title_x := float64(glb.Scroll.X + glb.Scroll.Dx/2)
-		title_y := float64(glb.Scroll.Y + glb.Scroll.Dy)
+		title_x := glb.Scroll.X + glb.Scroll.Dx/2
+		title_y := glb.Scroll.Y + glb.Scroll.Dy
 		gl.Disable(gl.TEXTURE_2D)
 		gl.Color4ub(255, 255, 255, 255)
 		title_d.RenderString(glb.Title.Text, title_x, title_y, 0, title_d.MaxHeight(), gui.Center)
@@ -506,7 +506,7 @@ func (sm *OnlineMenu) Draw(region gui.Region) {
 			game.join.RenderAt(sx, sy)
 			gl.Disable(gl.TEXTURE_2D)
 			gl.Color4ub(255, 255, 255, 255)
-			d.RenderString(game.name, float64(sx+50), float64(sy), 0, d.MaxHeight(), gui.Left)
+			d.RenderString(game.name, sx+50, sy, 0, d.MaxHeight(), gui.Left)
 			if game.delete != nil {
 				game.delete.RenderAt(sx+50+glb.Scroll.Dx-100, sy)
 			}
@@ -517,15 +517,15 @@ func (sm *OnlineMenu) Draw(region gui.Region) {
 	gl.Color4ub(255, 255, 255, byte(255*sm.update_alpha))
 	sx := sm.layout.User.Entry.X + sm.layout.User.Entry.Dx + 10
 	sy := sm.layout.User.Button.Y
-	d.RenderString("Name Updated", float64(sx), float64(sy), 0, d.MaxHeight(), gui.Left)
+	d.RenderString("Name Updated", sx, sy, 0, d.MaxHeight(), gui.Left)
 
 	if sm.hover_game != nil {
 		game := sm.hover_game
 		gl.Disable(gl.TEXTURE_2D)
 		gl.Color4ub(255, 255, 255, 255)
 		d := base.GetDictionary(sm.layout.GameStats.Size)
-		x := float64(sm.layout.GameStats.X + sm.layout.GameStats.Dx/2)
-		y := float64(sm.layout.GameStats.Y+sm.layout.GameStats.Dy) - d.MaxHeight()
+		x := sm.layout.GameStats.X + sm.layout.GameStats.Dx/2
+		y := sm.layout.GameStats.Y+sm.layout.GameStats.Dy - d.MaxHeight()
 
 		if game.game.Denizens_id == net_id {
 			d.RenderString("You: Denizens", x, y, 0, d.MaxHeight(), gui.Center)
@@ -556,7 +556,7 @@ func (sm *OnlineMenu) Draw(region gui.Region) {
 		gl.Color4ub(255, 0, 0, 255)
 		l := sm.layout.Error
 		d := base.GetDictionary(l.Size)
-		d.RenderString(fmt.Sprintf("ERROR: %s", l.err), float64(l.X), float64(l.Y), 0, d.MaxHeight(), gui.Left)
+		d.RenderString(fmt.Sprintf("ERROR: %s", l.err), l.X, l.Y, 0, d.MaxHeight(), gui.Left)
 	}
 }
 

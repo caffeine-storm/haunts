@@ -33,8 +33,8 @@ func (t *TextArea) RenderString(s string) {
 		base.Warn().Printf("Unknown justification '%s' in main gui bar.", t.Justification)
 		t.Justification = "center"
 	}
-	px := float64(t.X)
-	py := float64(t.Y)
+	px := t.X
+	py := t.Y
 	d := base.GetDictionary(t.Size)
 	d.RenderString(s, px, py, 0, d.MaxHeight(), just)
 }
@@ -57,16 +57,19 @@ type MainBarLayout struct {
 	Ego        TextArea
 
 	Conditions struct {
+		// TODO(tmckee): should these be floats or ints?
 		X, Y, Height, Width, Size, Spacing float64
 	}
 
 	Actions struct {
+		// TODO(tmckee): should these be floats or ints?
 		X, Y, Width, Icon_size float64
 		Count                  int
 		Empty                  texture.Object
 	}
 
 	Gear struct {
+		// TODO(tmckee): should these be floats or ints?
 		X, Y float64
 	}
 }
@@ -291,7 +294,7 @@ func (m *MainBar) Think(g *gui.Gui, t int64) {
 		// We similarly need to scroll through conditions
 		c := m.layout.Conditions
 		d := base.GetDictionary(int(c.Size))
-		max_scroll := d.MaxHeight() * float64(len(m.ent.Stats.ConditionNames()))
+		max_scroll := float64(d.MaxHeight()) * float64(len(m.ent.Stats.ConditionNames()))
 		max_scroll -= m.layout.Conditions.Height
 		// This might end up with a max that is negative, but we'll cap it at zero
 		if m.state.Conditions.scroll_pos > max_scroll {
@@ -318,7 +321,7 @@ func (m *MainBar) Think(g *gui.Gui, t int64) {
 		c := m.layout.Conditions
 		if pointInsideRect(m.mx, m.my, int(c.X), int(c.Y), int(c.Width), int(c.Height)) {
 			pos := c.Y + c.Height + m.state.Conditions.scroll_pos - float64(m.my)
-			index := int(pos / base.GetDictionary(int(c.Size)).MaxHeight())
+			index := int(pos / float64(base.GetDictionary(int(c.Size)).MaxHeight()))
 			if index >= 0 && index < len(m.ent.Stats.ConditionNames()) {
 				m.state.MouseOver.active = true
 				m.state.MouseOver.text = m.ent.Stats.ConditionNames()[index]
@@ -507,9 +510,9 @@ func (m *MainBar) Draw(region gui.Region) {
 			d := base.GetDictionary(10)
 			var r gui.Region
 			r.X = int(m.layout.Actions.X)
-			r.Y = int(m.layout.Actions.Y - d.MaxHeight())
+			r.Y = int(m.layout.Actions.Y - float64(d.MaxHeight()))
 			r.Dx = int(m.layout.Actions.Width)
-			r.Dy = int(m.layout.Actions.Icon_size + d.MaxHeight())
+			r.Dy = int(m.layout.Actions.Icon_size + float64(d.MaxHeight()))
 			r.PushClipPlanes()
 
 			gl.Color4d(1, 1, 1, 1)
@@ -548,8 +551,8 @@ func (m *MainBar) Draw(region gui.Region) {
 				gl.End()
 				gl.Disable(gl.TEXTURE_2D)
 
-				ypos := m.layout.Actions.Y - d.MaxHeight() - 2
-				d.RenderString(fmt.Sprintf("%d", i+1), xpos+s/2, ypos, 0, d.MaxHeight(), gui.Center)
+				ypos := int(m.layout.Actions.Y) - d.MaxHeight() - 2
+				d.RenderString(fmt.Sprintf("%d", i+1), int(xpos+s/2), ypos, 0, d.MaxHeight(), gui.Center)
 
 				xpos += spacing + m.layout.Actions.Icon_size
 			}
@@ -561,10 +564,10 @@ func (m *MainBar) Draw(region gui.Region) {
 				// a := m.state.Actions.selected
 				d := base.GetDictionary(15)
 				x := m.layout.Actions.X + m.layout.Actions.Width/2
-				y := float64(m.layout.ActionLeft.Y)
+				y := m.layout.ActionLeft.Y
 				str := fmt.Sprintf("%s:%dAP", m.state.Actions.selected.String(), m.state.Actions.selected.AP())
 				gl.Color4d(1, 1, 1, 1)
-				d.RenderString(str, x, y, 0, d.MaxHeight(), gui.Center)
+				d.RenderString(str, int(x), y, 0, d.MaxHeight(), gui.Center)
 			}
 		}
 
@@ -573,7 +576,7 @@ func (m *MainBar) Draw(region gui.Region) {
 			gl.Color4d(1, 1, 1, 1)
 			c := m.layout.Conditions
 			d := base.GetDictionary(int(c.Size))
-			ypos := c.Y + c.Height - d.MaxHeight() + m.state.Conditions.scroll_pos
+			ypos := c.Y + c.Height - float64(d.MaxHeight()) + m.state.Conditions.scroll_pos
 			var r gui.Region
 			r.X = int(c.X)
 			r.Y = int(c.Y)
@@ -581,7 +584,7 @@ func (m *MainBar) Draw(region gui.Region) {
 			r.Dy = int(c.Height)
 			r.PushClipPlanes()
 			for _, s := range m.ent.Stats.ConditionNames() {
-				d.RenderString(s, c.X+c.Width/2, ypos, 0, d.MaxHeight(), gui.Center)
+				d.RenderString(s, int(c.X+c.Width/2), int(ypos), 0, d.MaxHeight(), gui.Center)
 				ypos -= float64(d.MaxHeight())
 			}
 
@@ -595,7 +598,7 @@ func (m *MainBar) Draw(region gui.Region) {
 			icon := gear.Small_icon.Data()
 			icon.RenderNatural(int(layout.X), int(layout.Y))
 			d := base.GetDictionary(10)
-			d.RenderString("Gear", layout.X+float64(icon.Dx())/2, layout.Y-d.MaxHeight(), 0, d.MaxHeight(), gui.Center)
+			d.RenderString("Gear", int(layout.X+float64(icon.Dx())/2), int(layout.Y)-d.MaxHeight(), 0, d.MaxHeight(), gui.Center)
 		}
 	}
 
@@ -614,7 +617,7 @@ func (m *MainBar) Draw(region gui.Region) {
 		}
 		y := m.layout.Background.Data().Dy() - 40
 		d := base.GetDictionary(15)
-		d.RenderString(m.state.MouseOver.text, float64(x), float64(y), 0, d.MaxHeight(), gui.Center)
+		d.RenderString(m.state.MouseOver.text, x, y, 0, d.MaxHeight(), gui.Center)
 	}
 }
 

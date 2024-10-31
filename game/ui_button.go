@@ -132,6 +132,6 @@ func (b *Button) RenderAt(x, y int) {
 			b.bounds.x -= b.bounds.dx / 2
 			b.Text.Justification = "center"
 		}
-		d.RenderString(b.Text.String, float64(b.X+x), float64(b.Y+y), 0, d.MaxHeight(), just)
+		d.RenderString(b.Text.String, b.X+x, b.Y+y, 0, d.MaxHeight(), just)
 	}
 }

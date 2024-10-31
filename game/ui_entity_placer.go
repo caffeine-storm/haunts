@@ -3,6 +3,9 @@ package game
 import (
 	"errors"
 	"fmt"
+	"math"
+	"path/filepath"
+
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/sound"
@@ -11,7 +14,6 @@ import (
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/util/algorithm"
-	"path/filepath"
 )
 
 type placerLayout struct {
@@ -241,8 +243,8 @@ func (ep *EntityPlacer) Draw(region gui.Region) {
 	y_off := ep.layout.Roster.Points.Y_off
 	for i, button := range ep.ent_buttons {
 		cost := ep.roster[ep.roster_names[i]]
-		x := float64(button.X + x_off)
-		y := float64(button.Y + y_off)
+		x := button.X + x_off
+		y := button.Y + y_off
 		d.RenderString(fmt.Sprintf("%d", cost), x, y, 0, d.MaxHeight(), gui.Right)
 	}
 	gl.Color4ub(255, 255, 255, 255)
@@ -263,10 +265,10 @@ func (ep *EntityPlacer) Draw(region gui.Region) {
 	}
 	if ep.show_points {
 		d := base.GetDictionary(ep.layout.Points_remaining.Size)
-		x := float64(ep.layout.Points_remaining.X)
-		y := float64(ep.layout.Points_remaining.Y)
+		x := ep.layout.Points_remaining.X
+		y := ep.layout.Points_remaining.Y
 		d.RenderString(ep.layout.Points_remaining.String, x, y, 0, d.MaxHeight(), gui.Left)
-		w := d.StringPixelWidth(ep.layout.Points_remaining.String)
+		w := int(math.Ceil(d.StringPixelWidth(ep.layout.Points_remaining.String)))
 		d.RenderString(fmt.Sprintf("%d", ep.points), x+w, y, 0, d.MaxHeight(), gui.Right)
 	}
 }

@@ -18,7 +18,7 @@ type Console struct {
 	gui.BasicZone
 	lines      [maxLines]string
 	start, end int
-	xscroll    float64
+	xscroll    int
 
 	input *bufio.Reader
 	cmd   []byte
@@ -100,7 +100,7 @@ func (c *Console) DrawFocused(region gui.Region) {
 	gl.Vertex2i(region.X+region.Dx, region.Y)
 	gl.End()
 	gl.Color4d(1, 1, 1, 1)
-	y := float64(region.Y) + float64(len(c.lines))*c.dict.MaxHeight()
+	y := region.Y + len(c.lines)*c.dict.MaxHeight()
 	do_color := func(line string) {
 		if strings.HasPrefix(line, "LOG") {
 			gl.Color4d(1, 1, 1, 1)
