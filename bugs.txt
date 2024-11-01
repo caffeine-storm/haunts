@@ -1,3 +1,7 @@
+- Running 'make test' complains that ld failed to find -lglop but the tests
+  still pass!
+	- presumably, this is a report from the go-build cache'd version?
+
 - The main menu doesn't render the buttons we'd expect
 
 - glop logging has a 'source' attribute that is way too long
