@@ -1,0 +1,4 @@
+go: downloading github.com/caffeine-storm/glop v0.0.0-20241101164606-3ab444d2b0a1
+go: github.com/caffeine-storm/glop@latest (v0.0.0-20241101164606-3ab444d2b0a1) requires github.com/caffeine-storm/glop@v0.0.0-20241101164606-3ab444d2b0a1: parsing go.mod:
+        module declares its path as: github.com/runningwild/glop
+                but was required as: github.com/caffeine-storm/glop

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"os/exec"
 	"path"
 	"path/filepath"
@@ -18,6 +19,10 @@ func main() {
 	oldRepo := "github.com/runningwild/glop"
 	cstormRepo := "github.com/caffeine-storm/glop"
 	cmd := exec.Command("go", "get", "-u", cstormRepo + "@latest")
+
+	// Defeat the default cache at proxy.golang.org or else we can get stale
+	// results.
+	cmd.Env = append(os.Environ(), "GONOPROXY="+cstormRepo)
 
 	data, err := cmd.CombinedOutput()
 	// We _EXPECT_ the go get to fail
