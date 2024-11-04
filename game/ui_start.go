@@ -22,7 +22,7 @@ type startLayout struct {
 }
 
 type StartMenu struct {
-	layout  startLayout
+	layout startLayout
 	// TODO(tmckee): clean: I don't think we need this; we're told the region to
 	// render into each frame, no?
 	region  gui.Region
@@ -147,6 +147,9 @@ func (sm *StartMenu) Draw(region gui.Region) {
 	sm.layout.Menu.Texture.Data().RenderNatural(sm.region.X+sm.layout.Menu.X, sm.region.Y+sm.layout.Menu.Y)
 	base.Log().Info("StartMenu.Draw: about to render buttons", "numbuttons", len(sm.buttons), "sm.layout", sm.layout)
 	for _, button := range sm.buttons {
+		// TODO(tmckee): clean: (x,y) given to RenderAt is not a target location
+		// but an offset from the button's (X,Y) fields. This does not seem clear
+		// to me.
 		button.RenderAt(sm.region.X, sm.region.Y)
 	}
 }

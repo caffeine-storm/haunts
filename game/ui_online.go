@@ -506,7 +506,7 @@ func (sm *OnlineMenu) Draw(region gui.Region) {
 			game.join.RenderAt(sx, sy)
 			gl.Disable(gl.TEXTURE_2D)
 			gl.Color4ub(255, 255, 255, 255)
-			d.RenderString(game.name, gui.Point{X: sx+50, Y: sy}, d.MaxHeight(), gui.Left)
+			d.RenderString(game.name, gui.Point{X: sx + 50, Y: sy}, d.MaxHeight(), gui.Left)
 			if game.delete != nil {
 				game.delete.RenderAt(sx+50+glb.Scroll.Dx-100, sy)
 			}
@@ -525,7 +525,7 @@ func (sm *OnlineMenu) Draw(region gui.Region) {
 		gl.Color4ub(255, 255, 255, 255)
 		d := base.GetDictionary(sm.layout.GameStats.Size)
 		x := sm.layout.GameStats.X + sm.layout.GameStats.Dx/2
-		y := sm.layout.GameStats.Y+sm.layout.GameStats.Dy - d.MaxHeight()
+		y := sm.layout.GameStats.Y + sm.layout.GameStats.Dy - d.MaxHeight()
 
 		if game.game.Denizens_id == net_id {
 			d.RenderString("You: Denizens", gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center)
