@@ -265,7 +265,7 @@ func main() {
 
 	base.InitShaders(render)
 	runtime.GOMAXPROCS(8)
-	ui, err := gui.Make(gin.In(), gui.Dims{wdx, wdy}, filepath.Join(datadir, "fonts", "skia.ttf"))
+	ui, err := gui.Make(gin.In(), gui.Dims{Dx: wdx, Dy: wdy}, filepath.Join(datadir, "fonts", "skia.ttf"))
 	if err != nil {
 		panic(err.Error())
 	}
