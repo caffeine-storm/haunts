@@ -83,6 +83,11 @@ func (*baseLogger) Error(msg string, args ...interface{}) {
 	slogger.Error(msg, args...)
 }
 
+// Equivalent to slog.Logger.Warn
+func (*baseLogger) Warn(msg string, args ...interface{}) {
+	slogger.Warn(msg, args...)
+}
+
 // Equivalent to slog.Logger.Info
 func (*baseLogger) Info(msg string, args ...interface{}) {
 	slogger.Info(msg, args...)
@@ -141,7 +146,7 @@ func loadFont() (*truetype.Font, error) {
 	return font, nil
 }
 
-func loadDictionaryFromFile(size int, renderQueue render.RenderQueueInterface, dims gui.Dimser) (*gui.Dictionary, error) {
+func loadDictionaryFromFile(size int, renderQueue render.RenderQueueInterface, dims gui.Dimser, logger *slog.Logger) (*gui.Dictionary, error) {
 	name := fmt.Sprintf("dict_%d.gob", size)
 
 	filename := filepath.Join(datadir, "fonts", name)
@@ -151,7 +156,6 @@ func loadDictionaryFromFile(size int, renderQueue render.RenderQueueInterface, d
 	}
 	defer f.Close()
 
-	logger := glog.Relevel(slogger, slog.LevelDebug)
 	d, err := gui.LoadDictionary(f, renderQueue, dims, logger)
 	if err != nil {
 		return nil, fmt.Errorf("gui.LoadDictionary failed: %w", err)
@@ -177,7 +181,8 @@ func GetDictionary(size int) *gui.Dictionary {
 		panic("need to call base.InitDictionaries first")
 	}
 	if _, ok := font_dict[size]; !ok {
-		d, err := loadDictionaryFromFile(size, render_queue, dims_getter)
+		logger := glog.Relevel(slogger, slog.LevelWarn)
+		d, err := loadDictionaryFromFile(size, render_queue, dims_getter, logger)
 		if err == nil {
 			font_dict[size] = d
 		} else {
@@ -186,7 +191,8 @@ func GetDictionary(size int) *gui.Dictionary {
 			if err != nil {
 				panic(fmt.Errorf("unable to load font: size %d: err: %w", size, err))
 			}
-			d = gui.MakeDictionary(font, size, render_queue, dims_getter)
+			logger := glog.Relevel(slogger, slog.LevelDebug)
+			d = gui.MakeDictionary(font, size, render_queue, dims_getter, logger)
 			err = saveDictionaryToFile(d, size)
 			if err != nil {
 				Log().Warn("Unable to save dictionary", "size", size, "err", err)

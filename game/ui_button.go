@@ -17,7 +17,7 @@ type ButtonLike interface {
 }
 
 type Button struct {
-	X, Y    int
+	X, Y int
 	// TODO(tmckee): clean: split button into TextButton and TextureButton
 	Texture texture.Object
 	Text    struct {
@@ -104,6 +104,8 @@ func (b *Button) Think(x, y, mx, my int, dt int64) {
 }
 
 func (b *Button) RenderAt(x, y int) {
+	// TODO(tmckee): clean: why not
+	// gl.Color4d(1, 1, 1, b.shade))
 	gl.Color4ub(255, 255, 255, byte(b.shade*255))
 	base.Log().Info("Button.RenderAt", "tex-path", b.Texture.Path)
 	if b.Texture.Path != "" {
@@ -133,6 +135,7 @@ func (b *Button) RenderAt(x, y int) {
 			b.bounds.x -= b.bounds.dx / 2
 			b.Text.Justification = "center"
 		}
-		d.RenderString(b.Text.String, gui.Point{X: b.X+x, Y: b.Y+y}, d.MaxHeight(), just)
+		base.Log().Warn("button.RenderAt", "b.Text.String", b.Text.String, "b.X", b.X, "b.Y", b.Y, "x", x, "y", y)
+		d.RenderString(b.Text.String, gui.Point{X: b.X + x, Y: b.Y + y}, d.MaxHeight(), just)
 	}
 }
