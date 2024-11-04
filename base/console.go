@@ -18,7 +18,8 @@ type Console struct {
 	gui.BasicZone
 	lines      [maxLines]string
 	start, end int
-	xscroll    int
+	// TODO(tmckee): clean: use a gui.Point instead of a raw X co-ordinate.
+	xscroll int
 
 	input *bufio.Reader
 	cmd   []byte
@@ -115,20 +116,20 @@ func (c *Console) DrawFocused(region gui.Region) {
 	if c.start > c.end {
 		for i := c.start; i < len(c.lines); i++ {
 			do_color(c.lines[i])
-			c.dict.RenderString(c.lines[i], c.xscroll, y, 0, c.dict.MaxHeight(), gui.Left)
+			c.dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, c.dict.MaxHeight(), gui.Left)
 			y -= c.dict.MaxHeight()
 		}
 		for i := 0; i < c.end; i++ {
 			do_color(c.lines[i])
-			c.dict.RenderString(c.lines[i], c.xscroll, y, 0, c.dict.MaxHeight(), gui.Left)
+			c.dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, c.dict.MaxHeight(), gui.Left)
 			y -= c.dict.MaxHeight()
 		}
 	} else {
 		for i := c.start; i < c.end && i < len(c.lines); i++ {
 			do_color(c.lines[i])
-			c.dict.RenderString(c.lines[i], c.xscroll, y, 0, c.dict.MaxHeight(), gui.Left)
+			c.dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, c.dict.MaxHeight(), gui.Left)
 			y -= c.dict.MaxHeight()
 		}
 	}
-	c.dict.RenderString(string(c.cmd), c.xscroll, y, 0, c.dict.MaxHeight(), gui.Left)
+	c.dict.RenderString(string(c.cmd), gui.Point{X: c.xscroll, Y: y}, c.dict.MaxHeight(), gui.Left)
 }

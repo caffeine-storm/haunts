@@ -209,6 +209,22 @@ func (llt *lowerLeftTable) AddChild(w gui.Widget) {
 	llt.AnchorBox.AddChild(w, gui.Anchor{0, 0, 0, 0})
 }
 
+type callsSys struct {
+	sys system.System
+}
+
+func (c *callsSys) Dims() gui.Dims {
+	_, _, dx, dy := c.sys.GetWindowDims()
+	return gui.Dims{
+		Dx: dx,
+		Dy: dy,
+	}
+}
+
+func sysDimser(sys system.System) gui.Dimser {
+	return &callsSys{sys: sys}
+}
+
 func onHauntsPanic(recoveredValue interface{}) {
 	data := debug.Stack()
 	base.Error().Printf("PANIC: %v\n", recoveredValue)
@@ -244,7 +260,7 @@ func main() {
 	})
 	render.StartProcessing()
 
-	base.InitDictionaries(render)
+	base.InitDictionaries(render, sysDimser(sys))
 	texture.Init(render)
 
 	base.InitShaders(render)

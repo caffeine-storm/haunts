@@ -17,6 +17,7 @@ import (
 
 	"code.google.com/p/freetype-go/freetype/truetype"
 	"github.com/MobRulesGames/opengl/gl"
+	"github.com/runningwild/glop/glog"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
 )
@@ -111,14 +112,16 @@ func CloseLog() {
 
 var font_dict map[int]*gui.Dictionary
 var render_queue render.RenderQueueInterface
+var dims_getter gui.Dimser
 var dictionary_mutex sync.Mutex
 
-func InitDictionaries(renderQueue render.RenderQueueInterface) {
+func InitDictionaries(renderQueue render.RenderQueueInterface, dimsGetter gui.Dimser) {
 	if font_dict != nil {
 		panic("must not call InitDictionaries multiple times!")
 	}
 	font_dict = make(map[int]*gui.Dictionary)
 	render_queue = renderQueue
+	dims_getter = dimsGetter
 }
 
 func loadFont() (*truetype.Font, error) {
@@ -138,7 +141,7 @@ func loadFont() (*truetype.Font, error) {
 	return font, nil
 }
 
-func loadDictionaryFromFile(size int, renderQueue render.RenderQueueInterface) (*gui.Dictionary, error) {
+func loadDictionaryFromFile(size int, renderQueue render.RenderQueueInterface, dims gui.Dimser) (*gui.Dictionary, error) {
 	name := fmt.Sprintf("dict_%d.gob", size)
 
 	filename := filepath.Join(datadir, "fonts", name)
@@ -148,7 +151,8 @@ func loadDictionaryFromFile(size int, renderQueue render.RenderQueueInterface) (
 	}
 	defer f.Close()
 
-	d, err := gui.LoadDictionary(f, renderQueue, slogger)
+	logger := glog.Relevel(slogger, slog.LevelDebug)
+	d, err := gui.LoadDictionary(f, renderQueue, dims, logger)
 	if err != nil {
 		return nil, fmt.Errorf("gui.LoadDictionary failed: %w", err)
 	}
@@ -173,7 +177,7 @@ func GetDictionary(size int) *gui.Dictionary {
 		panic("need to call base.InitDictionaries first")
 	}
 	if _, ok := font_dict[size]; !ok {
-		d, err := loadDictionaryFromFile(size, render_queue)
+		d, err := loadDictionaryFromFile(size, render_queue, dims_getter)
 		if err == nil {
 			font_dict[size] = d
 		} else {
@@ -182,7 +186,7 @@ func GetDictionary(size int) *gui.Dictionary {
 			if err != nil {
 				panic(fmt.Errorf("unable to load font: size %d: err: %w", size, err))
 			}
-			d = gui.MakeDictionary(font, size, render_queue)
+			d = gui.MakeDictionary(font, size, render_queue, dims_getter)
 			err = saveDictionaryToFile(d, size)
 			if err != nil {
 				Log().Warn("Unable to save dictionary", "size", size, "err", err)

@@ -245,7 +245,7 @@ func (ep *EntityPlacer) Draw(region gui.Region) {
 		cost := ep.roster[ep.roster_names[i]]
 		x := button.X + x_off
 		y := button.Y + y_off
-		d.RenderString(fmt.Sprintf("%d", cost), x, y, 0, d.MaxHeight(), gui.Right)
+		d.RenderString(fmt.Sprintf("%d", cost), gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Right)
 	}
 	gl.Color4ub(255, 255, 255, 255)
 	var ent *Entity
@@ -267,9 +267,9 @@ func (ep *EntityPlacer) Draw(region gui.Region) {
 		d := base.GetDictionary(ep.layout.Points_remaining.Size)
 		x := ep.layout.Points_remaining.X
 		y := ep.layout.Points_remaining.Y
-		d.RenderString(ep.layout.Points_remaining.String, x, y, 0, d.MaxHeight(), gui.Left)
+		d.RenderString(ep.layout.Points_remaining.String, gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Left)
 		w := int(math.Ceil(d.StringPixelWidth(ep.layout.Points_remaining.String)))
-		d.RenderString(fmt.Sprintf("%d", ep.points), x+w, y, 0, d.MaxHeight(), gui.Right)
+		d.RenderString(fmt.Sprintf("%d", ep.points), gui.Point{X: x+w, Y: y}, d.MaxHeight(), gui.Right)
 	}
 }
 

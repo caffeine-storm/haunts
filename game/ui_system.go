@@ -183,7 +183,7 @@ func (sm *SystemMenu) DrawFocused(region gui.Region) {
 	d := base.GetDictionary(sm.layout.Sub.Save.Button.Text.Size)
 	sx := x + sm.layout.Sub.Save.Entry.X + sm.layout.Sub.Save.Entry.Dx + 10
 	sy := y + sm.layout.Sub.Save.Button.Y
-	d.RenderString("Game Saved!", sx, sy, 0, d.MaxHeight(), gui.Left)
+	d.RenderString("Game Saved!", gui.Point{X: sx, Y: sy}, d.MaxHeight(), gui.Left)
 }
 
 func (sm *SystemMenu) String() string {

@@ -312,7 +312,7 @@ func (mdb *MediumDialogBox) Draw(region gui.Region) {
 		}
 		gl.Color4ub(255, 255, 255, 255)
 
-		d.RenderParagraph(data.Text, p.X+region.X, p.Y+region.Y-d.MaxHeight()/2, 0, p.Dx, d.MaxHeight(), just, valign)
+		d.RenderParagraph(data.Text, p.X+region.X, p.Y+region.Y-d.MaxHeight()/2, p.Dx, d.MaxHeight(), just, valign)
 
 		gl.Color4ub(255, 255, 255, byte(data.shading*255))
 		tex := data.Image.Data()

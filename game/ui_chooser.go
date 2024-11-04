@@ -165,7 +165,7 @@ func (ob *OptionBasic) DrawInfo(x, y, dx, dy int) {
 	ty := y + dy - ob.Large.Data().Dy()
 	ob.Large.Data().RenderNatural(tx, ty)
 	d := base.GetDictionary(ob.Size)
-	d.RenderParagraph(ob.Text, x, y+dy-ob.Large.Data().Dy()-d.MaxHeight(), 0, dx, d.MaxHeight(), gui.Left, gui.Top)
+	d.RenderParagraph(ob.Text, x, y+dy-ob.Large.Data().Dy()-d.MaxHeight(), dx, d.MaxHeight(), gui.Left, gui.Top)
 }
 func (ob *OptionBasic) Height() int {
 	return ob.Small.Data().Dy()

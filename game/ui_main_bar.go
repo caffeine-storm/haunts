@@ -36,7 +36,7 @@ func (t *TextArea) RenderString(s string) {
 	px := t.X
 	py := t.Y
 	d := base.GetDictionary(t.Size)
-	d.RenderString(s, px, py, 0, d.MaxHeight(), just)
+	d.RenderString(s, gui.Point{X: px, Y: py}, d.MaxHeight(), just)
 }
 
 type MainBarLayout struct {
@@ -552,7 +552,7 @@ func (m *MainBar) Draw(region gui.Region) {
 				gl.Disable(gl.TEXTURE_2D)
 
 				ypos := int(m.layout.Actions.Y) - d.MaxHeight() - 2
-				d.RenderString(fmt.Sprintf("%d", i+1), int(xpos+s/2), ypos, 0, d.MaxHeight(), gui.Center)
+				d.RenderString(fmt.Sprintf("%d", i+1), gui.Point{X: int(xpos+s/2), Y: ypos}, d.MaxHeight(), gui.Center)
 
 				xpos += spacing + m.layout.Actions.Icon_size
 			}
@@ -567,7 +567,7 @@ func (m *MainBar) Draw(region gui.Region) {
 				y := m.layout.ActionLeft.Y
 				str := fmt.Sprintf("%s:%dAP", m.state.Actions.selected.String(), m.state.Actions.selected.AP())
 				gl.Color4d(1, 1, 1, 1)
-				d.RenderString(str, int(x), y, 0, d.MaxHeight(), gui.Center)
+				d.RenderString(str, gui.Point{X: int(x), Y: y}, d.MaxHeight(), gui.Center)
 			}
 		}
 
@@ -584,7 +584,7 @@ func (m *MainBar) Draw(region gui.Region) {
 			r.Dy = int(c.Height)
 			r.PushClipPlanes()
 			for _, s := range m.ent.Stats.ConditionNames() {
-				d.RenderString(s, int(c.X+c.Width/2), int(ypos), 0, d.MaxHeight(), gui.Center)
+				d.RenderString(s, gui.Point{X: int(c.X+c.Width/2), Y: int(ypos)}, d.MaxHeight(), gui.Center)
 				ypos -= float64(d.MaxHeight())
 			}
 
@@ -598,7 +598,7 @@ func (m *MainBar) Draw(region gui.Region) {
 			icon := gear.Small_icon.Data()
 			icon.RenderNatural(int(layout.X), int(layout.Y))
 			d := base.GetDictionary(10)
-			d.RenderString("Gear", int(layout.X+float64(icon.Dx())/2), int(layout.Y)-d.MaxHeight(), 0, d.MaxHeight(), gui.Center)
+			d.RenderString("Gear", gui.Point{X: int(layout.X+float64(icon.Dx())/2), Y: int(layout.Y)-d.MaxHeight()}, d.MaxHeight(), gui.Center)
 		}
 	}
 
@@ -617,7 +617,7 @@ func (m *MainBar) Draw(region gui.Region) {
 		}
 		y := m.layout.Background.Data().Dy() - 40
 		d := base.GetDictionary(15)
-		d.RenderString(m.state.MouseOver.text, x, y, 0, d.MaxHeight(), gui.Center)
+		d.RenderString(m.state.MouseOver.text, gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center)
 	}
 }
 

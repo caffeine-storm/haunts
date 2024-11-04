@@ -238,7 +238,7 @@ func (te *TextEntry) RenderAt(x, y int) {
 	gl.End()
 
 	gl.Color4ub(255, 255, 255, 255)
-	d.RenderString(te.Entry.text, x, y, 0, d.MaxHeight(), gui.Left)
+	d.RenderString(te.Entry.text, gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Left)
 
 	if te.Entry.ghost.offset >= 0 {
 		gl.Disable(gl.TEXTURE_2D)

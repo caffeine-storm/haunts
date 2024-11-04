@@ -496,7 +496,7 @@ func (sm *OnlineMenu) Draw(region gui.Region) {
 		title_y := glb.Scroll.Y + glb.Scroll.Dy
 		gl.Disable(gl.TEXTURE_2D)
 		gl.Color4ub(255, 255, 255, 255)
-		title_d.RenderString(glb.Title.Text, title_x, title_y, 0, title_d.MaxHeight(), gui.Center)
+		title_d.RenderString(glb.Title.Text, gui.Point{X: title_x, Y: title_y}, title_d.MaxHeight(), gui.Center)
 
 		sx := glb.Scroll.X
 		sy := glb.Scroll.Top()
@@ -506,7 +506,7 @@ func (sm *OnlineMenu) Draw(region gui.Region) {
 			game.join.RenderAt(sx, sy)
 			gl.Disable(gl.TEXTURE_2D)
 			gl.Color4ub(255, 255, 255, 255)
-			d.RenderString(game.name, sx+50, sy, 0, d.MaxHeight(), gui.Left)
+			d.RenderString(game.name, gui.Point{X: sx+50, Y: sy}, d.MaxHeight(), gui.Left)
 			if game.delete != nil {
 				game.delete.RenderAt(sx+50+glb.Scroll.Dx-100, sy)
 			}
@@ -517,7 +517,7 @@ func (sm *OnlineMenu) Draw(region gui.Region) {
 	gl.Color4ub(255, 255, 255, byte(255*sm.update_alpha))
 	sx := sm.layout.User.Entry.X + sm.layout.User.Entry.Dx + 10
 	sy := sm.layout.User.Button.Y
-	d.RenderString("Name Updated", sx, sy, 0, d.MaxHeight(), gui.Left)
+	d.RenderString("Name Updated", gui.Point{X: sx, Y: sy}, d.MaxHeight(), gui.Left)
 
 	if sm.hover_game != nil {
 		game := sm.hover_game
@@ -528,9 +528,9 @@ func (sm *OnlineMenu) Draw(region gui.Region) {
 		y := sm.layout.GameStats.Y+sm.layout.GameStats.Dy - d.MaxHeight()
 
 		if game.game.Denizens_id == net_id {
-			d.RenderString("You: Denizens", x, y, 0, d.MaxHeight(), gui.Center)
+			d.RenderString("You: Denizens", gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center)
 		} else {
-			d.RenderString("You: Intruders", x, y, 0, d.MaxHeight(), gui.Center)
+			d.RenderString("You: Intruders", gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center)
 		}
 		y -= d.MaxHeight()
 		if game.game.Denizens_id == net_id {
@@ -540,15 +540,15 @@ func (sm *OnlineMenu) Draw(region gui.Region) {
 			} else {
 				opponent = fmt.Sprintf("Vs: %s", game.game.Intruders_name)
 			}
-			d.RenderString(opponent, x, y, 0, d.MaxHeight(), gui.Center)
+			d.RenderString(opponent, gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center)
 		} else {
-			d.RenderString(fmt.Sprintf("Vs: %s", game.game.Denizens_name), x, y, 0, d.MaxHeight(), gui.Center)
+			d.RenderString(fmt.Sprintf("Vs: %s", game.game.Denizens_name), gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center)
 		}
 		y -= d.MaxHeight()
 		if (game.game.Denizens_id == net_id) == (len(game.game.Execs)%2 == 0) {
-			d.RenderString("Your move", x, y, 0, d.MaxHeight(), gui.Center)
+			d.RenderString("Your move", gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center)
 		} else {
-			d.RenderString("Their move", x, y, 0, d.MaxHeight(), gui.Center)
+			d.RenderString("Their move", gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center)
 		}
 	}
 
@@ -556,7 +556,7 @@ func (sm *OnlineMenu) Draw(region gui.Region) {
 		gl.Color4ub(255, 0, 0, 255)
 		l := sm.layout.Error
 		d := base.GetDictionary(l.Size)
-		d.RenderString(fmt.Sprintf("ERROR: %s", l.err), l.X, l.Y, 0, d.MaxHeight(), gui.Left)
+		d.RenderString(fmt.Sprintf("ERROR: %s", l.err), gui.Point{X: l.X, Y: l.Y}, d.MaxHeight(), gui.Left)
 	}
 }
 

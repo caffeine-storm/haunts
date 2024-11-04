@@ -105,6 +105,7 @@ func (b *Button) Think(x, y, mx, my int, dt int64) {
 
 func (b *Button) RenderAt(x, y int) {
 	gl.Color4ub(255, 255, 255, byte(b.shade*255))
+	base.Log().Info("Button.RenderAt", "tex-path", b.Texture.Path)
 	if b.Texture.Path != "" {
 		b.Texture.Data().RenderNatural(b.X+x, b.Y+y)
 		b.bounds.x = b.X + x
@@ -132,6 +133,6 @@ func (b *Button) RenderAt(x, y int) {
 			b.bounds.x -= b.bounds.dx / 2
 			b.Text.Justification = "center"
 		}
-		d.RenderString(b.Text.String, b.X+x, b.Y+y, 0, d.MaxHeight(), just)
+		d.RenderString(b.Text.String, gui.Point{X: b.X+x, Y: b.Y+y}, d.MaxHeight(), just)
 	}
 }

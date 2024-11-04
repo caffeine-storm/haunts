@@ -291,7 +291,7 @@ func (rc *RosterChooser) Draw(r gui.Region) {
 		} else {
 			gl.Color4d(0.6, 0.6, 0.6, 1)
 		}
-		d.RenderString("Done", x1, y, 0, d.MaxHeight(), gui.Center)
+		d.RenderString("Done", gui.Point{X: x1, Y: y}, d.MaxHeight(), gui.Center)
 
 		if rc.on_undo != nil {
 			if rc.mouse.Inside(rc.render.undo) {
@@ -299,7 +299,7 @@ func (rc *RosterChooser) Draw(r gui.Region) {
 			} else {
 				gl.Color4d(0.6, 0.6, 0.6, 1)
 			}
-			d.RenderString("Undo", x2, y, 0, d.MaxHeight(), gui.Center)
+			d.RenderString("Undo", gui.Point{X: x2, Y: y}, d.MaxHeight(), gui.Center)
 		}
 
 	}

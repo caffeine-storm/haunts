@@ -136,7 +136,7 @@ func (cm *CreditsMenu) Draw(region gui.Region) {
 	gl.Color4ub(255, 255, 255, 255)
 	for _, line := range cm.layout.Credits.Lines {
 		sy -= int(d.MaxHeight())
-		d.RenderString(line, sx, sy, 0, d.MaxHeight(), gui.Left)
+		d.RenderString(line, gui.Point{X: sx, Y: sy}, d.MaxHeight(), gui.Left)
 	}
 	cm.layout.Credits.Scroll.Region().PopClipPlanes()
 }
