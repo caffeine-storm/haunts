@@ -744,6 +744,8 @@ func loadHouse(gp *GamePanel) lua.LuaGoFunction {
 			base.Error().Printf("No house exists with the name '%s'.", name)
 			return 0
 		}
+		// TODO(tmckee): this is a bug; we will get a nil sprite manager from
+		// GetSpriteManager because gp.game isn't initialized ... right?
 		gp.game = makeGame(def, gp.game.GetSpriteManager())
 		gp.game.viewer.Edit_mode = true
 		gp.game.script = gp.script
