@@ -289,6 +289,9 @@ func main() {
 			editor.Load(path)
 		}
 	}
+	// TODO(tmckee): clean: using a string to pick between room editor and house
+	// editor is unclear. For now, remember that we start in 'room editor'
+	// 'editor mode'; can select room/house editor with 'os+1'/'os+2'.
 	editor_name = "room"
 	editor = editors[editor_name]
 
