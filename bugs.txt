@@ -1,8 +1,8 @@
+- The 'edit mode' screen doesn't render its text correctly
+
 - Running 'make test' complains that ld failed to find -lglop but the tests
   still pass!
 	- presumably, this is a report from the go-build cache'd version?
-
-- The main menu doesn't render the buttons we'd expect
 
 - glop logging has a 'source' attribute that is way too long
 
@@ -10,11 +10,8 @@
 	- Note that the 'error texture' from glop's sprite manager is a
 	  semi-transparent pink rectangle.
 
-- The 'game mode' screen doesn't render its text correctly
-
 base.Log messages don't uniquely identify the file
 
 Can get locked up by repeatedly opening/closing the same door.
 
 Can have a door not connected to a room.
-
