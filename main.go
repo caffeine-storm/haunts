@@ -23,6 +23,7 @@ import (
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/system"
+	glopdebug "github.com/runningwild/glop/debug"
 
 	// Need to pull in all of the actions we define here and not in
 	// haunts/game because haunts/game/actions depends on it
@@ -374,6 +375,20 @@ func main() {
 
 			if key_map["manual mem"].FramePressCount() > 0 {
 				base.Log().Printf(memory.TotalAllocations())
+			}
+
+			if key_map["screenshot"].FramePressCount() > 0 {
+				// Use gl.ReadPixels to dump a 'screen shot' to screen.png
+				fname := filepath.Join(datadir, "screen.png")
+				f, err := os.Create(fname)
+				if err != nil {
+					panic(fmt.Errorf("couldn't os.Create %q: %w", fname, err))
+				}
+				defer f.Close()
+
+				render.Queue(func() {
+					glopdebug.ScreenShot(wdx, wdy, f)
+				})
 			}
 
 			if key_map["game mode"].FramePressCount()%2 == 1 {
