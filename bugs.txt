@@ -1,5 +1,9 @@
 - The 'edit mode' screen doesn't render its text correctly
 
+- CI/CD
+	- travis-ci.com has a free-for-FOSS offering
+	- appveyor.com does too
+
 - Running 'make test' complains that ld failed to find -lglop but the tests
   still pass!
 	- presumably, this is a report from the go-build cache'd version?

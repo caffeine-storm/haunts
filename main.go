@@ -140,6 +140,7 @@ func gameMode(ui *gui.Gui) {
 func editMode(ui *gui.Gui) {
 	draggingAndZooming(ui, editor.GetViewer())
 	if ui.FocusWidget() == nil {
+		// Did a keypress come in for "change the type of editor"?
 		for name := range editors {
 			if key_map[fmt.Sprintf("%s editor", name)].FramePressCount() > 0 && ui.FocusWidget() == nil {
 				ui.RemoveChild(editor)
@@ -151,6 +152,7 @@ func editMode(ui *gui.Gui) {
 			}
 		}
 
+		// Did a keypress come in for "save"?
 		if key_map["save"].FramePressCount() > 0 && chooser == nil {
 			path, err := editor.Save()
 			if err != nil {
@@ -191,6 +193,7 @@ func editMode(ui *gui.Gui) {
 		}
 		if ok_to_select {
 			numericKeyId := gin.AnyKeyPad0
+			// Select the tab corresponding to a pressed keypad key.
 			for i := 1; i <= 9; i++ {
 				idx := int(gin.AnyKeyPad0.Index) + i
 				numericKeyId.Index = gin.KeyIndex(idx)
