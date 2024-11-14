@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/sound"
 	"github.com/MobRulesGames/haunts/texture"
@@ -232,6 +233,7 @@ func (ep *EntityPlacer) Respond(g *gui.Gui, group gui.EventGroup) bool {
 }
 
 func (ep *EntityPlacer) Draw(region gui.Region) {
+	shaderBank := globals.RenderQueueState().Shaders()
 	ep.region = region
 	gl.Color4ub(255, 255, 255, 255)
 	ep.layout.Texture.Data().RenderNatural(region.X, region.Y)
@@ -245,7 +247,7 @@ func (ep *EntityPlacer) Draw(region gui.Region) {
 		cost := ep.roster[ep.roster_names[i]]
 		x := button.X + x_off
 		y := button.Y + y_off
-		d.RenderString(fmt.Sprintf("%d", cost), gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Right)
+		d.RenderString(fmt.Sprintf("%d", cost), gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Right, shaderBank)
 	}
 	gl.Color4ub(255, 255, 255, 255)
 	var ent *Entity
@@ -267,9 +269,9 @@ func (ep *EntityPlacer) Draw(region gui.Region) {
 		d := base.GetDictionary(ep.layout.Points_remaining.Size)
 		x := ep.layout.Points_remaining.X
 		y := ep.layout.Points_remaining.Y
-		d.RenderString(ep.layout.Points_remaining.String, gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Left)
+		d.RenderString(ep.layout.Points_remaining.String, gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Left, shaderBank)
 		w := int(math.Ceil(d.StringPixelWidth(ep.layout.Points_remaining.String)))
-		d.RenderString(fmt.Sprintf("%d", ep.points), gui.Point{X: x + w, Y: y}, d.MaxHeight(), gui.Right)
+		d.RenderString(fmt.Sprintf("%d", ep.points), gui.Point{X: x + w, Y: y}, d.MaxHeight(), gui.Right, shaderBank)
 	}
 }
 

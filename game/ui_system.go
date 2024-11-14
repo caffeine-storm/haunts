@@ -1,13 +1,15 @@
 package game
 
 import (
+	"path/filepath"
+	"time"
+
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/opengl/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
-	"path/filepath"
-	"time"
 )
 
 var Restart func()
@@ -183,7 +185,8 @@ func (sm *SystemMenu) DrawFocused(region gui.Region) {
 	d := base.GetDictionary(sm.layout.Sub.Save.Button.Text.Size)
 	sx := x + sm.layout.Sub.Save.Entry.X + sm.layout.Sub.Save.Entry.Dx + 10
 	sy := y + sm.layout.Sub.Save.Button.Y
-	d.RenderString("Game Saved!", gui.Point{X: sx, Y: sy}, d.MaxHeight(), gui.Left)
+	shaderBank := globals.RenderQueueState().Shaders()
+	d.RenderString("Game Saved!", gui.Point{X: sx, Y: sy}, d.MaxHeight(), gui.Left, shaderBank)
 }
 
 func (sm *SystemMenu) String() string {

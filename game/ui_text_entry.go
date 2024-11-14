@@ -2,6 +2,7 @@ package game
 
 import (
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/opengl/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
@@ -238,7 +239,8 @@ func (te *TextEntry) RenderAt(x, y int) {
 	gl.End()
 
 	gl.Color4ub(255, 255, 255, 255)
-	d.RenderString(te.Entry.text, gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Left)
+	shaderBank := globals.RenderQueueState().Shaders()
+	d.RenderString(te.Entry.text, gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Left, shaderBank)
 
 	if te.Entry.ghost.offset >= 0 {
 		gl.Disable(gl.TEXTURE_2D)

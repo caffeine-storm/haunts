@@ -1,12 +1,14 @@
 package hui // haunts ui
 
 import (
+	"path/filepath"
+
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/opengl/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
-	"path/filepath"
 )
 
 type Option interface {
@@ -286,12 +288,14 @@ func (rc *RosterChooser) Draw(r gui.Region) {
 			gui.Dims{r.Dx / 2, int(d.MaxHeight() * 2)},
 		}
 
+		shaderBank := globals.RenderQueueState().Shaders()
+
 		if rc.mouse.Inside(rc.render.done) {
 			gl.Color4d(1, 1, 1, 1)
 		} else {
 			gl.Color4d(0.6, 0.6, 0.6, 1)
 		}
-		d.RenderString("Done", gui.Point{X: x1, Y: y}, d.MaxHeight(), gui.Center)
+		d.RenderString("Done", gui.Point{X: x1, Y: y}, d.MaxHeight(), gui.Center, shaderBank)
 
 		if rc.on_undo != nil {
 			if rc.mouse.Inside(rc.render.undo) {
@@ -299,7 +303,7 @@ func (rc *RosterChooser) Draw(r gui.Region) {
 			} else {
 				gl.Color4d(0.6, 0.6, 0.6, 1)
 			}
-			d.RenderString("Undo", gui.Point{X: x2, Y: y}, d.MaxHeight(), gui.Center)
+			d.RenderString("Undo", gui.Point{X: x2, Y: y}, d.MaxHeight(), gui.Center, shaderBank)
 		}
 
 	}

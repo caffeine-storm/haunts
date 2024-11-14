@@ -2,12 +2,14 @@ package game
 
 import (
 	"fmt"
+	"path/filepath"
+
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/opengl/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
-	"path/filepath"
 )
 
 type Center struct {
@@ -36,7 +38,8 @@ func (t *TextArea) RenderString(s string) {
 	px := t.X
 	py := t.Y
 	d := base.GetDictionary(t.Size)
-	d.RenderString(s, gui.Point{X: px, Y: py}, d.MaxHeight(), just)
+	shaderBank := globals.RenderQueueState().Shaders()
+	d.RenderString(s, gui.Point{X: px, Y: py}, d.MaxHeight(), just, shaderBank)
 }
 
 type MainBarLayout struct {
@@ -416,6 +419,7 @@ func (m *MainBar) Respond(g *gui.Gui, group gui.EventGroup) bool {
 }
 
 func (m *MainBar) Draw(region gui.Region) {
+	shaderBank := globals.RenderQueueState().Shaders()
 	m.region = region
 	gl.Enable(gl.TEXTURE_2D)
 	m.layout.Background.Data().Bind()
@@ -552,7 +556,7 @@ func (m *MainBar) Draw(region gui.Region) {
 				gl.Disable(gl.TEXTURE_2D)
 
 				ypos := int(m.layout.Actions.Y) - d.MaxHeight() - 2
-				d.RenderString(fmt.Sprintf("%d", i+1), gui.Point{X: int(xpos + s/2), Y: ypos}, d.MaxHeight(), gui.Center)
+				d.RenderString(fmt.Sprintf("%d", i+1), gui.Point{X: int(xpos + s/2), Y: ypos}, d.MaxHeight(), gui.Center, shaderBank)
 
 				xpos += spacing + m.layout.Actions.Icon_size
 			}
@@ -567,7 +571,7 @@ func (m *MainBar) Draw(region gui.Region) {
 				y := m.layout.ActionLeft.Y
 				str := fmt.Sprintf("%s:%dAP", m.state.Actions.selected.String(), m.state.Actions.selected.AP())
 				gl.Color4d(1, 1, 1, 1)
-				d.RenderString(str, gui.Point{X: int(x), Y: y}, d.MaxHeight(), gui.Center)
+				d.RenderString(str, gui.Point{X: int(x), Y: y}, d.MaxHeight(), gui.Center, shaderBank)
 			}
 		}
 
@@ -584,7 +588,7 @@ func (m *MainBar) Draw(region gui.Region) {
 			r.Dy = int(c.Height)
 			r.PushClipPlanes()
 			for _, s := range m.ent.Stats.ConditionNames() {
-				d.RenderString(s, gui.Point{X: int(c.X + c.Width/2), Y: int(ypos)}, d.MaxHeight(), gui.Center)
+				d.RenderString(s, gui.Point{X: int(c.X + c.Width/2), Y: int(ypos)}, d.MaxHeight(), gui.Center, shaderBank)
 				ypos -= float64(d.MaxHeight())
 			}
 
@@ -598,7 +602,7 @@ func (m *MainBar) Draw(region gui.Region) {
 			icon := gear.Small_icon.Data()
 			icon.RenderNatural(int(layout.X), int(layout.Y))
 			d := base.GetDictionary(10)
-			d.RenderString("Gear", gui.Point{X: int(layout.X + float64(icon.Dx())/2), Y: int(layout.Y) - d.MaxHeight()}, d.MaxHeight(), gui.Center)
+			d.RenderString("Gear", gui.Point{X: int(layout.X + float64(icon.Dx())/2), Y: int(layout.Y) - d.MaxHeight()}, d.MaxHeight(), gui.Center, shaderBank)
 		}
 	}
 
@@ -617,7 +621,7 @@ func (m *MainBar) Draw(region gui.Region) {
 		}
 		y := m.layout.Background.Data().Dy() - 40
 		d := base.GetDictionary(15)
-		d.RenderString(m.state.MouseOver.text, gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center)
+		d.RenderString(m.state.MouseOver.text, gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center, shaderBank)
 	}
 }
 

@@ -2,15 +2,17 @@ package game
 
 import (
 	"fmt"
+	"math"
+	"path/filepath"
+
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/sound"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/util/algorithm"
-	"math"
-	"path/filepath"
 )
 
 type Option interface {
@@ -160,12 +162,13 @@ func (ob *OptionBasic) Draw(x, y, dx int) {
 	ob.Small.Data().RenderNatural(x, y)
 }
 func (ob *OptionBasic) DrawInfo(x, y, dx, dy int) {
+	shaderBank := globals.RenderQueueState().Shaders()
 	gl.Color4ub(255, 255, 255, 255)
 	tx := x + (dx-ob.Large.Data().Dx())/2
 	ty := y + dy - ob.Large.Data().Dy()
 	ob.Large.Data().RenderNatural(tx, ty)
 	d := base.GetDictionary(ob.Size)
-	d.RenderParagraph(ob.Text, x, y+dy-ob.Large.Data().Dy()-d.MaxHeight(), dx, d.MaxHeight(), gui.Left, gui.Top)
+	d.RenderParagraph(ob.Text, x, y+dy-ob.Large.Data().Dy()-d.MaxHeight(), dx, d.MaxHeight(), gui.Left, gui.Top, shaderBank)
 }
 func (ob *OptionBasic) Height() int {
 	return ob.Small.Data().Dy()

@@ -71,9 +71,9 @@ func SetUniformF(shader, variable string, f float32) {
 	loc.Uniform1f(f)
 }
 
-func InitShaders(render render.RenderQueueInterface) {
-	gui.Init(render)
-	render.Queue(func() {
+func InitShaders(queue render.RenderQueueInterface) {
+	gui.Init(queue)
+	queue.Queue(func(render.RenderQueueState) {
 		vertex_shaders = make(map[string]gl.Shader)
 		fragment_shaders = make(map[string]gl.Shader)
 		shader_progs = make(map[string]gl.Program)
@@ -141,5 +141,5 @@ func InitShaders(render render.RenderQueueInterface) {
 			shader_progs[shader.Name] = glProgram
 		}
 	})
-	render.Purge()
+	queue.Purge()
 }

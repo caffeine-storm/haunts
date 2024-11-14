@@ -29,7 +29,7 @@ type LosTexture struct {
 }
 
 func losTextureFinalize(lt *LosTexture, renderQueue render.RenderQueueInterface) {
-	renderQueue.Queue(func() {
+	renderQueue.Queue(func(render.RenderQueueState) {
 		gl.Enable(gl.TEXTURE_2D)
 		lt.tex.Delete()
 	})
@@ -47,7 +47,7 @@ func MakeLosTexture() *LosTexture {
 
 	// TODO(tmckee): there must be a better way...
 	renderQueue := texture.GetRenderQueue()
-	renderQueue.Queue(func() {
+	renderQueue.Queue(func(render.RenderQueueState) {
 		gl.Enable(gl.TEXTURE_2D)
 		tex := gl.GenTexture()
 		tex.Bind(gl.TEXTURE_2D)
@@ -87,7 +87,7 @@ func (lt *LosTexture) Remap() {
 		return
 	}
 	renderQueue := texture.GetRenderQueue()
-	renderQueue.Queue(func() {
+	renderQueue.Queue(func(render.RenderQueueState) {
 		gl.Enable(gl.TEXTURE_2D)
 		lt.tex.Bind(gl.TEXTURE_2D)
 		gl.TexSubImage2D(gl.TEXTURE_2D, 0, 0, 0, len(lt.p2d), len(lt.p2d), gl.ALPHA, lt.pix)

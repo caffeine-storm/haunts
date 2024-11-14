@@ -1,13 +1,15 @@
 package game
 
 import (
+	"path/filepath"
+
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game/hui"
+	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/gui"
-	"path/filepath"
 )
 
 type UiSelectMap struct {
@@ -44,7 +46,8 @@ func (mo *MapOption) Draw(hovered, selected, selectable bool, region gui.Region)
 	icon.RenderNatural(region.X, region.Y)
 	gl.Color4ub(0, 0, 0, 255)
 	d := base.GetDictionary(15)
-	d.RenderString(mo.house_def.Name, region.Point, d.MaxHeight(), gui.Left)
+	shaderBank := globals.RenderQueueState().Shaders()
+	d.RenderString(mo.house_def.Name, region.Point, d.MaxHeight(), gui.Left, shaderBank)
 }
 func (mo *MapOption) Think(dt int64) {
 }

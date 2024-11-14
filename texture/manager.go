@@ -53,7 +53,7 @@ var textureListSync sync.Once
 
 func setupTextureList() {
 	textureListSync.Do(func() {
-		manager.renderQueue.Queue(func() {
+		manager.renderQueue.Queue(func(render.RenderQueueState) {
 			textureList = gl.GenLists(1)
 			gl.NewList(textureList, gl.COMPILE)
 			gl.Begin(gl.QUADS)
@@ -180,7 +180,7 @@ func (m *Manager) Scavenger() {
 			m.deleted[s] = m.registry[s]
 			delete(m.registry, s)
 		}
-		manager.renderQueue.Queue(func() {
+		manager.renderQueue.Queue(func(render.RenderQueueState) {
 			for _, d := range unused_data {
 				d.texture.Delete()
 				d.texture = 0
@@ -325,7 +325,7 @@ func handleLoadRequest(req loadRequest) {
 	} else {
 		manual_unlock = true
 	}
-	manager.renderQueue.Queue(func() {
+	manager.renderQueue.Queue(func(render.RenderQueueState) {
 		{
 			gl.Enable(gl.TEXTURE_2D)
 			req.data.texture = gl.GenTexture()

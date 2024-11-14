@@ -3,13 +3,15 @@ package game
 import (
 	"errors"
 	"fmt"
+	"path/filepath"
+	"strings"
+
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/opengl/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
-	"path/filepath"
-	"strings"
 )
 
 type Paragraph struct {
@@ -274,6 +276,8 @@ func (mdb *MediumDialogBox) Draw(region gui.Region) {
 	if mdb.done {
 		return
 	}
+
+	shaderBank := globals.RenderQueueState().Shaders()
 	gl.Enable(gl.TEXTURE_2D)
 	gl.Color4ub(255, 255, 255, 255)
 	mdb.layout.Background.Data().RenderNatural(region.X, region.Y)
@@ -312,7 +316,7 @@ func (mdb *MediumDialogBox) Draw(region gui.Region) {
 		}
 		gl.Color4ub(255, 255, 255, 255)
 
-		d.RenderParagraph(data.Text, p.X+region.X, p.Y+region.Y-d.MaxHeight()/2, p.Dx, d.MaxHeight(), just, valign)
+		d.RenderParagraph(data.Text, p.X+region.X, p.Y+region.Y-d.MaxHeight()/2, p.Dx, d.MaxHeight(), just, valign, shaderBank)
 
 		gl.Color4ub(255, 255, 255, byte(data.shading*255))
 		tex := data.Image.Data()

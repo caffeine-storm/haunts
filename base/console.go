@@ -2,11 +2,13 @@ package base
 
 import (
 	"bufio"
+	"strings"
+	"unicode"
+
+	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/opengl/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
-	"strings"
-	"unicode"
 )
 
 const maxLines = 25
@@ -113,23 +115,24 @@ func (c *Console) DrawFocused(region gui.Region) {
 			gl.Color4d(1, 0, 0, 1)
 		}
 	}
+	shaderBank := globals.RenderQueueState().Shaders()
 	if c.start > c.end {
 		for i := c.start; i < len(c.lines); i++ {
 			do_color(c.lines[i])
-			c.dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, c.dict.MaxHeight(), gui.Left)
+			c.dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, c.dict.MaxHeight(), gui.Left, shaderBank)
 			y -= c.dict.MaxHeight()
 		}
 		for i := 0; i < c.end; i++ {
 			do_color(c.lines[i])
-			c.dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, c.dict.MaxHeight(), gui.Left)
+			c.dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, c.dict.MaxHeight(), gui.Left, shaderBank)
 			y -= c.dict.MaxHeight()
 		}
 	} else {
 		for i := c.start; i < c.end && i < len(c.lines); i++ {
 			do_color(c.lines[i])
-			c.dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, c.dict.MaxHeight(), gui.Left)
+			c.dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, c.dict.MaxHeight(), gui.Left, shaderBank)
 			y -= c.dict.MaxHeight()
 		}
 	}
-	c.dict.RenderString(string(c.cmd), gui.Point{X: c.xscroll, Y: y}, c.dict.MaxHeight(), gui.Left)
+	c.dict.RenderString(string(c.cmd), gui.Point{X: c.xscroll, Y: y}, c.dict.MaxHeight(), gui.Left, shaderBank)
 }

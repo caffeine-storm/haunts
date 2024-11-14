@@ -2,6 +2,7 @@ package game
 
 import (
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/sound"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/opengl/gl"
@@ -136,6 +137,7 @@ func (b *Button) RenderAt(x, y int) {
 			b.Text.Justification = "center"
 		}
 		base.Log().Warn("button.RenderAt", "b.Text.String", b.Text.String, "b.X", b.X, "b.Y", b.Y, "x", x, "y", y)
-		d.RenderString(b.Text.String, gui.Point{X: b.X + x, Y: b.Y + y}, d.MaxHeight(), just)
+		shaderBank := globals.RenderQueueState().Shaders()
+		d.RenderString(b.Text.String, gui.Point{X: b.X + x, Y: b.Y + y}, d.MaxHeight(), just, shaderBank)
 	}
 }

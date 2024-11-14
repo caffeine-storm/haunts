@@ -1,12 +1,14 @@
 package game
 
 import (
+	"path/filepath"
+
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/opengl/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
-	"path/filepath"
 )
 
 type creditsLayout struct {
@@ -119,6 +121,7 @@ func (cm *CreditsMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 }
 
 func (cm *CreditsMenu) Draw(region gui.Region) {
+	shaderBank := globals.RenderQueueState().Shaders()
 	cm.region = region
 	gl.Color4ub(255, 255, 255, 255)
 	cm.layout.Background.Data().RenderNatural(region.X, region.Y)
@@ -136,7 +139,7 @@ func (cm *CreditsMenu) Draw(region gui.Region) {
 	gl.Color4ub(255, 255, 255, 255)
 	for _, line := range cm.layout.Credits.Lines {
 		sy -= int(d.MaxHeight())
-		d.RenderString(line, gui.Point{X: sx, Y: sy}, d.MaxHeight(), gui.Left)
+		d.RenderString(line, gui.Point{X: sx, Y: sy}, d.MaxHeight(), gui.Left, shaderBank)
 	}
 	cm.layout.Credits.Scroll.Region().PopClipPlanes()
 }

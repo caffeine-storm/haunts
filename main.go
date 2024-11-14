@@ -13,17 +13,18 @@ import (
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
+	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/sound"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/memory"
 	"github.com/go-gl-legacy/gl"
+	glopdebug "github.com/runningwild/glop/debug"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gos"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/system"
-	glopdebug "github.com/runningwild/glop/debug"
 
 	// Need to pull in all of the actions we define here and not in
 	// haunts/game because haunts/game/actions depends on it
@@ -238,6 +239,10 @@ func onHauntsPanic(recoveredValue interface{}) {
 	fmt.Printf("PANIC: %s\n", string(data))
 }
 
+func MakeQueueWithPrefixFn(prefix func(render.RenderQueueState), initFn func(render.RenderQueueState)) render.RenderQueueInterface {
+	return render.MakeQueue(initFn)
+}
+
 func main() {
 	defer func() {
 		if r := recover(); r != nil {
@@ -250,7 +255,8 @@ func main() {
 	base.Log().Printf("Version %s", Version())
 	sys.Startup()
 	sound.Init()
-	render := render.MakeQueue(func() {
+	queue := render.MakeQueue(func(queueState render.RenderQueueState) {
+		globals.SetRenderQueueState(queueState)
 		sys.CreateWindow(10, 10, wdx, wdy)
 		sys.EnableVSync(true)
 		err := gl.Init()
@@ -262,12 +268,12 @@ func main() {
 		gl.Enable(gl.BLEND)
 		gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 	})
-	render.StartProcessing()
+	queue.StartProcessing()
 
-	base.InitDictionaries(render, sysDimser(sys))
-	texture.Init(render)
+	base.InitDictionaries(queue, sysDimser(sys))
+	texture.Init(queue)
 
-	base.InitShaders(render)
+	base.InitShaders(queue)
 	runtime.GOMAXPROCS(8)
 	ui, err := gui.Make(gin.In(), gui.Dims{Dx: wdx, Dy: wdy}, filepath.Join(datadir, "fonts", "skia.ttf"))
 	if err != nil {
@@ -318,10 +324,10 @@ func main() {
 	sys.Think()
 	// Wait until now to create the dictionary because the render thread needs
 	// to be running in advance.
-	render.Queue(func() {
+	queue.Queue(func(render.RenderQueueState) {
 		ui.Draw()
 	})
-	render.Purge()
+	queue.Purge()
 
 	var profile_output *os.File
 	heap_prof_count := 0
@@ -331,11 +337,11 @@ func main() {
 			break
 		}
 		sys.Think()
-		render.Queue(func() {
+		queue.Queue(func(render.RenderQueueState) {
 			sys.SwapBuffers()
 			ui.Draw()
 		})
-		render.Purge()
+		queue.Purge()
 
 		for _, child := range game_box.GetChildren() {
 			if gp, ok := child.(*game.GamePanel); ok {
@@ -392,7 +398,7 @@ func main() {
 				}
 				defer f.Close()
 
-				render.Queue(func() {
+				queue.Queue(func(render.RenderQueueState) {
 					glopdebug.ScreenShot(wdx, wdy, f)
 				})
 			}
@@ -448,7 +454,7 @@ func main() {
 		}
 		// Draw a cursor at the cursor - for testing an osx bug in glop.
 		// zx, zy := gin.In().GetCursor("Mouse").Point()
-		// render.Queue(func() {
+		// render.Queue(func(render.RenderQueueState) {
 		//   gl.Color4ub(255, 0, 0, 255)
 		//   gl.Begin(gl.LINES)
 		//   {
