@@ -118,10 +118,10 @@ func (ui *UiSelectMap) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	return ui.chooser.Respond(g, group)
 }
 
-func (ui *UiSelectMap) Draw(region gui.Region) {
-	ui.chooser.Draw(region)
+func (ui *UiSelectMap) Draw(region gui.Region, ctx gui.DrawingContext) {
+	ui.chooser.Draw(region, ctx)
 }
 
-func (ui *UiSelectMap) DrawFocused(region gui.Region) {
-	ui.chooser.Draw(region)
+func (ui *UiSelectMap) DrawFocused(region gui.Region, ctx gui.DrawingContext) {
+	ui.chooser.Draw(region, ctx)
 }

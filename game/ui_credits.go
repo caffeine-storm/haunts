@@ -120,7 +120,7 @@ func (cm *CreditsMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	return hit
 }
 
-func (cm *CreditsMenu) Draw(region gui.Region) {
+func (cm *CreditsMenu) Draw(region gui.Region, ctx gui.DrawingContext) {
 	shaderBank := globals.RenderQueueState().Shaders()
 	cm.region = region
 	gl.Color4ub(255, 255, 255, 255)
@@ -144,7 +144,7 @@ func (cm *CreditsMenu) Draw(region gui.Region) {
 	cm.layout.Credits.Scroll.Region().PopClipPlanes()
 }
 
-func (cm *CreditsMenu) DrawFocused(region gui.Region) {
+func (cm *CreditsMenu) DrawFocused(region gui.Region, ctx gui.DrawingContext) {
 }
 
 func (cm *CreditsMenu) String() string {

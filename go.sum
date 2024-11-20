@@ -59,8 +59,8 @@ github.com/bgentry/speakeasy v0.1.0/go.mod h1:+zsyZBPWlz7T6j88CTgSN5bM796AkVf0kB
 github.com/bketelsen/crypt v0.0.4/go.mod h1:aI6NrJ0pMGgvZKL1iVgXLnfIFJtfV+bKCoqOes/6LfM=
 github.com/caffeine-storm/gl v0.0.0-20240909160157-d1b38f2deb16 h1:lHq5YECDcjZKieQW2YWLh8AjJ9Gs/2jIiXcJjbsJGqU=
 github.com/caffeine-storm/gl v0.0.0-20240909160157-d1b38f2deb16/go.mod h1:5WNXbhdBMLerIscVkSVTRwGcsRywYKYHRKFEBZOUBEA=
-github.com/caffeine-storm/glop v0.0.0-20241114163331-7a30a2c7fd22 h1:GwjK/2ZkndLpjBIhVnPVL7WXyuD4sCiVT/W04Fgfnuo=
-github.com/caffeine-storm/glop v0.0.0-20241114163331-7a30a2c7fd22/go.mod h1:SXZnV68Vk2Yhhkw1FGakXUDlMLlShBW4EfR3GHWrUjA=
+github.com/caffeine-storm/glop v0.0.0-20241120173848-d3f070461324 h1:tm6YvrE+nRTldX/avWxshAdJLq3DUOuL2JxT4upnAHw=
+github.com/caffeine-storm/glop v0.0.0-20241120173848-d3f070461324/go.mod h1:bFzhUGylkGggQJMUBbkpbc1N3LscBto/lKdzlUiLlDg=
 github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c h1:KqJxBrec/mnKQ+QgBu3/iJvaiurKpNDsXLrrXSau73U=
 github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c/go.mod h1:ntYmIr0ULu7QxKlmOE6cC87X4pWDG8jO/wSUBn2ZzJY=
 github.com/caffeine-storm/golua v0.0.0-20240910150920-bb0104c032e4 h1:zTOKTYGNmZCZVDgvjsTEXhaFIcTWiccPHKBFaWQzo80=
@@ -248,8 +248,6 @@ github.com/smartystreets/assertions v0.0.0-20180927180507-b2de0cb4f26d/go.mod h1
 github.com/smartystreets/goconvey v1.6.4/go.mod h1:syvi0/a8iFYH4r/RixwvyeAJjdLS9QV7WQ/tjFTllLA=
 github.com/smartystreets/goconvey v1.8.1 h1:qGjIddxOk4grTu9JPOU31tVfq3cNdBlNa5sSznIX1xY=
 github.com/smartystreets/goconvey v1.8.1/go.mod h1:+/u4qLyY6x1jReYOp7GOM2FSt8aP9CzCZL03bI28W60=
-github.com/spakin/netpbm v1.3.2 h1:ZAb16Sw/+b4QeO9NokEvejVvbrYdF6DdcYJe0dKONL0=
-github.com/spakin/netpbm v1.3.2/go.mod h1:cVep9uXARFgAu2UU+0c+OE1J+eKmDN2hW0EN+tazkTA=
 github.com/spf13/afero v1.6.0/go.mod h1:Ai8FlHk4v/PARR026UzYexafAt9roJ7LcLMAmO6Z93I=
 github.com/spf13/cast v1.3.1/go.mod h1:Qx5cxh0v+4UWYiBimWS+eyWzqEqokIECu5etghLkUJE=
 github.com/spf13/cobra v1.2.1/go.mod h1:ExllRjgxM/piMAM+3tAZvg8fsklGAf3tPfi+i8t68Nk=

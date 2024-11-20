@@ -82,11 +82,11 @@ package game
 //   return false
 // }
 
-// func (ui *UiSelectSide) Draw(region gui.Region) {
+// func (ui *UiSelectSide) Draw(region gui.Region, ctx gui.DrawingContext) {
 //   for _, button := range ui.buttons {
 //     button.RenderAt(region.X, region.Y, ui.mx, ui.my)
 //   }
 // }
 
-// func (ui *UiSelectSide) DrawFocused(region gui.Region) {
+// func (ui *UiSelectSide) DrawFocused(region gui.Region, ctx gui.DrawingContext) {
 // }

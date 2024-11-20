@@ -357,7 +357,7 @@ func (o offsetDrawable) Pos() (int, int) {
 	return x + o.dx, y + o.dy
 }
 
-func (hv *HouseViewer) Draw(region gui.Region) {
+func (hv *HouseViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
 	region.PushClipPlanes()
 	defer region.PopClipPlanes()
 

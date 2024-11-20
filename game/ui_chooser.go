@@ -438,7 +438,7 @@ func (c *Chooser) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	}
 	return false
 }
-func (c *Chooser) Draw(region gui.Region) {
+func (c *Chooser) Draw(region gui.Region, ctx gui.DrawingContext) {
 	c.region = region
 	gl.Color4ub(255, 255, 255, 255)
 	c.layout.Background.Data().RenderNatural(region.X, region.Y)
@@ -475,8 +475,8 @@ func (c *Chooser) Draw(region gui.Region) {
 	}
 	c.info_region.PopClipPlanes()
 }
-func (c *Chooser) DrawFocused(region gui.Region) {
-	c.Draw(region)
+func (c *Chooser) DrawFocused(region gui.Region, ctx gui.DrawingContext) {
+	c.Draw(region, ctx)
 }
 func (c *Chooser) String() string {
 	return "chooser"

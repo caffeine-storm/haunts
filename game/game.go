@@ -71,8 +71,8 @@ func (gp *GamePanel) Think(ui *gui.Gui, t int64) {
 	}
 }
 
-func (gp *GamePanel) Draw(region gui.Region) {
-	gp.AnchorBox.Draw(region)
+func (gp *GamePanel) Draw(region gui.Region, ctx gui.DrawingContext) {
+	gp.AnchorBox.Draw(region, ctx)
 	region.PushClipPlanes()
 	defer region.PopClipPlanes()
 }

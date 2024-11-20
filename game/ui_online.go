@@ -481,7 +481,7 @@ func (sm *OnlineMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	return false
 }
 
-func (sm *OnlineMenu) Draw(region gui.Region) {
+func (sm *OnlineMenu) Draw(region gui.Region, ctx gui.DrawingContext) {
 	shaderBank := globals.RenderQueueState().Shaders()
 	sm.region = region
 	gl.Color4ub(255, 255, 255, 255)
@@ -563,7 +563,7 @@ func (sm *OnlineMenu) Draw(region gui.Region) {
 	}
 }
 
-func (sm *OnlineMenu) DrawFocused(region gui.Region) {
+func (sm *OnlineMenu) DrawFocused(region gui.Region, ctx gui.DrawingContext) {
 }
 
 func (sm *OnlineMenu) String() string {

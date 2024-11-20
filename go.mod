@@ -20,7 +20,7 @@ require (
 
 replace code.google.com/p/freetype-go => github.com/golang/freetype v0.0.0-20120725121025-28cc5fbc5d0b
 
-replace github.com/runningwild/glop => github.com/caffeine-storm/glop v0.0.0-20241114163331-7a30a2c7fd22
+replace github.com/runningwild/glop => github.com/caffeine-storm/glop v0.0.0-20241120173848-d3f070461324
 
 replace github.com/go-gl-legacy/gl => github.com/caffeine-storm/gl v0.0.0-20240909160157-d1b38f2deb16
 

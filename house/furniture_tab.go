@@ -46,7 +46,7 @@ func makeFurniturePanel(room *Room, viewer *RoomViewer) *FurniturePanel {
 	if room.Name == "" {
 		room.Name = "name"
 	}
-	fp.name = gui.MakeTextEditLine("standard", room.Name, 300, 1, 1, 1, 1)
+	fp.name = gui.MakeTextEditLine("standard_18", room.Name, 300, 1, 1, 1, 1)
 
 	if room.Floor.Path == "" {
 		room.Floor.Path = base.Path(datadir)
@@ -80,7 +80,7 @@ func makeFurniturePanel(room *Room, viewer *RoomViewer) *FurniturePanel {
 	fnames := GetAllFurnitureNames()
 	for i := range fnames {
 		name := fnames[i]
-		furn_table.AddChild(gui.MakeButton("standard", name, 300, 1, 1, 1, 1, func(t int64) {
+		furn_table.AddChild(gui.MakeButton("standard_18", name, 300, 1, 1, 1, 1, func(t int64) {
 			f := MakeFurniture(name)
 			if f == nil {
 				return

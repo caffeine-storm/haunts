@@ -894,7 +894,7 @@ func drawFurniture(roomx, roomy int, mat mathgl.Mat4, zoom float32, furniture []
 	gl.PopMatrix()
 }
 
-func (rv *RoomViewer) Draw(region gui.Region) {
+func (rv *RoomViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
 	region.PushClipPlanes()
 	defer region.PopClipPlanes()
 

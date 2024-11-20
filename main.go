@@ -226,10 +226,6 @@ func (c *callsSys) Dims() gui.Dims {
 	}
 }
 
-func sysDimser(sys system.System) gui.Dimser {
-	return &callsSys{sys: sys}
-}
-
 func onHauntsPanic(recoveredValue interface{}) {
 	data := debug.Stack()
 	base.Error().Printf("PANIC: %v\n", recoveredValue)
@@ -270,15 +266,15 @@ func main() {
 	})
 	queue.StartProcessing()
 
-	base.InitDictionaries(queue, sysDimser(sys))
 	texture.Init(queue)
 
 	base.InitShaders(queue)
 	runtime.GOMAXPROCS(8)
-	ui, err := gui.Make(gin.In(), gui.Dims{Dx: wdx, Dy: wdy}, filepath.Join(datadir, "fonts", "skia.ttf"))
+	ui, err := gui.Make(gin.In(), gui.Dims{Dx: wdx, Dy: wdy})
 	if err != nil {
 		panic(err.Error())
 	}
+	base.InitDictionaries(ui)
 	loadAllRegistries()
 
 	// TODO: Might want to be able to reload stuff, but this is sensitive because it

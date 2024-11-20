@@ -139,7 +139,7 @@ func (sm *StartMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	return false
 }
 
-func (sm *StartMenu) Draw(region gui.Region) {
+func (sm *StartMenu) Draw(region gui.Region, ctx gui.DrawingContext) {
 	base.Log().Info("StartMenu.Draw", "region", region)
 	sm.region = region
 	gl.Color4ub(255, 255, 255, 255)
@@ -154,7 +154,7 @@ func (sm *StartMenu) Draw(region gui.Region) {
 	}
 }
 
-func (sm *StartMenu) DrawFocused(region gui.Region) {
+func (sm *StartMenu) DrawFocused(region gui.Region, ctx gui.DrawingContext) {
 }
 
 func (sm *StartMenu) String() string {

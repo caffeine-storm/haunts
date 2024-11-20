@@ -418,7 +418,7 @@ func (m *MainBar) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	return cursor != nil
 }
 
-func (m *MainBar) Draw(region gui.Region) {
+func (m *MainBar) Draw(region gui.Region, ctx gui.DrawingContext) {
 	shaderBank := globals.RenderQueueState().Shaders()
 	m.region = region
 	gl.Enable(gl.TEXTURE_2D)
@@ -625,7 +625,7 @@ func (m *MainBar) Draw(region gui.Region) {
 	}
 }
 
-func (m *MainBar) DrawFocused(region gui.Region) {
+func (m *MainBar) DrawFocused(region gui.Region, ctx gui.DrawingContext) {
 
 }
 

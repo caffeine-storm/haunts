@@ -5,7 +5,6 @@ import (
 	"path/filepath"
 
 	"github.com/go-gl-legacy/gl"
-	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
 )
 
@@ -72,7 +71,6 @@ func SetUniformF(shader, variable string, f float32) {
 }
 
 func InitShaders(queue render.RenderQueueInterface) {
-	gui.Init(queue)
 	queue.Queue(func(render.RenderQueueState) {
 		vertex_shaders = make(map[string]gl.Shader)
 		fragment_shaders = make(map[string]gl.Shader)

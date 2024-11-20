@@ -45,7 +45,7 @@ func (o *Overlay) Think(g *gui.Gui, dt int64) {
 		o.game.Waypoints[i].drawn = false
 	}
 }
-func (o *Overlay) Draw(region gui.Region) {
+func (o *Overlay) Draw(region gui.Region, ctx gui.DrawingContext) {
 	o.region = region
 	switch o.game.Side {
 	case SideHaunt:
@@ -93,8 +93,8 @@ func (o *Overlay) Draw(region gui.Region) {
 		base.EnableShader("")
 	}
 }
-func (o *Overlay) DrawFocused(region gui.Region) {
-	o.Draw(region)
+func (o *Overlay) DrawFocused(region gui.Region, ctx gui.DrawingContext) {
+	o.Draw(region, ctx)
 }
 func (o *Overlay) String() string {
 	return "overlay"

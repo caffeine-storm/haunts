@@ -724,7 +724,7 @@ func makeHouseDataTab(house *HouseDef, viewer *HouseViewer) *houseDataTab {
 	hdt.house = house
 	hdt.viewer = viewer
 
-	hdt.name = gui.MakeTextEditLine("standard", "name", 300, 1, 1, 1, 1)
+	hdt.name = gui.MakeTextEditLine("standard_18", "name", 300, 1, 1, 1, 1)
 	num_floors_options := []string{"1 Floor", "2 Floors", "3 Floors", "4 Floors"}
 	hdt.num_floors = gui.MakeComboTextBox(num_floors_options, 300)
 	if hdt.house.Icon.Path == "" {
@@ -740,7 +740,7 @@ func makeHouseDataTab(house *HouseDef, viewer *HouseViewer) *houseDataTab {
 	room_buttons := gui.MakeVerticalTable()
 	for _, name := range names {
 		n := name
-		room_buttons.AddChild(gui.MakeButton("standard", name, 300, 1, 1, 1, 1, func(int64) {
+		room_buttons.AddChild(gui.MakeButton("standard_18", name, 300, 1, 1, 1, 1, func(int64) {
 			if hdt.temp_room != nil {
 				return
 			}
@@ -917,7 +917,7 @@ func makeHouseDoorTab(house *HouseDef, viewer *HouseViewer) *houseDoorTab {
 	door_buttons := gui.MakeVerticalTable()
 	for _, name := range names {
 		n := name
-		door_buttons.AddChild(gui.MakeButton("standard", name, 300, 1, 1, 1, 1, func(int64) {
+		door_buttons.AddChild(gui.MakeButton("standard_18", name, 300, 1, 1, 1, 1, func(int64) {
 			if len(hdt.house.Floors[0].Rooms) < 2 || hdt.temp_door != nil {
 				return
 			}
@@ -1073,11 +1073,11 @@ func makeHouseRelicsTab(house *HouseDef, viewer *HouseViewer) *houseRelicsTab {
 	hdt.house = house
 	hdt.viewer = viewer
 
-	hdt.VerticalTable.AddChild(gui.MakeTextLine("standard", "Spawns", 300, 1, 1, 1, 1))
-	hdt.spawn_name = gui.MakeTextEditLine("standard", "", 300, 1, 1, 1, 1)
+	hdt.VerticalTable.AddChild(gui.MakeTextLine("standard_18", "Spawns", 300, 1, 1, 1, 1))
+	hdt.spawn_name = gui.MakeTextEditLine("standard_18", "", 300, 1, 1, 1, 1)
 	hdt.VerticalTable.AddChild(hdt.spawn_name)
 
-	hdt.make_spawn = gui.MakeButton("standard", "New Spawn Point", 300, 1, 1, 1, 1, func(int64) {
+	hdt.make_spawn = gui.MakeButton("standard_18", "New Spawn Point", 300, 1, 1, 1, 1, func(int64) {
 		hdt.newSpawn()
 	})
 	hdt.VerticalTable.AddChild(hdt.make_spawn)

@@ -5,7 +5,6 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/opengl/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
@@ -25,7 +24,6 @@ type Console struct {
 
 	input *bufio.Reader
 	cmd   []byte
-	dict  *gui.Dictionary
 }
 
 func MakeConsole() *Console {
@@ -37,7 +35,6 @@ func MakeConsole() *Console {
 	c.BasicZone.Ey = true
 	c.BasicZone.Request_dims = gui.Dims{1000, 1000}
 	c.input = bufio.NewReader(log_console)
-	c.dict = GetDictionary(12)
 	return &c
 }
 
@@ -90,10 +87,12 @@ func (c *Console) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 	return group.Focus
 }
 
-func (c *Console) Draw(region gui.Region) {
+func (c *Console) Draw(region gui.Region, ctx gui.DrawingContext) {
 }
 
-func (c *Console) DrawFocused(region gui.Region) {
+func (c *Console) DrawFocused(region gui.Region, ctx gui.DrawingContext) {
+	// TODO(tmckee): is 'standard_18' correct here?
+	dict := ctx.GetDictionary("standard_18")
 	gl.Color4d(0.2, 0, 0.3, 0.8)
 	gl.Disable(gl.TEXTURE_2D)
 	gl.Begin(gl.QUADS)
@@ -103,7 +102,7 @@ func (c *Console) DrawFocused(region gui.Region) {
 	gl.Vertex2i(region.X+region.Dx, region.Y)
 	gl.End()
 	gl.Color4d(1, 1, 1, 1)
-	y := region.Y + len(c.lines)*c.dict.MaxHeight()
+	y := region.Y + len(c.lines)*dict.MaxHeight()
 	do_color := func(line string) {
 		if strings.HasPrefix(line, "LOG") {
 			gl.Color4d(1, 1, 1, 1)
@@ -115,24 +114,25 @@ func (c *Console) DrawFocused(region gui.Region) {
 			gl.Color4d(1, 0, 0, 1)
 		}
 	}
-	shaderBank := globals.RenderQueueState().Shaders()
+	// TODO(tmckee): expose the glop.font shader id instead of hardcoding here.
+	shaderBank := ctx.GetShaders("glop.font")
 	if c.start > c.end {
 		for i := c.start; i < len(c.lines); i++ {
 			do_color(c.lines[i])
-			c.dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, c.dict.MaxHeight(), gui.Left, shaderBank)
-			y -= c.dict.MaxHeight()
+			dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, dict.MaxHeight(), gui.Left, shaderBank)
+			y -= dict.MaxHeight()
 		}
 		for i := 0; i < c.end; i++ {
 			do_color(c.lines[i])
-			c.dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, c.dict.MaxHeight(), gui.Left, shaderBank)
-			y -= c.dict.MaxHeight()
+			dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, dict.MaxHeight(), gui.Left, shaderBank)
+			y -= dict.MaxHeight()
 		}
 	} else {
 		for i := c.start; i < c.end && i < len(c.lines); i++ {
 			do_color(c.lines[i])
-			c.dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, c.dict.MaxHeight(), gui.Left, shaderBank)
-			y -= c.dict.MaxHeight()
+			dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, dict.MaxHeight(), gui.Left, shaderBank)
+			y -= dict.MaxHeight()
 		}
 	}
-	c.dict.RenderString(string(c.cmd), gui.Point{X: c.xscroll, Y: y}, c.dict.MaxHeight(), gui.Left, shaderBank)
+	dict.RenderString(string(c.cmd), gui.Point{X: c.xscroll, Y: y}, dict.MaxHeight(), gui.Left, shaderBank)
 }

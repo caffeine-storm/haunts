@@ -271,7 +271,7 @@ func (mdb *MediumDialogBox) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	return cursor != nil
 }
 
-func (mdb *MediumDialogBox) Draw(region gui.Region) {
+func (mdb *MediumDialogBox) Draw(region gui.Region, ctx gui.DrawingContext) {
 	mdb.region = region
 	if mdb.done {
 		return
@@ -324,7 +324,7 @@ func (mdb *MediumDialogBox) Draw(region gui.Region) {
 	}
 }
 
-func (mdb *MediumDialogBox) DrawFocused(region gui.Region) {}
+func (mdb *MediumDialogBox) DrawFocused(region gui.Region, ctx gui.DrawingContext) {}
 
 func (mdb *MediumDialogBox) String() string {
 	return "medium dialog box"

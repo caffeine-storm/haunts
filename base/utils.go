@@ -5,9 +5,11 @@ import (
 	"encoding/base64"
 	"encoding/gob"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"image/color"
 	"io"
+	"io/fs"
 	"log"
 	"log/slog"
 	"os"
@@ -16,6 +18,7 @@ import (
 	"sync"
 
 	"code.google.com/p/freetype-go/freetype/truetype"
+	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/opengl/gl"
 	"github.com/runningwild/glop/glog"
 	"github.com/runningwild/glop/gui"
@@ -115,18 +118,11 @@ func CloseLog() {
 	log_out.Close()
 }
 
-var font_dict map[int]*gui.Dictionary
-var render_queue render.RenderQueueInterface
-var dims_getter gui.Dimser
+var drawing_context gui.UpdateableDrawingContext
 var dictionary_mutex sync.Mutex
 
-func InitDictionaries(renderQueue render.RenderQueueInterface, dimsGetter gui.Dimser) {
-	if font_dict != nil {
-		panic("must not call InitDictionaries multiple times!")
-	}
-	font_dict = make(map[int]*gui.Dictionary)
-	render_queue = renderQueue
-	dims_getter = dimsGetter
+func InitDictionaries(ctx gui.UpdateableDrawingContext) {
+	drawing_context = ctx
 }
 
 func loadFont() (*truetype.Font, error) {
@@ -146,17 +142,8 @@ func loadFont() (*truetype.Font, error) {
 	return font, nil
 }
 
-func loadDictionaryFromFile(size int, renderQueue render.RenderQueueInterface, dims gui.Dimser, logger *slog.Logger) (*gui.Dictionary, error) {
-	name := fmt.Sprintf("dict_%d.gob", size)
-
-	filename := filepath.Join(datadir, "fonts", name)
-	f, err := os.Open(filename)
-	if err != nil {
-		return nil, fmt.Errorf("couldn't open file %q: %w", filename, err)
-	}
-	defer f.Close()
-
-	d, err := gui.LoadDictionary(f, renderQueue, dims, logger)
+func loadDictionaryFromFile(input io.Reader, renderQueue render.RenderQueueInterface, logger *slog.Logger) (*gui.Dictionary, error) {
+	d, err := gui.LoadDictionary(input, renderQueue, logger)
 	if err != nil {
 		return nil, fmt.Errorf("gui.LoadDictionary failed: %w", err)
 	}
@@ -174,34 +161,103 @@ func saveDictionaryToFile(d *gui.Dictionary, size int) error {
 	return d.Store(f)
 }
 
+// TODO(tmckee): this kinda breaks the abstraction for RenderQueue. We need it
+// so that jobs running on the render thread already can call subroutines that
+// call Queue(). We ought to find a better way to do this.
+type immediateQueue struct {}
+var _ render.RenderQueueInterface = (*immediateQueue)(nil)
+
+func (q *immediateQueue) Queue(f render.RenderJob) {
+	queue_state := globals.RenderQueueState()
+	f(queue_state)
+}
+func (q *immediateQueue) StartProcessing() {}
+func (q *immediateQueue) Purge() {}
+func (q *immediateQueue) IsPurging() bool {
+	return true
+}
+
 func GetDictionary(size int) *gui.Dictionary {
 	dictionary_mutex.Lock()
 	defer dictionary_mutex.Unlock()
-	if font_dict == nil {
+	if drawing_context == nil {
 		panic("need to call base.InitDictionaries first")
 	}
-	if _, ok := font_dict[size]; !ok {
-		logger := glog.Relevel(slogger, slog.LevelWarn)
-		d, err := loadDictionaryFromFile(size, render_queue, dims_getter, logger)
-		if err == nil {
-			font_dict[size] = d
-		} else {
-			Log().Warn("Unable to load dictionary", "size", size, "err", err)
-			font, err := loadFont()
-			if err != nil {
-				panic(fmt.Errorf("unable to load font: size %d: err: %w", size, err))
+
+	return getDictionaryByProperties("standard", size)
+}
+
+func fontIdFromProperties(fontName string, size int) string {
+	return fmt.Sprintf("%s_%d", fontName, size)
+}
+
+func fontCachePath(fontName string, size int) string {
+	return fmt.Sprintf("dict_%s.gob", fontIdFromProperties(fontName, size))
+}
+
+func getDictionaryByProperties(fontName string, size int) *gui.Dictionary {
+	var ret *gui.Dictionary
+	fontId := fontIdFromProperties(fontName, size)
+	func () {
+		// TODO(tmckee): catching a panic is not as nice as supporting lookup-miss
+		// in the API.
+		defer func() {
+			if e := recover(); e != nil {
+				switch e.(type) {
+				case gui.MissingFontError:
+					// TODO(tmckee): BARF!! THIS IS UGGGLGY
+					ret = loadDictionaryByProperties(fontName, size)
+					drawing_context.SetDictionary(fontId, ret)
+					bank := globals.RenderQueueState().Shaders()
+					drawing_context.SetShaders("glop.font", bank)
+				default:
+					panic(e)
+				}
 			}
-			logger := glog.Relevel(slogger, slog.LevelDebug)
-			d = gui.MakeDictionary(font, size, render_queue, dims_getter, logger)
-			err = saveDictionaryToFile(d, size)
-			if err != nil {
-				Log().Warn("Unable to save dictionary", "size", size, "err", err)
-			}
-			font_dict[size] = d
+		}()
+		ret = drawing_context.GetDictionary(fontId)
+	}()
+
+	return ret
+}
+
+func loadDictionaryByProperties(fontName string, size int) *gui.Dictionary {
+	logger := glog.Relevel(slogger, slog.LevelDebug)
+	// First, check our disk cache for a grid-of-glyphs.
+	cachePath := fontCachePath(fontName, size)
+
+	filename := filepath.Join(datadir, "fonts", cachePath)
+	f, err := os.Open(filename)
+	if err == nil {
+		defer f.Close()
+		Log().Info("font-cache-hit", "fontName", fontName, "size", size, "err", err)
+		d, err := loadDictionaryFromFile(f, &immediateQueue{}, glog.WarningLogger())
+		if err != nil {
+			panic(fmt.Errorf("couldn't loadDictionaryFromFile for %q @%d: %w", fontName, size, err))
 		}
+
+		return d
 	}
 
-	return font_dict[size]
+	// Make sure this is a cache miss (i.e. missing file) instead of something
+	// more serious.
+	if !errors.Is(err, fs.ErrNotExist) {
+		panic(fmt.Errorf("couldn't open %q: %w", filename, err))
+	}
+
+	// We don't have an appropriate grid-of-glyphs on disk; make one!
+	Log().Warn("font-cache-miss", "fontName", fontName, "size", size, "err", err)
+	font, err := loadFont()
+	if err != nil {
+		panic(fmt.Errorf("unable to load font: size %d: err: %w", size, err))
+	}
+
+	d := gui.MakeDictionary(font, size, &immediateQueue{}, logger)
+	err = saveDictionaryToFile(d, size)
+	if err != nil {
+		Log().Error("Unable to save dictionary", "size", size, "err", err)
+	}
+	return d
 }
 
 // A Path is a string that is intended to store a path.  When it is encoded

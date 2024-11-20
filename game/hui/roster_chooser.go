@@ -134,9 +134,13 @@ func MakeRosterChooser(options []Option, selector Selector, on_complete func(map
 		base.Log().Error("MakeRosterChooser failed", "err", err)
 		return nil
 	}
+
+	// TODO(tmckee): do we _need_ to know the font height?
+	// fontHeight := int(base.GetDictionary(15).MaxHeight())
+	fontHeight := 20
 	rc.Request_dims = gui.Dims{
-		rc.layout.Down.Data().Dx() + rc.layout.Option.Dx,
-		rc.layout.Num_options*rc.layout.Option.Dy + 2*int(base.GetDictionary(15).MaxHeight()),
+		Dx: rc.layout.Down.Data().Dx() + rc.layout.Option.Dx,
+		Dy: rc.layout.Num_options*rc.layout.Option.Dy + 2*fontHeight,
 	}
 	rc.selected = make(map[int]bool)
 	rc.selector = selector
@@ -213,7 +217,7 @@ func (rc *RosterChooser) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 	return false
 }
 
-func (rc *RosterChooser) Draw(r gui.Region) {
+func (rc *RosterChooser) Draw(r gui.Region, ctx gui.DrawingContext) {
 	rc.Render_region = r
 	r.PushClipPlanes()
 	defer r.PopClipPlanes()
@@ -259,8 +263,8 @@ func (rc *RosterChooser) Draw(r gui.Region) {
 		y := r.Y + r.Dy - rc.layout.Option.Dy + int(float64(rc.layout.Option.Dy)*rc.focus_pos)
 		for i := range rc.options {
 			rc.render.options[i] = gui.Region{
-				gui.Point{x, y},
-				gui.Dims{rc.layout.Option.Dx, rc.layout.Option.Dy},
+				Point: gui.Point{X: x, Y: y},
+				Dims: gui.Dims{Dx: rc.layout.Option.Dx, Dy: rc.layout.Option.Dy},
 			}
 			hovered := rc.mouse.Inside(rc.render.options[i])
 			selected := rc.selected[i]
@@ -273,19 +277,20 @@ func (rc *RosterChooser) Draw(r gui.Region) {
 	}
 
 	{ // Text
-		d := base.GetDictionary(15)
+		// TODO(tmckee): is this the right font name?
+		d := ctx.GetDictionary("glop.font")
 		x := r.X
 		y := r.Y + d.MaxHeight()/2
 		x1 := x + r.Dx/3
 		x2 := x + 2*r.Dx/3
 
 		rc.render.done = gui.Region{
-			gui.Point{x, r.Y},
-			gui.Dims{r.Dx / 2, int(d.MaxHeight() * 2)},
+			Point: gui.Point{X: x, Y: r.Y},
+			Dims: gui.Dims{Dx: r.Dx / 2, Dy: int(d.MaxHeight() * 2)},
 		}
 		rc.render.undo = gui.Region{
-			gui.Point{x + r.Dx/2, r.Y},
-			gui.Dims{r.Dx / 2, int(d.MaxHeight() * 2)},
+			Point: gui.Point{X: x + r.Dx/2, Y: r.Y},
+			Dims: gui.Dims{Dx: r.Dx / 2, Dy: int(d.MaxHeight() * 2)},
 		}
 
 		shaderBank := globals.RenderQueueState().Shaders()
@@ -309,7 +314,7 @@ func (rc *RosterChooser) Draw(r gui.Region) {
 	}
 }
 
-func (rc *RosterChooser) DrawFocused(gui.Region) {
+func (rc *RosterChooser) DrawFocused(gui.Region, gui.DrawingContext) {
 
 }
 

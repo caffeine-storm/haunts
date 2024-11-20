@@ -163,7 +163,7 @@ func (sm *SystemMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	return (g.FocusWidget() == sm)
 }
 
-func (sm *SystemMenu) Draw(region gui.Region) {
+func (sm *SystemMenu) Draw(region gui.Region, ctx gui.DrawingContext) {
 	sm.region = region
 	gl.Color4ub(255, 255, 255, 255)
 	x := region.X + region.Dx - sm.layout.Main.Texture.Data().Dx()
@@ -171,7 +171,7 @@ func (sm *SystemMenu) Draw(region gui.Region) {
 	sm.layout.Main.RenderAt(x, y)
 }
 
-func (sm *SystemMenu) DrawFocused(region gui.Region) {
+func (sm *SystemMenu) DrawFocused(region gui.Region, ctx gui.DrawingContext) {
 	sm.region = region
 	gl.Color4ub(255, 255, 255, 255)
 	x := region.X + region.Dx/2 - sm.layout.Sub.Background.Data().Dx()/2
