@@ -94,6 +94,9 @@ type baseLogger struct {
 var base_logger baseLogger
 
 func doLog(lvl slog.Level, msg string, args ...interface{}) {
+	if !glogger.Enabled(context.Background(), lvl) {
+		return
+	}
 	var pcs [1]uintptr
 	runtime.Callers(3, pcs[:]) // skip [Callers, <helper>, doLog]
 	r := slog.NewRecord(time.Now(), lvl, msg, pcs[0])

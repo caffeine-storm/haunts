@@ -108,7 +108,7 @@ func (b *Button) RenderAt(x, y int) {
 	// TODO(tmckee): clean: why not
 	// gl.Color4d(1, 1, 1, b.shade))
 	gl.Color4ub(255, 255, 255, byte(b.shade*255))
-	base.Log().Info("Button.RenderAt", "tex-path", b.Texture.Path)
+	base.Log().Trace("Button.RenderAt", "tex-path", b.Texture.Path)
 	if b.Texture.Path != "" {
 		b.Texture.Data().RenderNatural(b.X+x, b.Y+y)
 		b.bounds.x = b.X + x
@@ -136,7 +136,7 @@ func (b *Button) RenderAt(x, y int) {
 			b.bounds.x -= b.bounds.dx / 2
 			b.Text.Justification = "center"
 		}
-		base.Log().Warn("button.RenderAt", "b.Text.String", b.Text.String, "b.X", b.X, "b.Y", b.Y, "x", x, "y", y)
+		base.Log().Trace("button.RenderAt", "b.Text.String", b.Text.String, "b.X", b.X, "b.Y", b.Y, "x", x, "y", y)
 		shaderBank := globals.RenderQueueState().Shaders()
 		d.RenderString(b.Text.String, gui.Point{X: b.X + x, Y: b.Y + y}, d.MaxHeight(), just, shaderBank)
 	}

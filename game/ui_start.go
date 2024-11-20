@@ -140,12 +140,12 @@ func (sm *StartMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 }
 
 func (sm *StartMenu) Draw(region gui.Region, ctx gui.DrawingContext) {
-	base.Log().Info("StartMenu.Draw", "region", region)
+	base.Log().Trace("StartMenu.Draw", "region", region)
 	sm.region = region
 	gl.Color4ub(255, 255, 255, 255)
 	sm.layout.Background.Data().RenderNatural(sm.region.X, sm.region.Y)
 	sm.layout.Menu.Texture.Data().RenderNatural(sm.region.X+sm.layout.Menu.X, sm.region.Y+sm.layout.Menu.Y)
-	base.Log().Info("StartMenu.Draw: about to render buttons", "numbuttons", len(sm.buttons), "sm.layout", sm.layout)
+	base.Log().Trace("StartMenu.Draw: about to render buttons", "numbuttons", len(sm.buttons), "sm.layout", sm.layout)
 	for _, button := range sm.buttons {
 		// TODO(tmckee): clean: (x,y) given to RenderAt is not a target location
 		// but an offset from the button's (X,Y) fields. This does not seem clear
