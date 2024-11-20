@@ -93,31 +93,27 @@ type baseLogger struct {
 
 var base_logger baseLogger
 
-// Equivalent to glog.ErrorLogger.Error
-func (*baseLogger) Error(msg string, args ...interface{}) {
+func doLog(lvl slog.Level, msg string, args ...interface{}) {
 	var pcs [1]uintptr
-	runtime.Callers(2, pcs[:]) // skip [Callers, Error]
-	r := slog.NewRecord(time.Now(), slog.LevelError, msg, pcs[0])
+	runtime.Callers(3, pcs[:]) // skip [Callers, <helper>, doLog]
+	r := slog.NewRecord(time.Now(), lvl, msg, pcs[0])
 	r.Add(args...)
 	glogger.Handler().Handle(context.Background(), r)
+}
+
+// Equivalent to glog.ErrorLogger.Error
+func (*baseLogger) Error(msg string, args ...interface{}) {
+	doLog(slog.LevelError, msg, args...)
 }
 
 // Equivalent to glog.WarningLogger.Warn
 func (*baseLogger) Warn(msg string, args ...interface{}) {
-	var pcs [1]uintptr
-	runtime.Callers(2, pcs[:]) // skip [Callers, Warn]
-	r := slog.NewRecord(time.Now(), slog.LevelWarn, msg, pcs[0])
-	r.Add(args...)
-	glogger.Handler().Handle(context.Background(), r)
+	doLog(slog.LevelWarn, msg, args...)
 }
 
 // Equivalent to glog.InfoLogger.Info
 func (*baseLogger) Info(msg string, args ...interface{}) {
-	var pcs [1]uintptr
-	runtime.Callers(2, pcs[:]) // skip [Callers, Info]
-	r := slog.NewRecord(time.Now(), slog.LevelInfo, msg, pcs[0])
-	r.Add(args...)
-	glogger.Handler().Handle(context.Background(), r)
+	doLog(slog.LevelInfo, msg, args...)
 }
 
 // TODO: This probably isn't the best way to do things - different go-routines
