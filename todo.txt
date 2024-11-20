@@ -1,5 +1,8 @@
 - migrate uses of gospec to Convey
 
+- CI/CD
+	- use appveyor.com
+
 - add tooling to run revive
 	https://github.com/mgechev/revive
 
@@ -8,9 +11,6 @@
 
 - Do we need to worry about building in devel mode?
 	- build-tag: // +build !release
-
-- CI/CD
-	- use appveyor.com
 
 bugs:
 - The 'edit mode' screen doesn't render its text correctly
