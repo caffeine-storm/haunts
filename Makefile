@@ -45,6 +45,10 @@ clean:
 fmt:
 	go fmt ./...
 
+# -l for 'list files'
+checkfmt:
+	@gofmt -l ./
+
 test:
 	go test ${testrunargs} -tags nosound ./...
 

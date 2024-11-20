@@ -18,7 +18,7 @@ func main() {
 
 	oldRepo := "github.com/runningwild/glop"
 	cstormRepo := "github.com/caffeine-storm/glop"
-	cmd := exec.Command("go", "get", "-u", cstormRepo + "@latest")
+	cmd := exec.Command("go", "get", "-u", cstormRepo+"@latest")
 
 	// Defeat the default cache at proxy.golang.org or else we can get stale
 	// results.
