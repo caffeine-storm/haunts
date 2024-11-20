@@ -2,6 +2,7 @@ package base
 
 import (
 	"bytes"
+	"context"
 	"encoding/base64"
 	"encoding/gob"
 	"encoding/json"
@@ -14,8 +15,10 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"sync"
+	"time"
 
 	"code.google.com/p/freetype-go/freetype/truetype"
 	"github.com/MobRulesGames/haunts/globals"
@@ -92,17 +95,29 @@ var base_logger baseLogger
 
 // Equivalent to glog.ErrorLogger.Error
 func (*baseLogger) Error(msg string, args ...interface{}) {
-	glogger.Error(msg, args...)
+	var pcs [1]uintptr
+	runtime.Callers(2, pcs[:]) // skip [Callers, Error]
+	r := slog.NewRecord(time.Now(), slog.LevelError, msg, pcs[0])
+	r.Add(args...)
+	glogger.Handler().Handle(context.Background(), r)
 }
 
 // Equivalent to glog.WarningLogger.Warn
 func (*baseLogger) Warn(msg string, args ...interface{}) {
-	glogger.Warn(msg, args...)
+	var pcs [1]uintptr
+	runtime.Callers(2, pcs[:]) // skip [Callers, Warn]
+	r := slog.NewRecord(time.Now(), slog.LevelWarn, msg, pcs[0])
+	r.Add(args...)
+	glogger.Handler().Handle(context.Background(), r)
 }
 
 // Equivalent to glog.InfoLogger.Info
 func (*baseLogger) Info(msg string, args ...interface{}) {
-	glogger.Info(msg, args...)
+	var pcs [1]uintptr
+	runtime.Callers(2, pcs[:]) // skip [Callers, Info]
+	r := slog.NewRecord(time.Now(), slog.LevelInfo, msg, pcs[0])
+	r.Add(args...)
+	glogger.Handler().Handle(context.Background(), r)
 }
 
 // TODO: This probably isn't the best way to do things - different go-routines

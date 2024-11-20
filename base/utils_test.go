@@ -66,7 +66,9 @@ func LoggingSpec() {
 		logOutput := base.SetupLogger("../testdata")
 		base.Log().Info("a test message")
 
-		So(logOutput, ShouldReference, "base/utils_test.go")
+		Convey("should reference the client code", func() {
+			So(logOutput, ShouldReference, "base/utils_test.go")
+		})
 	})
 }
 
