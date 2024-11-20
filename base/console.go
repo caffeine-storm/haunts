@@ -2,6 +2,7 @@ package base
 
 import (
 	"bufio"
+	"io"
 	"strings"
 	"unicode"
 
@@ -26,7 +27,7 @@ type Console struct {
 	cmd   []byte
 }
 
-func MakeConsole() *Console {
+func MakeConsole(rdr io.Reader) *Console {
 	if log_console == nil {
 		panic("Cannot make a console until the logging system has been set up.")
 	}
@@ -34,7 +35,7 @@ func MakeConsole() *Console {
 	c.BasicZone.Ex = true
 	c.BasicZone.Ey = true
 	c.BasicZone.Request_dims = gui.Dims{1000, 1000}
-	c.input = bufio.NewReader(log_console)
+	c.input = bufio.NewReader(rdr)
 	return &c
 }
 

@@ -38,27 +38,35 @@ var log_reader io.Reader
 var log_out *os.File
 var log_console *bytes.Buffer
 
-func SetDatadir(_datadir string) {
+func SetDatadir(_datadir string) io.Reader {
+	if datadir == _datadir {
+		return log_console
+	}
+
+	if datadir != "" {
+		panic(fmt.Errorf("double-setting datadir! was %q, new %q", datadir, _datadir))
+	}
+
 	datadir = _datadir
-	setupLogger()
+	return SetupLogger(datadir)
 }
 func GetDataDir() string {
 	return datadir
 }
 
-func setupLogger() {
+func SetupLogger(dir string) *bytes.Buffer {
 	// If an error happens when making this directory it might already exist,
 	// all that really matters is making the log file in the directory.
-	os.Mkdir(filepath.Join(datadir, "logs"), 0777)
+	os.Mkdir(filepath.Join(dir, "logs"), 0777)
 	logger = nil
 	var err error
 	name := "haunts.log"
-	log_out, err = os.Create(filepath.Join(datadir, "logs", name))
+	log_out, err = os.Create(filepath.Join(dir, "logs", name))
 	if err != nil {
 		fmt.Printf("Unable to open log file: %v\nLogging to stdout...\n", err.Error())
 		log_out = os.Stdout
 	}
-	log_console = bytes.NewBuffer(nil)
+	log_console = &bytes.Buffer{}
 	log_writer := io.MultiWriter(log_console, log_out)
 	logger = log.New(log_writer, "> ", log.Ltime|log.Lshortfile)
 
@@ -70,6 +78,8 @@ func setupLogger() {
 		logger,
 		glogger,
 	}
+
+	return log_console
 }
 
 type sloggy = glog.Slogger

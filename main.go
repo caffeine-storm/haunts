@@ -37,6 +37,7 @@ import (
 var (
 	sys                       system.System
 	datadir                   string
+	logReader                 io.Reader
 	key_map                   base.KeyMap
 	editors                   map[string]house.Editor
 	editor                    house.Editor
@@ -77,7 +78,7 @@ func init() {
 
 	rand.Seed(100)
 	datadir = "data-runtime"
-	base.SetDatadir(datadir)
+	logReader = base.SetDatadir(datadir)
 	base.Log().Printf("Setting datadir: %s", datadir)
 	err := house.SetDatadir(datadir)
 	if err != nil {
@@ -315,7 +316,7 @@ func main() {
 	game.Restart()
 
 	if base.IsDevel() {
-		ui.AddChild(base.MakeConsole())
+		ui.AddChild(base.MakeConsole(logReader))
 	}
 	sys.Think()
 	// Wait until now to create the dictionary because the render thread needs
