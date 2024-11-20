@@ -192,7 +192,8 @@ func saveDictionaryToFile(d *gui.Dictionary, size int) error {
 // TODO(tmckee): this kinda breaks the abstraction for RenderQueue. We need it
 // so that jobs running on the render thread already can call subroutines that
 // call Queue(). We ought to find a better way to do this.
-type immediateQueue struct {}
+type immediateQueue struct{}
+
 var _ render.RenderQueueInterface = (*immediateQueue)(nil)
 
 func (q *immediateQueue) Queue(f render.RenderJob) {
@@ -200,7 +201,7 @@ func (q *immediateQueue) Queue(f render.RenderJob) {
 	f(queue_state)
 }
 func (q *immediateQueue) StartProcessing() {}
-func (q *immediateQueue) Purge() {}
+func (q *immediateQueue) Purge()           {}
 func (q *immediateQueue) IsPurging() bool {
 	return true
 }
@@ -226,7 +227,7 @@ func fontCachePath(fontName string, size int) string {
 func getDictionaryByProperties(fontName string, size int) *gui.Dictionary {
 	var ret *gui.Dictionary
 	fontId := fontIdFromProperties(fontName, size)
-	func () {
+	func() {
 		// TODO(tmckee): catching a panic is not as nice as supporting lookup-miss
 		// in the API.
 		defer func() {

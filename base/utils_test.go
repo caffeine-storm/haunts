@@ -52,7 +52,7 @@ func ShouldReference(actual interface{}, expected ...interface{}) string {
 	if !ok {
 		panic(fmt.Errorf("'actual' had wrong type: want io.Reader, got %T", actual))
 	}
-	
+
 	srcRef, ok := expected[0].(string)
 	if !ok {
 		panic(fmt.Errorf("'expected[0]' had wrong type: want string, got %T", expected[0]))

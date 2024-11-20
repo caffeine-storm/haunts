@@ -264,7 +264,7 @@ func (rc *RosterChooser) Draw(r gui.Region, ctx gui.DrawingContext) {
 		for i := range rc.options {
 			rc.render.options[i] = gui.Region{
 				Point: gui.Point{X: x, Y: y},
-				Dims: gui.Dims{Dx: rc.layout.Option.Dx, Dy: rc.layout.Option.Dy},
+				Dims:  gui.Dims{Dx: rc.layout.Option.Dx, Dy: rc.layout.Option.Dy},
 			}
 			hovered := rc.mouse.Inside(rc.render.options[i])
 			selected := rc.selected[i]
@@ -286,11 +286,11 @@ func (rc *RosterChooser) Draw(r gui.Region, ctx gui.DrawingContext) {
 
 		rc.render.done = gui.Region{
 			Point: gui.Point{X: x, Y: r.Y},
-			Dims: gui.Dims{Dx: r.Dx / 2, Dy: int(d.MaxHeight() * 2)},
+			Dims:  gui.Dims{Dx: r.Dx / 2, Dy: int(d.MaxHeight() * 2)},
 		}
 		rc.render.undo = gui.Region{
 			Point: gui.Point{X: x + r.Dx/2, Y: r.Y},
-			Dims: gui.Dims{Dx: r.Dx / 2, Dy: int(d.MaxHeight() * 2)},
+			Dims:  gui.Dims{Dx: r.Dx / 2, Dy: int(d.MaxHeight() * 2)},
 		}
 
 		shaderBank := globals.RenderQueueState().Shaders()
