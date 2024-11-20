@@ -101,19 +101,24 @@ func doLog(lvl slog.Level, msg string, args ...interface{}) {
 	glogger.Handler().Handle(context.Background(), r)
 }
 
-// Equivalent to glog.ErrorLogger.Error
+// Equivalent to glog.ErrorLogger().Error
 func (*baseLogger) Error(msg string, args ...interface{}) {
 	doLog(slog.LevelError, msg, args...)
 }
 
-// Equivalent to glog.WarningLogger.Warn
+// Equivalent to glog.WarningLogger().Warn
 func (*baseLogger) Warn(msg string, args ...interface{}) {
 	doLog(slog.LevelWarn, msg, args...)
 }
 
-// Equivalent to glog.InfoLogger.Info
+// Equivalent to glog.InfoLogger().Info
 func (*baseLogger) Info(msg string, args ...interface{}) {
 	doLog(slog.LevelInfo, msg, args...)
+}
+
+// Equivalent to glog.InfoLogger().Trace
+func (*baseLogger) Trace(msg string, args ...interface{}) {
+	doLog(glog.LevelTrace, msg, args...)
 }
 
 // TODO: This probably isn't the best way to do things - different go-routines
