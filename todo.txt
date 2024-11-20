@@ -1,5 +1,3 @@
-- add a 'fmt' pre-commit hook
-
 - migrate uses of gospec to Convey
 
 - add tooling to run revive
