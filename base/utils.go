@@ -32,7 +32,7 @@ var datadir string
 // TODO(tmckee): delegate logging from 'logger' to 'slogger' so that all logs
 // are structured/leveled conveniently.
 var logger *log.Logger
-var slogger *slog.Logger
+var glogger glog.Logger
 
 var log_reader io.Reader
 var log_out *os.File
@@ -62,18 +62,17 @@ func setupLogger() {
 	log_writer := io.MultiWriter(log_console, log_out)
 	logger = log.New(log_writer, "> ", log.Ltime|log.Lshortfile)
 
-	opts := &slog.HandlerOptions{
-		AddSource: true,
-	}
-	slogger = slog.New(slog.NewTextHandler(log_writer, opts))
+	glogger = glog.New(&glog.Opts{
+		Output: log_writer,
+	})
 
 	base_logger = baseLogger{
 		logger,
-		slogger,
+		glogger,
 	}
 }
 
-type sloggy = *slog.Logger
+type sloggy = glog.Slogger
 type baseLogger struct {
 	*log.Logger
 	sloggy
@@ -81,19 +80,19 @@ type baseLogger struct {
 
 var base_logger baseLogger
 
-// Equivalent to slog.Logger.Error
+// Equivalent to glog.ErrorLogger.Error
 func (*baseLogger) Error(msg string, args ...interface{}) {
-	slogger.Error(msg, args...)
+	glogger.Error(msg, args...)
 }
 
-// Equivalent to slog.Logger.Warn
+// Equivalent to glog.WarningLogger.Warn
 func (*baseLogger) Warn(msg string, args ...interface{}) {
-	slogger.Warn(msg, args...)
+	glogger.Warn(msg, args...)
 }
 
-// Equivalent to slog.Logger.Info
+// Equivalent to glog.InfoLogger.Info
 func (*baseLogger) Info(msg string, args ...interface{}) {
-	slogger.Info(msg, args...)
+	glogger.Info(msg, args...)
 }
 
 // TODO: This probably isn't the best way to do things - different go-routines
@@ -142,7 +141,7 @@ func loadFont() (*truetype.Font, error) {
 	return font, nil
 }
 
-func loadDictionaryFromFile(input io.Reader, renderQueue render.RenderQueueInterface, logger *slog.Logger) (*gui.Dictionary, error) {
+func loadDictionaryFromFile(input io.Reader, renderQueue render.RenderQueueInterface, logger glog.Logger) (*gui.Dictionary, error) {
 	d, err := gui.LoadDictionary(input, renderQueue, logger)
 	if err != nil {
 		return nil, fmt.Errorf("gui.LoadDictionary failed: %w", err)
@@ -222,7 +221,7 @@ func getDictionaryByProperties(fontName string, size int) *gui.Dictionary {
 }
 
 func loadDictionaryByProperties(fontName string, size int) *gui.Dictionary {
-	logger := glog.Relevel(slogger, slog.LevelDebug)
+	logger := glog.Relevel(glogger, slog.LevelDebug)
 	// First, check our disk cache for a grid-of-glyphs.
 	cachePath := fontCachePath(fontName, size)
 
