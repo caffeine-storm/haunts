@@ -1,3 +1,5 @@
+- migrate uses of gospec to Convey
+
 - add tooling to run revive
 	https://github.com/mgechev/revive
 
