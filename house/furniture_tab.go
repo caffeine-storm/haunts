@@ -16,7 +16,7 @@ type FurniturePanel struct {
 	wall_path  *gui.FileWidget
 
 	Room       *Room
-	RoomViewer *RoomViewer
+	RoomViewer *roomViewer
 
 	// If we're in the middle of moving an object and this widget gets collapsed
 	// we want to put the object back where it was before we started dragging it.
@@ -38,7 +38,7 @@ func (w *FurniturePanel) Expand() {
 	w.RoomViewer.SetEditMode(editFurniture)
 }
 
-func makeFurniturePanel(room *Room, viewer *RoomViewer) *FurniturePanel {
+func makeFurniturePanel(room *Room, viewer *roomViewer) *FurniturePanel {
 	var fp FurniturePanel
 	fp.Room = room
 	fp.RoomViewer = viewer

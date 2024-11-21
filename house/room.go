@@ -721,7 +721,7 @@ type RoomEditorPanel struct {
 	}
 
 	room   Room
-	viewer *RoomViewer
+	viewer *roomViewer
 }
 
 // Manually pass all events to the tabs, regardless of location, since the tabs

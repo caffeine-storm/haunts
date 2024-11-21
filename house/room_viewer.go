@@ -41,7 +41,7 @@ const (
 	editCells
 )
 
-type RoomViewer struct {
+type roomViewer struct {
 	gui.Childless
 	gui.EmbeddedWidget
 	gui.BasicZone
@@ -93,16 +93,16 @@ type RoomViewer struct {
 	cstack base.ColorStack
 }
 
-func (rv *RoomViewer) SetEditMode(mode editMode) {
+func (rv *roomViewer) SetEditMode(mode editMode) {
 	rv.edit_mode = mode
 }
 
-func (rv *RoomViewer) String() string {
+func (rv *roomViewer) String() string {
 	return "viewer"
 }
 
-func MakeRoomViewer(room *Room, angle float32) *RoomViewer {
-	var rv RoomViewer
+func MakeRoomViewer(room *Room, angle float32) *roomViewer {
+	var rv roomViewer
 	rv.EmbeddedWidget = &gui.BasicWidget{CoreWidget: &rv}
 	rv.room = room
 	rv.angle = angle
@@ -119,12 +119,12 @@ func MakeRoomViewer(room *Room, angle float32) *RoomViewer {
 	return &rv
 }
 
-func (rv *RoomViewer) AdjAngle(ang float32) {
+func (rv *roomViewer) AdjAngle(ang float32) {
 	rv.angle = ang
 	rv.makeMat()
 }
 
-func (rv *RoomViewer) Drag(dx, dy float64) {
+func (rv *roomViewer) Drag(dx, dy float64) {
 	v := mathgl.Vec3{X: rv.fx, Y: rv.fy}
 	vx := mathgl.Vec3{1, -1, 0}
 	vx.Normalize()
@@ -138,7 +138,7 @@ func (rv *RoomViewer) Drag(dx, dy float64) {
 	rv.makeMat()
 }
 
-func (rv *RoomViewer) makeMat() {
+func (rv *roomViewer) makeMat() {
 	rv.mat, rv.imat, rv.left_wall_mat, rv.left_wall_imat, rv.right_wall_mat, rv.right_wall_imat = makeRoomMats(rv.room, rv.Render_region, rv.fx, rv.fy, rv.angle, rv.zoom)
 }
 
@@ -197,10 +197,10 @@ func makeRoomMats(room *Room, region gui.Region, focusx, focusy, angle, zoom flo
 }
 
 // Transforms a cursor position in window coordinates to board coordinates.
-func (rv *RoomViewer) WindowToBoard(wx, wy int) (float32, float32) {
+func (rv *roomViewer) WindowToBoard(wx, wy int) (float32, float32) {
 	return rv.WindowToBoardf(float32(wx), float32(wy))
 }
-func (rv *RoomViewer) WindowToBoardf(wx, wy float32) (float32, float32) {
+func (rv *roomViewer) WindowToBoardf(wx, wy float32) (float32, float32) {
 	fx, fy, fdist := rv.modelviewToBoard(wx, wy)
 	lbx, lby, ldist := rv.modelviewToLeftWall(wx, wy)
 	rbx, rby, rdist := rv.modelviewToRightWall(wx, wy)
@@ -219,11 +219,11 @@ func (rv *RoomViewer) WindowToBoardf(wx, wy float32) (float32, float32) {
 	return rbx, rby
 }
 
-func (rv *RoomViewer) BoardToWindow(bx, by float32) (int, int) {
+func (rv *roomViewer) BoardToWindow(bx, by float32) (int, int) {
 	x, y := rv.BoardToWindowf(bx, by)
 	return int(x), int(y)
 }
-func (rv *RoomViewer) BoardToWindowf(bx, by float32) (float32, float32) {
+func (rv *roomViewer) BoardToWindowf(bx, by float32) (float32, float32) {
 	fx, fy, fz := rv.boardToModelview(float32(bx), float32(by))
 	lbx, lby, lz := rv.leftWallToModelview(float32(bx), float32(by))
 	rbx, rby, rz := rv.rightWallToModelview(float32(bx), float32(by))
@@ -236,7 +236,7 @@ func (rv *RoomViewer) BoardToWindowf(bx, by float32) (float32, float32) {
 	return rbx, rby
 }
 
-func (rv *RoomViewer) modelviewToLeftWall(mx, my float32) (x, y, dist float32) {
+func (rv *roomViewer) modelviewToLeftWall(mx, my float32) (x, y, dist float32) {
 	mz := d2p(rv.left_wall_mat, mathgl.Vec3{mx, my, 0}, mathgl.Vec3{0, 0, 1})
 	v := mathgl.Vec4{X: mx, Y: my, Z: mz, W: 1}
 	v.Transform(&rv.left_wall_imat)
@@ -246,7 +246,7 @@ func (rv *RoomViewer) modelviewToLeftWall(mx, my float32) (x, y, dist float32) {
 	return v.X, v.Y + float32(rv.room.Size.Dy), mz
 }
 
-func (rv *RoomViewer) modelviewToRightWall(mx, my float32) (x, y, dist float32) {
+func (rv *roomViewer) modelviewToRightWall(mx, my float32) (x, y, dist float32) {
 	mz := d2p(rv.right_wall_mat, mathgl.Vec3{mx, my, 0}, mathgl.Vec3{0, 0, 1})
 	v := mathgl.Vec4{X: mx, Y: my, Z: mz, W: 1}
 	v.Transform(&rv.right_wall_imat)
@@ -256,13 +256,13 @@ func (rv *RoomViewer) modelviewToRightWall(mx, my float32) (x, y, dist float32) 
 	return v.X + float32(rv.room.Size.Dx), v.Y, mz
 }
 
-func (rv *RoomViewer) leftWallToModelview(bx, by float32) (x, y, z float32) {
+func (rv *roomViewer) leftWallToModelview(bx, by float32) (x, y, z float32) {
 	v := mathgl.Vec4{X: bx, Y: by - float32(rv.room.Size.Dy), W: 1}
 	v.Transform(&rv.left_wall_mat)
 	return v.X, v.Y, v.Z
 }
 
-func (rv *RoomViewer) rightWallToModelview(bx, by float32) (x, y, z float32) {
+func (rv *roomViewer) rightWallToModelview(bx, by float32) (x, y, z float32) {
 	v := mathgl.Vec4{X: bx - float32(rv.room.Size.Dx), Y: by, W: 1}
 	v.Transform(&rv.right_wall_mat)
 	return v.X, v.Y, v.Z
@@ -288,7 +288,7 @@ func d2p(tmat mathgl.Mat4, point, ray mathgl.Vec3) float32 {
 	return dist / float32(cos)
 }
 
-func (rv *RoomViewer) modelviewToBoard(mx, my float32) (x, y, dist float32) {
+func (rv *roomViewer) modelviewToBoard(mx, my float32) (x, y, dist float32) {
 	mz := d2p(rv.mat, mathgl.Vec3{mx, my, 0}, mathgl.Vec3{0, 0, 1})
 	//  mz := (my - float32(rv.Render_region.Y+rv.Render_region.Dy/2)) * float32(math.Tan(float64(rv.angle*math.Pi/180)))
 	v := mathgl.Vec4{X: mx, Y: my, Z: mz, W: 1}
@@ -296,7 +296,7 @@ func (rv *RoomViewer) modelviewToBoard(mx, my float32) (x, y, dist float32) {
 	return v.X, v.Y, mz
 }
 
-func (rv *RoomViewer) boardToModelview(mx, my float32) (x, y, z float32) {
+func (rv *roomViewer) boardToModelview(mx, my float32) (x, y, z float32) {
 	v := mathgl.Vec4{X: mx, Y: my, W: 1}
 	v.Transform(&rv.mat)
 	x, y, z = v.X, v.Y, v.Z
@@ -314,7 +314,7 @@ func clamp(f, min, max float32) float32 {
 }
 
 // Changes the current zoom from e^(zoom) to e^(zoom+dz)
-func (rv *RoomViewer) Zoom(dz float64) {
+func (rv *roomViewer) Zoom(dz float64) {
 	if dz == 0 {
 		return
 	}
@@ -734,7 +734,7 @@ func drawFloor(room *Room, floor mathgl.Mat4, temp *WallTexture, cstack base.Col
 	gl.End()
 }
 
-func (rv *RoomViewer) drawFloor() {
+func (rv *roomViewer) drawFloor() {
 	gl.MatrixMode(gl.MODELVIEW)
 	gl.PushMatrix()
 	gl.LoadIdentity()
@@ -894,7 +894,7 @@ func drawFurniture(roomx, roomy int, mat mathgl.Mat4, zoom float32, furniture []
 	gl.PopMatrix()
 }
 
-func (rv *RoomViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
+func (rv *roomViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
 	region.PushClipPlanes()
 	defer region.PopClipPlanes()
 
@@ -932,11 +932,11 @@ func (rv *RoomViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
 	drawFurniture(0, 0, rv.mat, rv.zoom, rv.room.Furniture, rv.Temp.Furniture, nil, rv.cstack, nil, 1.0)
 }
 
-func (rv *RoomViewer) SetEventHandler(handler gin.EventHandler) {
+func (rv *roomViewer) SetEventHandler(handler gin.EventHandler) {
 	rv.handler = handler
 }
 
-func (rv *RoomViewer) Think(*gui.Gui, int64) {
+func (rv *roomViewer) Think(*gui.Gui, int64) {
 	if rv.size != rv.room.Size {
 		rv.size = rv.room.Size
 		rv.makeMat()
