@@ -51,6 +51,10 @@ test:
 test-nocache:
 	go test ${testrunargs} -count=1            -tags nosound ./...
 
+test-dlv: singlepackage=${pkg}
+test-dlv:
+	dlv test --build-flags="-tags nosound" ${singlepackage} -- ${testrunargs}
+
 devtest:
 	go test ${testrunargs} -modfile dev.go.mod -tags nosound ./...
 
