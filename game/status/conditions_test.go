@@ -3,11 +3,12 @@ package status_test
 import (
 	"bytes"
 	"encoding/gob"
+	"path/filepath"
+	"testing"
+
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game/status"
-	"github.com/orfjackal/gospec/src/gospec"
-	. "github.com/orfjackal/gospec/src/gospec"
-	"path/filepath"
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 var datadir string
@@ -17,19 +18,24 @@ func init() {
 	base.SetDatadir(datadir)
 }
 
-func ConditionsSpec(c gospec.Context) {
-	c.Specify("Conditions are loaded properly.", func() {
+func TestConditions(t *testing.T) {
+	status.RegisterAllConditions()
+	Convey("Conditions Specs", t, ConditionsSpec)
+}
+
+func ConditionsSpec() {
+	Convey("Conditions are loaded properly.", func() {
 		basic := status.MakeCondition("Basic Test")
 		_, ok := basic.(*status.BasicCondition)
-		c.Expect(ok, Equals, true)
-		c.Expect(basic.Strength(), Equals, 5)
-		c.Expect(basic.Kind(), Equals, status.Fire)
+		So(ok, ShouldEqual, true)
+		So(basic.Strength(), ShouldEqual, 5)
+		So(basic.Kind(), ShouldEqual, status.Fire)
 		var b status.Base
 		b = basic.ModifyBase(b, status.Unspecified)
-		c.Expect(b.Attack, Equals, 3)
+		So(b.Attack, ShouldEqual, 3)
 	})
 
-	c.Specify("Conditions can be gobbed without loss of type.", func() {
+	Convey("Conditions can be gobbed without loss of type.", func() {
 		buf := bytes.NewBuffer(nil)
 		enc := gob.NewEncoder(buf)
 
@@ -37,51 +43,51 @@ func ConditionsSpec(c gospec.Context) {
 		cs = append(cs, status.MakeCondition("Basic Test"))
 
 		err := enc.Encode(cs)
-		c.Assume(err, Equals, nil)
+		So(err, ShouldEqual, nil)
 
 		dec := gob.NewDecoder(buf)
 		var cs2 []status.Condition
 		err = dec.Decode(&cs2)
-		c.Assume(err, Equals, nil)
+		So(err, ShouldEqual, nil)
 
 		_, ok := cs2[0].(*status.BasicCondition)
-		c.Expect(ok, Equals, true)
+		So(ok, ShouldEqual, true)
 	})
 
-	c.Specify("Conditions stack properly", func() {
+	Convey("Conditions stack properly", func() {
 		var s status.Inst
 		fd := status.MakeCondition("Fire Debuff Attack")
 		pd := status.MakeCondition("Poison Debuff Attack")
 		pd2 := status.MakeCondition("Poison Debuff Attack 2")
-		c.Expect(s.AttackBonusWith(status.Unspecified), Equals, 0)
+		So(s.AttackBonusWith(status.Unspecified), ShouldEqual, 0)
 		s.ApplyCondition(pd)
-		c.Expect(s.AttackBonusWith(status.Unspecified), Equals, -1)
+		So(s.AttackBonusWith(status.Unspecified), ShouldEqual, -1)
 		s.ApplyCondition(fd)
-		c.Expect(s.AttackBonusWith(status.Unspecified), Equals, -2)
+		So(s.AttackBonusWith(status.Unspecified), ShouldEqual, -2)
 		s.ApplyCondition(fd)
-		c.Expect(s.AttackBonusWith(status.Unspecified), Equals, -2)
+		So(s.AttackBonusWith(status.Unspecified), ShouldEqual, -2)
 		s.ApplyCondition(pd)
-		c.Expect(s.AttackBonusWith(status.Unspecified), Equals, -2)
+		So(s.AttackBonusWith(status.Unspecified), ShouldEqual, -2)
 		s.ApplyCondition(pd2)
-		c.Expect(s.AttackBonusWith(status.Unspecified), Equals, -3)
+		So(s.AttackBonusWith(status.Unspecified), ShouldEqual, -3)
 	})
 
-	c.Specify("Resistances work", func() {
+	Convey("Resistances work", func() {
 		var s status.Inst
 		fr1 := status.MakeCondition("Fire Resistance")
 		fr2 := status.MakeCondition("Greater Fire Resistance")
-		c.Expect(s.CorpusVs("Fire"), Equals, s.CorpusVs("Unspecified"))
+		So(s.CorpusVs("Fire"), ShouldEqual, s.CorpusVs("Unspecified"))
 		s.ApplyCondition(fr1)
-		c.Expect(s.CorpusVs("Fire"), Equals, s.CorpusVs("Unspecified")+1)
-		c.Expect(s.CorpusVs("Panic"), Equals, s.CorpusVs("Unspecified"))
-		c.Expect(s.CorpusVs("Brutal"), Equals, s.CorpusVs("Unspecified"))
+		So(s.CorpusVs("Fire"), ShouldEqual, s.CorpusVs("Unspecified")+1)
+		So(s.CorpusVs("Panic"), ShouldEqual, s.CorpusVs("Unspecified"))
+		So(s.CorpusVs("Brutal"), ShouldEqual, s.CorpusVs("Unspecified"))
 		s.ApplyCondition(fr2)
-		c.Expect(s.CorpusVs("Fire"), Equals, s.CorpusVs("Unspecified")+3)
-		c.Expect(s.CorpusVs("Panic"), Equals, s.CorpusVs("Unspecified"))
-		c.Expect(s.CorpusVs("Brutal"), Equals, s.CorpusVs("Unspecified"))
+		So(s.CorpusVs("Fire"), ShouldEqual, s.CorpusVs("Unspecified")+3)
+		So(s.CorpusVs("Panic"), ShouldEqual, s.CorpusVs("Unspecified"))
+		So(s.CorpusVs("Brutal"), ShouldEqual, s.CorpusVs("Unspecified"))
 	})
 
-	c.Specify("Basic conditions last the appropriate amount of time", func() {
+	Convey("Basic conditions last the appropriate amount of time", func() {
 		var s status.Inst
 		s.UnmarshalJSON([]byte(`
       {
@@ -97,61 +103,61 @@ func ConditionsSpec(c gospec.Context) {
 		pd2 := status.MakeCondition("Poison Debuff Attack 2")
 		pd.Strength()
 		pd2.Strength()
-		c.Expect(s.HpCur(), Equals, 100)
+		So(s.HpCur(), ShouldEqual, 100)
 		s.ApplyCondition(status.MakeCondition("Fire Debuff Attack"))
-		c.Expect(s.HpCur(), Equals, 100)
+		So(s.HpCur(), ShouldEqual, 100)
 		s.OnRound()
-		c.Expect(s.HpCur(), Equals, 99)
+		So(s.HpCur(), ShouldEqual, 99)
 		s.OnRound()
-		c.Expect(s.HpCur(), Equals, 98)
+		So(s.HpCur(), ShouldEqual, 98)
 		s.OnRound()
-		c.Expect(s.HpCur(), Equals, 97)
+		So(s.HpCur(), ShouldEqual, 97)
 		s.OnRound()
-		c.Expect(s.HpCur(), Equals, 97)
+		So(s.HpCur(), ShouldEqual, 97)
 
 		s.ApplyCondition(status.MakeCondition("Fire Debuff Attack"))
 		s.OnRound()
-		c.Expect(s.HpCur(), Equals, 96)
+		So(s.HpCur(), ShouldEqual, 96)
 		s.ApplyCondition(status.MakeCondition("Fire Debuff Attack"))
 		s.OnRound()
-		c.Expect(s.HpCur(), Equals, 95)
+		So(s.HpCur(), ShouldEqual, 95)
 		s.ApplyCondition(status.MakeCondition("Fire Debuff Attack"))
 		s.OnRound()
-		c.Expect(s.HpCur(), Equals, 94)
+		So(s.HpCur(), ShouldEqual, 94)
 		s.OnRound()
-		c.Expect(s.HpCur(), Equals, 93)
+		So(s.HpCur(), ShouldEqual, 93)
 		s.OnRound()
-		c.Expect(s.HpCur(), Equals, 92)
+		So(s.HpCur(), ShouldEqual, 92)
 		s.OnRound()
-		c.Expect(s.HpCur(), Equals, 92)
-
-		s.ApplyCondition(status.MakeCondition("Fire Debuff Attack"))
-		s.ApplyCondition(status.MakeCondition("Poison Debuff Attack"))
-		s.OnRound()
-		c.Expect(s.HpCur(), Equals, 90)
-		s.ApplyCondition(status.MakeCondition("Fire Debuff Attack"))
-		s.OnRound()
-		c.Expect(s.HpCur(), Equals, 88)
-		s.OnRound()
-		c.Expect(s.HpCur(), Equals, 86)
-		s.OnRound()
-		c.Expect(s.HpCur(), Equals, 85)
-		s.OnRound()
-		c.Expect(s.HpCur(), Equals, 85)
+		So(s.HpCur(), ShouldEqual, 92)
 
 		s.ApplyCondition(status.MakeCondition("Fire Debuff Attack"))
 		s.ApplyCondition(status.MakeCondition("Poison Debuff Attack"))
 		s.OnRound()
-		c.Expect(s.HpCur(), Equals, 83)
+		So(s.HpCur(), ShouldEqual, 90)
+		s.ApplyCondition(status.MakeCondition("Fire Debuff Attack"))
+		s.OnRound()
+		So(s.HpCur(), ShouldEqual, 88)
+		s.OnRound()
+		So(s.HpCur(), ShouldEqual, 86)
+		s.OnRound()
+		So(s.HpCur(), ShouldEqual, 85)
+		s.OnRound()
+		So(s.HpCur(), ShouldEqual, 85)
+
+		s.ApplyCondition(status.MakeCondition("Fire Debuff Attack"))
+		s.ApplyCondition(status.MakeCondition("Poison Debuff Attack"))
+		s.OnRound()
+		So(s.HpCur(), ShouldEqual, 83)
 		s.ApplyCondition(status.MakeCondition("Poison Debuff Attack 2"))
 		s.OnRound()
-		c.Expect(s.HpCur(), Equals, 80)
+		So(s.HpCur(), ShouldEqual, 80)
 		s.ApplyCondition(status.MakeCondition("Poison Debuff Attack"))
 		s.OnRound()
-		c.Expect(s.HpCur(), Equals, 77)
+		So(s.HpCur(), ShouldEqual, 77)
 		s.OnRound()
-		c.Expect(s.HpCur(), Equals, 75)
+		So(s.HpCur(), ShouldEqual, 75)
 		s.OnRound()
-		c.Expect(s.HpCur(), Equals, 75)
+		So(s.HpCur(), ShouldEqual, 75)
 	})
 }
