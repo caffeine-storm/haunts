@@ -6,9 +6,6 @@
 - Do we need to worry about building in devel mode?
 	- build-tag: // +build !release
 
-- bug #2: Running 'make test' complains that ld failed to find -lglop but the tests
-  still pass!
-	- presumably, this is a report from the go-build cache'd version?
 - bug #3: Trying to open the console only paints a pink layer on top of everything
 	- Note that the 'error texture' from glop's sprite manager is a
 	  semi-transparent pink rectangle.
