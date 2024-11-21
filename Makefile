@@ -62,10 +62,13 @@ update-glop:
 	go -C tools/update-glop/ run cmd/main.go
 	go mod tidy
 
+update-appveyor-image:
+	go run tools/update-appveyor-image/main.go ./appveyor.yml
+
 # Let go tooling decide if things are out-of-date
 .PHONY: haunts
 .PHONY: devhaunts
 .PHONY: clean
 .PHONY: fmt lint
 .PHONY: test devtest
-.PHONY: update-glop
+.PHONY: update-glop update-appveyor-image
