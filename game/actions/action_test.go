@@ -3,12 +3,13 @@ package actions_test
 import (
 	"bytes"
 	"encoding/gob"
+	"path/filepath"
+	"testing"
+
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/game/actions"
-	"github.com/orfjackal/gospec/src/gospec"
-	. "github.com/orfjackal/gospec/src/gospec"
-	"path/filepath"
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 var datadir string
@@ -18,15 +19,19 @@ func init() {
 	base.SetDatadir(datadir)
 }
 
-func ActionSpec(c gospec.Context) {
+func TestActionSpecs(t *testing.T) {
+	Convey("Action Specs", t, ActionSpec)
+}
+
+func ActionSpec() {
 	game.RegisterActions()
-	c.Specify("Actions are loaded properly.", func() {
+	Convey("Actions are loaded properly.", func() {
 		basic := game.MakeAction("Basic Test")
 		_, ok := basic.(*actions.BasicAttack)
-		c.Expect(ok, Equals, true)
+		So(ok, ShouldEqual, true)
 	})
 
-	c.Specify("Actions can be gobbed without loss of type.", func() {
+	Convey("Actions can be gobbed without loss of type.", func() {
 		buf := bytes.NewBuffer(nil)
 		enc := gob.NewEncoder(buf)
 
@@ -35,18 +40,17 @@ func ActionSpec(c gospec.Context) {
 		as = append(as, game.MakeAction("Basic Test"))
 
 		err := enc.Encode(as)
-		c.Assume(err, Equals, nil)
+		So(err, ShouldEqual, nil)
 
 		dec := gob.NewDecoder(buf)
 		var as2 []game.Action
 		err = dec.Decode(&as2)
-		c.Assume(err, Equals, nil)
+		So(err, ShouldEqual, nil)
 
 		_, ok := as2[0].(*actions.Move)
-		c.Expect(ok, Equals, true)
+		So(ok, ShouldEqual, true)
 
 		_, ok = as2[1].(*actions.BasicAttack)
-		c.Expect(ok, Equals, true)
-
+		So(ok, ShouldEqual, true)
 	})
 }
