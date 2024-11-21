@@ -1,5 +1,3 @@
-- migrate uses of gospec to Convey
-
 - CI/CD
 	- use appveyor.com
 
