@@ -1,20 +1,18 @@
+- bug #1: The 'edit mode' screen doesn't render its text correctly
+
 - verify licenses
 	- see test/licenses
 
 - Do we need to worry about building in devel mode?
 	- build-tag: // +build !release
 
-bugs:
-- The 'edit mode' screen doesn't render its text correctly
-- Running 'make test' complains that ld failed to find -lglop but the tests
+- bug #2: Running 'make test' complains that ld failed to find -lglop but the tests
   still pass!
 	- presumably, this is a report from the go-build cache'd version?
-- glop logging has a 'source' attribute that is way too long
-- Trying to open the console only paints a pink layer on top of everything
+- bug #3: Trying to open the console only paints a pink layer on top of everything
 	- Note that the 'error texture' from glop's sprite manager is a
 	  semi-transparent pink rectangle.
-- base.Log messages don't uniquely identify the file
-- Can get locked up by repeatedly opening/closing the same door.
+- bug #4: Can get locked up by repeatedly opening/closing the same door.
 	- needs repro
-- Can have a door not connected to a room.
+- bug #5: Can have a door not connected to a room.
 	- needs repro
