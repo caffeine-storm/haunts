@@ -1,5 +1,8 @@
 - bug #1: The 'edit mode' screen doesn't render its text correctly
 
+- bug #6: The 'edit mode' screen seems really slow; we need to profile and
+  optimize it
+
 - verify licenses
 	- see test/licenses
 
