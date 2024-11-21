@@ -49,6 +49,9 @@ fmt:
 checkfmt:
 	@gofmt -l ./
 
+lint:
+	go run github.com/mgechev/revive@v1.5.1 ./...
+
 test:
 	go test ${testrunargs} -tags nosound ./...
 
@@ -62,7 +65,6 @@ update-glop:
 .PHONY: haunts
 .PHONY: devhaunts
 .PHONY: clean
-.PHONY: fmt
-.PHONY: test
-.PHONY: devtest
+.PHONY: fmt lint
+.PHONY: test devtest
 .PHONY: update-glop
