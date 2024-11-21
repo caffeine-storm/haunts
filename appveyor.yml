@@ -1,0 +1,19 @@
+version: 1.0.{build}
+image: Ubuntu2204
+
+install:
+  # appveyor's custom images are a pay-to-win feature; let's just clone the
+  # setup and run it here each build :D
+  # - git clone https://github.com/caffeine-storm/haunts-custom-build-image.git
+  - export IMG=haunts-custom-build-image
+  - export HASH=5ab1541af9449b1735d555ae4dc304a809eca021
+  - wget https://github.com/caffeine-storm/$IMG/archive/$HASH.tar.gz -O $IMG.tar.gz
+  - mkdir $IMG
+  - tar -C $IMG --strip-components=1 -xf $IMG.tar.gz
+  - sudo ./$IMG/install-build-dependencies.sh
+
+build_script:
+  - make
+
+test_script:
+  - make test
