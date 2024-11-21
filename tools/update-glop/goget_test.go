@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	updateglop "github.com/caffeine-storm/update-glop"
+	updateglop "github.com/MobRulesGames/haunts/tools/update-glop"
 )
 
 func TestGoGetCommand(t *testing.T) {
