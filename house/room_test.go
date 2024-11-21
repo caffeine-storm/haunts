@@ -7,8 +7,15 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+func GivenARoomDef() *house.RoomDef {
+	return &house.RoomDef{}
+}
+
 func GivenARoom() *house.Room {
-	return &house.Room{}
+	roomDef := GivenARoomDef()
+	return &house.Room{
+		RoomDef: roomDef,
+	}
 }
 
 func TestRoom(t *testing.T) {
