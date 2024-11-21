@@ -59,6 +59,18 @@ const (
 	applicationEditMode
 )
 
+func (mode applicationMode) String() string {
+	switch mode {
+	case applicationStartupMode:
+		return "startup"
+	case applicationGameMode:
+		return "game"
+	case applicationEditMode:
+		return "edit"
+	}
+	panic(fmt.Errorf("unknown applicationMode: %v", int(mode)))
+}
+
 func loadAllRegistries() {
 	house.LoadAllFurnitureInDir(filepath.Join(datadir, "furniture"))
 	house.LoadAllWallTexturesInDir(filepath.Join(datadir, "textures"))
