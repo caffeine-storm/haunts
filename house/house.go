@@ -57,6 +57,12 @@ type Room struct {
 	wall_texture_state_map map[*WallTexture]wallTextureState
 }
 
+func BlankRoom() *Room {
+	return &Room{
+		RoomDef: &RoomDef{},
+	}
+}
+
 func (room *Room) Color() (r, g, b, a byte) {
 	if room.temporary {
 		if room.invalid {

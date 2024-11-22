@@ -1,6 +1,6 @@
-- bug #1: The 'edit mode' screen doesn't render its text correctly
+- bug#1: The 'edit mode' screen doesn't render its text correctly
 
-- bug #6: The 'edit mode' screen seems really slow; we need to profile and
+- bug#6: The 'edit mode' screen seems really slow; we need to profile and
   optimize it
 
 - verify licenses
@@ -9,10 +9,12 @@
 - Do we need to worry about building in devel mode?
 	- build-tag: // +build !release
 
-- bug #3: Trying to open the console only paints a pink layer on top of everything
+- bug#3: Trying to open the console only paints a pink layer on top of everything
 	- Note that the 'error texture' from glop's sprite manager is a
 	  semi-transparent pink rectangle.
-- bug #4: Can get locked up by repeatedly opening/closing the same door.
+- bug#4: Can get locked up by repeatedly opening/closing the same door.
 	- needs repro
-- bug #5: Can have a door not connected to a room.
+- bug#5: Can have a door not connected to a room.
 	- needs repro
+
+- bug#8: <next>
