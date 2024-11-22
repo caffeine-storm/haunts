@@ -1,7 +1,7 @@
-- bug#1: The 'edit mode' screen doesn't render its text correctly
-
 - bug#6: The 'edit mode' screen seems really slow; we need to profile and
   optimize it
+
+- bug#1: The 'edit mode' screen doesn't render its text correctly
 
 - verify licenses
 	- see test/licenses
