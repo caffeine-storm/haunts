@@ -345,7 +345,8 @@ func main() {
 		if key_map["quit"].FramePressCount() != 0 {
 			break
 		}
-		sys.Think()
+		horizon := sys.Think()
+		ui.Think(horizon)
 		queue.Queue(func(render.RenderQueueState) {
 			sys.SwapBuffers()
 			ui.Draw()
