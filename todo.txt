@@ -1,5 +1,5 @@
-- bug#6: The 'edit mode' screen seems really slow; we need to profile and
-  optimize it
+- bug#6: The 'edit mode' screen can really lag out; afterwards, switching back to the startup screen seems to break
+	- we need to profile and optimize it
 
 - bug#1: The 'edit mode' screen doesn't render its text correctly
 

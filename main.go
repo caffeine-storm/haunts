@@ -10,6 +10,7 @@ import (
 	"runtime"
 	"runtime/debug"
 	"runtime/pprof"
+	"time"
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
@@ -152,6 +153,7 @@ func gameMode(ui *gui.Gui) {
 }
 
 func editMode(ui *gui.Gui) {
+	base.Log().Trace("editMode entered")
 	draggingAndZooming(ui, editor.GetViewer())
 	if ui.FocusWidget() == nil {
 		// Did a keypress come in for "change the type of editor"?
@@ -217,6 +219,8 @@ func editMode(ui *gui.Gui) {
 			}
 		}
 	}
+
+	base.Log().Trace("editMode returning")
 }
 
 type lowerLeftTable struct {
@@ -341,17 +345,26 @@ func main() {
 	var profile_output *os.File
 	heap_prof_count := 0
 
+	var horizon int64
+	var tickCount int64
 	for {
 		if key_map["quit"].FramePressCount() != 0 {
 			break
 		}
-		horizon := sys.Think()
+
+		glopdebug.LogAndClearGlErrors(base.Log())
+
+		renderStart := time.Now()
+		horizon = sys.Think()
+		tickCount += 1
 		ui.Think(horizon)
 		queue.Queue(func(render.RenderQueueState) {
 			sys.SwapBuffers()
 			ui.Draw()
 		})
 		queue.Purge()
+		renderEnd := time.Now()
+		base.Log().Debug("renderwork", "duration", renderEnd.Sub(renderStart), "tick", tickCount)
 
 		for _, child := range game_box.GetChildren() {
 			if gp, ok := child.(*game.GamePanel); ok {
@@ -413,7 +426,7 @@ func main() {
 				})
 			}
 
-			if key_map["game mode"].FramePressCount()%2 == 1 {
+			if key_map["game mode"].FramePressCount() > 0 {
 				base.Log().Info("Game mode change", "currentMode", currentMode)
 				switch currentMode {
 				case applicationStartupMode:
@@ -429,6 +442,7 @@ func main() {
 				default:
 					panic(fmt.Errorf("bad applicationMode: %+v", currentMode))
 				}
+				base.Log().Info("Game mode changed", "currentMode", currentMode)
 
 				if key_map["row up"].FramePressCount() > 0 {
 					house.Num_rows += 25
@@ -451,6 +465,8 @@ func main() {
 				if key_map["foo"].FramePressCount() > 0 {
 					house.Foo = (house.Foo + 1) % 2
 				}
+
+				base.Log().Info("done switching modes")
 			}
 
 			switch currentMode {
@@ -459,7 +475,6 @@ func main() {
 			case applicationGameMode:
 				gameMode(ui)
 			case applicationStartupMode:
-
 			}
 		}
 		// Draw a cursor at the cursor - for testing an osx bug in glop.
