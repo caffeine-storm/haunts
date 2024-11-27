@@ -9,5 +9,8 @@ func SetRenderQueueState(queueState render.RenderQueueState) {
 }
 
 func RenderQueueState() render.RenderQueueState {
+	if renderQueueState == nil {
+		panic("Need to call SetRenderQueueState before RenderQueueState()")
+	}
 	return renderQueueState
 }
