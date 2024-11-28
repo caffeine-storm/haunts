@@ -143,6 +143,10 @@ func (sm *StartMenu) Draw(region gui.Region, ctx gui.DrawingContext) {
 	base.Log().Trace("StartMenu.Draw", "region", region)
 	sm.region = region
 	gl.Color4ub(255, 255, 255, 255)
+	// TODO(tmckee): this is racy. .Data() lazy-loads the texture through the
+	// texture manager but we immediately call RenderNatural. This is okayish IRL
+	// because eventually there'll be a frame where things _have_ loaded; we'll
+	// actually draw then. For testing, we can use texture.BlockUntilLoaded.
 	sm.layout.Background.Data().RenderNatural(sm.region.X, sm.region.Y)
 	sm.layout.Menu.Texture.Data().RenderNatural(sm.region.X+sm.layout.Menu.X, sm.region.Y+sm.layout.Menu.Y)
 	base.Log().Trace("StartMenu.Draw: about to render buttons", "numbuttons", len(sm.buttons), "sm.layout", sm.layout)

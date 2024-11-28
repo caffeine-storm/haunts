@@ -81,6 +81,7 @@ func setupTextureList() {
 
 // Renders the texture on a quad at the texture's natural size.
 func (d *Data) RenderNatural(x, y int) {
+	base.Log().Trace("render natural", "x", x, "y", y, "dx", d.dx, "dy", d.dy)
 	d.Render(float64(x), float64(y), float64(d.dx), float64(d.dy))
 }
 
@@ -320,6 +321,9 @@ func handleLoadRequest(req loadRequest) {
 		pix = ga.Pix
 		canvas = ga
 	} else {
+		// TODO(tmckee): reading from 'req.data' ought to synchronize with what's
+		// going on on the render thread... we ought to pass dx/dy explicity by
+		// value in a loadRequest instead.
 		pix = memory.GetBlock(4 * req.data.dx * req.data.dy)
 		canvas = &image.RGBA{pix, 4 * req.data.dx, im.Bounds()}
 	}
