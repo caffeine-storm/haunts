@@ -458,6 +458,7 @@ func drawWall(room *Room, floor, left, right mathgl.Mat4, temp_tex *WallTexture,
 
 		do_right_wall()
 
+		gl.MatrixMode(gl.PROJECTION)
 		gl.PushMatrix()
 		gl.LoadIdentity()
 		gl.MultMatrixf(&right[0])
@@ -588,6 +589,7 @@ func drawWall(room *Room, floor, left, right mathgl.Mat4, temp_tex *WallTexture,
 		cstack.ApplyWithAlpha(alpha * los_alpha)
 		do_left_wall()
 
+		gl.MatrixMode(gl.PROJECTION)
 		gl.PushMatrix()
 		gl.LoadIdentity()
 		gl.MultMatrixf(&left[0])
@@ -788,6 +790,7 @@ func (rv *roomViewer) drawFloor() {
 func drawFurniture(roomx, roomy int, mat mathgl.Mat4, zoom float32, furniture []*Furniture, temp_furniture *Furniture, extras []Drawable, cstack base.ColorStack, los_tex *LosTexture, los_alpha float64) {
 	gl.Enable(gl.TEXTURE_2D)
 	gl.Color4d(1, 1, 1, los_alpha)
+	gl.MatrixMode(gl.PROJECTION)
 	gl.PushMatrix()
 	gl.LoadIdentity()
 
