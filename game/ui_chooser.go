@@ -366,7 +366,7 @@ func (c *Chooser) doOnOptions(f func(index int, opt Option, data doOnOptionData)
 		f(i, option, data)
 	}
 }
-func doApproach(cur, target float64, dt int64) float64 {
+func assymptoticApproach(cur, target float64, dt int64) float64 {
 	dt = 16 // KLUDGE: makes it work even on windows, which doesn't work, who knows why
 	delta := target - cur
 	delta *= math.Exp(-45.0 / float64(1+dt))

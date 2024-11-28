@@ -116,7 +116,7 @@ func (sm *SystemMenu) Think(g *gui.Gui, t int64) {
 	}
 
 	if sm.saved_time != (time.Time{}) && time.Now().Sub(sm.saved_time).Seconds() > 3 {
-		sm.saved_alpha = doApproach(sm.saved_alpha, 0.0, dt)
+		sm.saved_alpha = assymptoticApproach(sm.saved_alpha, 0.0, dt)
 	}
 
 	sm.focus = (g.FocusWidget() == sm)

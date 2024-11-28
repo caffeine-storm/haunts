@@ -971,9 +971,9 @@ func (g *Game) Think(dt int64) {
 				}
 				alpha := furn.Alpha()
 				if hit {
-					furn.SetAlpha(doApproach(alpha, 0.3, dt))
+					furn.SetAlpha(assymptoticApproach(alpha, 0.3, dt))
 				} else {
-					furn.SetAlpha(doApproach(alpha, 1.0, dt))
+					furn.SetAlpha(assymptoticApproach(alpha, 1.0, dt))
 				}
 			}
 		}

@@ -28,7 +28,7 @@ func (sr *ScrollingRegion) Think(dt int64) {
 	if sr.target < 0 {
 		sr.target = 0
 	}
-	sr.pos = doApproach(sr.pos, sr.target, dt)
+	sr.pos = assymptoticApproach(sr.pos, sr.target, dt)
 }
 func (sr *ScrollingRegion) Region() gui.Region {
 	return gui.Region{gui.Point{sr.X, sr.Y}, gui.Dims{sr.Dx, sr.Dy}}

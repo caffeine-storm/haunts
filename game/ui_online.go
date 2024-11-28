@@ -422,7 +422,7 @@ func (sm *OnlineMenu) Think(g *gui.Gui, t int64) {
 	}
 
 	if sm.update_alpha > 0.0 && time.Now().Sub(sm.update_time).Seconds() >= 2 {
-		sm.update_alpha = doApproach(sm.update_alpha, 0.0, dt)
+		sm.update_alpha = assymptoticApproach(sm.update_alpha, 0.0, dt)
 	}
 
 	for _, button := range sm.buttons {

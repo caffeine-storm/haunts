@@ -87,7 +87,7 @@ func doShading(current float64, in bool, dt int64) float64 {
 	} else {
 		target = 0.6
 	}
-	return doApproach(current, target, dt)
+	return assymptoticApproach(current, target, dt)
 }
 
 func (b *Button) Think(x, y, mx, my int, dt int64) {
