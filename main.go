@@ -252,7 +252,8 @@ func onHauntsPanic(recoveredValue interface{}) {
 	fmt.Printf("PANIC: %s\n", string(data))
 }
 
-const TargetFPS = 144
+// TODO(tmckee): optimize things till we can reliably hit 144
+const TargetFPS = 30
 
 func WatchForSlowJobs() *render.JobTimingListener {
 	return &render.JobTimingListener{
