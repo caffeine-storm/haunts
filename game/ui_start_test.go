@@ -69,7 +69,7 @@ func RunStartupSpecs() {
 		})
 		queue.Purge()
 
-		So(queue, rendertest.ShouldLookLikeFile, "startup", 0, rendertest.Threshold(8))
+		So(queue, rendertest.ShouldLookLikeFile, "startup", rendertest.Threshold(8))
 	})
 }
 
