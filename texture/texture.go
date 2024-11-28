@@ -1,8 +1,8 @@
 package texture
 
 import (
-	"github.com/MobRulesGames/opengl/gl"
-	"github.com/MobRulesGames/opengl/glu"
+	"github.com/go-gl-legacy/gl"
+	"github.com/go-gl-legacy/glu"
 )
 
 var error_texture gl.Texture
@@ -17,5 +17,5 @@ func makeErrorTexture() {
 	gl.TexParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT)
 	gl.TexParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT)
 	singleTexel := []byte{255, 0, 255, 255}
-	glu.Build2DMipmaps(gl.TEXTURE_2D, 4, 1, 1, gl.RGBA, singleTexel)
+	glu.Build2DMipmaps(gl.TEXTURE_2D, gl.RGBA, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, singleTexel)
 }
