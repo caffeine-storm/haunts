@@ -257,8 +257,8 @@ const TargetFPS = 30
 
 func WatchForSlowJobs() *render.JobTimingListener {
 	return &render.JobTimingListener{
-		OnNotify: func(delta time.Duration, attribution string) {
-			base.Warn().Warn("slow render job", "t", delta, "location", attribution)
+		OnNotify: func(info *render.JobTimingInfo, attribution string) {
+			base.Warn().Warn("slow render job", "runtime", info.RunTime, "queuetime", info.QueueTime, "location", attribution)
 		},
 		Threshold: time.Second / TargetFPS,
 	}
@@ -366,6 +366,9 @@ func main() {
 		horizon = sys.Think()
 		tickCount += 1
 		ui.Think(horizon)
+		queue.Queue(func(render.RenderQueueState) {
+			gl.Finish()
+		})
 		queue.Queue(func(render.RenderQueueState) {
 			sys.SwapBuffers()
 			ui.Draw()

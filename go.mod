@@ -12,6 +12,7 @@ require (
 	github.com/MobRulesGames/memory v0.0.0-20120626004817-db5bb35fd894
 	github.com/MobRulesGames/opengl v0.0.0-20121115013359-5beafb9fb3b3
 	github.com/go-gl-legacy/gl v0.0.0-20150223033340-df25b1fe668d
+	github.com/go-gl-legacy/glu v0.0.0-20150315173544-b54aa06bc77a
 	github.com/howeyc/fsnotify v0.9.0 // indirect
 	github.com/runningwild/glop v0.0.0-20130331194942-bcbcf4982510
 	github.com/smartystreets/goconvey v1.8.1
@@ -20,7 +21,7 @@ require (
 
 replace code.google.com/p/freetype-go => github.com/golang/freetype v0.0.0-20120725121025-28cc5fbc5d0b
 
-replace github.com/runningwild/glop => github.com/caffeine-storm/glop v0.0.0-20241128153855-cb9053014111
+replace github.com/runningwild/glop => github.com/caffeine-storm/glop v0.0.0-20241128190925-d6bc6f9b4645
 
 replace github.com/go-gl-legacy/gl => github.com/caffeine-storm/gl v0.0.0-20240909160157-d1b38f2deb16
 
