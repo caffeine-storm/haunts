@@ -62,11 +62,7 @@ func RunStartupSpecs() {
 		}
 		texture.BlockUntilLoaded(startTexture, menuTexture)
 
-		// Call .Think 56 times to 'shade in' the button text.
-		// TODO(tmckee): oh please god no!
-		for i := 0; i < 56; i++ {
-			menu.Think(nil, 42)
-		}
+		menu.SetOpacity(0.6)
 
 		queue.Queue(func(st render.RenderQueueState) {
 			menu.Draw(windowRegion, ctx)

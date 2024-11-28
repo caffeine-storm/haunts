@@ -109,6 +109,14 @@ func (sm *StartMenu) Think(g *gui.Gui, t int64) {
 	}
 }
 
+func (sm *StartMenu) SetOpacity(percent float64) {
+	for _, buttonLike := range sm.buttons {
+		if button, ok := buttonLike.(SetOpacityer); ok {
+			button.SetOpacity(percent)
+		}
+	}
+}
+
 func (sm *StartMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	cursor := group.Events[0].Key.Cursor()
 	if cursor != nil {

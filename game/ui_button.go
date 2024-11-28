@@ -17,6 +17,10 @@ type ButtonLike interface {
 	RenderAt(x, y int)
 }
 
+type SetOpacityer interface {
+	SetOpacity(percent float64)
+}
+
 type Button struct {
 	X, Y int
 	// TODO(tmckee): clean: split button into TextButton and TextureButton
@@ -50,6 +54,9 @@ type Button struct {
 	}
 }
 
+var _ ButtonLike = (*Button)(nil)
+var _ SetOpacityer = (*Button)(nil)
+
 // If x,y is inside the button's region then it will run its function and
 // return true, otherwise it does nothing and returns false.
 func (b *Button) handleClick(x, y int, data interface{}) bool {
@@ -59,6 +66,10 @@ func (b *Button) handleClick(x, y int, data interface{}) bool {
 		sound.PlaySound("Haunts/SFX/UI/Select", 0.75)
 	}
 	return in
+}
+
+func (b *Button) SetOpacity(pct float64) {
+	b.opacity = pct
 }
 
 func (b *Button) Over(mx, my int) bool {
