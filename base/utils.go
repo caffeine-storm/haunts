@@ -22,7 +22,7 @@ import (
 
 	"code.google.com/p/freetype-go/freetype/truetype"
 	"github.com/MobRulesGames/haunts/globals"
-	"github.com/MobRulesGames/opengl/gl"
+	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/glog"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"

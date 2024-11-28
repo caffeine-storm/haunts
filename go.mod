@@ -10,7 +10,6 @@ require (
 	github.com/MobRulesGames/golua v0.0.0-00010101000000-000000000000
 	github.com/MobRulesGames/mathgl v0.0.0-20120424214601-79bd4ce3042d
 	github.com/MobRulesGames/memory v0.0.0-20120626004817-db5bb35fd894
-	github.com/MobRulesGames/opengl v0.0.0-20121115013359-5beafb9fb3b3
 	github.com/go-gl-legacy/gl v0.0.0-20150223033340-df25b1fe668d
 	github.com/go-gl-legacy/glu v0.0.0-20150315173544-b54aa06bc77a
 	github.com/howeyc/fsnotify v0.9.0 // indirect

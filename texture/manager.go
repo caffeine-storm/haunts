@@ -13,8 +13,8 @@ import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/mathgl"
 	"github.com/MobRulesGames/memory"
-	"github.com/MobRulesGames/opengl/gl"
-	"github.com/MobRulesGames/opengl/glu"
+	"github.com/go-gl-legacy/gl"
+	"github.com/go-gl-legacy/glu"
 	"github.com/runningwild/glop/render"
 )
 
@@ -96,7 +96,7 @@ func Render(x, y, dx, dy float64) {
 	gl.MatrixMode(gl.PROJECTION)
 	gl.PushMatrix()
 	gl.Enable(gl.TEXTURE_2D)
-	gl.MultMatrixf(&run[0])
+	gl.MultMatrixf((*[16]float32)(&run))
 	gl.CallList(textureList)
 	gl.PopMatrix()
 }
@@ -141,7 +141,7 @@ func RenderAdvanced(x, y, dx, dy, rot float64, flip bool) {
 	}
 	gl.MatrixMode(gl.PROJECTION)
 	gl.PushMatrix()
-	gl.MultMatrixf(&run[0])
+	gl.MultMatrixf((*[16]float32)(&run))
 	gl.Enable(gl.TEXTURE_2D)
 	gl.CallList(textureList)
 	gl.PopMatrix()
@@ -367,9 +367,9 @@ func handleLoadRequest(req loadRequest) {
 			gl.TexParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT)
 		}
 		if gray {
-			glu.Build2DMipmaps(gl.TEXTURE_2D, gl.LUMINANCE_ALPHA, req.data.dx, req.data.dy, gl.LUMINANCE_ALPHA, pix)
+			glu.Build2DMipmaps(gl.TEXTURE_2D, gl.LUMINANCE_ALPHA, req.data.dx, req.data.dy, gl.LUMINANCE_ALPHA, gl.UNSIGNED_BYTE, pix)
 		} else {
-			glu.Build2DMipmaps(gl.TEXTURE_2D, gl.RGBA, req.data.dx, req.data.dy, gl.RGBA, pix)
+			glu.Build2DMipmaps(gl.TEXTURE_2D, gl.RGBA, req.data.dx, req.data.dy, gl.RGBA, gl.UNSIGNED_BYTE, pix)
 		}
 		memory.FreeBlock(pix)
 		if manual_unlock {

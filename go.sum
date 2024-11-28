@@ -49,8 +49,6 @@ github.com/MobRulesGames/mathgl v0.0.0-20120424214601-79bd4ce3042d h1:Rh3yrqrbhJ
 github.com/MobRulesGames/mathgl v0.0.0-20120424214601-79bd4ce3042d/go.mod h1:wXL75i6wDmeUURnQnNtW2xpiuPmDzPk2JnpQbm7Esu0=
 github.com/MobRulesGames/memory v0.0.0-20120626004817-db5bb35fd894 h1:26ZCnKDg9vNxiOK0VZ/tN2tg34DfrhKB0Xg5jUWkO8A=
 github.com/MobRulesGames/memory v0.0.0-20120626004817-db5bb35fd894/go.mod h1:w5jrl1aXV+AZaP1ye7wO8xB3ne7U2CkweE0atB7FPwk=
-github.com/MobRulesGames/opengl v0.0.0-20121115013359-5beafb9fb3b3 h1:0Gh/6v/TMLPaho7LjvcYXBX0yFed0AJi5Pscy1p5mvo=
-github.com/MobRulesGames/opengl v0.0.0-20121115013359-5beafb9fb3b3/go.mod h1:5lEWNJrwRD33Sb0ScERpH7bkXfd+UUcMtvEcg2p0I9o=
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=
 github.com/armon/circbuf v0.0.0-20150827004946-bbbad097214e/go.mod h1:3U/XgcO3hCbHZ8TKRvWD2dDTCfh9M9ya+I9JpbB7O8o=
 github.com/armon/go-metrics v0.0.0-20180917152333-f0300d1749da/go.mod h1:Q73ZrmVTwzkszR9V5SSuryQ31EELlFMUz1kKyl939pY=

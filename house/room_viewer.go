@@ -3,7 +3,7 @@ package house
 import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/mathgl"
-	"github.com/MobRulesGames/opengl/gl"
+	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"math"
@@ -364,7 +364,7 @@ func drawWall(room *Room, floor, left, right mathgl.Mat4, temp_tex *WallTexture,
 	}
 	corner := float32(room.Size.Dx) / float32(room.Size.Dx+room.Size.Dy)
 	gl.LoadIdentity()
-	gl.MultMatrixf(&floor[0])
+	gl.MultMatrixf((*[16]float32)(&floor))
 
 	g_texs = g_texs[0:0]
 	if temp_tex != nil {
@@ -461,7 +461,7 @@ func drawWall(room *Room, floor, left, right mathgl.Mat4, temp_tex *WallTexture,
 		gl.MatrixMode(gl.PROJECTION)
 		gl.PushMatrix()
 		gl.LoadIdentity()
-		gl.MultMatrixf(&right[0])
+		gl.MultMatrixf((*[16]float32)(&right))
 		for i, tex := range g_texs {
 			dx, dy := float32(room.Size.Dx), float32(room.Size.Dy)
 			if tex.Y > dy {
@@ -592,7 +592,7 @@ func drawWall(room *Room, floor, left, right mathgl.Mat4, temp_tex *WallTexture,
 		gl.MatrixMode(gl.PROJECTION)
 		gl.PushMatrix()
 		gl.LoadIdentity()
-		gl.MultMatrixf(&left[0])
+		gl.MultMatrixf((*[16]float32)(&left))
 		for i, tex := range g_texs {
 			dx, dy := float32(room.Size.Dx), float32(room.Size.Dy)
 			if tex.X > dx {
@@ -650,7 +650,7 @@ func drawFloor(room *Room, floor mathgl.Mat4, temp *WallTexture, cstack base.Col
 	gl.MatrixMode(gl.MODELVIEW)
 	gl.PushMatrix()
 	gl.LoadIdentity()
-	gl.MultMatrixf(&floor[0])
+	gl.MultMatrixf((*[16]float32)(&floor))
 	defer gl.PopMatrix()
 
 	gl.Enable(gl.STENCIL_TEST)
@@ -740,7 +740,7 @@ func (rv *roomViewer) drawFloor() {
 	gl.MatrixMode(gl.MODELVIEW)
 	gl.PushMatrix()
 	gl.LoadIdentity()
-	gl.MultMatrixf(&rv.mat[0])
+	gl.MultMatrixf((*[16]float32)(&rv.mat))
 	defer gl.PopMatrix()
 
 	gl.Disable(gl.TEXTURE_2D)
@@ -910,7 +910,7 @@ func (rv *roomViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
 	gl.PushMatrix()
 	defer gl.PopMatrix()
 	gl.LoadIdentity()
-	gl.MultMatrixf(&rv.mat[0])
+	gl.MultMatrixf((*[16]float32)(&rv.mat))
 
 	// rv.room.render(rv.mat, rv.left_wall_mat, rv.right_wall_mat)
 	rv.room.setupGlStuff()

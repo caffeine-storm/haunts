@@ -4,7 +4,7 @@ import (
 	"runtime"
 
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/MobRulesGames/opengl/gl"
+	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/render"
 )
 
@@ -90,7 +90,7 @@ func (lt *LosTexture) Remap() {
 	renderQueue.Queue(func(render.RenderQueueState) {
 		gl.Enable(gl.TEXTURE_2D)
 		lt.tex.Bind(gl.TEXTURE_2D)
-		gl.TexSubImage2D(gl.TEXTURE_2D, 0, 0, 0, len(lt.p2d), len(lt.p2d), gl.ALPHA, lt.pix)
+		gl.TexSubImage2D(gl.TEXTURE_2D, 0, 0, 0, len(lt.p2d), len(lt.p2d), gl.ALPHA, gl.UNSIGNED_BYTE, lt.pix)
 	})
 }
 

@@ -8,7 +8,7 @@ import (
 	"github.com/MobRulesGames/haunts/game/status"
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/MobRulesGames/opengl/gl"
+	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/util/algorithm"

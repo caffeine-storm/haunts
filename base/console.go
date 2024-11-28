@@ -6,7 +6,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/MobRulesGames/opengl/gl"
+	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 )
