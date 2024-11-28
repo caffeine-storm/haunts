@@ -19,3 +19,4 @@ lib/linux/libglop.so
 devhaunts
 __debug_bin*
 testdata/*/*.rej.*
+testdata/report.tar.gz

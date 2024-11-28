@@ -1,3 +1,7 @@
+SHELL:=/bin/bash
+
+TEST_REPORT_TAR:=testdata/report.tar.gz
+
 ifneq "${testrun}" ""
 testrunargs:=-run ${testrun}
 else
@@ -29,11 +33,8 @@ haunts: GEN_version.go
 GEN_version.go: tools/version.go .git/HEAD
 	go run -C tools version.go
 
-${RUNTIME_DATADIR}: ${SRC_DATADIR}
-	cp -r $^ $@
-
 clean:
-	rm -rf ${RUNTIME_DATADIR}
+	rm -f ${TEST_REPORT_TAR}
 
 fmt:
 	go fmt ./...
@@ -65,6 +66,25 @@ update-glop:
 update-appveyor-image:
 	go run tools/update-appveyor-image/main.go ./appveyor.yml
 
+# Deliberately signal failure from this recipe so that CI notices failing tests
+# are red.
+appveyor-test-report-and-fail: test-report
+	appveyor PushArtifact ${TEST_REPORT_TAR} -DeploymentName "test report tarball"
+	false
+
+test-report: ${TEST_REPORT_TAR}
+
+${TEST_REPORT_TAR}:
+	tar \
+		--auto-compress \
+		--create \
+		--file $@ \
+		--directory testdata/ \
+		--files-from <(cd testdata; find  . -name '*.rej.*' | while read fname ; do \
+				echo $$fname ; \
+				echo $${fname/.rej} ; \
+			done \
+		)
 # Let go tooling decide if things are out-of-date
 .PHONY: haunts
 .PHONY: devhaunts
