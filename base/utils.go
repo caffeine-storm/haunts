@@ -179,8 +179,8 @@ func loadDictionaryFromFile(input io.Reader, renderQueue render.RenderQueueInter
 	return d, nil
 }
 
-func saveDictionaryToFile(d *gui.Dictionary, size int) error {
-	name := fmt.Sprintf("dict_%d.gob", size)
+func saveDictionaryToFile(d *gui.Dictionary, fontName string, size int) error {
+	name := fontCachePath(fontName, size)
 	f, err := os.Create(filepath.Join(datadir, "fonts", name))
 	if err != nil {
 		return err
@@ -282,7 +282,7 @@ func loadDictionaryByProperties(fontName string, size int) *gui.Dictionary {
 	}
 
 	d := gui.MakeDictionary(font, size, &immediateQueue{}, logger)
-	err = saveDictionaryToFile(d, size)
+	err = saveDictionaryToFile(d, fontName, size)
 	if err != nil {
 		Log().Error("Unable to save dictionary", "size", size, "err", err)
 	}
