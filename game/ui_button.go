@@ -30,8 +30,8 @@ type Button struct {
 	// True if the mouse was over this button on the last frame
 	was_in bool
 
-	// Color - brighter when the mouse is over it
-	shade float64
+	// Intensity as a percent - buttons will brighten when the mouse is over it
+	opacity float64
 
 	// Function to run whenever the button is clicked
 	f func(interface{})
@@ -80,7 +80,7 @@ func (b *Button) Respond(group gui.EventGroup, data interface{}) bool {
 	return false
 }
 
-func doShading(current float64, in bool, dt int64) float64 {
+func computeOpacity(current float64, in bool, dt int64) float64 {
 	var target float64
 	if in {
 		target = 1.0
@@ -101,13 +101,13 @@ func (b *Button) Think(x, y, mx, my int, dt int64) {
 		sound.PlaySound("Haunts/SFX/UI/Tick", 0.75)
 	}
 	b.was_in = in
-	b.shade = doShading(b.shade, in, dt)
+	b.opacity = computeOpacity(b.opacity, in, dt)
 }
 
 func (b *Button) RenderAt(x, y int) {
 	// TODO(tmckee): clean: why not
 	// gl.Color4d(1, 1, 1, b.shade))
-	gl.Color4ub(255, 255, 255, byte(b.shade*255))
+	gl.Color4ub(255, 255, 255, byte(b.opacity*255))
 	base.Log().Trace("Button.RenderAt", "tex-path", b.Texture.Path)
 	if b.Texture.Path != "" {
 		b.Texture.Data().RenderNatural(b.X+x, b.Y+y)

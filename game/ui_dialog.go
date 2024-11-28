@@ -216,7 +216,7 @@ func (mdb *MediumDialogBox) Think(g *gui.Gui, t int64) {
 			data.shading = 1.0
 		}
 		in := pointInsideRect(mdb.mx, mdb.my, mdb.region.X+section.Region.X, mdb.region.Y+section.Region.Y, section.Region.Dx, section.Region.Dy)
-		data.shading = doShading(data.shading, in, dt)
+		data.shading = computeOpacity(data.shading, in, dt)
 	}
 	if len(mdb.format.Sections) == 1 {
 		mdb.data.Pages[mdb.data.cur_page].Sections[0].shading = 1.0
