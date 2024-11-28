@@ -1,6 +1,7 @@
 package texture
 
 import (
+	"fmt"
 	"image"
 	"image/draw"
 	_ "image/jpeg"
@@ -28,7 +29,11 @@ type Object struct {
 
 func (o *Object) Data() *Data {
 	if o.data == nil || o.path != o.Path || o.data.texture == 0 {
-		o.data = LoadFromPath(string(o.Path))
+		var err error
+		o.data, err = LoadFromPath(string(o.Path))
+		if err != nil {
+			panic(fmt.Errorf("texture manager LoadFromPath failed: path: %q: %w", o.Path, err))
+		}
 		o.path = o.Path
 	}
 	o.data.accessed = generation
@@ -196,7 +201,7 @@ func (m *Manager) Scavenger() {
 	}
 }
 
-func LoadFromPath(path string) *Data {
+func LoadFromPath(path string) (*Data, error) {
 	if manager == nil {
 		panic("need to call texure.Init before texture.LoadFromPath")
 	}
@@ -352,10 +357,12 @@ func handleLoadRequest(req loadRequest) {
 			load_count = 0
 			load_mutex.Unlock()
 		}
+
+		manager.signalLoad(req.path, true)
 	})
 }
 
-func (m *Manager) LoadFromPath(path string) *Data {
+func (m *Manager) LoadFromPath(path string) (*Data, error) {
 	setupTextureList()
 	m.mutex.RLock()
 	var data *Data
@@ -365,7 +372,7 @@ func (m *Manager) LoadFromPath(path string) *Data {
 		m.mutex.Lock()
 		data.accessed = generation
 		m.mutex.Unlock()
-		return data
+		return data, nil
 	}
 	m.mutex.RUnlock()
 	m.mutex.Lock()
@@ -380,7 +387,7 @@ func (m *Manager) LoadFromPath(path string) *Data {
 
 	f, err := os.Open(path)
 	if err != nil {
-		return data
+		return nil, fmt.Errorf("couldn't open path %q: %w", path, err)
 	}
 	config, _, err := image.DecodeConfig(f)
 	f.Close()
@@ -388,7 +395,7 @@ func (m *Manager) LoadFromPath(path string) *Data {
 	data.dy = config.Height
 
 	load_requests <- loadRequest{path, data}
-	return data
+	return data, nil
 }
 
 // TODO(tmckee): this is horrible; not as horrible as exposing the

@@ -2,6 +2,11 @@ package game
 
 import (
 	"encoding/gob"
+	"fmt"
+	"image"
+	"path/filepath"
+	"regexp"
+
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game/status"
 	"github.com/MobRulesGames/haunts/house"
@@ -11,9 +16,6 @@ import (
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/sprite"
 	"github.com/runningwild/glop/util/algorithm"
-	"image"
-	"path/filepath"
-	"regexp"
 )
 
 type Ai interface {
@@ -530,7 +532,10 @@ func (e *Entity) drawReticle(pos mathgl.Vec2, rgba [4]float64) {
 	default:
 		gl.Color4ub(r, g, b, uint8((int(a)*200)>>8))
 	}
-	glow := texture.LoadFromPath(filepath.Join(base.GetDataDir(), "ui", "glow.png"))
+	glow, err := texture.LoadFromPath(filepath.Join(base.GetDataDir(), "ui", "glow.png"))
+	if err != nil {
+		panic(fmt.Errorf("glow texture loading failed: %w", err))
+	}
 	dx := float64(e.last_render_width + 0.5)
 	dy := float64(e.last_render_width * 150 / 100)
 	glow.Render(float64(pos.X), float64(pos.Y), dx, dy)
