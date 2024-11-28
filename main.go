@@ -252,8 +252,15 @@ func onHauntsPanic(recoveredValue interface{}) {
 	fmt.Printf("PANIC: %s\n", string(data))
 }
 
-func MakeQueueWithPrefixFn(prefix func(render.RenderQueueState), initFn func(render.RenderQueueState)) render.RenderQueueInterface {
-	return render.MakeQueue(initFn)
+const TargetFPS = 144
+
+func WatchForSlowJobs() *render.JobTimingListener {
+	return &render.JobTimingListener{
+		OnNotify: func(delta time.Duration, attribution string) {
+			base.Warn().Warn("slow render job", "t", delta, "location", attribution)
+		},
+		Threshold: time.Second / TargetFPS,
+	}
 }
 
 func main() {
@@ -268,7 +275,7 @@ func main() {
 	base.Log().Printf("Version %s", Version())
 	sys.Startup()
 	sound.Init()
-	queue := render.MakeQueue(func(queueState render.RenderQueueState) {
+	queue := render.MakeQueueWithTiming(func(queueState render.RenderQueueState) {
 		globals.SetRenderQueueState(queueState)
 		sys.CreateWindow(10, 10, wdx, wdy)
 		sys.EnableVSync(true)
@@ -280,7 +287,7 @@ func main() {
 		}
 		gl.Enable(gl.BLEND)
 		gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
-	})
+	}, WatchForSlowJobs())
 	queue.StartProcessing()
 
 	texture.Init(queue)
