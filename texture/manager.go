@@ -233,6 +233,11 @@ type Manager struct {
 	// Rendering queue/context that will be used for all gl operations.
 	renderQueue render.RenderQueueInterface
 
+	// Clients can request to block until a given texture path has been loaded.
+	// This map tracks a set of channels needed for signalling when a texture
+	// loads.
+	loadWaiters map[string]chan bool
+
 	mutex sync.RWMutex
 }
 
@@ -245,6 +250,7 @@ func Init(renderQueue render.RenderQueueInterface) {
 		registry:    make(map[string]*Data),
 		deleted:     make(map[string]*Data),
 		renderQueue: renderQueue,
+		loadWaiters: make(map[string]chan bool),
 	}
 
 	go manager.Scavenger()
@@ -292,11 +298,20 @@ func loadTextureRoutine(pipe chan loadRequest) {
 	}
 }
 
+func BlockUntilLoaded(paths ...string) {
+	if manager == nil {
+		panic("need to call texture.Init before texture.BlockUntilLoaded")
+	}
+
+	manager.BlockUntilLoaded(paths...)
+}
+
 func handleLoadRequest(req loadRequest) {
 	f, _ := os.Open(req.path)
 	im, _, err := image.Decode(f)
 	f.Close()
 	if err != nil {
+		manager.signalLoad(req.path, false)
 		return
 	}
 	gray := true
@@ -400,6 +415,65 @@ func (m *Manager) LoadFromPath(path string) (*Data, error) {
 
 	load_requests <- loadRequest{path, data}
 	return data, nil
+}
+
+func (m *Manager) BlockUntilLoaded(paths ...string) {
+	base.Log().Trace("block until loaded called", "paths", paths)
+	pathset := make(map[string]bool)
+	for _, path := range paths {
+		pathset[path] = true
+	}
+
+	waitChannels := []chan bool{}
+
+	func() {
+		m.mutex.Lock()
+		defer m.mutex.Unlock()
+
+		// Prune out what's already loaded
+		for path, data := range m.registry {
+			// The texture is only loaded if there's an opengl texture id associated
+			// with what's in the registry. Zero-valued 'Data' instances live in the
+			// registry and get updated once the texture is loaded.
+			// TODO(tmckee): it might be cleaner to have a 'loadingRegistry' and a
+			// 'loadedRegistry'.
+			if data.texture != 0 {
+				delete(pathset, path)
+			}
+		}
+
+		for path := range pathset {
+			waitChan, found := m.loadWaiters[path]
+			if !found {
+				base.Log().Trace("waiter add", "path", path)
+				waitChan = make(chan bool, 1)
+				m.loadWaiters[path] = waitChan
+			}
+			waitChannels = append(waitChannels, waitChan)
+		}
+	}()
+
+	for _, waitChan := range waitChannels {
+		base.Log().Trace("waiter wait")
+		<-waitChan
+	}
+
+	base.Log().Trace("done waiting", "times-waited", len(waitChannels))
+}
+
+func (m *Manager) signalLoad(path string, success bool) {
+	base.Log().Trace("signalling load", "path", path, "success", success)
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+
+	waitChan, found := m.loadWaiters[path]
+	if !found {
+		return
+	}
+
+	waitChan <- success
+	close(waitChan)
+	delete(m.loadWaiters, path)
 }
 
 // TODO(tmckee): this is horrible; not as horrible as exposing the
