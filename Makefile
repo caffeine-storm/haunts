@@ -20,6 +20,12 @@ go: haunts ${RUNTIME_DATADIR}
 debug: devhaunts
 	./$^
 
+dev.go.mod dev.go.sum: go.mod go.sum
+	# dev.go.mod is just go.mod but patched to look at a local glop
+	cat go.mod | sed -e 's,\(runningwild/glop =>\).*,\1 ../deps-for-haunts/glop,' > dev.go.mod
+	# dev.go.sum is just go.sum
+	cp go.sum dev.go.sum
+
 dlv: devhaunts ${RUNTIME_DATADIR} dev.go.mod
 	dlv debug --build-flags='-modfile dev.go.mod -tags nosound' .
 
