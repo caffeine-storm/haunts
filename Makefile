@@ -20,14 +20,14 @@ go: haunts ${RUNTIME_DATADIR}
 debug: devhaunts
 	./$^
 
-dlv: devhaunts ${RUNTIME_DATADIR}
+dlv: devhaunts ${RUNTIME_DATADIR} dev.go.mod
 	dlv debug --build-flags='-modfile dev.go.mod -tags nosound' .
 
-devhaunts:
-	go build -x -modfile dev.go.mod -o devhaunts -tags nosound main.go GEN_version.go
+devhaunts: dev.go.mod
+	go build -x -modfile dev.go.mod -o $@ -tags nosound main.go GEN_version.go
 
 haunts: GEN_version.go
-	go build -x -o haunts -tags nosound main.go GEN_version.go
+	go build -x -o $@ -tags nosound main.go $^
 
 # TODO(tmckee): this should use 'go gen' instead
 GEN_version.go: tools/version.go .git/HEAD
@@ -56,7 +56,7 @@ test-dlv: singlepackage=${pkg}
 test-dlv:
 	dlv test --build-flags="-tags nosound" ${singlepackage} -- ${testrunargs}
 
-devtest:
+devtest: dev.go.mod
 	xvfb-run go test ${testrunargs} -modfile dev.go.mod -tags nosound ./...
 
 update-glop:
