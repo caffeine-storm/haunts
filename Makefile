@@ -66,6 +66,9 @@ update-glop:
 update-appveyor-image:
 	go run tools/update-appveyor-image/main.go ./appveyor.yml
 
+spawn-pprof:
+	pprof -http :8080 ./perf.data
+
 # Deliberately signal failure from this recipe so that CI notices failing tests
 # are red.
 appveyor-test-report-and-fail: test-report
@@ -90,5 +93,5 @@ ${TEST_REPORT_TAR}:
 .PHONY: devhaunts
 .PHONY: clean
 .PHONY: fmt lint
-.PHONY: test devtest
+.PHONY: test devtest spawn-pprof
 .PHONY: update-glop update-appveyor-image
