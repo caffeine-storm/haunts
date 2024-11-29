@@ -20,3 +20,5 @@ devhaunts
 __debug_bin*
 testdata/*/*.rej.*
 testdata/report.tar.gz
+perf.data
+perf.data.old

@@ -1,6 +1,7 @@
 SHELL:=/bin/bash
 
 TEST_REPORT_TAR:=testdata/report.tar.gz
+PERF?=perf
 
 ifneq "${testrun}" ""
 testrunargs:=-run ${testrun}
@@ -34,6 +35,12 @@ devhaunts: dev.go.mod
 
 haunts: GEN_version.go
 	go build -x -o $@ -tags nosound main.go $^
+
+profile-haunts: haunts
+	${PERF} record -g ./$^
+
+profile-dev-haunts: devhaunts
+	${PERF} record -g ./$^
 
 # TODO(tmckee): this should use 'go gen' instead
 GEN_version.go: tools/version.go .git/HEAD
