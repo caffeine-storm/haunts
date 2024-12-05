@@ -1,5 +1,11 @@
 - bug#6: The 'edit mode' screen can really lag out; afterwards, switching back to the startup screen seems to break
 	- we need to profile and optimize it
+	- blockage in drivers? __driDriverGetExtensions_d3d12 seems like the culprit
+		; best guess is that it's building a string describing all the GL
+		extensions that the wslg d3d12 'gallium' driver supports. Rebuilding every
+		time most likely T_T
+	- ... now's as good a time as any to port to windows... let's see if it's
+	  Windows-Subsystem-for-Linux or Windows-Sans-Linux...
 
 - bug#1: The 'edit mode' screen doesn't render its text correctly
 
