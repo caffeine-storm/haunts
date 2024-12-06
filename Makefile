@@ -36,6 +36,17 @@ devhaunts: dev.go.mod
 haunts: GEN_version.go
 	go build -x -o $@ -tags nosound main.go $^
 
+win-haunts: GEN_version.go
+win-haunts: export GOOS=windows
+win-haunts: export CGO_ENABLED=1
+win-haunts: export CGO_CPPFLAGS=-I/home/tmckee/workspace/glew/include
+win-haunts: export CXX=x86_64-w64-mingw32-g++-win32
+win-haunts: export CC=x86_64-w64-mingw32-gcc-win32
+win-haunts:
+	go env GOOS
+	echo $$CC
+	go build -x -o $@ -tags nosound main.go $^
+
 profile-haunts: haunts
 	${PERF} record -g ./$^
 
