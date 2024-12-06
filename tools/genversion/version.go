@@ -1,7 +1,4 @@
-//go:build ignore
-// +build ignore
-
-package main
+package genversion
 
 import (
 	"fmt"
@@ -20,15 +17,15 @@ func Version() string {
 }
 `
 
-func main() {
-	headBytes, err := os.ReadFile(filepath.Join("..", ".git", "HEAD"))
+func GenFile() {
+	headBytes, err := os.ReadFile(filepath.Join(".git", "HEAD"))
 	if err != nil {
 		fmt.Printf("Error: %v\n", err)
 		return
 	}
 	head := strings.TrimSpace(string(headBytes))
 
-	target := filepath.Join("..", "GEN_version.go")
+	target := filepath.Join("GEN_version.go")
 	os.Remove(target) // Don't care about errors on this one
 	f, err := os.Create(target)
 	if err != nil {

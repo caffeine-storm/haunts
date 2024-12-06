@@ -43,8 +43,8 @@ profile-dev-haunts: devhaunts
 	${PERF} record -g ./$^
 
 # TODO(tmckee): this should use 'go gen' instead
-GEN_version.go: tools/version.go .git/HEAD
-	go run -C tools version.go
+GEN_version.go: tools/genversion/version.go .git/HEAD
+	go run ./tools/genversion/cmd
 
 clean:
 	rm -f ${TEST_REPORT_TAR}
