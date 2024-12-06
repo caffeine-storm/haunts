@@ -30,7 +30,7 @@ dev.go.mod dev.go.sum: go.mod go.sum
 dlv: devhaunts ${RUNTIME_DATADIR} dev.go.mod
 	dlv debug --build-flags='-modfile dev.go.mod -tags nosound' .
 
-devhaunts: dev.go.mod
+devhaunts: dev.go.mod GEN_version.go
 	go build -x -modfile dev.go.mod -o $@ -tags nosound main.go GEN_version.go
 
 haunts: GEN_version.go
