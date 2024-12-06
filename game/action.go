@@ -169,7 +169,7 @@ type Action interface {
 	HandleInput(gui.EventGroup, *Game) (bool, ActionExec)
 
 	// Got to have some way for the user to see what is going on
-	house.FloorDrawer
+	house.RenderOnFloorer
 
 	// Called if the user cancels the action - done this way so that all actions
 	// can be cancelled in the same way instead of each action deciding how to

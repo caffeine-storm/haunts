@@ -17,7 +17,7 @@ type RectObject interface {
 	Dims() (int, int)
 }
 
-type FloorDrawer interface {
+type RenderOnFloorer interface {
 	// Draws stuff on the floor.  This will be called after the floor and all
 	// textures on it have been drawn, but before furniture has been drawn.
 	RenderOnFloor()
@@ -646,7 +646,7 @@ func drawWall(room *Room, floor, left, right mathgl.Mat4, temp_tex *WallTexture,
 	}
 }
 
-func drawFloor(room *Room, floor mathgl.Mat4, temp *WallTexture, cstack base.ColorStack, los_tex *LosTexture, los_alpha float64, floor_drawer []FloorDrawer) {
+func drawFloor(room *Room, floor mathgl.Mat4, temp *WallTexture, cstack base.ColorStack, los_tex *LosTexture, los_alpha float64, floor_drawer []RenderOnFloorer) {
 	gl.MatrixMode(gl.MODELVIEW)
 	gl.PushMatrix()
 	gl.LoadIdentity()

@@ -44,7 +44,7 @@ type HouseViewer struct {
 
 	drawables          []Drawable
 	Los_tex            *LosTexture
-	temp_floor_drawers []FloorDrawer
+	temp_floor_drawers []RenderOnFloorer
 	Edit_mode          bool
 
 	bounds struct {
@@ -69,7 +69,7 @@ type HouseViewer struct {
 	temp_drawables []Drawable
 	all_furn       []*Furniture
 	spawns         []*SpawnPoint
-	floor_drawers  []FloorDrawer
+	floor_drawers  []RenderOnFloorer
 }
 
 func MakeHouseViewer(house *HouseDef, angle float32) *HouseViewer {
@@ -126,14 +126,14 @@ func (hv *HouseViewer) RemoveDrawable(d Drawable) {
 	})
 }
 
-func (hv *HouseViewer) AddFloorDrawable(fd FloorDrawer) {
+func (hv *HouseViewer) AddFloorDrawable(fd RenderOnFloorer) {
 	if fd == nil || reflect.ValueOf(fd).IsNil() {
 		panic("WTF")
 	}
 	hv.floor_drawers = append(hv.floor_drawers, fd)
 }
-func (hv *HouseViewer) RemoveFloorDrawable(fd FloorDrawer) {
-	algorithm.Choose(&hv.floor_drawers, func(t FloorDrawer) bool {
+func (hv *HouseViewer) RemoveFloorDrawable(fd RenderOnFloorer) {
+	algorithm.Choose(&hv.floor_drawers, func(t RenderOnFloorer) bool {
 		return t != fd
 	})
 }

@@ -260,7 +260,7 @@ var Num_steps float32 = 3
 var Foo int = 0
 
 // Need floor, right wall, and left wall matrices to draw the details
-func (room *Room) render(floor, left, right mathgl.Mat4, zoom float32, base_alpha byte, drawables []Drawable, los_tex *LosTexture, floor_drawers []FloorDrawer) {
+func (room *Room) render(floor, left, right mathgl.Mat4, zoom float32, base_alpha byte, drawables []Drawable, los_tex *LosTexture, floor_drawers []RenderOnFloorer) {
 	do_color := func(r, g, b, a byte) {
 		R, G, B, A := room.Color()
 		A = alphaMult(A, base_alpha)

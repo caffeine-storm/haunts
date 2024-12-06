@@ -532,7 +532,7 @@ func (f *Floor) RoomFurnSpawnAtPos(x, y int) (room *Room, furn *Furniture, spawn
 	return
 }
 
-func (f *Floor) render(region gui.Region, focusx, focusy, angle, zoom float32, drawables []Drawable, los_tex *LosTexture, floor_drawers []FloorDrawer) {
+func (f *Floor) render(region gui.Region, focusx, focusy, angle, zoom float32, drawables []Drawable, los_tex *LosTexture, floor_drawers []RenderOnFloorer) {
 	var ros []RectObject
 	algorithm.Map(f.Rooms, &ros, func(r *Room) RectObject { return r })
 	// Do not include temporary objects in the ordering, since they will likely
