@@ -10,7 +10,7 @@
     },
     "Credits": {
       "X": 805,
-      "Y": 300,
+      "Y": 285,
       "Text": {
         "String": "Credits",
         "Size": 18,
@@ -19,7 +19,7 @@
     },
     "Versus": {
       "X": 805,
-      "Y": 460,
+      "Y": 445,
       "Text": {
         "String": "Versus Mode",
         "Size": 18,
@@ -28,7 +28,7 @@
     },
     "Online": {
       "X": 805,
-      "Y": 380,
+      "Y": 365,
       "Text": {
         "String": "Play Online",
         "Size": 18,
