@@ -356,11 +356,11 @@ func main() {
 	var horizon int64
 	var tickCount int64
 	for {
+		glopdebug.LogAndClearGlErrors(base.Log())
+
 		if key_map["quit"].FramePressCount() != 0 {
 			break
 		}
-
-		glopdebug.LogAndClearGlErrors(base.Log())
 
 		renderStart := time.Now()
 		horizon = sys.Think()
