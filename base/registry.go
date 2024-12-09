@@ -64,7 +64,7 @@ func RegisterRegistry(name string, registry interface{}) {
 	if mr.Type().Key().Kind() != reflect.String {
 		Log().Error("Registry must be a map that uses strings as keys", "actualtype", mr.Type().Key())
 	}
-	if mr.Type().Elem().Kind() != reflect.Ptr {
+	if mr.Type().Elem().Kind() != reflect.Pointer {
 		Log().Error("Registry must be a map that uses pointers as values", "actualtype", mr.Type().Elem())
 	}
 	if field, ok := mr.Type().Elem().Elem().FieldByName("Name"); !ok || field.Type.Kind() != reflect.String {
@@ -86,7 +86,7 @@ func RegisterObject(registry_name string, object interface{}) {
 	}
 
 	obj_val := reflect.ValueOf(object)
-	if obj_val.Kind() != reflect.Ptr {
+	if obj_val.Kind() != reflect.Pointer {
 		Log().Error("Can only register objects as pointers", "actualkind", obj_val.Kind())
 	}
 	if obj_val.Elem().Type() != reg.Type().Elem().Elem() {
@@ -115,7 +115,7 @@ func GetObject(registry_name string, object interface{}) {
 	}
 
 	object_val := reflect.ValueOf(object)
-	if object_val.Kind() != reflect.Ptr {
+	if object_val.Kind() != reflect.Pointer {
 		Log().Error("Tried to load into a value that was not a pointer", "actualkind", object_val.Kind())
 	}
 
@@ -180,7 +180,7 @@ func LoadAndProcessObject(path, format string, target interface{}) error {
 // according to any tags that have been set on those types
 func ProcessObject(val reflect.Value, tag string) {
 	switch val.Type().Kind() {
-	case reflect.Ptr:
+	case reflect.Pointer:
 		if !val.IsNil() {
 			// Any object marked with a tag of the form `registry:"loadfrom-foo"` will be
 			// loaded from the specified registry ("foo", in this example) as long as a
