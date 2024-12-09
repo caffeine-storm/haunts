@@ -1,1 +1,55 @@
-{"Name":"restest","Size":{"Name":"Small","Dx":10,"Dy":10},"Furniture":[],"WallTextures":[{"Defname":"Cobweb","X":15.754118,"Y":1.2256411,"Rot":0,"Flip":false},{"Defname":"Cobweb","X":15.787312,"Y":9.368074,"Rot":0,"Flip":false},{"Defname":"Cobweb","X":10.1399975,"Y":9.029777,"Rot":0,"Flip":false},{"Defname":"Mouse Hole RF","X":10.307363,"Y":6.4452004,"Rot":0,"Flip":false},{"Defname":"Mouse Hole LF","X":7.6991677,"Y":10.392261,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_19_opart.png"},"Wall":{"Path":"rooms/walls/wall_02.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+  "Name": "restest",
+  "Size": {
+    "Name": "Small",
+    "Dx": 10,
+    "Dy": 10
+  },
+  "Furniture": [],
+  "WallTextures": [
+    {
+      "Defname": "Cobweb",
+      "X": 15.754118,
+      "Y": 1.2256411,
+      "Rot": 0,
+      "Flip": false
+    },
+    {
+      "Defname": "Cobweb",
+      "X": 15.787312,
+      "Y": 9.368074,
+      "Rot": 0,
+      "Flip": false
+    },
+    {
+      "Defname": "Cobweb",
+      "X": 10.1399975,
+      "Y": 9.029777,
+      "Rot": 0,
+      "Flip": false
+    },
+    {
+      "Defname": "Mouse Hole RF",
+      "X": 10.307363,
+      "Y": 6.4452004,
+      "Rot": 0,
+      "Flip": false
+    },
+    {
+      "Defname": "Mouse Hole LF",
+      "X": 7.6991677,
+      "Y": 10.392261,
+      "Rot": 0,
+      "Flip": false
+    }
+  ],
+  "Floor": {
+    "Path": "rooms/floors/floor_19_opart.png"
+  },
+  "Wall": {
+    "Path": "rooms/walls/wall_02.png"
+  },
+  "Themes": null,
+  "Sizes": null,
+  "Decor": null
+}
