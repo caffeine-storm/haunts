@@ -571,12 +571,12 @@ func (e *Entity) Render(pos mathgl.Vec2, width float32) {
 
 func facing(v mathgl.Vec2) int {
 	fs := []mathgl.Vec2{
-		mathgl.Vec2{-1, -1},
-		mathgl.Vec2{-4, 1},
-		mathgl.Vec2{0, 1},
-		mathgl.Vec2{1, 1},
-		mathgl.Vec2{1, 0},
-		mathgl.Vec2{1, -4},
+		{X: -1, Y: -1},
+		{X: -4, Y: 1},
+		{X: 0, Y: 1},
+		{X: 1, Y: 1},
+		{X: 1, Y: 0},
+		{X: 1, Y: -4},
 	}
 
 	var max float32

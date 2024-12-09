@@ -17,7 +17,7 @@ func MakeOverlay(g *Game) gui.Widget {
 }
 
 func (o *Overlay) Requested() gui.Dims {
-	return gui.Dims{1024, 768}
+	return gui.Dims{Dx: 1024, Dy: 768}
 }
 func (o *Overlay) Expandable() (bool, bool) {
 	return false, false
