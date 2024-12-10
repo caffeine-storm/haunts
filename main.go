@@ -16,6 +16,7 @@ import (
 	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/house"
+	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/sound"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/memory"
@@ -31,8 +32,6 @@ import (
 	// haunts/game because haunts/game/actions depends on it
 	_ "github.com/MobRulesGames/haunts/game/actions"
 	_ "github.com/MobRulesGames/haunts/game/ai"
-
-	"github.com/MobRulesGames/haunts/game/status"
 )
 
 var (
@@ -70,17 +69,6 @@ func (mode applicationMode) String() string {
 		return "edit"
 	}
 	panic(fmt.Errorf("unknown applicationMode: %v", int(mode)))
-}
-
-func loadAllRegistries() {
-	house.LoadAllFurnitureInDir(filepath.Join(datadir, "furniture"))
-	house.LoadAllWallTexturesInDir(filepath.Join(datadir, "textures"))
-	house.LoadAllRoomsInDir(filepath.Join(datadir, "rooms"))
-	house.LoadAllDoorsInDir(filepath.Join(datadir, "doors"))
-	house.LoadAllHousesInDir(filepath.Join(datadir, "houses"))
-	game.LoadAllGearInDir(filepath.Join(datadir, "gear"))
-	game.RegisterActions()
-	status.RegisterAllConditions()
 }
 
 func init() {
@@ -162,7 +150,7 @@ func editMode(ui *gui.Gui) {
 				ui.RemoveChild(editor)
 				editor_name = name
 				editor = editors[editor_name]
-				loadAllRegistries()
+				registry.LoadAllRegistries()
 				editor.Reload()
 				ui.AddChild(editor)
 			}
@@ -300,7 +288,7 @@ func main() {
 		panic(err.Error())
 	}
 	base.InitDictionaries(ui)
-	loadAllRegistries()
+	registry.LoadAllRegistries()
 
 	// TODO: Might want to be able to reload stuff, but this is sensitive because it
 	// is loading textures.  We should probably redo the sprite system so that this

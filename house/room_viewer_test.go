@@ -12,7 +12,7 @@ func TestRoomViewer(t *testing.T) {
 }
 
 func RoomViewerSpecs() {
-	room := GivenARoom()
+	room := GivenARoom("restest")
 
 	Convey("can be made", func() {
 		rv := house.MakeRoomViewer(room, 0)

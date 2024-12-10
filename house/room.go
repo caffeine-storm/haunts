@@ -2,16 +2,19 @@ package house
 
 import (
 	"fmt"
-	"github.com/MobRulesGames/haunts/base"
-	"github.com/MobRulesGames/haunts/texture"
-	"github.com/MobRulesGames/mathgl"
-	"github.com/go-gl-legacy/gl"
-	"github.com/runningwild/glop/gui"
 	"image"
 	"math"
 	"path/filepath"
 	"strings"
 	"unsafe"
+
+	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/texture"
+	"github.com/MobRulesGames/mathgl"
+	"github.com/go-gl-legacy/gl"
+	"github.com/runningwild/glop/debug"
+	"github.com/runningwild/glop/glog"
+	"github.com/runningwild/glop/gui"
 )
 
 func GetAllRoomNames() []string {
@@ -260,7 +263,9 @@ var Num_steps float32 = 3
 var Foo int = 0
 
 // Need floor, right wall, and left wall matrices to draw the details
-func (room *Room) render(floor, left, right mathgl.Mat4, zoom float32, base_alpha byte, drawables []Drawable, los_tex *LosTexture, floor_drawers []RenderOnFloorer) {
+func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alpha byte, drawables []Drawable, los_tex *LosTexture, floor_drawers []RenderOnFloorer) {
+	debug.LogAndClearGlErrors(glog.InfoLogger())
+
 	do_color := func(r, g, b, a byte) {
 		R, G, B, A := room.Color()
 		A = alphaMult(A, base_alpha)
@@ -286,6 +291,7 @@ func (room *Room) render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 		{room.floor_buffer, room.Floor, &floor},
 	}
 
+	gl.MatrixMode(gl.MODELVIEW)
 	gl.PushMatrix()
 	defer gl.PopMatrix()
 
@@ -369,6 +375,8 @@ func (room *Room) render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 			gl.StencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE)
 			do_color(255, 255, 255, 255)
 		}
+
+		debug.LogAndClearGlErrors(glog.InfoLogger())
 
 		gl.ClientActiveTexture(gl.TEXTURE0)
 		gl.Buffer(room.vbuffer).Bind(gl.ARRAY_BUFFER)

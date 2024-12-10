@@ -414,8 +414,8 @@ func drawWall(room *Room, floor, left, right mathgl.Mat4, temp_tex *WallTexture,
 				}
 			}
 			cstack.ApplyWithAlpha(alpha * los_alpha)
-			gl.Begin(gl.QUADS)
 			height := float64(door.Width*door.TextureData().Dy()) / float64(door.TextureData().Dx())
+			gl.Begin(gl.QUADS)
 			gl.TexCoord2f(1, 0)
 			gl.Vertex3d(float64(room.Size.Dx), float64(door.Pos), 0)
 			gl.TexCoord2f(1, -1)
@@ -547,8 +547,8 @@ func drawWall(room *Room, floor, left, right mathgl.Mat4, temp_tex *WallTexture,
 				}
 			}
 			cstack.ApplyWithAlpha(alpha * los_alpha)
-			gl.Begin(gl.QUADS)
 			height := float64(door.Width*door.TextureData().Dy()) / float64(door.TextureData().Dx())
+			gl.Begin(gl.QUADS)
 			gl.TexCoord2f(0, 0)
 			gl.Vertex3d(float64(door.Pos), float64(room.Size.Dy), 0)
 			gl.TexCoord2f(0, -1)
@@ -916,7 +916,7 @@ func (rv *roomViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
 	rv.room.setupGlStuff()
 	rv.room.far_left.wall_alpha = 255
 	rv.room.far_right.wall_alpha = 255
-	rv.room.render(rv.mat, rv.left_wall_mat, rv.right_wall_mat, rv.zoom, 255, nil, nil, nil)
+	rv.room.Render(rv.mat, rv.left_wall_mat, rv.right_wall_mat, rv.zoom, 255, nil, nil, nil)
 	return
 
 	rv.cstack.Push(1, 1, 1, 1)

@@ -54,6 +54,7 @@ func SetDatadir(_datadir string) io.Reader {
 	return SetupLogger(datadir)
 }
 func GetDataDir() string {
+	// TODO(tmckee): panic if not initialized!!!
 	return datadir
 }
 

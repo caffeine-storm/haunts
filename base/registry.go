@@ -172,6 +172,8 @@ func LoadAndProcessObject(path, format string, target interface{}) error {
 	if err != nil {
 		return err
 	}
+
+	fmt.Printf("loaded an object at %q: %+v\n", path, target)
 	ProcessObject(reflect.ValueOf(target), "")
 	return nil
 }
@@ -181,21 +183,23 @@ func LoadAndProcessObject(path, format string, target interface{}) error {
 func ProcessObject(val reflect.Value, tag string) {
 	switch val.Type().Kind() {
 	case reflect.Pointer:
-		if !val.IsNil() {
-			// Any object marked with a tag of the form `registry:"loadfrom-foo"` will be
-			// loaded from the specified registry ("foo", in this example) as long as a
-			// Defname field of type string was in the same struct.  If it was then the
-			// value of that field will be used as the key when loading this object from
-			// the registry.
-			loadfrom_tag := "loadfrom-"
-			if strings.HasPrefix(tag, loadfrom_tag) {
-				source := tag[len(loadfrom_tag):]
-				GetObject(source, val.Interface())
-			}
-			ProcessObject(val.Elem(), tag)
+		if val.IsNil() {
+			break
 		}
-
+		// Any object marked with a tag of the form `registry:"loadfrom-foo"` will be
+		// loaded from the specified registry ("foo", in this example) as long as a
+		// Defname field of type string was in the same struct.  If it was then the
+		// value of that field will be used as the key when loading this object from
+		// the registry.
+		loadfrom_tag := "loadfrom-"
+		if strings.HasPrefix(tag, loadfrom_tag) {
+			source := tag[len(loadfrom_tag):]
+			fmt.Printf("GetObject-ing for registry %q\n", source)
+			GetObject(source, val.Interface())
+		}
+		ProcessObject(val.Elem(), tag)
 	case reflect.Struct:
+		fmt.Printf("processing %d struct fields\n", val.NumField())
 		for i := 0; i < val.NumField(); i++ {
 			ProcessObject(val.Field(i), val.Type().Field(i).Tag.Get("registry"))
 		}
@@ -203,6 +207,7 @@ func ProcessObject(val reflect.Value, tag string) {
 	case reflect.Array:
 		fallthrough
 	case reflect.Slice:
+		fmt.Printf("processing %d items\n", val.Len())
 		for i := 0; i < val.Len(); i++ {
 			ProcessObject(val.Index(i), tag)
 		}
@@ -211,11 +216,13 @@ func ProcessObject(val reflect.Value, tag string) {
 	// Anything that is tagged with autoload has its Load() method called if it
 	// exists and has zero inputs and outputs
 	if tag == "autoload" {
+		fmt.Printf("autoload tagged!!!\n")
 		load := val.MethodByName("Load")
 		if !load.IsValid() && val.CanAddr() {
 			load = val.Addr().MethodByName("Load")
 		}
 		if load.IsValid() && load.Type().NumIn() == 0 && load.Type().NumOut() == 0 {
+			fmt.Printf("calling autoload!!!\n")
 			load.Call(nil)
 		}
 	}
