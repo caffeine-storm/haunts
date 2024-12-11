@@ -137,12 +137,12 @@ func Log() logging.Logger {
 	return &base_logger
 }
 
-func Warn() *baseLogger {
+func Warn() logging.Logger {
 	logger.SetPrefix("WARN > ")
 	return &base_logger
 }
 
-func Error() *baseLogger {
+func Error() logging.Logger {
 	logger.SetPrefix("ERROR> ")
 	return &base_logger
 }
