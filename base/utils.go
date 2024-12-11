@@ -94,6 +94,10 @@ type baseLogger struct {
 
 var base_logger baseLogger
 
+func SetLogLevel(lvl slog.Level) {
+	base_logger.sloggy = glog.Relevel(&base_logger, lvl)
+}
+
 func doLog(lvl slog.Level, msg string, args ...interface{}) {
 	if !glogger.Enabled(context.Background(), lvl) {
 		return

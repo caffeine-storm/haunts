@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/runningwild/glop/gloptest"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -69,6 +70,15 @@ func LoggingSpec() {
 		Convey("should reference the client code", func() {
 			So(logOutput, ShouldReference, "base/utils_test.go")
 		})
+
+	})
+	SkipConvey("should print when running tests", func() {
+		lines := gloptest.CollectOutput(func() {
+			base.SetupLogger("../testdata")
+			base.Log().Error("collected message")
+		})
+		fmt.Printf("output: %v\n", lines)
+		So(strings.Join(lines, "\n"), ShouldContainSubstring, "collected message")
 	})
 }
 

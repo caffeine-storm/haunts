@@ -1,6 +1,7 @@
 package texture
 
 import (
+	"context"
 	"fmt"
 	"image"
 	"image/draw"
@@ -298,12 +299,12 @@ func loadTextureRoutine(pipe chan loadRequest) {
 	}
 }
 
-func BlockUntilLoaded(paths ...string) {
+func BlockUntilLoaded(ctx context.Context, paths ...string) error {
 	if manager == nil {
 		panic("need to call texture.Init before texture.BlockUntilLoaded")
 	}
 
-	manager.BlockUntilLoaded(paths...)
+	return manager.BlockUntilLoaded(ctx, paths...)
 }
 
 func handleLoadRequest(req loadRequest) {
@@ -382,6 +383,7 @@ func handleLoadRequest(req loadRequest) {
 }
 
 func (m *Manager) LoadFromPath(path string) (*Data, error) {
+	fmt.Println("LoadFromPath", "path", path)
 	setupTextureList()
 	m.mutex.RLock()
 	var data *Data
@@ -417,7 +419,7 @@ func (m *Manager) LoadFromPath(path string) (*Data, error) {
 	return data, nil
 }
 
-func (m *Manager) BlockUntilLoaded(paths ...string) {
+func (m *Manager) BlockUntilLoaded(ctx context.Context, paths ...string) error {
 	base.Log().Trace("block until loaded called", "paths", paths)
 	pathset := make(map[string]bool)
 	for _, path := range paths {
@@ -453,12 +455,31 @@ func (m *Manager) BlockUntilLoaded(paths ...string) {
 		}
 	}()
 
+	collector := make(chan bool, len(waitChannels))
 	for _, waitChan := range waitChannels {
-		base.Log().Trace("waiter wait")
-		<-waitChan
+		c := waitChan
+		go func() {
+			collector <- (<-c)
+		}()
+	}
+
+	loadOk := true
+	for range waitChannels {
+		select {
+		case loadResult := <-collector:
+			loadOk = loadOk && loadResult
+		case <-ctx.Done():
+			return fmt.Errorf("deadline exceeded")
+		}
 	}
 
 	base.Log().Trace("done waiting", "times-waited", len(waitChannels))
+
+	if !loadOk {
+		return fmt.Errorf("texture load failure")
+	}
+
+	return nil
 }
 
 func (m *Manager) signalLoad(path string, success bool) {

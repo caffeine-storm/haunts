@@ -1,9 +1,11 @@
 package game_test
 
 import (
+	"context"
 	"fmt"
 	"path"
 	"testing"
+	"time"
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
@@ -60,7 +62,11 @@ func RunStartupSpecs() {
 		if err != nil {
 			panic(err)
 		}
-		texture.BlockUntilLoaded(startTexture, menuTexture)
+
+		deadlineContext, cancel := context.WithTimeout(context.Background(), time.Millisecond*250)
+		defer cancel()
+		err = texture.BlockUntilLoaded(deadlineContext, startTexture, menuTexture)
+		So(err, ShouldBeNil)
 
 		menu.SetOpacity(0.6)
 

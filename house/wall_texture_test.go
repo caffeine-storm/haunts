@@ -1,9 +1,11 @@
 package house_test
 
 import (
+	"context"
 	"fmt"
 	"path"
 	"testing"
+	"time"
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/house"
@@ -28,9 +30,17 @@ func TestWallTextureSpecs(t *testing.T) {
 				texture.Init(queue)
 				wt := house.MakeWallTexture("Cobweb")
 				So(wt, ShouldNotBeNil)
+				deadline, cancel := context.WithTimeout(context.Background(), time.Millisecond*250)
+				defer cancel()
 				doneLoadingTexture := make(chan bool, 1)
+				var err error
+
+				texpath := path.Join(datadir, "textures", "cobweb.png")
 				queue.Queue(func(render.RenderQueueState) {
-					texture.BlockUntilLoaded(path.Join(datadir, "textures", "cobweb.png"))
+					_, err = texture.LoadFromPath(texpath)
+				})
+				queue.Queue(func(render.RenderQueueState) {
+					err = texture.BlockUntilLoaded(deadline, texpath)
 					doneLoadingTexture <- true
 				})
 				doneRendering := make(chan bool, 1)
@@ -41,6 +51,9 @@ func TestWallTextureSpecs(t *testing.T) {
 
 				fmt.Printf("going to wait for texture\n")
 				<-doneLoadingTexture
+
+				So(err, ShouldBeNil)
+
 				fmt.Printf("going to wait for render\n")
 				<-doneRendering
 				fmt.Printf("done waiting\n")

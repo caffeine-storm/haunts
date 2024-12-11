@@ -265,12 +265,14 @@ var Foo int = 0
 func (room *Room) RenderWalls(floor *mathgl.Mat4, base_alpha byte) {
 	var vert roomVertex
 	for _, wt := range room.WallTextures {
+
 		if room.wall_texture_gl_map == nil {
 			room.wall_texture_gl_map = make(map[*WallTexture]wallTextureGlIds)
 			room.wall_texture_state_map = make(map[*WallTexture]wallTextureState)
 		}
+
 		ids := room.wall_texture_gl_map[wt]
-		state := room.wall_texture_state_map[wt]
+		cachedState := room.wall_texture_state_map[wt]
 		var new_state wallTextureState
 		new_state.flip = wt.Flip
 		new_state.rot = wt.Rot
@@ -280,11 +282,12 @@ func (room *Room) RenderWalls(floor *mathgl.Mat4, base_alpha byte) {
 		new_state.room.y = room.Y
 		new_state.room.dx = room.Size.Dx
 		new_state.room.dy = room.Size.Dy
-		if new_state != state {
+		if new_state != cachedState {
 			wt.setupGlStuff(room.X, room.Y, room.Size.Dx, room.Size.Dy, &ids)
 			room.wall_texture_gl_map[wt] = ids
 			room.wall_texture_state_map[wt] = new_state
 		}
+
 		gl.LoadMatrixf((*[16]float32)(floor))
 		if ids.vbuffer != 0 {
 			wt.Texture.Data().Bind()
