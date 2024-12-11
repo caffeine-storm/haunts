@@ -22,6 +22,7 @@ import (
 
 	"code.google.com/p/freetype-go/freetype/truetype"
 	"github.com/MobRulesGames/haunts/globals"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/glog"
 	"github.com/runningwild/glop/gui"
@@ -131,7 +132,7 @@ func (*baseLogger) Trace(msg string, args ...interface{}) {
 
 // TODO: This probably isn't the best way to do things - different go-routines
 // can call these and screw up prefixes for each other.
-func Log() *baseLogger {
+func Log() logging.Logger {
 	logger.SetPrefix("LOG  > ")
 	return &base_logger
 }
