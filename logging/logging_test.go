@@ -8,6 +8,7 @@ import (
 	"testing"
 
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/runningwild/glop/gloptest"
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -63,21 +64,29 @@ func ShouldReference(actual interface{}, expected ...interface{}) string {
 }
 
 func LoggingSpec() {
-	Convey("the source attribute in a log message", func() {
-		logOutput := base.SetupLogger("../testdata")
-		base.Log().Info("a test message")
+	Convey("using logging through the base package", func() {
+		Convey("the source attribute in a log message", func() {
+			logOutput := base.SetupLogger("../testdata")
+			base.Log().Info("a test message")
 
-		Convey("should reference the client code", func() {
-			So(logOutput, ShouldReference, "logging/logging_test.go")
+			Convey("should reference the client code", func() {
+				So(logOutput, ShouldReference, "logging/logging_test.go")
+			})
+
 		})
-
+		SkipConvey("should print when running tests", func() {
+			lines := gloptest.CollectOutput(func() {
+				base.SetupLogger("../testdata")
+				base.Log().Error("collected message")
+			})
+			So(strings.Join(lines, "\n"), ShouldContainSubstring, "collected message")
+		})
 	})
-	SkipConvey("should print when running tests", func() {
+
+	Convey("using logging directly", func() {
 		lines := gloptest.CollectOutput(func() {
-			base.SetupLogger("../testdata")
-			base.Log().Error("collected message")
+			logging.Error("collected message")
 		})
-		fmt.Printf("output: %v\n", lines)
 		So(strings.Join(lines, "\n"), ShouldContainSubstring, "collected message")
 	})
 }
