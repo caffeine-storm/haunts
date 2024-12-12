@@ -21,11 +21,13 @@ go: haunts ${RUNTIME_DATADIR}
 debug: devhaunts
 	./$^
 
-dev.go.mod dev.go.sum: go.mod go.sum
+dev.go.mod: go.mod
 	# dev.go.mod is just go.mod but patched to look at a local glop
-	cat go.mod | sed -e 's,\(runningwild/glop =>\).*,\1 ../deps-for-haunts/glop,' > dev.go.mod
+	cat $^ | sed -e 's,\(runningwild/glop =>\).*,\1 ../deps-for-haunts/glop,' > $@
+
+dev.go.sum: go.sum
 	# dev.go.sum is just go.sum
-	cp go.sum dev.go.sum
+	cp $^ $@
 
 dlv: devhaunts ${RUNTIME_DATADIR} dev.go.mod
 	dlv debug --build-flags='-modfile dev.go.mod -tags nosound' .
@@ -33,6 +35,10 @@ dlv: devhaunts ${RUNTIME_DATADIR} dev.go.mod
 devhaunts: dev.go.mod GEN_version.go
 	go build -x -modfile dev.go.mod -o $@ -tags nosound main.go GEN_version.go
 
+go.sum: go.mod
+	go mod tidy
+
+haunts: |go.mod go.sum
 haunts: GEN_version.go
 	go build -x -o $@ -tags nosound main.go $^
 
@@ -48,6 +54,7 @@ GEN_version.go: tools/genversion/version.go .git/HEAD
 
 clean:
 	rm -f ${TEST_REPORT_TAR}
+	rm -f devhaunts haunts
 
 fmt:
 	go fmt ./...
@@ -69,7 +76,7 @@ test-dlv: singlepackage=${pkg}
 test-dlv:
 	dlv test --build-flags="-tags nosound" ${singlepackage} -- ${testrunargs}
 
-devtest: dev.go.mod
+devtest: dev.go.mod dev.go.sum
 	xvfb-run go test ${testrunargs} -modfile dev.go.mod -tags nosound ./...
 
 update-glop:

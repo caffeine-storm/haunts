@@ -22,3 +22,4 @@ testdata/*/*.rej.*
 testdata/report.tar.gz
 perf.data
 perf.data.old
+dev.go.sum
