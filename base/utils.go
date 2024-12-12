@@ -2,7 +2,6 @@ package base
 
 import (
 	"bytes"
-	"context"
 	"encoding/base64"
 	"encoding/gob"
 	"encoding/json"
@@ -11,14 +10,10 @@ import (
 	"image/color"
 	"io"
 	"io/fs"
-	"log"
-	"log/slog"
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"sync"
-	"time"
 
 	"code.google.com/p/freetype-go/freetype/truetype"
 	"github.com/MobRulesGames/haunts/globals"
@@ -31,20 +26,9 @@ import (
 
 var datadir string
 
-// Until we migrate lots of old log.Logger calls, we'll keep a log.Logger
-// around.
-// TODO(tmckee): delegate logging from 'logger' to 'slogger' so that all logs
-// are structured/leveled conveniently.
-var logger *log.Logger
-var glogger glog.Logger
-
-var log_reader io.Reader
-var log_out *os.File
-var log_console *bytes.Buffer
-
-func SetDatadir(_datadir string) io.Reader {
+func SetDatadir(_datadir string) {
 	if datadir == _datadir {
-		return log_console
+		return
 	}
 
 	if datadir != "" {
@@ -52,104 +36,23 @@ func SetDatadir(_datadir string) io.Reader {
 	}
 
 	datadir = _datadir
-	return SetupLogger(datadir)
 }
+
 func GetDataDir() string {
 	// TODO(tmckee): panic if not initialized!!!
 	return datadir
 }
 
-func SetupLogger(dir string) *bytes.Buffer {
-	// If an error happens when making this directory it might already exist,
-	// all that really matters is making the log file in the directory.
-	os.Mkdir(filepath.Join(dir, "logs"), 0777)
-	logger = nil
-	var err error
-	name := "haunts.log"
-	log_out, err = os.Create(filepath.Join(dir, "logs", name))
-	if err != nil {
-		fmt.Printf("Unable to open log file: %v\nLogging to stdout...\n", err.Error())
-		log_out = os.Stdout
-	}
-	log_console = &bytes.Buffer{}
-	log_writer := io.MultiWriter(log_console, log_out)
-	logger = log.New(log_writer, "> ", log.Ltime|log.Lshortfile)
-
-	glogger = glog.New(&glog.Opts{
-		Output: log_writer,
-	})
-
-	base_logger = baseLogger{
-		logger,
-		glogger,
-	}
-
-	return log_console
-}
-
-type gloggy = glog.Logger
-type baseLogger struct {
-	*log.Logger
-	gloggy
-}
-
-var base_logger baseLogger
-
-func SetLogLevel(lvl slog.Level) {
-	base_logger.gloggy = glog.Relevel(&base_logger, lvl)
-}
-
-func doLog(lvl slog.Level, msg string, args ...interface{}) {
-	if !glogger.Enabled(context.Background(), lvl) {
-		return
-	}
-	var pcs [1]uintptr
-	runtime.Callers(3, pcs[:]) // skip [Callers, <helper>, doLog]
-	r := slog.NewRecord(time.Now(), lvl, msg, pcs[0])
-	r.Add(args...)
-	glogger.Handler().Handle(context.Background(), r)
-}
-
-// Equivalent to glog.ErrorLogger().Error
-func (*baseLogger) Error(msg string, args ...interface{}) {
-	doLog(slog.LevelError, msg, args...)
-}
-
-// Equivalent to glog.WarningLogger().Warn
-func (*baseLogger) Warn(msg string, args ...interface{}) {
-	doLog(slog.LevelWarn, msg, args...)
-}
-
-// Equivalent to glog.InfoLogger().Info
-func (*baseLogger) Info(msg string, args ...interface{}) {
-	doLog(slog.LevelInfo, msg, args...)
-}
-
-// Equivalent to glog.InfoLogger().Trace
-func (*baseLogger) Trace(msg string, args ...interface{}) {
-	doLog(glog.LevelTrace, msg, args...)
-}
-
-// TODO: This probably isn't the best way to do things - different go-routines
-// can call these and screw up prefixes for each other.
 func Log() logging.Logger {
-	logger.SetPrefix("LOG  > ")
-	return &base_logger
+	return logging.DefaultLogger()
 }
 
 func Warn() logging.Logger {
-	logger.SetPrefix("WARN > ")
-	return &base_logger
+	return logging.WarnLogger()
 }
 
 func Error() logging.Logger {
-	logger.SetPrefix("ERROR> ")
-	return &base_logger
-}
-
-func CloseLog() {
-	log_out.WriteString("END OF LOG\n\n\n\n")
-	log_out.Close()
+	return logging.ErrorLogger()
 }
 
 var drawing_context gui.UpdateableDrawingContext
@@ -257,7 +160,7 @@ func getDictionaryByProperties(fontName string, size int) *gui.Dictionary {
 }
 
 func loadDictionaryByProperties(fontName string, size int) *gui.Dictionary {
-	logger := glog.Relevel(glogger, slog.LevelDebug)
+	logger := logging.DebugLogger()
 	// First, check our disk cache for a grid-of-glyphs.
 	cachePath := fontCachePath(fontName, size)
 

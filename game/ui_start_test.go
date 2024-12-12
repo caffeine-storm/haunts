@@ -10,6 +10,7 @@ import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/globals"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/gui/guitest"
@@ -34,6 +35,7 @@ func givenADrawingContext(dims gui.Dims) gui.UpdateableDrawingContext {
 
 func RunStartupSpecs() {
 	base.SetDatadir("../data")
+	logging.SetupLogger("../data")
 	windowRegion := gui.Region{
 		Point: gui.Point{X: 0, Y: 0},
 		Dims:  gui.Dims{Dx: 1024, Dy: 750},

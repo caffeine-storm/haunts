@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/runningwild/glop/glog"
 	"github.com/runningwild/glop/render/rendertest"
@@ -16,6 +17,7 @@ func TestBlockUntilLoaded(t *testing.T) {
 	// TODO(tmckee): BLECH! we're doing this to call base.SetupLogger() which
 	// should not be coupled to this test.
 	base.SetDatadir("../data")
+	logging.SetupLogger("../data")
 	queue := rendertest.MakeDiscardingRenderQueue()
 	texture.Init(queue)
 	t.Run("should take a context with deadline", func(t *testing.T) {
@@ -29,7 +31,7 @@ func TestBlockUntilLoaded(t *testing.T) {
 
 	t.Run("can load a texture", func(t *testing.T) {
 		t.Skip()
-		base.SetLogLevel(glog.LevelTrace)
+		logging.SetLogLevel(glog.LevelTrace)
 		base.Log().Trace("a test trace message")
 		texpath := path.Join(base.GetDataDir(), "textures", "cobweb.png")
 		_, err := texture.LoadFromPath(texpath)

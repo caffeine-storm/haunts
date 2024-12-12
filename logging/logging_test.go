@@ -46,7 +46,8 @@ func ShouldContainSourceRef(outputStream io.Reader, target string) string {
 			return ""
 		}
 	}
-	return fmt.Sprintf("did not find %q amongst output", target)
+
+	return fmt.Sprintf("did not find %q amongst output %q", target, bytes.Join(outputLines, []byte{'\n'}))
 }
 
 func ShouldReference(actual interface{}, expected ...interface{}) string {
@@ -66,17 +67,15 @@ func ShouldReference(actual interface{}, expected ...interface{}) string {
 func LoggingSpec() {
 	Convey("using logging through the base package", func() {
 		Convey("the source attribute in a log message", func() {
-			logOutput := base.SetupLogger("../testdata")
+			logOutput := logging.SetupLogger("../testdata")
 			base.Log().Info("a test message")
 
 			Convey("should reference the client code", func() {
 				So(logOutput, ShouldReference, "logging/logging_test.go")
 			})
-
 		})
-		SkipConvey("should print when running tests", func() {
+		Convey("should print when running tests", func() {
 			lines := logtesting.CollectOutput(func() {
-				base.SetupLogger("../testdata")
 				base.Log().Error("collected message")
 			})
 			So(strings.Join(lines, "\n"), ShouldContainSubstring, "collected message")

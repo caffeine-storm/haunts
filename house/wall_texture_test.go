@@ -9,6 +9,7 @@ import (
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/house"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/runningwild/glop/render"
@@ -20,6 +21,7 @@ import (
 // TODO(tmckee): rename 'WallTexture' to 'Decal' or something.
 func TestWallTextureSpecs(t *testing.T) {
 	base.SetDatadir("../data")
+	logging.SetupLogger("../data")
 	Convey("Wall Textures", t, func() {
 		SkipConvey("can be made", func() {
 			rendertest.WithGlForTest(200, 200, func(sys system.System, queue render.RenderQueueInterface) {

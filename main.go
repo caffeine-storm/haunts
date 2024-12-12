@@ -17,6 +17,7 @@ import (
 	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/house"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/sound"
 	"github.com/MobRulesGames/haunts/texture"
@@ -80,7 +81,8 @@ func init() {
 
 	rand.Seed(100)
 	datadir = "data-runtime"
-	logReader = base.SetDatadir(datadir)
+	base.SetDatadir(datadir)
+	logReader = logging.SetupLogger(datadir)
 	base.Log().Printf("Setting datadir: %s", datadir)
 	err := house.SetDatadir(datadir)
 	if err != nil {
@@ -236,7 +238,7 @@ func onHauntsPanic(recoveredValue interface{}) {
 	data := debug.Stack()
 	base.Error().Printf("PANIC: %v\n", recoveredValue)
 	base.Error().Printf("PANIC: %s\n", string(data))
-	base.CloseLog()
+	logging.CloseLog()
 	fmt.Printf("PANIC: %v\n", recoveredValue)
 	fmt.Printf("PANIC: %s\n", string(data))
 }
