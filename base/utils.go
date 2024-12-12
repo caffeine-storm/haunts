@@ -19,7 +19,6 @@ import (
 	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/go-gl-legacy/gl"
-	"github.com/runningwild/glop/glog"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
 )
@@ -79,7 +78,7 @@ func loadFont() (*truetype.Font, error) {
 	return font, nil
 }
 
-func loadDictionaryFromFile(input io.Reader, renderQueue render.RenderQueueInterface, logger glog.Logger) (*gui.Dictionary, error) {
+func loadDictionaryFromFile(input io.Reader, renderQueue render.RenderQueueInterface, logger logging.Logger) (*gui.Dictionary, error) {
 	d, err := gui.LoadDictionary(input, renderQueue, logger)
 	if err != nil {
 		return nil, fmt.Errorf("gui.LoadDictionary failed: %w", err)
@@ -169,7 +168,7 @@ func loadDictionaryByProperties(fontName string, size int) *gui.Dictionary {
 	if err == nil {
 		defer f.Close()
 		Log().Info("font-cache-hit", "fontName", fontName, "size", size, "err", err)
-		d, err := loadDictionaryFromFile(f, &immediateQueue{}, glog.WarningLogger())
+		d, err := loadDictionaryFromFile(f, &immediateQueue{}, logging.DebugLogger())
 		if err != nil {
 			panic(fmt.Errorf("couldn't loadDictionaryFromFile for %q @%d: %w", fontName, size, err))
 		}

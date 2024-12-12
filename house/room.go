@@ -9,11 +9,11 @@ import (
 	"unsafe"
 
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/mathgl"
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/debug"
-	"github.com/runningwild/glop/glog"
 	"github.com/runningwild/glop/gui"
 )
 
@@ -330,7 +330,7 @@ func doColour(room *Room, r, g, b, a, base_alpha byte) {
 
 // Need floor, right wall, and left wall matrices to draw the details
 func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alpha byte, drawables []Drawable, los_tex *LosTexture, floor_drawers []RenderOnFloorer) {
-	debug.LogAndClearGlErrors(glog.InfoLogger())
+	debug.LogAndClearGlErrors(logging.InfoLogger())
 
 	do_color := func(r, g, b, a byte) {
 		doColour(room, r, g, b, a, base_alpha)
@@ -440,7 +440,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 			do_color(255, 255, 255, 255)
 		}
 
-		debug.LogAndClearGlErrors(glog.InfoLogger())
+		debug.LogAndClearGlErrors(logging.InfoLogger())
 
 		gl.ClientActiveTexture(gl.TEXTURE0)
 		gl.Buffer(room.vbuffer).Bind(gl.ARRAY_BUFFER)
