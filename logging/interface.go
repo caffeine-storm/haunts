@@ -82,6 +82,22 @@ func ErrorLogger() Logger {
 	return errorLogger
 }
 
+func Log(msg string, args ...interface{}) {
+	DefaultLogger().Info(msg, args...)
+}
+
+func Debug(msg string, args ...interface{}) {
+	DebugLogger().Debug(msg, args...)
+}
+
+func Info(msg string, args ...interface{}) {
+	InfoLogger().Info(msg, args...)
+}
+
+func Warn(msg string, args ...interface{}) {
+	WarnLogger().Info(msg, args...)
+}
+
 func Error(msg string, args ...interface{}) {
 	ErrorLogger().Error(msg, args...)
 }
