@@ -1,4 +1,4 @@
-package base_test
+package logging_test
 
 import (
 	"bytes"
@@ -68,7 +68,7 @@ func LoggingSpec() {
 		base.Log().Info("a test message")
 
 		Convey("should reference the client code", func() {
-			So(logOutput, ShouldReference, "base/utils_test.go")
+			So(logOutput, ShouldReference, "logging/logging_test.go")
 		})
 
 	})
