@@ -55,23 +55,23 @@ func RemoveRegistry(name string) {
 // Registers a registry which must be a map from string to pointers to something
 func RegisterRegistry(name string, registry interface{}) {
 	if strings.Contains(name, " ") {
-		Log().Error("Registry name cannot contain spaces", "name", name)
+		DeprecatedLog().Error("Registry name cannot contain spaces", "name", name)
 	}
 	mr := reflect.ValueOf(registry)
 	if mr.Kind() != reflect.Map {
-		Log().Error("Registries must be map[string]*struct", "actualkind", mr.Kind())
+		DeprecatedLog().Error("Registries must be map[string]*struct", "actualkind", mr.Kind())
 	}
 	if mr.Type().Key().Kind() != reflect.String {
-		Log().Error("Registry must be a map that uses strings as keys", "actualtype", mr.Type().Key())
+		DeprecatedLog().Error("Registry must be a map that uses strings as keys", "actualtype", mr.Type().Key())
 	}
 	if mr.Type().Elem().Kind() != reflect.Pointer {
-		Log().Error("Registry must be a map that uses pointers as values", "actualtype", mr.Type().Elem())
+		DeprecatedLog().Error("Registry must be a map that uses pointers as values", "actualtype", mr.Type().Elem())
 	}
 	if field, ok := mr.Type().Elem().Elem().FieldByName("Name"); !ok || field.Type.Kind() != reflect.String {
-		Log().Error("Registry must store values that have a Name field of type string")
+		DeprecatedLog().Error("Registry must store values that have a Name field of type string")
 	}
 	if _, ok := registry_registry[name]; ok {
-		Log().Error("Cannot register two registries with the same name", "name", name)
+		DeprecatedLog().Error("Cannot register two registries with the same name", "name", name)
 	}
 	registry_registry[name] = mr
 }
@@ -82,15 +82,15 @@ func RegisterRegistry(name string, registry interface{}) {
 func RegisterObject(registry_name string, object interface{}) {
 	reg, ok := registry_registry[registry_name]
 	if !ok {
-		Log().Error("Tried to register an object into an unknown registry", "name", registry_name)
+		DeprecatedLog().Error("Tried to register an object into an unknown registry", "name", registry_name)
 	}
 
 	obj_val := reflect.ValueOf(object)
 	if obj_val.Kind() != reflect.Pointer {
-		Log().Error("Can only register objects as pointers", "actualkind", obj_val.Kind())
+		DeprecatedLog().Error("Can only register objects as pointers", "actualkind", obj_val.Kind())
 	}
 	if obj_val.Elem().Type() != reg.Type().Elem().Elem() {
-		Log().Error("Registry type mismatch", "objtype", obj_val.Elem(), "registry", registry_name, "requiredtype", reg.Type().Elem().Elem())
+		DeprecatedLog().Error("Registry type mismatch", "objtype", obj_val.Elem(), "registry", registry_name, "requiredtype", reg.Type().Elem().Elem())
 	}
 
 	// At this point we know we have the right type, and since registries can only
@@ -99,7 +99,7 @@ func RegisterObject(registry_name string, object interface{}) {
 	object_name := obj_val.Elem().FieldByName("Name").String()
 	cur_val := reg.MapIndex(reflect.ValueOf(object_name))
 	if cur_val.IsValid() {
-		Log().Error("Registry entry name collision", "object_name", object_name, "registry_name", registry_name)
+		DeprecatedLog().Error("Registry entry name collision", "object_name", object_name, "registry_name", registry_name)
 	}
 	reg.SetMapIndex(reflect.ValueOf(object_name), obj_val)
 }
@@ -111,27 +111,27 @@ func RegisterObject(registry_name string, object interface{}) {
 func GetObject(registry_name string, object interface{}) {
 	reg, ok := registry_registry[registry_name]
 	if !ok {
-		Log().Error("Load from an unknown registry", "registry_name", registry_name)
+		DeprecatedLog().Error("Load from an unknown registry", "registry_name", registry_name)
 	}
 
 	object_val := reflect.ValueOf(object)
 	if object_val.Kind() != reflect.Pointer {
-		Log().Error("Tried to load into a value that was not a pointer", "actualkind", object_val.Kind())
+		DeprecatedLog().Error("Tried to load into a value that was not a pointer", "actualkind", object_val.Kind())
 	}
 
 	object_name := object_val.Elem().FieldByName("Defname")
 	if !object_name.IsValid() || object_name.Kind() != reflect.String {
-		Log().Error("Missing Defname field")
+		DeprecatedLog().Error("Missing Defname field")
 	}
 
 	cur_val := reg.MapIndex(object_name)
 	if !cur_val.IsValid() {
-		Log().Error("No object with name", "object_name", object_name.String(), "registry_name", registry_name)
+		DeprecatedLog().Error("No object with name", "object_name", object_name.String(), "registry_name", registry_name)
 	}
 	fieldName := cur_val.Elem().Type().Name()
 	field := object_val.Elem().FieldByName(fieldName)
 	if !field.IsValid() {
-		Log().Error("Expected embedded field", "containertype", object_val.Elem().Type(), "missingtype", cur_val.Type())
+		DeprecatedLog().Error("Expected embedded field", "containertype", object_val.Elem().Type(), "missingtype", cur_val.Type())
 	}
 	if !field.CanSet() {
 		panic(fmt.Errorf("can't set value through field named %q", fieldName))
@@ -143,7 +143,7 @@ func GetObject(registry_name string, object interface{}) {
 func GetAllNamesInRegistry(registry_name string) []string {
 	reg, ok := registry_registry[registry_name]
 	if !ok {
-		Log().Error("Unknown registry", "registry_name", registry_name)
+		DeprecatedLog().Error("Unknown registry", "registry_name", registry_name)
 	}
 	keys := reg.MapKeys()
 	var names []string
@@ -157,7 +157,7 @@ func GetAllNamesInRegistry(registry_name string) []string {
 // Processes an object as it is normally processed when registered through
 // RegisterAllObjectsInDir().  Does NOT register the object in any registry.
 func LoadAndProcessObject(path, format string, target interface{}) error {
-	Log().Info("LoadAndProcessObject", "path", path)
+	DeprecatedLog().Info("LoadAndProcessObject", "path", path)
 	var err error
 	switch format {
 	case "json":
@@ -233,10 +233,10 @@ func ProcessObject(val reflect.Value, tag string) {
 // RegisterObject().  format should either be "json" or "gob"
 // Files begining with '.' are ignored in this process
 func RegisterAllObjectsInDir(registry_name, dir, suffix, format string) {
-	Log().Info("Registering directory", "dir", dir)
+	DeprecatedLog().Info("Registering directory", "dir", dir)
 	reg, ok := registry_registry[registry_name]
 	if !ok {
-		Log().Error("Tried to load objects into an unknown registry", "registry-name", registry_name)
+		DeprecatedLog().Error("Tried to load objects into an unknown registry", "registry-name", registry_name)
 	}
 	filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
 		_, filename := filepath.Split(path)
@@ -256,11 +256,11 @@ func RegisterAllObjectsInDir(registry_name, dir, suffix, format string) {
 				if err == nil {
 					RegisterObject(registry_name, target.Interface())
 				} else {
-					Log().Error("Error loading file", "path", path, "err", err)
+					DeprecatedLog().Error("Error loading file", "path", path, "err", err)
 				}
 			}
 		}
 		return nil
 	})
-	Log().Info("Completed directory", "dir", dir)
+	DeprecatedLog().Info("Completed directory", "dir", dir)
 }

@@ -71,12 +71,12 @@ func LoadAllEntities() {
 // pattern is a regexp that matches only the names of all valid spawn points.
 func (g *Game) placeEntity(pattern string) bool {
 	if g.new_ent == nil {
-		base.Log().Info("No new ent")
+		base.DeprecatedLog().Info("No new ent")
 		return false
 	}
 	re, err := regexp.Compile(pattern)
 	if err != nil {
-		base.Log().Info("regexp compilation fail", "pattern", pattern, "err", err)
+		base.DeprecatedLog().Info("regexp compilation fail", "pattern", pattern, "err", err)
 		return false
 	}
 	g.new_ent.Info.RoomsExplored[g.new_ent.CurrentRoom()] = true
@@ -123,16 +123,16 @@ func (e *Entity) LoadAi() {
 		filename = e.Ai_file_override.String()
 	}
 	if filename == "" {
-		base.Log().Info("missing ai", "e.Name", e.Name)
+		base.DeprecatedLog().Info("missing ai", "e.Name", e.Name)
 		e.Ai = inactiveAi{}
 		return
 	}
 	ai_maker(filename, e.Game(), e, &e.Ai, EntityAi)
 	if e.Ai == nil {
 		e.Ai = inactiveAi{}
-		base.Log().Info("Failed to make Ai", "e.Name", e.Name, "filename", filename)
+		base.DeprecatedLog().Info("Failed to make Ai", "e.Name", e.Name, "filename", filename)
 	} else {
-		base.Log().Info("Made Ai for", "e.Name", e.Name, "filename", filename)
+		base.DeprecatedLog().Info("Made Ai for", "e.Name", e.Name, "filename", filename)
 	}
 }
 
@@ -220,7 +220,7 @@ func (sc *spriteContainer) Sprite() *sprite.Sprite {
 func (sc *spriteContainer) Load(path string, spriteManager *sprite.Manager) {
 	sc.sp, sc.err = spriteManager.LoadSprite(path)
 	if sc.err != nil {
-		base.Log().Error("Unable to load sprite", "path", path, "sc.err", sc.err)
+		base.DeprecatedLog().Error("Unable to load sprite", "path", path, "sc.err", sc.err)
 	}
 }
 
@@ -279,7 +279,7 @@ func (ei *entityDef) Side() Side {
 		types++
 	}
 	if types > 1 {
-		base.Log().Error("too many ent types", "types", types, "ei.Name", ei.Name)
+		base.DeprecatedLog().Error("too many ent types", "types", types, "ei.Name", ei.Name)
 		return SideNone
 	}
 
@@ -293,7 +293,7 @@ func (ei *entityDef) Side() Side {
 		case LevelMaster:
 		case LevelServitor:
 		default:
-			base.Log().Error("unknown level", "ei.Name", ei.Name, "ei.HauntEnt.Level", ei.HauntEnt.Level)
+			base.DeprecatedLog().Error("unknown level", "ei.Name", ei.Name, "ei.HauntEnt.Level", ei.HauntEnt.Level)
 		}
 		return SideHaunt
 
@@ -308,7 +308,7 @@ func (ei *entityDef) Side() Side {
 }
 func (ei *entityDef) Dims() (int, int) {
 	if ei.Dx <= 0 || ei.Dy <= 0 {
-		base.Error().Printf("Entity '%s' didn't have its Dims set properly", ei.Name)
+		base.DeprecatedError().Printf("Entity '%s' didn't have its Dims set properly", ei.Name)
 		ei.Dx = 1
 		ei.Dy = 1
 	}
@@ -653,15 +653,15 @@ func (e *Entity) Think(dt int64) {
 
 func (e *Entity) SetGear(gear_name string) bool {
 	if e.ExplorerEnt == nil {
-		base.Error().Printf("Tried to set gear on a non-explorer entity.")
+		base.DeprecatedError().Printf("Tried to set gear on a non-explorer entity.")
 		return false
 	}
 	if e.ExplorerEnt.Gear != nil && gear_name != "" {
-		base.Error().Printf("Tried to set gear on an explorer that already had gear.")
+		base.DeprecatedError().Printf("Tried to set gear on an explorer that already had gear.")
 		return false
 	}
 	if e.ExplorerEnt.Gear == nil && gear_name == "" {
-		base.Error().Printf("Tried to remove gear from an explorer with no gear.")
+		base.DeprecatedError().Printf("Tried to remove gear from an explorer with no gear.")
 		return false
 	}
 	if gear_name == "" {
@@ -678,7 +678,7 @@ func (e *Entity) SetGear(gear_name string) bool {
 	g.Defname = gear_name
 	base.GetObject("gear", &g)
 	if g.Name == "" {
-		base.Error().Printf("Tried to load gear '%s' that doesn't exist.", gear_name)
+		base.DeprecatedError().Printf("Tried to load gear '%s' that doesn't exist.", gear_name)
 		return false
 	}
 	e.ExplorerEnt.Gear = &g

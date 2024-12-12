@@ -15,7 +15,7 @@ func PushSpawnRegexp(pattern string) {
 	re, err := regexp.Compile(pattern)
 	if err != nil {
 		// TODO(tmckee): let's just crash instead
-		base.Log().Error("regexp compile fail", "pattern", pattern, "err", err)
+		base.DeprecatedLog().Error("regexp compile fail", "pattern", pattern, "err", err)
 		// Just duplicate the top one, since this will probably come with an
 		// associated pop.
 		spawn_regex = append(spawn_regex, topSpawnRegexp())
@@ -25,7 +25,7 @@ func PushSpawnRegexp(pattern string) {
 }
 func PopSpawnRegexp() {
 	if len(spawn_regex) == 0 {
-		base.Log().Error("Tried to pop an empty stack.")
+		base.DeprecatedLog().Error("Tried to pop an empty stack.")
 		return
 	}
 	spawn_regex = spawn_regex[0 : len(spawn_regex)-1]

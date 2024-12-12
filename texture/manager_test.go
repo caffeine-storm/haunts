@@ -32,7 +32,7 @@ func TestBlockUntilLoaded(t *testing.T) {
 	t.Run("can load a texture", func(t *testing.T) {
 		t.Skip()
 		logging.SetLogLevel(glog.LevelTrace)
-		base.Log().Trace("a test trace message")
+		base.DeprecatedLog().Trace("a test trace message")
 		texpath := path.Join(base.GetDataDir(), "textures", "cobweb.png")
 		_, err := texture.LoadFromPath(texpath)
 		if err != nil {

@@ -203,7 +203,7 @@ func (a *SummonAction) Maintain(dt int64, g *game.Game, ae game.ActionExec) game
 		exec := ae.(*summonExec)
 		ent := g.EntityById(exec.Ent)
 		if ent == nil {
-			base.Error().Printf("Got a summon action without a valid entity.")
+			base.DeprecatedError().Printf("Got a summon action without a valid entity.")
 			return game.Complete
 		}
 		a.ent = ent

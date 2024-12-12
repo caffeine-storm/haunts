@@ -62,16 +62,16 @@ func MakeSystemMenu(gp *GamePanel, player *Player) (gui.Widget, error) {
 		UpdatePlayer(player, gp.script.L)
 		str, err := base.ToGobToBase64(gp.game)
 		if err != nil {
-			base.Error().Printf("Error gobbing game state: %v", err)
+			base.DeprecatedError().Printf("Error gobbing game state: %v", err)
 			return
 		}
 		player.Game_state = str
 		player.Name = sm.layout.Sub.Save.Text()
 		player.No_init = true
-		base.Log().Printf("Saving player: %v", player)
+		base.DeprecatedLog().Printf("Saving player: %v", player)
 		err = SavePlayer(player)
 		if err != nil {
-			base.Warn().Printf("Unable to save player: %v", err)
+			base.DeprecatedWarn().Printf("Unable to save player: %v", err)
 			return
 		}
 		sm.saved_time = time.Now()
@@ -135,7 +135,7 @@ func (sm *SystemMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 				g.TakeFocus(sm)
 			}
 			sm.focus = true
-			base.Log().Printf("focus: %v %v", sm, g.FocusWidget())
+			base.DeprecatedLog().Printf("focus: %v %v", sm, g.FocusWidget())
 			return true
 		}
 		if sm.focus {

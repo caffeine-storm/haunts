@@ -269,11 +269,11 @@ func (a *AoeAttack) AiBestTarget(ent *game.Entity, extra_dist int, spec AiAoeTar
 }
 func (a *AoeAttack) AiAttackPosition(ent *game.Entity, x, y int) game.ActionExec {
 	if !ent.HasLos(x, y, 1, 1) {
-		base.Log().Printf("Don't have los")
+		base.DeprecatedLog().Printf("Don't have los")
 		return nil
 	}
 	if a.Ap > ent.Stats.ApCur() {
-		base.Log().Printf("Don't have the ap")
+		base.DeprecatedLog().Printf("Don't have the ap")
 		return nil
 	}
 	var exec aoeExec
@@ -347,11 +347,11 @@ func (a *AoeAttack) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Ma
 		}
 		a.ent = g.EntityById(ae.EntityId())
 		if !a.ent.HasLos(a.exec.X, a.exec.Y, 1, 1) {
-			base.Error().Printf("Entity %d tried to target position (%d, %d) with an aoe but doesn't have los to it: %v", a.ent.Id, a.exec.X, a.exec.Y, a.exec)
+			base.DeprecatedError().Printf("Entity %d tried to target position (%d, %d) with an aoe but doesn't have los to it: %v", a.ent.Id, a.exec.X, a.exec.Y, a.exec)
 			return game.Complete
 		}
 		if a.Ap > a.ent.Stats.ApCur() {
-			base.Error().Printf("Got an aoe attack that required more ap than available: %v", a.exec)
+			base.DeprecatedError().Printf("Got an aoe attack that required more ap than available: %v", a.exec)
 			return game.Complete
 		}
 		a.ent.Stats.ApplyDamage(-a.Ap, 0, status.Unspecified)

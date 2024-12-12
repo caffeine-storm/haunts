@@ -234,7 +234,7 @@ func (w *FurniturePanel) Think(ui *gui.Gui, t int64) {
 	}
 
 	w.VerticalTable.Think(ui, t)
-	base.Log().Debug("FurniturePanel.Think", "room sizes", tags.RoomSizes, "selectedidx", w.room_size.GetComboedIndex())
+	base.DeprecatedLog().Debug("FurniturePanel.Think", "room sizes", tags.RoomSizes, "selectedidx", w.room_size.GetComboedIndex())
 	w.Room.Resize(tags.RoomSizes[w.room_size.GetComboedIndex()])
 	w.Room.Name = w.name.GetText()
 	w.Room.Floor.Path = base.Path(w.floor_path.GetPath())

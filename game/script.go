@@ -40,7 +40,7 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 	// Clear out the panel, now the script can do whatever it wants
 	player.Script_path = path
 	gp.AnchorBox = gui.MakeAnchorBox(gui.Dims{1024, 768})
-	base.Log().Printf("startGameScript")
+	base.DeprecatedLog().Printf("startGameScript")
 	if path != "" && !filepath.IsAbs(path) {
 		path = filepath.Join(base.GetDataDir(), "scripts", filepath.FromSlash(path))
 	}
@@ -53,12 +53,12 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 	if path != "" {
 		prog, err = os.ReadFile(path)
 		if err != nil {
-			base.Error().Printf("Unable to load game script file %s: %v", path, err)
+			base.DeprecatedError().Printf("Unable to load game script file %s: %v", path, err)
 			return
 		}
 	}
 	gp.script = &gameScript{}
-	base.Log().Printf("script = %p", gp.script)
+	base.DeprecatedLog().Printf("script = %p", gp.script)
 
 	gp.script.L = lua.NewState()
 	gp.script.L.OpenLibs()
@@ -136,7 +136,7 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 		loadGameStateRaw(gp, gp.script.L, player.Game_state)
 		err := LuaDecodeTable(bytes.NewBuffer(player.Lua_store), gp.script.L, gp.game)
 		if err != nil {
-			base.Warn().Printf("Error decoding lua state: %v", err)
+			base.DeprecatedWarn().Printf("Error decoding lua state: %v", err)
 		}
 		gp.script.L.SetGlobal("store")
 	} else {
@@ -147,12 +147,12 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 	if game_key == "" {
 		res := gp.script.L.DoString(string(prog))
 		if res != nil {
-			base.Error().Printf("There was an error running script %s:\n%s\n%s", path, prog, res)
+			base.DeprecatedError().Printf("There was an error running script %s:\n%s\n%s", path, prog, res)
 		}
 	}
 
 	gp.script.sync = make(chan struct{})
-	base.Log().Printf("Sync: %p", gp.script.sync)
+	base.DeprecatedLog().Printf("Sync: %p", gp.script.sync)
 
 	// if resp.Game.Denizens_id ==
 	go func() {
@@ -165,7 +165,7 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 			var resp mrgnet.StatusResponse
 			mrgnet.DoAction("status", req, &resp)
 			if resp.Err != "" {
-				base.Error().Printf("%s", resp.Err)
+				base.DeprecatedError().Printf("%s", resp.Err)
 				return
 			}
 
@@ -179,7 +179,7 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 					var resp mrgnet.UpdateGameResponse
 					err := mrgnet.DoAction("update", req, &resp)
 					if err != nil {
-						base.Error().Printf("Unable to make initial update: %v", err)
+						base.DeprecatedError().Printf("Unable to make initial update: %v", err)
 						return
 					}
 				} else {
@@ -187,7 +187,7 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 				}
 				res := gp.script.L.DoString(string(prog))
 				if res != nil {
-					base.Error().Printf("There was an error running script %s:\n%s\n%s", path, prog, res)
+					base.DeprecatedError().Printf("There was an error running script %s:\n%s\n%s", path, prog, res)
 					return
 				}
 				if len(resp.Game.Execs) > 0 {
@@ -215,11 +215,11 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 					gp.game.Turn = len(resp.Game.Execs) + 1
 
 					if net_id == resp.Game.Denizens_id {
-						base.Log().Printf("Setting side to Denizens, Turn %d", gp.game.Turn)
+						base.DeprecatedLog().Printf("Setting side to Denizens, Turn %d", gp.game.Turn)
 						gp.game.net.side = SideHaunt
 						gp.game.Side = SideHaunt
 					} else {
-						base.Log().Printf("Setting side to Intruders, Turn %d", gp.game.Turn)
+						base.DeprecatedLog().Printf("Setting side to Intruders, Turn %d", gp.game.Turn)
 						gp.game.net.side = SideExplorers
 						gp.game.Side = SideExplorers
 					}
@@ -261,7 +261,7 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 			}
 		}
 		if gp.game == nil {
-			base.Error().Printf("Script failed to load a house during Init().")
+			base.DeprecatedError().Printf("Script failed to load a house during Init().")
 		} else {
 			gp.game.net.key = game_key
 			gp.game.comm.script_to_game <- nil
@@ -297,17 +297,17 @@ func (gs *gameScript) OnRoundWaiting(g *Game) {
 		}
 
 		gs.L.SetExecutionLimit(250000)
-		base.Log().Printf("Doing RoundEnd(%t, %d)", g.Side == SideExplorers, (g.Turn+1)/2)
+		base.DeprecatedLog().Printf("Doing RoundEnd(%t, %d)", g.Side == SideExplorers, (g.Turn+1)/2)
 		gs.L.DoString(fmt.Sprintf("RoundEnd(%t, %d)", g.Side == SideExplorers, (g.Turn+1)/2))
 
-		base.Log().Printf("ScriptComm: Starting the RoundEnd phase out")
+		base.DeprecatedLog().Printf("ScriptComm: Starting the RoundEnd phase out")
 		g.comm.script_to_game <- nil
-		base.Log().Printf("ScriptComm: Starting the RoundEnd phase in")
+		base.DeprecatedLog().Printf("ScriptComm: Starting the RoundEnd phase in")
 
 		// Signal that we're done with the round end
-		base.Log().Printf("ScriptComm: Done with the RoundEnd phase in")
+		base.DeprecatedLog().Printf("ScriptComm: Done with the RoundEnd phase in")
 		g.comm.script_to_game <- nil
-		base.Log().Printf("ScriptComm: Done with the RoundEnd phase out")
+		base.DeprecatedLog().Printf("ScriptComm: Done with the RoundEnd phase out")
 	}()
 }
 
@@ -315,9 +315,9 @@ func (gs *gameScript) OnRoundWaiting(g *Game) {
 // Lets the game know that the round middle can begin
 // Runs RoundEnd
 func (gs *gameScript) OnRound(g *Game) {
-	base.Log().Printf("Launching script.RoundStart")
+	base.DeprecatedLog().Printf("Launching script.RoundStart")
 	if (g.Turn%2 == 1) != (g.Side == SideHaunt) {
-		base.Log().Printf("SCRIPT: OnRoundWaiting")
+		base.DeprecatedLog().Printf("SCRIPT: OnRoundWaiting")
 		gs.OnRoundWaiting(g)
 		return
 	}
@@ -328,26 +328,26 @@ func (gs *gameScript) OnRound(g *Game) {
 		//   <-action stuff
 		// <- round end
 		// <- round end done
-		base.Log().Printf("Game script: %p", gs)
-		base.Log().Printf("Lua state: %p", gs.L)
+		base.DeprecatedLog().Printf("Game script: %p", gs)
+		base.DeprecatedLog().Printf("Lua state: %p", gs.L)
 		gs.L.SetExecutionLimit(250000)
 		cmd := fmt.Sprintf("RoundStart(%t, %d)", g.Side == SideExplorers, (g.Turn+1)/2)
-		base.Log().Printf("cmd: '%s'", cmd)
+		base.DeprecatedLog().Printf("cmd: '%s'", cmd)
 		gs.L.DoString(cmd)
 
 		// signals to the game that we're done with the startup stuff
 		g.comm.script_to_game <- nil
-		base.Log().Printf("ScriptComm: Done with RoundStart")
+		base.DeprecatedLog().Printf("ScriptComm: Done with RoundStart")
 
 		for {
-			base.Log().Printf("ScriptComm: Waiting to verify action")
+			base.DeprecatedLog().Printf("ScriptComm: Waiting to verify action")
 			_exec := <-g.comm.game_to_script
-			base.Log().Printf("ScriptComm: Got exec: %v", _exec)
+			base.DeprecatedLog().Printf("ScriptComm: Got exec: %v", _exec)
 			if _exec == nil {
-				base.Log().Printf("ScriptComm: No more exec: bailing")
+				base.DeprecatedLog().Printf("ScriptComm: No more exec: bailing")
 				break
 			}
-			base.Log().Printf("ScriptComm: Verifying action")
+			base.DeprecatedLog().Printf("ScriptComm: Verifying action")
 
 			exec := _exec.(ActionExec)
 			if vpath := exec.GetPath(); vpath != nil {
@@ -360,23 +360,23 @@ func (gs *gameScript) OnRound(g *Game) {
 					LuaPushPoint(gs.L, x, y)
 					gs.L.SetTable(-3)
 				}
-				base.Log().Printf("Pathlength: %d", len(vpath))
+				base.DeprecatedLog().Printf("Pathlength: %d", len(vpath))
 				gs.L.SetGlobal("__path")
 				LuaPushEntity(gs.L, g.EntityById(exec.EntityId()))
 				gs.L.SetGlobal("__ent")
 				cmd = fmt.Sprintf("__truncate = OnMove(__ent, __path)")
-				base.Log().Printf("cmd: '%s'", cmd)
+				base.DeprecatedLog().Printf("cmd: '%s'", cmd)
 				func() {
 					defer func() {
 						if r := recover(); r != nil {
-							base.Error().Printf("OnMove(): %v", r)
+							base.DeprecatedError().Printf("OnMove(): %v", r)
 						}
 					}()
 					gs.L.DoString(cmd)
 					gs.L.GetGlobal("__truncate")
 					truncate := gs.L.ToInteger(-1)
 					gs.L.Pop(1)
-					base.Log().Printf("Truncating to length %d", truncate)
+					base.DeprecatedLog().Printf("Truncating to length %d", truncate)
 					exec.TruncatePath(truncate)
 				}()
 			}
@@ -387,13 +387,13 @@ func (gs *gameScript) OnRound(g *Game) {
 			// being executed, we want to wait until then so that the game is in a
 			// stable state before we do anything.
 			<-g.comm.game_to_script
-			base.Log().Printf("ScriptComm: Got action secondary")
+			base.DeprecatedLog().Printf("ScriptComm: Got action secondary")
 			// Run OnAction here
 			gs.L.SetExecutionLimit(250000)
 			exec.Push(gs.L, g)
 			str, err := base.ToGobToBase64([]ActionExec{exec})
 			if err != nil {
-				base.Error().Printf("Unable to encode exec: %v", err)
+				base.DeprecatedError().Printf("Unable to encode exec: %v", err)
 			} else {
 				gs.L.PushString("__encoded")
 				gs.L.PushString(str)
@@ -403,23 +403,23 @@ func (gs *gameScript) OnRound(g *Game) {
 			//      base.Log().Printf("exec: ", LuaStringifyParam(gs.L, -1))
 			gs.L.SetGlobal("__exec")
 			cmd = fmt.Sprintf("OnAction(%t, %d, %s)", g.Side == SideExplorers, (g.Turn+1)/2, "__exec")
-			base.Log().Printf("cmd: '%s'", cmd)
+			base.DeprecatedLog().Printf("cmd: '%s'", cmd)
 			gs.L.DoString(cmd)
 			g.comm.script_to_game <- nil
-			base.Log().Printf("ScriptComm: Done with OnAction")
+			base.DeprecatedLog().Printf("ScriptComm: Done with OnAction")
 		}
 
 		gs.L.SetExecutionLimit(250000)
 		gs.L.DoString(fmt.Sprintf("RoundEnd(%t, %d)", g.Side == SideExplorers, (g.Turn+1)/2))
 
-		base.Log().Printf("ScriptComm: Starting the RoundEnd phase out")
+		base.DeprecatedLog().Printf("ScriptComm: Starting the RoundEnd phase out")
 		g.comm.script_to_game <- nil
-		base.Log().Printf("ScriptComm: Starting the RoundEnd phase in")
+		base.DeprecatedLog().Printf("ScriptComm: Starting the RoundEnd phase in")
 
 		// Signal that we're done with the round end
-		base.Log().Printf("ScriptComm: Done with the RoundEnd phase in")
+		base.DeprecatedLog().Printf("ScriptComm: Done with the RoundEnd phase in")
 		g.comm.script_to_game <- nil
-		base.Log().Printf("ScriptComm: Done with the RoundEnd phase out")
+		base.DeprecatedLog().Printf("ScriptComm: Done with the RoundEnd phase out")
 	}()
 }
 
@@ -458,7 +458,7 @@ func startScript(gp *GamePanel, player *Player) lua.LuaGoFunction {
 		res := gp.script.L.DoString("Script.SaveStore()")
 		gp.script.syncStart()
 		if res != nil {
-			base.Error().Printf("Unable to properly autosave.")
+			base.DeprecatedError().Printf("Unable to properly autosave.")
 		}
 		startGameScript(gp, script, player, nil, gp.game.net.key)
 		return 0
@@ -474,17 +474,17 @@ func selectHouse(gp *GamePanel) lua.LuaGoFunction {
 		defer gp.script.syncEnd()
 		selector, output, err := MakeUiSelectMap(gp)
 		if err != nil {
-			base.Error().Printf("Error selecting map: %v", err)
+			base.DeprecatedError().Printf("Error selecting map: %v", err)
 			return 0
 		}
 		gp.AnchorBox.AddChild(selector, gui.Anchor{0.5, 0.5, 0.5, 0.5})
 		gp.script.syncEnd()
 
 		name := <-output
-		base.Log().Printf("Received '%s'", name)
+		base.DeprecatedLog().Printf("Received '%s'", name)
 		gp.script.syncStart()
 		gp.AnchorBox.RemoveChild(selector)
-		base.Log().Printf("Removed seletor")
+		base.DeprecatedLog().Printf("Removed seletor")
 		L.PushString(name)
 		return 1
 	}
@@ -507,17 +507,17 @@ func saveGameState(gp *GamePanel) lua.LuaGoFunction {
 		L.GetGlobal("store")
 		LuaEncodeValue(buf, L, -1)
 		L.Pop(1)
-		base.Log().Printf("SaveGameState-1: %d", buf.Len())
+		base.DeprecatedLog().Printf("SaveGameState-1: %d", buf.Len())
 		ts := totalState{
 			Game:  &gp.game,
 			Store: buf.Bytes(),
 		}
 		str, err := base.ToGobToBase64(ts)
 		if err != nil {
-			base.Error().Printf("Error gobbing game state: %v", err)
+			base.DeprecatedError().Printf("Error gobbing game state: %v", err)
 			return 0
 		}
-		base.Log().Printf("SaveGameState-2: %d", len(str)-buf.Len())
+		base.DeprecatedLog().Printf("SaveGameState-2: %d", len(str)-buf.Len())
 
 		L.PushString(str)
 		return 1
@@ -547,7 +547,7 @@ func loadGameStateRaw(gp *GamePanel, L *lua.State, state string) {
 	ts.Game = &gp.game
 	err := base.FromBase64FromGob(&ts, state)
 	if err != nil {
-		base.Error().Printf("Error decoding game state: %v", err)
+		base.DeprecatedError().Printf("Error decoding game state: %v", err)
 		return
 	}
 	// gp.game = ts.Game
@@ -579,7 +579,7 @@ func loadGameStateRaw(gp *GamePanel, L *lua.State, state string) {
 	L.SetGlobal("store")
 
 	gp.AnchorBox.RemoveChild(viewer)
-	base.Log().Printf("LoadGameStateRaw: Turn = %d, Side = %d", gp.game.Turn, gp.game.Side)
+	base.DeprecatedLog().Printf("LoadGameStateRaw: Turn = %d, Side = %d", gp.game.Turn, gp.game.Side)
 	gp.game.OnRound(false)
 
 	for _, child := range gp.AnchorBox.GetChildren() {
@@ -612,35 +612,35 @@ func doExec(gp *GamePanel) lua.LuaGoFunction {
 		if !LuaCheckParamsOk(L, "DoExec", LuaTable) {
 			return 0
 		}
-		base.Log().Printf("DEBUG: Listing Entities named 'Teen'...")
+		base.DeprecatedLog().Printf("DEBUG: Listing Entities named 'Teen'...")
 		for _, ent := range gp.game.Ents {
 			if ent.Name == "Teen" {
 				x, y := ent.Pos()
-				base.Log().Printf("DEBUG: %p: (%d, %d)", ent, x, y)
+				base.DeprecatedLog().Printf("DEBUG: %p: (%d, %d)", ent, x, y)
 			}
 		}
-		base.Log().Printf("DEBUG: Done")
+		base.DeprecatedLog().Printf("DEBUG: Done")
 
 		L.PushString("__encoded")
 		L.GetTable(-2)
 		str := L.ToString(-1)
 		L.Pop(1)
 		var execs []ActionExec
-		base.Log().Printf("Decoding from: '%s'", str)
+		base.DeprecatedLog().Printf("Decoding from: '%s'", str)
 		err := base.FromBase64FromGob(&execs, str)
 		if err != nil {
-			base.Error().Printf("Error decoding exec: %v", err)
+			base.DeprecatedError().Printf("Error decoding exec: %v", err)
 			return 0
 		}
 		if len(execs) != 1 {
-			base.Error().Printf("Error decoding exec: Found %d execs instead of exactly 1.", len(execs))
+			base.DeprecatedError().Printf("Error decoding exec: Found %d execs instead of exactly 1.", len(execs))
 			return 0
 		}
-		base.Log().Printf("ScriptComm: Exec: %v", execs[0])
+		base.DeprecatedLog().Printf("ScriptComm: Exec: %v", execs[0])
 		gp.game.comm.script_to_game <- execs[0]
-		base.Log().Printf("ScriptComm: Sent exec")
+		base.DeprecatedLog().Printf("ScriptComm: Sent exec")
 		<-gp.game.comm.game_to_script
-		base.Log().Printf("ScriptComm: exec done")
+		base.DeprecatedLog().Printf("ScriptComm: exec done")
 		done := make(chan bool)
 		gp.script.syncStart()
 		go func() {
@@ -664,11 +664,11 @@ func selectEnt(gp *GamePanel) lua.LuaGoFunction {
 		defer gp.script.syncEnd()
 		ent := LuaToEntity(L, gp.game, -1)
 		if ent == nil {
-			base.Error().Printf("Tried to SelectEnt on a non-existent entity.")
+			base.DeprecatedError().Printf("Tried to SelectEnt on a non-existent entity.")
 			return 0
 		}
 		if ent.Side() != gp.game.Side {
-			base.Error().Printf("Tried to SelectEnt on an entity that's not on the current side.")
+			base.DeprecatedError().Printf("Tried to SelectEnt on an entity that's not on the current side.")
 			return 0
 		}
 		gp.game.SelectEnt(ent)
@@ -711,7 +711,7 @@ func chooserFromFile(gp *GamePanel) lua.LuaGoFunction {
 		path := filepath.Join(base.GetDataDir(), L.ToString(-1))
 		chooser, done, err := makeChooserFromOptionBasicsFile(path)
 		if err != nil {
-			base.Error().Printf("Error making chooser: %v", err)
+			base.DeprecatedError().Printf("Error making chooser: %v", err)
 			return 0
 		}
 		gp.AnchorBox.AddChild(chooser, gui.Anchor{0.5, 0.5, 0.5, 0.5})
@@ -741,7 +741,7 @@ func loadHouse(gp *GamePanel) lua.LuaGoFunction {
 		name := L.ToString(-1)
 		def := house.MakeHouseFromName(name)
 		if def == nil || len(def.Floors) == 0 {
-			base.Error().Printf("No house exists with the name '%s'.", name)
+			base.DeprecatedError().Printf("No house exists with the name '%s'.", name)
 			return 0
 		}
 		// TODO(tmckee): this is a bug; we will get a nil sprite manager from
@@ -749,13 +749,13 @@ func loadHouse(gp *GamePanel) lua.LuaGoFunction {
 		gp.game = makeGame(def, gp.game.GetSpriteManager())
 		gp.game.viewer.Edit_mode = true
 		gp.game.script = gp.script
-		base.Log().Printf("script = %p", gp.game.script)
+		base.DeprecatedLog().Printf("script = %p", gp.game.script)
 
 		gp.AnchorBox = gui.MakeAnchorBox(gui.Dims{1024, 768})
 		gp.AnchorBox.AddChild(gp.game.viewer, gui.Anchor{0.5, 0.5, 0.5, 0.5})
 		gp.AnchorBox.AddChild(MakeOverlay(gp.game), gui.Anchor{0.5, 0.5, 0.5, 0.5})
 
-		base.Log().Printf("Done making stuff")
+		base.DeprecatedLog().Printf("Done making stuff")
 		return 0
 	}
 }
@@ -892,11 +892,11 @@ func spawnEntitySomewhereInSpawnPoints(gp *GamePanel) lua.LuaGoFunction {
 			}
 		}
 		if count == 0 {
-			base.Error().Printf("Unable to find an available position to spawn %s", name)
+			base.DeprecatedError().Printf("Unable to find an available position to spawn %s", name)
 			return 0
 		}
 		if ent == nil {
-			base.Error().Printf("Cannot make an entity named '%s', no such thing.", name)
+			base.DeprecatedError().Printf("Cannot make an entity named '%s', no such thing.", name)
 			return 0
 		}
 		if gp.game.SpawnEntity(ent, tx, ty) {
@@ -922,7 +922,7 @@ func isSpawnPointInLos(gp *GamePanel) lua.LuaGoFunction {
 		case "denizens":
 			in_los = gp.game.TeamLos(SideHaunt, spawn.X, spawn.Y, spawn.Dx, spawn.Dy)
 		default:
-			base.Error().Printf("Unexpected side in IsSpawnPointInLos: '%s'", side_str)
+			base.DeprecatedError().Printf("Unexpected side in IsSpawnPointInLos: '%s'", side_str)
 			return 0
 		}
 		L.PushBoolean(in_los)
@@ -952,12 +952,12 @@ func placeEntities(gp *GamePanel) lua.LuaGoFunction {
 		}
 		ep, done, err := MakeEntityPlacer(gp.game, names, costs, L.ToInteger(-2), L.ToInteger(-1), L.ToString(-4))
 		if err != nil {
-			base.Error().Printf("Unable to make entity placer: %v", err)
+			base.DeprecatedError().Printf("Unable to make entity placer: %v", err)
 			return 0
 		}
 		gp.AnchorBox.AddChild(ep, gui.Anchor{0, 0, 0, 0})
 		for i, kid := range gp.AnchorBox.GetChildren() {
-			base.Log().Printf("Kid[%d] = %s", i, kid.String())
+			base.DeprecatedLog().Printf("Kid[%d] = %s", i, kid.String())
 		}
 		gp.script.syncEnd()
 		ents := <-done
@@ -1037,7 +1037,7 @@ func dialogBox(gp *GamePanel) lua.LuaGoFunction {
 		}
 		box, output, err := MakeDialogBox(filepath.ToSlash(path), args)
 		if err != nil {
-			base.Error().Printf("Error making dialog: %v", err)
+			base.DeprecatedError().Printf("Error making dialog: %v", err)
 			return 0
 		}
 		gp.AnchorBox.AddChild(box, gui.Anchor{0.5, 0.5, 0.5, 0.5})
@@ -1047,7 +1047,7 @@ func dialogBox(gp *GamePanel) lua.LuaGoFunction {
 		for choice := range output {
 			choices = append(choices, choice)
 		}
-		base.Log().Printf("Dialog box press: %v", choices)
+		base.DeprecatedLog().Printf("Dialog box press: %v", choices)
 
 		gp.script.syncStart()
 		gp.AnchorBox.RemoveChild(box)
@@ -1174,7 +1174,7 @@ func setGear(gp *GamePanel) lua.LuaGoFunction {
 		gear_name := L.ToString(-1)
 		ent := LuaToEntity(L, gp.game, -2)
 		if ent == nil {
-			base.Error().Printf("Called SetGear on an invalid entity.")
+			base.DeprecatedError().Printf("Called SetGear on an invalid entity.")
 			return 0
 		}
 		L.PushBoolean(ent.SetGear(gear_name))
@@ -1204,7 +1204,7 @@ func bindAi(gp *GamePanel) lua.LuaGoFunction {
 			L.Pop(1)
 			ent := gp.game.EntityById(target)
 			if ent == nil {
-				base.Error().Printf("Referenced an entity with id == %d which doesn't exist.", target)
+				base.DeprecatedError().Printf("Referenced an entity with id == %d which doesn't exist.", target)
 				return 0
 			}
 			ent.Ai_file_override = base.Path(filepath.Join(base.GetDataDir(), "ais", filepath.FromSlash(L.ToString(-1))))
@@ -1218,7 +1218,7 @@ func bindAi(gp *GamePanel) lua.LuaGoFunction {
 			case "human":
 				gp.game.Ai.denizens = inactiveAi{}
 			case "net":
-				base.Error().Printf("bindAi('denizen', 'net') is not implemented.")
+				base.DeprecatedError().Printf("bindAi('denizen', 'net') is not implemented.")
 				return 0
 			default:
 				gp.game.Ai.denizens = nil
@@ -1234,7 +1234,7 @@ func bindAi(gp *GamePanel) lua.LuaGoFunction {
 			case "human":
 				gp.game.Ai.intruders = inactiveAi{}
 			case "net":
-				base.Error().Printf("bindAi('intruder', 'net') is not implemented.")
+				base.DeprecatedError().Printf("bindAi('intruder', 'net') is not implemented.")
 				return 0
 			default:
 				gp.game.Ai.intruders = nil
@@ -1254,7 +1254,7 @@ func bindAi(gp *GamePanel) lua.LuaGoFunction {
 				gp.game.Ai.minions = inactiveAi{}
 			}
 		default:
-			base.Error().Printf("Specified unknown Ai target '%s'", target)
+			base.DeprecatedError().Printf("Specified unknown Ai target '%s'", target)
 			return 0
 		}
 
@@ -1277,10 +1277,10 @@ func setVisibility(gp *GamePanel) lua.LuaGoFunction {
 		case "intruders":
 			side = SideExplorers
 		default:
-			base.Error().Printf("Cannot pass '%s' as first parameter of setVisibility()", side_str)
+			base.DeprecatedError().Printf("Cannot pass '%s' as first parameter of setVisibility()", side_str)
 			return 0
 		}
-		base.Log().Printf("SetVisibility: %s", side_str)
+		base.DeprecatedLog().Printf("SetVisibility: %s", side_str)
 		gp.game.SetVisibility(side)
 		return 0
 	}
@@ -1308,14 +1308,14 @@ func saveStore(gp *GamePanel, player *Player) lua.LuaGoFunction {
 		UpdatePlayer(player, gp.script.L)
 		str, err := base.ToGobToBase64(gp.game)
 		if err != nil {
-			base.Error().Printf("Error gobbing game state: %v", err)
+			base.DeprecatedError().Printf("Error gobbing game state: %v", err)
 			return 0
 		}
 		player.Game_state = str
 		player.Name = "autosave"
 		err = SavePlayer(player)
 		if err != nil {
-			base.Warn().Printf("Unable to save player: %v", err)
+			base.DeprecatedWarn().Printf("Unable to save player: %v", err)
 		}
 		return 0
 	}
@@ -1328,11 +1328,11 @@ func getLos(gp *GamePanel) lua.LuaGoFunction {
 		}
 		ent := LuaToEntity(L, gp.game, -1)
 		if ent == nil {
-			base.Error().Printf("Tried to GetLos on an invalid entity.")
+			base.DeprecatedError().Printf("Tried to GetLos on an invalid entity.")
 			return 0
 		}
 		if ent.los == nil || ent.los.grid == nil {
-			base.Error().Printf("Tried to GetLos on an entity without vision.")
+			base.DeprecatedError().Printf("Tried to GetLos on an entity without vision.")
 			return 0
 		}
 		L.NewTable()
@@ -1362,7 +1362,7 @@ func setVisibleSpawnPoints(gp *GamePanel) lua.LuaGoFunction {
 		case "intruders":
 			gp.game.Los_spawns.Intruders.Pattern = L.ToString(-1)
 		default:
-			base.Error().Printf("First parameter to SetVisibleSpawnPoints must be either 'denizens' or 'intruders'.")
+			base.DeprecatedError().Printf("First parameter to SetVisibleSpawnPoints must be either 'denizens' or 'intruders'.")
 			return 0
 		}
 		return 1
@@ -1378,11 +1378,11 @@ func setCondition(gp *GamePanel) lua.LuaGoFunction {
 		defer gp.script.syncEnd()
 		ent := LuaToEntity(L, gp.game, -3)
 		if ent == nil {
-			base.Warn().Printf("Tried to SetCondition on an entity that doesn't exist.")
+			base.DeprecatedWarn().Printf("Tried to SetCondition on an entity that doesn't exist.")
 			return 0
 		}
 		if ent.Stats == nil {
-			base.Warn().Printf("Tried to SetCondition on an entity that doesn't have stats.")
+			base.DeprecatedWarn().Printf("Tried to SetCondition on an entity that doesn't have stats.")
 			return 0
 		}
 		name := L.ToString(-2)
@@ -1404,7 +1404,7 @@ func setPosition(gp *GamePanel) lua.LuaGoFunction {
 		defer gp.script.syncEnd()
 		ent := LuaToEntity(L, gp.game, -2)
 		if ent == nil {
-			base.Warn().Printf("Tried to SetPosition on an entity that doesn't exist.")
+			base.DeprecatedWarn().Printf("Tried to SetPosition on an entity that doesn't exist.")
 			return 0
 		}
 		x, y := LuaToPoint(L, -1)
@@ -1423,11 +1423,11 @@ func setHp(gp *GamePanel) lua.LuaGoFunction {
 		defer gp.script.syncEnd()
 		ent := LuaToEntity(L, gp.game, -2)
 		if ent == nil {
-			base.Warn().Printf("Tried to SetHp on an entity that doesn't exist.")
+			base.DeprecatedWarn().Printf("Tried to SetHp on an entity that doesn't exist.")
 			return 0
 		}
 		if ent.Stats == nil {
-			base.Warn().Printf("Tried to SetHp on an entity that doesn't have stats.")
+			base.DeprecatedWarn().Printf("Tried to SetHp on an entity that doesn't have stats.")
 			return 0
 		}
 		ent.Stats.SetHp(L.ToInteger(-1))
@@ -1444,11 +1444,11 @@ func setAp(gp *GamePanel) lua.LuaGoFunction {
 		defer gp.script.syncEnd()
 		ent := LuaToEntity(L, gp.game, -2)
 		if ent == nil {
-			base.Warn().Printf("Tried to SetAp on an entity that doesn't exist.")
+			base.DeprecatedWarn().Printf("Tried to SetAp on an entity that doesn't exist.")
 			return 0
 		}
 		if ent.Stats == nil {
-			base.Warn().Printf("Tried to SetAp on an entity that doesn't have stats.")
+			base.DeprecatedWarn().Printf("Tried to SetAp on an entity that doesn't have stats.")
 			return 0
 		}
 		ent.Stats.SetAp(L.ToInteger(-1))
@@ -1463,7 +1463,7 @@ func removeEnt(gp *GamePanel) lua.LuaGoFunction {
 		}
 		ent := LuaToEntity(L, gp.game, -1)
 		if ent == nil {
-			base.Warn().Printf("Tried to RemoveEnt on an entity that doesn't exist.")
+			base.DeprecatedWarn().Printf("Tried to RemoveEnt on an entity that doesn't exist.")
 			return 0
 		}
 		removed := false
@@ -1477,7 +1477,7 @@ func removeEnt(gp *GamePanel) lua.LuaGoFunction {
 			}
 		}
 		if !removed {
-			base.Warn().Printf("Tried to RemoveEnt an entity that wasn't in the game.")
+			base.DeprecatedWarn().Printf("Tried to RemoveEnt an entity that wasn't in the game.")
 		}
 		return 0
 	}
@@ -1491,7 +1491,7 @@ func playAnimations(gp *GamePanel) lua.LuaGoFunction {
 		gp.script.syncStart()
 		ent := LuaToEntity(L, gp.game, -2)
 		if ent == nil {
-			base.Warn().Printf("Tried to PlayAnimation on an entity that doesn't exist.")
+			base.DeprecatedWarn().Printf("Tried to PlayAnimation on an entity that doesn't exist.")
 			return 0
 		}
 		gp.script.syncEnd()
@@ -1567,7 +1567,7 @@ func removeWaypoint(gp *GamePanel) lua.LuaGoFunction {
 			}
 		}
 		if !hit {
-			base.Error().Printf("RemoveWaypoint on waypoint '%s' which doesn't exist.", name)
+			base.DeprecatedError().Printf("RemoveWaypoint on waypoint '%s' which doesn't exist.", name)
 			return 0
 		}
 		return 0
@@ -1590,7 +1590,7 @@ func setWaypoint(gp *GamePanel) lua.LuaGoFunction {
 		case "denizens":
 			wp.Side = SideHaunt
 		default:
-			base.Error().Printf("Specified '%s' for the side parameter in SetWaypoint, must be 'intruders' or 'denizens'.", side_str)
+			base.DeprecatedError().Printf("Specified '%s' for the side parameter in SetWaypoint, must be 'intruders' or 'denizens'.", side_str)
 			return 0
 		}
 		wp.Name = L.ToString(-4)
@@ -1628,7 +1628,7 @@ func setLosMode(gp *GamePanel) lua.LuaGoFunction {
 		case "intruders":
 			side = SideExplorers
 		default:
-			base.Error().Printf("Cannot pass '%s' as first parameters of setLosMode()", side_str)
+			base.DeprecatedError().Printf("Cannot pass '%s' as first parameters of setLosMode()", side_str)
 			return 0
 		}
 		switch mode_str {
@@ -1642,7 +1642,7 @@ func setLosMode(gp *GamePanel) lua.LuaGoFunction {
 			gp.game.SetLosMode(side, LosModeEntities, nil)
 		case "rooms":
 			if !L.IsTable(-1) {
-				base.Error().Printf("The last parameter to setLosMode should be an array of rooms if mode == 'rooms'")
+				base.DeprecatedError().Printf("The last parameter to setLosMode should be an array of rooms if mode == 'rooms'")
 				return 0
 			}
 			L.PushNil()
@@ -1651,7 +1651,7 @@ func setLosMode(gp *GamePanel) lua.LuaGoFunction {
 			for L.Next(-2) != 0 {
 				index := L.ToInteger(-1)
 				if index < 0 || index > len(all_rooms) {
-					base.Error().Printf("Tried to reference room #%d which doesn't exist.", index)
+					base.DeprecatedError().Printf("Tried to reference room #%d which doesn't exist.", index)
 					continue
 				}
 				rooms = append(rooms, all_rooms[index])
@@ -1660,7 +1660,7 @@ func setLosMode(gp *GamePanel) lua.LuaGoFunction {
 			gp.game.SetLosMode(side, LosModeRooms, rooms)
 
 		default:
-			base.Error().Printf("Unknown los mode '%s'", mode_str)
+			base.DeprecatedError().Printf("Unknown los mode '%s'", mode_str)
 			return 0
 		}
 		return 0
@@ -1720,7 +1720,7 @@ func netSideFunc(gp *GamePanel) lua.LuaGoFunction {
 		case gp.game.net.game.Intruders_id == net_id:
 			L.PushString("Intruders")
 		default:
-			base.Error().Printf("Asked for a net side, but don't know the side.")
+			base.DeprecatedError().Printf("Asked for a net side, but don't know the side.")
 			L.PushString("Unknown")
 		}
 		return 1
@@ -1733,7 +1733,7 @@ func updateStateFunc(gp *GamePanel) lua.LuaGoFunction {
 			return 0
 		}
 		if gp.game.net.key == "" {
-			base.Error().Printf("Tried to UpdateState in a non-Net game.")
+			base.DeprecatedError().Printf("Tried to UpdateState in a non-Net game.")
 			return 0
 		}
 		gp.script.syncStart()
@@ -1749,10 +1749,10 @@ func updateStateFunc(gp *GamePanel) lua.LuaGoFunction {
 		var resp mrgnet.UpdateGameResponse
 		mrgnet.DoAction("update", req, &resp)
 		if resp.Err != "" {
-			base.Error().Printf("Error updating game state: %v", resp.Err)
+			base.DeprecatedError().Printf("Error updating game state: %v", resp.Err)
 			return 0
 		}
-		base.Log().Printf("UpdateState: Turn = %d, Side = %d", gp.game.Turn, gp.game.Side)
+		base.DeprecatedLog().Printf("UpdateState: Turn = %d, Side = %d", gp.game.Turn, gp.game.Side)
 		return 0
 	}
 }
@@ -1763,13 +1763,13 @@ func updateExecsFunc(gp *GamePanel) lua.LuaGoFunction {
 			return 0
 		}
 		if gp.game.net.key == "" {
-			base.Error().Printf("Tried to UpdateExecs in a non-Net game.")
+			base.DeprecatedError().Printf("Tried to UpdateExecs in a non-Net game.")
 			return 0
 		}
 		buf := bytes.NewBuffer(nil)
 		err := LuaEncodeValue(buf, L, -1)
 		if err != nil {
-			base.Error().Printf("Unable to serialize execs: %v", err)
+			base.DeprecatedError().Printf("Unable to serialize execs: %v", err)
 			return 0
 		}
 		gp.script.syncStart()
@@ -1786,10 +1786,10 @@ func updateExecsFunc(gp *GamePanel) lua.LuaGoFunction {
 		var resp mrgnet.UpdateGameResponse
 		mrgnet.DoAction("update", req, &resp)
 		if resp.Err != "" {
-			base.Error().Printf("Error updating game execs: %v", resp.Err)
+			base.DeprecatedError().Printf("Error updating game execs: %v", resp.Err)
 			return 0
 		}
-		base.Log().Printf("Successfully update game execs: %v", gp.game.net.key)
+		base.DeprecatedLog().Printf("Successfully update game execs: %v", gp.game.net.key)
 		return 0
 	}
 }
@@ -1800,7 +1800,7 @@ func netWaitFunc(gp *GamePanel) lua.LuaGoFunction {
 			return 0
 		}
 		if gp.game.net.key == "" {
-			base.Error().Printf("Tried to Wait in a non-net game.")
+			base.DeprecatedError().Printf("Tried to Wait in a non-net game.")
 			return 0
 		}
 		var net_id mrgnet.NetId
@@ -1813,21 +1813,21 @@ func netWaitFunc(gp *GamePanel) lua.LuaGoFunction {
 			var resp mrgnet.StatusResponse
 			mrgnet.DoAction("status", req, &resp)
 			if resp.Err != "" {
-				base.Error().Printf("%s", resp.Err)
+				base.DeprecatedError().Printf("%s", resp.Err)
 				return 0
 			}
 			expect := gp.game.Turn + 1
 			if len(resp.Game.Before) == len(resp.Game.Execs) && len(resp.Game.Before) == expect {
-				base.Log().Printf("Found the expected %d states", expect)
+				base.DeprecatedLog().Printf("Found the expected %d states", expect)
 				req.Sizes_only = false
 				mrgnet.DoAction("status", req, &resp)
 				if resp.Err != "" {
-					base.Error().Printf("%s", resp.Err)
+					base.DeprecatedError().Printf("%s", resp.Err)
 					return 0
 				}
 				break
 			}
-			base.Log().Printf("Found %d instead of %d states", len(resp.Game.Execs), expect)
+			base.DeprecatedLog().Printf("Found %d instead of %d states", len(resp.Game.Execs), expect)
 			time.Sleep(time.Second * 5)
 		}
 		return 0
@@ -1840,7 +1840,7 @@ func netLatestStateAndExecsFunc(gp *GamePanel) lua.LuaGoFunction {
 			return 0
 		}
 		if gp.game.net.key == "" {
-			base.Error().Printf("Tried to get LatestStateAndExecs in a non-net game.")
+			base.DeprecatedError().Printf("Tried to get LatestStateAndExecs in a non-net game.")
 			return 0
 		}
 		var net_id mrgnet.NetId
@@ -1851,11 +1851,11 @@ func netLatestStateAndExecsFunc(gp *GamePanel) lua.LuaGoFunction {
 		var resp mrgnet.StatusResponse
 		mrgnet.DoAction("status", req, &resp)
 		if resp.Err != "" {
-			base.Error().Printf("%s", resp.Err)
+			base.DeprecatedError().Printf("%s", resp.Err)
 			return 0
 		}
 		if len(resp.Game.Before) != len(resp.Game.Execs) {
-			base.Error().Printf("Not the same number of States and Execss")
+			base.DeprecatedError().Printf("Not the same number of States and Execss")
 			return 0
 		}
 		state := resp.Game.Before[len(resp.Game.Before)-1]
@@ -1876,7 +1876,7 @@ func registerUtilityFunctions(L *lua.State) {
 		for i := -n; i < 0; i++ {
 			res += LuaStringifyParam(L, i) + " "
 		}
-		base.Log().Printf("GameScript(%p): %s", L, res)
+		base.DeprecatedLog().Printf("GameScript(%p): %s", L, res)
 		return 0
 	})
 }

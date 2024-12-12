@@ -148,12 +148,12 @@ func AllPathablePointsFunc(a *Ai) lua.LuaGoFunction {
 				}
 			}
 		}
-		base.Log().Printf("Visible: %d", vis)
+		base.DeprecatedLog().Printf("Visible: %d", vis)
 		graph := a.ent.Game().Graph(a.ent.Side(), true, nil)
 		src := []int{a.ent.Game().ToVertex(x1, y1)}
 		reachable := algorithm.ReachableDestinations(graph, src, dst)
 		L.NewTable()
-		base.Log().Printf("%d/%d reachable from (%d, %d) -> (%d, %d)", len(reachable), len(dst), x1, y1, x2, y2)
+		base.DeprecatedLog().Printf("%d/%d reachable from (%d, %d) -> (%d, %d)", len(reachable), len(dst), x1, y1, x2, y2)
 		for i, v := range reachable {
 			_, x, y := a.ent.Game().FromVertex(v)
 			L.PushInteger(int64(i) + 1)
@@ -383,9 +383,9 @@ func DoMoveFunc(a *Ai) lua.LuaGoFunction {
 			}
 			L.PushBoolean(complete)
 			game.LuaPushPoint(L, x, y)
-			base.Log().Printf("Finished move")
+			base.DeprecatedLog().Printf("Finished move")
 		} else {
-			base.Log().Printf("Didn't bother moving")
+			base.DeprecatedLog().Printf("Didn't bother moving")
 			L.PushBoolean(true)
 			L.PushNil()
 		}
@@ -527,7 +527,7 @@ func NearestNEntitiesFunc(me *game.Entity) lua.LuaGoFunction {
 		kind := L.ToString(-1)
 		if !valid_kinds[kind] {
 			err_str := fmt.Sprintf("NearestNEntities expects kind in the set ['intruder' 'denizen' 'servitor' 'master' 'minion'], got %s.", kind)
-			base.Warn().Printf(err_str)
+			base.DeprecatedWarn().Printf(err_str)
 			// TODO(tmckee): my _guess_ is that we want crash... so let's crash :p
 			// L.PushString(err_str)
 			// L.Error()

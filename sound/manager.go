@@ -31,27 +31,27 @@ func Init() {
 	var err error
 	system, err = fmod.EventSystemCreate()
 	if err != nil {
-		base.Error().Printf("Unable to create sound system: %v", err)
+		base.DeprecatedError().Printf("Unable to create sound system: %v", err)
 		return
 	}
 
 	err = system.Init(32, fmod.INIT_NORMAL, nil, fmod.EVENT_INIT_NORMAL)
 	if err != nil {
-		base.Error().Printf("Unable to initialize sound system: %v", err)
+		base.DeprecatedError().Printf("Unable to initialize sound system: %v", err)
 		return
 	}
 	version, _ := system.GetVersion()
-	base.Log().Printf("Fmod version %x", version)
+	base.DeprecatedLog().Printf("Fmod version %x", version)
 
 	err = system.SetMediaPath(filepath.Join(base.GetDataDir(), "sound") + "/")
 	if err != nil {
-		base.Error().Printf("Unable to set media path: %v\n", err)
+		base.DeprecatedError().Printf("Unable to set media path: %v\n", err)
 		return
 	}
 
 	err = system.LoadPath("Haunts.fev", nil)
 	if err != nil {
-		base.Error().Printf("Unable to load fev: %v\n", err)
+		base.DeprecatedError().Printf("Unable to load fev: %v\n", err)
 		return
 	}
 
@@ -116,7 +116,7 @@ func musicControl() {
 				}
 				event, err := system.GetEvent(name, fmod.MODE_DEFAULT)
 				if err != nil {
-					base.Error().Printf("Unable to play music '%s': %v", name, err)
+					base.DeprecatedError().Printf("Unable to play music '%s': %v", name, err)
 					continue
 				}
 				err = event.Start()
@@ -146,7 +146,7 @@ func musicControl() {
 				if _, ok := current.params[req.name]; !ok {
 					param, err := current.event.GetParameter(req.name)
 					if err != nil {
-						base.Error().Printf("Can't get parameter '%s': %v", req.name, err)
+						base.DeprecatedError().Printf("Can't get parameter '%s': %v", req.name, err)
 						break
 					}
 					current.params[req.name] = paramState{param: param}
@@ -184,7 +184,7 @@ func PlaySound(name string, volume float64) {
 	}
 	sound, err := system.GetEvent(name, fmod.MODE_DEFAULT)
 	if err != nil {
-		base.Error().Printf("Unable to get event '%s': %v", name, err)
+		base.DeprecatedError().Printf("Unable to get event '%s': %v", name, err)
 		return
 	}
 	sound.SetVolume(volume)

@@ -152,7 +152,7 @@ func (gdt *gameDataTransient) alloc() {
 	gdt.comm.game_to_script = make(chan interface{}, 1)
 
 	gdt.script = &gameScript{}
-	base.Log().Printf("script = %p", gdt.script)
+	base.DeprecatedLog().Printf("script = %p", gdt.script)
 }
 
 type gameDataPrivate struct {
@@ -280,7 +280,7 @@ func (g *Game) GobDecode(data []byte) error {
 	g.setup()
 	for _, ent := range g.Ents {
 		ent.Load(g)
-		base.Log().Printf("Ungob, ent: %p, %s", ent, ent.Name)
+		base.DeprecatedLog().Printf("Ungob, ent: %p, %s", ent, ent.Name)
 		g.UpdateEntLos(ent, true)
 	}
 	g.mergeLos(SideHaunt)
@@ -394,7 +394,7 @@ func (g *Game) checkWinConditions() {
 	explorer_win := false
 
 	if explorer_win {
-		base.Log().Printf("Explorers won - kaboom")
+		base.DeprecatedLog().Printf("Explorers won - kaboom")
 	}
 
 	// Check for haunt win condition - all intruders dead
@@ -405,7 +405,7 @@ func (g *Game) checkWinConditions() {
 		}
 	}
 	if haunts_win {
-		base.Log().Printf("Haunts won - kaboom")
+		base.DeprecatedLog().Printf("Haunts won - kaboom")
 	}
 }
 
@@ -416,7 +416,7 @@ func (g *Game) SetVisibility(side Side) {
 	case SideExplorers:
 		g.viewer.Los_tex = g.los.intruders.tex
 	default:
-		base.Error().Printf("Unable to SetVisibility for side == %d.", side)
+		base.DeprecatedError().Printf("Unable to SetVisibility for side == %d.", side)
 		return
 	}
 }
@@ -430,22 +430,22 @@ func (g *Game) OnRound(do_scripts bool) {
 	// Don't end the round if any of the following are true
 	// An action is currently executing
 	if g.Action_state != noAction {
-		base.Log().Printf("No OnRound - have action")
+		base.DeprecatedLog().Printf("No OnRound - have action")
 		return
 	}
 	// Any master ai is still active
 	if g.Side == SideHaunt && (g.Ai.minions.Active() || g.Ai.denizens.Active()) {
-		base.Log().Printf("No OnRound - waiting on ais")
+		base.DeprecatedLog().Printf("No OnRound - waiting on ais")
 		return
 	}
 
 	if do_scripts {
 		g.Turn++
 		if g.Side == SideExplorers {
-			base.Log().Printf("OnRound from %d Intruders to %d Denizens", g.Turn-1, g.Turn)
+			base.DeprecatedLog().Printf("OnRound from %d Intruders to %d Denizens", g.Turn-1, g.Turn)
 			g.Side = SideHaunt
 		} else {
-			base.Log().Printf("OnRound from %d Denizens to %d Intruders", g.Turn-1, g.Turn)
+			base.DeprecatedLog().Printf("OnRound from %d Denizens to %d Intruders", g.Turn-1, g.Turn)
 			g.Side = SideExplorers
 		}
 		g.viewer.Los_tex.Remap()
@@ -463,7 +463,7 @@ func (g *Game) OnRound(do_scripts bool) {
 	if do_scripts {
 		for i := range g.Ents {
 			g.Ents[i].Ai.Activate()
-			base.Log().Printf("EntityActive '%s': %t", g.Ents[i].Name, g.Ents[i].Ai.Active())
+			base.DeprecatedLog().Printf("EntityActive '%s': %t", g.Ents[i].Name, g.Ents[i].Ai.Active())
 		}
 
 		if g.Side == SideHaunt {
@@ -729,7 +729,7 @@ func (g *Game) adjacent(v int, los bool, side Side, ex map[*Entity]bool) ([]int,
 		case SideExplorers:
 			data = &g.los.intruders
 		default:
-			base.Error().Printf("Unable to SetLosMode for side == %d.", side)
+			base.DeprecatedError().Printf("Unable to SetLosMode for side == %d.", side)
 			return nil, nil
 		}
 	}
@@ -846,7 +846,7 @@ func (g *Game) SetLosMode(side Side, mode LosMode, rooms []*house.Room) {
 	case SideExplorers:
 		data = &g.los.intruders
 	default:
-		base.Error().Printf("Unable to SetLosMode for side == %d.", side)
+		base.DeprecatedError().Printf("Unable to SetLosMode for side == %d.", side)
 		return
 	}
 	data.mode = mode
@@ -983,7 +983,7 @@ func (g *Game) Think(dt int64) {
 	case turnStateInit:
 		select {
 		case <-g.comm.script_to_game:
-			base.Log().Printf("ScriptComm: change to turnStateStart")
+			base.DeprecatedLog().Printf("ScriptComm: change to turnStateStart")
 			g.Turn_state = turnStateStart
 			g.script.OnRound(g)
 			// g.OnRound()
@@ -992,7 +992,7 @@ func (g *Game) Think(dt int64) {
 	case turnStateStart:
 		select {
 		case <-g.comm.script_to_game:
-			base.Log().Printf("ScriptComm: change to turnStateAiAction")
+			base.DeprecatedLog().Printf("ScriptComm: change to turnStateAiAction")
 			g.Turn_state = turnStateAiAction
 		default:
 		}
@@ -1000,12 +1000,12 @@ func (g *Game) Think(dt int64) {
 		select {
 		case exec := <-g.comm.script_to_game:
 			if g.current_exec != nil {
-				base.Error().Printf("Got an exec from the script when we already had one pending.")
+				base.DeprecatedError().Printf("Got an exec from the script when we already had one pending.")
 			} else {
 				if exec != nil {
 					g.current_exec = exec.(ActionExec)
 				} else {
-					base.Log().Printf("ScriptComm: change to turnStateAiAction")
+					base.DeprecatedLog().Printf("ScriptComm: change to turnStateAiAction")
 					g.Turn_state = turnStateAiAction
 				}
 			}
@@ -1015,7 +1015,7 @@ func (g *Game) Think(dt int64) {
 		select {
 		case exec := <-g.comm.script_to_game:
 			if exec != nil {
-				base.Log().Printf("ScriptComm: Got an exec: %v", exec)
+				base.DeprecatedLog().Printf("ScriptComm: Got an exec: %v", exec)
 				g.current_exec = exec.(ActionExec)
 				g.Action_state = doingAction
 				ent := g.EntityById(g.current_exec.EntityId())
@@ -1025,7 +1025,7 @@ func (g *Game) Think(dt int64) {
 				ent.current_action = g.current_action
 			} else {
 				g.Turn_state = turnStateEnd
-				base.Log().Printf("ScriptComm: change to turnStateEnd for realzes")
+				base.DeprecatedLog().Printf("ScriptComm: change to turnStateEnd for realzes")
 			}
 		default:
 		}
@@ -1034,7 +1034,7 @@ func (g *Game) Think(dt int64) {
 		select {
 		case <-g.comm.script_to_game:
 			g.Turn_state = turnStateStart
-			base.Log().Printf("ScriptComm: change to turnStateStart")
+			base.DeprecatedLog().Printf("ScriptComm: change to turnStateStart")
 			g.OnRound(true)
 		default:
 		}
@@ -1047,7 +1047,7 @@ func (g *Game) Think(dt int64) {
 		g.viewer.AddFloorDrawable(g.current_action)
 		ent.current_action = g.current_action
 		g.Action_state = verifyingAction
-		base.Log().Printf("ScriptComm: request exec verification")
+		base.DeprecatedLog().Printf("ScriptComm: request exec verification")
 		g.comm.game_to_script <- g.current_exec
 	}
 
@@ -1064,7 +1064,7 @@ func (g *Game) Think(dt int64) {
 	if g.Action_state == doingAction {
 		res := g.current_action.Maintain(dt, g, g.current_exec)
 		if g.current_exec != nil {
-			base.Log().Printf("ScriptComm: sent action")
+			base.DeprecatedLog().Printf("ScriptComm: sent action")
 			g.current_exec = nil
 		}
 		switch res {
@@ -1076,7 +1076,7 @@ func (g *Game) Think(dt int64) {
 			if g.Turn_state != turnStateMainPhaseOver {
 				g.Turn_state = turnStateScriptOnAction
 			}
-			base.Log().Printf("ScriptComm: Action complete")
+			base.DeprecatedLog().Printf("ScriptComm: Action complete")
 			g.comm.game_to_script <- nil
 			g.checkWinConditions()
 
@@ -1117,7 +1117,7 @@ func (g *Game) Think(dt int64) {
 				var err error
 				los.r, err = regexp.Compile("^" + los.Pattern + "$")
 				if err != nil {
-					base.Warn().Printf("Unable to compile regexp: `%s`", los.Pattern)
+					base.DeprecatedWarn().Printf("Unable to compile regexp: `%s`", los.Pattern)
 					los.Pattern = ""
 				}
 			}
@@ -1246,9 +1246,9 @@ func (g *Game) Think(dt int64) {
 	}
 	if g.player_inactive && g.Action_state == noAction && !g.Ai.intruders.Active() && !g.Ai.denizens.Active() && !g.Ai.minions.Active() {
 		g.Turn_state = turnStateMainPhaseOver
-		base.Log().Printf("ScriptComm: change to turnStateMainPhaseOver")
+		base.DeprecatedLog().Printf("ScriptComm: change to turnStateMainPhaseOver")
 		g.comm.game_to_script <- nil
-		base.Log().Printf("ScriptComm: sent nil")
+		base.DeprecatedLog().Printf("ScriptComm: sent nil")
 	}
 }
 
@@ -1312,7 +1312,7 @@ func (g *Game) TeamLos(side Side, x, y, dx, dy int) bool {
 	} else if side == SideHaunt {
 		team_los = g.los.denizens.tex.Pix()
 	} else {
-		base.Warn().Printf("Can only ask for TeamLos for the intruders and denizens.")
+		base.DeprecatedWarn().Printf("Can only ask for TeamLos for the intruders and denizens.")
 		return false
 	}
 	if team_los == nil {
@@ -1357,7 +1357,7 @@ func (g *Game) mergeLos(side Side) {
 	case SideExplorers:
 		pix = g.los.intruders.tex.Pix()
 	default:
-		base.Error().Printf("Unable to mergeLos on side %d.", side)
+		base.DeprecatedError().Printf("Unable to mergeLos on side %d.", side)
 		return
 	}
 	for i := range g.los.full_merger {
@@ -1440,7 +1440,7 @@ func (g *Game) UpdateEntLos(ent *Entity, force bool) {
 	if !force && ex == ent.los.x && ey == ent.los.y {
 		return
 	}
-	base.Log().Printf("UpdateEntLos(%s): %t (%d, %d) -> (%d, %d)", ent.Name, force, ent.los.x, ent.los.y, ex, ey)
+	base.DeprecatedLog().Printf("UpdateEntLos(%s): %t (%d, %d) -> (%d, %d)", ent.Name, force, ent.los.x, ent.los.y, ex, ey)
 	ent.los.x = ex
 	ent.los.y = ey
 

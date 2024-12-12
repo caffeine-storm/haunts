@@ -82,7 +82,7 @@ func setupTextureList() {
 
 // Renders the texture on a quad at the texture's natural size.
 func (d *Data) RenderNatural(x, y int) {
-	base.Log().Trace("render natural", "x", x, "y", y, "dx", d.dx, "dy", d.dy)
+	base.DeprecatedLog().Trace("render natural", "x", x, "y", y, "dx", d.dx, "dy", d.dy)
 	d.Render(float64(x), float64(y), float64(d.dx), float64(d.dy))
 }
 
@@ -104,7 +104,7 @@ func Render(x, y, dx, dy float64) {
 
 func (d *Data) Render(x, y, dx, dy float64) {
 	if textureList == 0 {
-		base.Warn().Warn("Data.Render called before textureList setup!")
+		base.DeprecatedWarn().Warn("Data.Render called before textureList setup!")
 		return
 	}
 	d.Bind()
@@ -113,7 +113,7 @@ func (d *Data) Render(x, y, dx, dy float64) {
 
 func (d *Data) RenderAdvanced(x, y, dx, dy, rot float64, flip bool) {
 	if textureList == 0 {
-		base.Warn().Warn("Data.RenderAdvanced called before textureList setup!")
+		base.DeprecatedWarn().Warn("Data.RenderAdvanced called before textureList setup!")
 		return
 	}
 	d.Bind()
@@ -420,7 +420,7 @@ func (m *Manager) LoadFromPath(path string) (*Data, error) {
 }
 
 func (m *Manager) BlockUntilLoaded(ctx context.Context, paths ...string) error {
-	base.Log().Trace("block until loaded called", "paths", paths)
+	base.DeprecatedLog().Trace("block until loaded called", "paths", paths)
 	pathset := make(map[string]bool)
 	for _, path := range paths {
 		pathset[path] = true
@@ -447,7 +447,7 @@ func (m *Manager) BlockUntilLoaded(ctx context.Context, paths ...string) error {
 		for path := range pathset {
 			waitChan, found := m.loadWaiters[path]
 			if !found {
-				base.Log().Trace("waiter add", "path", path)
+				base.DeprecatedLog().Trace("waiter add", "path", path)
 				waitChan = make(chan bool, 1)
 				m.loadWaiters[path] = waitChan
 			}
@@ -473,7 +473,7 @@ func (m *Manager) BlockUntilLoaded(ctx context.Context, paths ...string) error {
 		}
 	}
 
-	base.Log().Trace("done waiting", "times-waited", len(waitChannels))
+	base.DeprecatedLog().Trace("done waiting", "times-waited", len(waitChannels))
 
 	if !loadOk {
 		return fmt.Errorf("texture load failure")
@@ -483,7 +483,7 @@ func (m *Manager) BlockUntilLoaded(ctx context.Context, paths ...string) error {
 }
 
 func (m *Manager) signalLoad(path string, success bool) {
-	base.Log().Trace("signalling load", "path", path, "success", success)
+	base.DeprecatedLog().Trace("signalling load", "path", path, "success", success)
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 

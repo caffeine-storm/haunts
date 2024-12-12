@@ -26,7 +26,7 @@ func registerBasicAttacks() map[string]func() game.Action {
 			a := BasicAttack{Defname: cname}
 			base.GetObject("actions-attack_actions", &a)
 			if !a.Target_allies && !a.Target_enemies {
-				base.Error().Printf("Basic Attack '%s' cannot target anything!  Either Target_allies or Target_enemies must be true", a.Name)
+				base.DeprecatedError().Printf("Basic Attack '%s' cannot target anything!  Either Target_allies or Target_enemies must be true", a.Name)
 			}
 			if a.Ammo > 0 {
 				a.Current_ammo = a.Ammo
@@ -284,13 +284,13 @@ func (a *BasicAttack) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.
 		}
 
 		if a.Ap > a.ent.Stats.ApCur() {
-			base.Error().Printf("Got a basic attack that required more ap than available: %v", a.exec)
-			base.Error().Printf("Ent: %s, Ap: %d", a.ent.Name, a.ent.Stats.ApCur())
+			base.DeprecatedError().Printf("Got a basic attack that required more ap than available: %v", a.exec)
+			base.DeprecatedError().Printf("Ent: %s, Ap: %d", a.ent.Name, a.ent.Stats.ApCur())
 			return game.Complete
 		}
 
 		if !a.validTarget(a.ent, a.target) {
-			base.Error().Printf("Got a basic attack that was invalid for some reason: %v", a.exec)
+			base.DeprecatedError().Printf("Got a basic attack that was invalid for some reason: %v", a.exec)
 			return game.Complete
 		}
 	}

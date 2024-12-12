@@ -38,7 +38,7 @@ func EnableShader(name string) {
 	} else {
 		gl.Program(0).Use()
 		if name != "" && !warned_names[name] {
-			Log().Warn("Tried to use unknown shader", "name", name)
+			DeprecatedLog().Warn("Tried to use unknown shader", "name", name)
 			warned_names[name] = true
 		}
 	}
@@ -48,7 +48,7 @@ func SetUniformI(shader, variable string, n int) {
 	prog, ok := shader_progs[shader]
 	if !ok {
 		if !warned_names[shader] {
-			Log().Warn("Tried to set a uniform in an unknown shader", "shader", shader)
+			DeprecatedLog().Warn("Tried to set a uniform in an unknown shader", "shader", shader)
 			warned_names[shader] = true
 		}
 		return
@@ -61,7 +61,7 @@ func SetUniformF(shader, variable string, f float32) {
 	prog, ok := shader_progs[shader]
 	if !ok {
 		if !warned_names[shader] {
-			Log().Warn("Tried to set a uniform in an unknown shader", "shader", shader)
+			DeprecatedLog().Warn("Tried to set a uniform in an unknown shader", "shader", shader)
 			warned_names[shader] = true
 		}
 		return
@@ -86,12 +86,12 @@ func InitShaders(queue render.RenderQueueInterface) {
 			GetObject("shaders", &shader)
 			vdata, err := os.ReadFile(filepath.Join(GetDataDir(), shader.Vertex_path))
 			if err != nil {
-				Log().Error("Unable to load vertex shader", "path", shader.Vertex_path, "err", err)
+				DeprecatedLog().Error("Unable to load vertex shader", "path", shader.Vertex_path, "err", err)
 				continue
 			}
 			fdata, err := os.ReadFile(filepath.Join(GetDataDir(), shader.Fragment_path))
 			if err != nil {
-				Log().Error("Unable to load fragment shader", "path", shader.Fragment_path, "err", err)
+				DeprecatedLog().Error("Unable to load fragment shader", "path", shader.Fragment_path, "err", err)
 				continue
 			}
 
@@ -105,7 +105,7 @@ func InitShaders(queue render.RenderQueueInterface) {
 				glVertexShader.Compile()
 				status := glVertexShader.Get(gl.COMPILE_STATUS)
 				if status == 0 {
-					Log().Error("Failed to compile vertex shader", "path", shader.Vertex_path, "compile-status", status)
+					DeprecatedLog().Error("Failed to compile vertex shader", "path", shader.Vertex_path, "compile-status", status)
 					continue
 				}
 			}
@@ -118,7 +118,7 @@ func InitShaders(queue render.RenderQueueInterface) {
 				glFragmentShader.Compile()
 				status := glFragmentShader.Get(gl.COMPILE_STATUS)
 				if status == 0 {
-					Log().Error("Failed to compile fragment shader", "path", shader.Fragment_path, "compile-status", status)
+					DeprecatedLog().Error("Failed to compile fragment shader", "path", shader.Fragment_path, "compile-status", status)
 					continue
 				}
 			}
@@ -130,7 +130,7 @@ func InitShaders(queue render.RenderQueueInterface) {
 			glProgram.Link()
 			status := glProgram.Get(gl.LINK_STATUS)
 			if status == 0 {
-				Log().Error("Failed to link shader", "shader-name", shader.Name, "compile-status", status)
+				DeprecatedLog().Error("Failed to link shader", "shader-name", shader.Name, "compile-status", status)
 				continue
 			}
 

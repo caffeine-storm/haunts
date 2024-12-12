@@ -74,11 +74,11 @@ type moveExec struct {
 
 func (exec *moveExec) measureCost(ent *game.Entity, g *game.Game) int {
 	if len(exec.Path) == 0 {
-		base.Error().Printf("Zero length path")
+		base.DeprecatedError().Printf("Zero length path")
 		return -1
 	}
 	if g.ToVertex(ent.Pos()) != exec.Path[0] {
-		base.Error().Printf("Path doesn't begin at ent's position, %d != %d", g.ToVertex(ent.Pos()), exec.Path[0])
+		base.DeprecatedError().Printf("Path doesn't begin at ent's position, %d != %d", g.ToVertex(ent.Pos()), exec.Path[0])
 		return -1
 	}
 	graph := g.Graph(ent.Side(), true, nil)
@@ -88,9 +88,9 @@ func (exec *moveExec) measureCost(ent *game.Entity, g *game.Game) int {
 		dsts, costs := graph.Adjacent(v)
 		ok := false
 		prev := v
-		base.Log().Printf("Adj(%d):", v)
+		base.DeprecatedLog().Printf("Adj(%d):", v)
 		for j := range dsts {
-			base.Log().Printf("Node %d", dsts[j])
+			base.DeprecatedLog().Printf("Node %d", dsts[j])
 			if dsts[j] == step {
 				cost += int(costs[j])
 				v = dsts[j]
@@ -98,7 +98,7 @@ func (exec *moveExec) measureCost(ent *game.Entity, g *game.Game) int {
 				break
 			}
 		}
-		base.Log().Printf("%d -> %d: %t", prev, v, ok)
+		base.DeprecatedLog().Printf("%d -> %d: %t", prev, v, ok)
 		if !ok {
 			return -1
 		}
@@ -175,7 +175,7 @@ func limitPath(ent *game.Entity, start int, path []int, max int) []int {
 			}
 		}
 		if !found {
-			base.Log().Printf("PATH: DIdn't find, %d / %d", last+1, len(path))
+			base.DeprecatedLog().Printf("PATH: DIdn't find, %d / %d", last+1, len(path))
 			return path[0:last]
 		}
 	}
@@ -183,23 +183,23 @@ func limitPath(ent *game.Entity, start int, path []int, max int) []int {
 }
 
 func (a *Move) AiMoveToPos(ent *game.Entity, dst []int, max_ap int) game.ActionExec {
-	base.Log().Printf("PATH: Request move to %v", dst)
+	base.DeprecatedLog().Printf("PATH: Request move to %v", dst)
 	graph := ent.Game().Graph(ent.Side(), false, nil)
 	src := []int{ent.Game().ToVertex(ent.Pos())}
 	_, path := algorithm.Dijkstra(graph, src, dst)
-	base.Log().Printf("PATH: Found path of length %d", len(path))
+	base.DeprecatedLog().Printf("PATH: Found path of length %d", len(path))
 	ppx, ppy := ent.Pos()
 	if path == nil {
 		return nil
 	}
 	_, xx, yy := ent.Game().FromVertex(path[len(path)-1])
-	base.Log().Printf("PATH: %d,%d -> %d,%d", ppx, ppy, xx, yy)
+	base.DeprecatedLog().Printf("PATH: %d,%d -> %d,%d", ppx, ppy, xx, yy)
 	if ent.Stats.ApCur() < max_ap {
 		max_ap = ent.Stats.ApCur()
 	}
 	path = limitPath(ent, src[0], path, max_ap)
 	_, xx, yy = ent.Game().FromVertex(path[len(path)-1])
-	base.Log().Printf("PATH: (limited) %d,%d -> %d,%d", ppx, ppy, xx, yy)
+	base.DeprecatedLog().Printf("PATH: (limited) %d,%d -> %d,%d", ppx, ppy, xx, yy)
 	if len(path) <= 1 {
 		return nil
 	}
@@ -317,24 +317,24 @@ func (a *Move) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Mainten
 		exec := ae.(*moveExec)
 		a.ent = g.EntityById(ae.EntityId())
 		if len(exec.Path) == 0 {
-			base.Error().Printf("Got a move exec with a path length of 0: %v", exec)
+			base.DeprecatedError().Printf("Got a move exec with a path length of 0: %v", exec)
 			return game.Complete
 		}
 		a.cost = exec.measureCost(a.ent, g)
 		if a.cost > a.ent.Stats.ApCur() {
-			base.Error().Printf("Got a move that required more ap than available: %v", exec)
-			base.Error().Printf("Path: %v", exec.Path)
+			base.DeprecatedError().Printf("Got a move that required more ap than available: %v", exec)
+			base.DeprecatedError().Printf("Path: %v", exec.Path)
 			return game.Complete
 		}
 		if a.cost == -1 {
-			base.Error().Printf("Got a move that followed an invalid path: %v", exec)
-			base.Error().Printf("Path: %v", exec.Path)
+			base.DeprecatedError().Printf("Got a move that followed an invalid path: %v", exec)
+			base.DeprecatedError().Printf("Path: %v", exec.Path)
 			if a.ent == nil {
-				base.Error().Printf("ENT was Nil!")
+				base.DeprecatedError().Printf("ENT was Nil!")
 			} else {
 				x, y := a.ent.Pos()
 				v := g.ToVertex(x, y)
-				base.Error().Printf("Ent pos: (%d, %d) -> (%d)", x, y, v)
+				base.DeprecatedError().Printf("Ent pos: (%d, %d) -> (%d)", x, y, v)
 			}
 			return game.Complete
 		}
@@ -342,7 +342,7 @@ func (a *Move) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Mainten
 			_, x, y := g.FromVertex(v)
 			return [2]int{x, y}
 		})
-		base.Log().Printf("Path Validated: %v", exec)
+		base.DeprecatedLog().Printf("Path Validated: %v", exec)
 		a.ent.Stats.ApplyDamage(-a.cost, 0, status.Unspecified)
 		src := g.ToVertex(a.ent.Pos())
 		graph := g.Graph(a.ent.Side(), true, nil)

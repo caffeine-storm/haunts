@@ -42,15 +42,18 @@ func GetDataDir() string {
 	return datadir
 }
 
-func Log() logging.Logger {
+// Prefer calling logging.DefaultLogger directly
+func DeprecatedLog() logging.Logger {
 	return logging.DefaultLogger()
 }
 
-func Warn() logging.Logger {
+// Prefer calling logging.WarnLogger directly
+func DeprecatedWarn() logging.Logger {
 	return logging.WarnLogger()
 }
 
-func Error() logging.Logger {
+// Prefer calling logging.ErrorLogger directly
+func DeprecatedError() logging.Logger {
 	return logging.ErrorLogger()
 }
 
@@ -167,7 +170,7 @@ func loadDictionaryByProperties(fontName string, size int) *gui.Dictionary {
 	f, err := os.Open(filename)
 	if err == nil {
 		defer f.Close()
-		Log().Info("font-cache-hit", "fontName", fontName, "size", size, "err", err)
+		DeprecatedLog().Info("font-cache-hit", "fontName", fontName, "size", size, "err", err)
 		d, err := loadDictionaryFromFile(f, &immediateQueue{}, logging.DebugLogger())
 		if err != nil {
 			panic(fmt.Errorf("couldn't loadDictionaryFromFile for %q @%d: %w", fontName, size, err))
@@ -183,7 +186,7 @@ func loadDictionaryByProperties(fontName string, size int) *gui.Dictionary {
 	}
 
 	// We don't have an appropriate grid-of-glyphs on disk; make one!
-	Log().Warn("font-cache-miss", "fontName", fontName, "size", size, "err", err)
+	DeprecatedLog().Warn("font-cache-miss", "fontName", fontName, "size", size, "err", err)
 	font, err := loadFont()
 	if err != nil {
 		panic(fmt.Errorf("unable to load font: size %d: err: %w", size, err))
@@ -192,7 +195,7 @@ func loadDictionaryByProperties(fontName string, size int) *gui.Dictionary {
 	d := gui.MakeDictionary(font, size, &immediateQueue{}, logger)
 	err = saveDictionaryToFile(d, fontName, size)
 	if err != nil {
-		Log().Error("Unable to save dictionary", "size", size, "err", err)
+		DeprecatedLog().Error("Unable to save dictionary", "size", size, "err", err)
 	}
 	return d
 }
@@ -230,7 +233,7 @@ func CheckPathCasing(path string) {
 	base := GetDataDir()
 	rel, err := filepath.Rel(base, path)
 	if err != nil {
-		Log().Error("filepath.Rel(base, path) failed", "base", base, "path", path, "err", err)
+		DeprecatedLog().Error("filepath.Rel(base, path) failed", "base", base, "path", path, "err", err)
 		return
 	}
 	parts := strings.Split(rel, string(filepath.Separator))
@@ -239,13 +242,13 @@ func CheckPathCasing(path string) {
 	for _, part := range parts {
 		f, err := os.Open(running)
 		if err != nil {
-			Log().Error("os.Open(path) failed", "path", running, "err", err)
+			DeprecatedLog().Error("os.Open(path) failed", "path", running, "err", err)
 			return
 		}
 		names, err := f.Readdirnames(10000)
 		f.Close()
 		if err != nil {
-			Log().Error("f.Readdirnames(10000) failed", "path", running, "err", err)
+			DeprecatedLog().Error("f.Readdirnames(10000) failed", "path", running, "err", err)
 			return
 		}
 		found := false
@@ -259,10 +262,10 @@ func CheckPathCasing(path string) {
 			final := filepath.Join(running, part)
 			_, err := os.Stat(final)
 			if err != nil {
-				Log().Error("os.Stat(final) failed", "final", final, "err", err)
+				DeprecatedLog().Error("os.Stat(final) failed", "final", final, "err", err)
 				return
 			}
-			Log().Error("bad casing", "given", running, "should-end-with", part)
+			DeprecatedLog().Error("bad casing", "given", running, "should-end-with", part)
 			return
 		}
 		running = filepath.Join(running, part)

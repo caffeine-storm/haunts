@@ -48,7 +48,7 @@ func InsertStartMenu(ui gui.WidgetParent) error {
 		ui.RemoveChild(&sm)
 		err := InsertCreditsMenu(ui)
 		if err != nil {
-			base.Error().Printf("Unable to make Credits Menu: %v", err)
+			base.DeprecatedError().Printf("Unable to make Credits Menu: %v", err)
 			return
 		}
 	}
@@ -62,7 +62,7 @@ func InsertStartMenu(ui gui.WidgetParent) error {
 			InsertStartMenu,
 		)
 		if err != nil {
-			base.Error().Printf("Unable to make Map Chooser: %v", err)
+			base.DeprecatedError().Printf("Unable to make Map Chooser: %v", err)
 			return
 		}
 	}
@@ -71,7 +71,7 @@ func InsertStartMenu(ui gui.WidgetParent) error {
 		ui.RemoveChild(&sm)
 		err := InsertOnlineMenu(ui)
 		if err != nil {
-			base.Error().Printf("Unable to make Online Menu: %v", err)
+			base.DeprecatedError().Printf("Unable to make Online Menu: %v", err)
 			return
 		}
 	}
@@ -148,7 +148,7 @@ func (sm *StartMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 }
 
 func (sm *StartMenu) Draw(region gui.Region, ctx gui.DrawingContext) {
-	base.Log().Trace("StartMenu.Draw", "region", region)
+	base.DeprecatedLog().Trace("StartMenu.Draw", "region", region)
 	sm.region = region
 	gl.Color4ub(255, 255, 255, 255)
 	// TODO(tmckee): this is racy. .Data() lazy-loads the texture through the
@@ -157,7 +157,7 @@ func (sm *StartMenu) Draw(region gui.Region, ctx gui.DrawingContext) {
 	// actually draw then. For testing, we can use texture.BlockUntilLoaded.
 	sm.layout.Background.Data().RenderNatural(sm.region.X, sm.region.Y)
 	sm.layout.Menu.Texture.Data().RenderNatural(sm.region.X+sm.layout.Menu.X, sm.region.Y+sm.layout.Menu.Y)
-	base.Log().Trace("StartMenu.Draw: about to render buttons", "numbuttons", len(sm.buttons), "sm.layout", sm.layout)
+	base.DeprecatedLog().Trace("StartMenu.Draw: about to render buttons", "numbuttons", len(sm.buttons), "sm.layout", sm.layout)
 	for _, button := range sm.buttons {
 		// TODO(tmckee): clean: (x,y) given to RenderAt is not a target location
 		// but an offset from the button's (X,Y) fields. This does not seem clear

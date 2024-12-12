@@ -92,9 +92,9 @@ func LuaDecodeValue(r io.Reader, L *lua.State, g *Game) error {
 		ent := g.EntityById(EntityId(id))
 		LuaPushEntity(L, ent)
 		if ent != nil {
-			base.Log().Printf("LUA: Push Ent %s", ent.Name)
+			base.DeprecatedLog().Printf("LUA: Push Ent %s", ent.Name)
 		} else {
-			base.Log().Printf("LUA: Push Ent NIL")
+			base.DeprecatedLog().Printf("LUA: Push Ent NIL")
 		}
 	case luaEncTable:
 		err = LuaDecodeTable(r, L, g)
@@ -210,7 +210,7 @@ func LuaPushSmartFunctionTable(L *lua.State, ft FunctionTable) {
 		if f, ok := myft[name]; ok {
 			f()
 		} else {
-			base.Error().Printf("'%s' is not a valid selector, valid seletors are %s", name, valid_selectors)
+			base.DeprecatedError().Printf("'%s' is not a valid selector, valid seletors are %s", name, valid_selectors)
 			L.PushNil()
 		}
 		return 1
@@ -716,7 +716,7 @@ func LuaCheckParamsOk(L *lua.State, name string, params ...LuaType) bool {
 }
 
 func LuaDoError(L *lua.State, err_str string) {
-	base.Error().Printf(err_str)
+	base.DeprecatedError().Printf(err_str)
 	L.PushString(err_str)
 	L.SetExecutionLimit(1)
 }

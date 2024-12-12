@@ -89,7 +89,7 @@ func order(input []RectObject) []int {
 	// TODO(tmckee): let's just crash instead
 	defer func() {
 		if err := recover(); err != nil {
-			base.Log().Error("order failed", "err", err)
+			base.DeprecatedLog().Error("order failed", "err", err)
 		}
 	}()
 	var minx, miny int

@@ -214,19 +214,19 @@ func InsertMapChooser(ui gui.WidgetParent, chosen func(string), resert func(ui g
 	datadir := base.GetDataDir()
 	err := base.LoadAndProcessObject(filepath.Join(datadir, "ui", "start", "versus", "map_select.json"), "json", &bops)
 	if err != nil {
-		base.Error().Printf("Unable to insert MapChooser: %v", err)
+		base.DeprecatedError().Printf("Unable to insert MapChooser: %v", err)
 		return err
 	}
 	var opts []Option
 	algorithm.Map(bops, &opts, func(ob OptionBasic) Option { return &ob })
 	for _, opt := range opts {
-		base.Log().Printf(opt.String())
+		base.DeprecatedLog().Printf(opt.String())
 	}
 
 	var ch Chooser
 	err = base.LoadAndProcessObject(filepath.Join(datadir, "ui", "chooser", "layout.json"), "json", &ch.layout)
 	if err != nil {
-		base.Error().Printf("Unable to insert MapChooser: %v", err)
+		base.DeprecatedError().Printf("Unable to insert MapChooser: %v", err)
 		return err
 	}
 	ch.options = opts
@@ -251,7 +251,7 @@ func InsertMapChooser(ui gui.WidgetParent, chosen func(string), resert func(ui g
 		ui.RemoveChild(&ch)
 		err := resert(ui)
 		if err != nil {
-			base.Error().Printf("Unable to make Start Menu: %v", err)
+			base.DeprecatedError().Printf("Unable to make Start Menu: %v", err)
 			return
 		}
 	}

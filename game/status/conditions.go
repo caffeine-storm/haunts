@@ -44,7 +44,7 @@ func RegisterAllConditions() {
 func MakeCondition(name string) Condition {
 	maker, ok := condition_makers[name]
 	if !ok {
-		base.Log().Error("Missing Condition", "name", name)
+		base.DeprecatedLog().Error("Missing Condition", "name", name)
 		return condition_makers["Error"]()
 	}
 	return maker()

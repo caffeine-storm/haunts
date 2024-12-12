@@ -71,7 +71,7 @@ func makeAi(path string, g *game.Game, ent *game.Entity, dst_iface *game.Ai, kin
 	var err error
 	ai_struct.watcher, err = fsnotify.NewWatcher()
 	if err != nil {
-		base.Warn().Printf("Unable to create a filewatcher - '%s' will not reload ai files dynamically: %v", path, err)
+		base.DeprecatedWarn().Printf("Unable to create a filewatcher - '%s' will not reload ai files dynamically: %v", path, err)
 		ai_struct.watcher = nil
 	}
 	ai_struct.ent = ent
@@ -87,7 +87,7 @@ func makeAi(path string, g *game.Game, ent *game.Entity, dst_iface *game.Ai, kin
 
 	err = ai_struct.setupLuaState()
 	if err != nil {
-		base.Error().Printf("Unable to make ai: %v", err)
+		base.DeprecatedError().Printf("Unable to make ai: %v", err)
 		if ai_struct.watcher != nil {
 			ai_struct.watcher.Close()
 		}
@@ -142,7 +142,7 @@ func (a *Ai) setupLuaState() error {
 		for i := -n; i < 0; i++ {
 			res += game.LuaStringifyParam(L, i) + " "
 		}
-		base.Log().Printf("Ai(%p): %s", a, res)
+		base.DeprecatedLog().Printf("Ai(%p): %s", a, res)
 		return 0
 	})
 	a.L.Register("randN", func(L *lua.State) int {
@@ -153,7 +153,7 @@ func (a *Ai) setupLuaState() error {
 		}
 		val := L.ToInteger(-1)
 		if val <= 0 {
-			base.Error().Printf("Can't call randN with a value <= 0.")
+			base.DeprecatedError().Printf("Can't call randN with a value <= 0.")
 			return 0
 		}
 		L.PushInteger(int64(rand.Intn(val)) + 1)
@@ -180,7 +180,7 @@ func (a *Ai) loadUtils(dir string) {
 			if err != nil {
 				return nil
 			}
-			base.Log().Printf("Loaded lua utils file '%s'", path)
+			base.DeprecatedLog().Printf("Loaded lua utils file '%s'", path)
 			a.L.DoString(string(data))
 		}
 		return nil
@@ -202,14 +202,14 @@ func (a *Ai) masterRoutine() {
 		case a.active = <-a.active_set:
 			if a.active == false {
 				if a.ent == nil {
-					base.Log().Printf("Evaluating = false")
+					base.DeprecatedLog().Printf("Evaluating = false")
 				} else {
-					base.Log().Printf("Ent %p inactivated", a.ent)
+					base.DeprecatedLog().Printf("Ent %p inactivated", a.ent)
 				}
 				a.evaluating = false
 			} else {
 				if a.ent != nil {
-					base.Log().Printf("Ent %s activated", a.ent.Name)
+					base.DeprecatedLog().Printf("Ent %s activated", a.ent.Name)
 				}
 			}
 
@@ -226,11 +226,11 @@ func (a *Ai) masterRoutine() {
 				a.evaluating = true
 				go func() {
 					if a.ent == nil {
-						base.Log().Printf("Eval master")
+						base.DeprecatedLog().Printf("Eval master")
 					} else {
-						base.Log().Printf("Eval ent: %p", a.ent)
+						base.DeprecatedLog().Printf("Eval ent: %p", a.ent)
 					}
-					base.Log().Printf("Evaluating lua script: %s", a.Prog)
+					base.DeprecatedLog().Printf("Evaluating lua script: %s", a.Prog)
 					// Reset the execution limit in case it was set to 0 due to a
 					// previous error
 					a.L.SetExecutionLimit(2500000)
@@ -239,13 +239,13 @@ func (a *Ai) masterRoutine() {
 					// will exit() if it fails, which we cannot catch
 					a.L.DoString("Think()")
 					if a.ent == nil {
-						base.Log().Printf("Completed master")
+						base.DeprecatedLog().Printf("Completed master")
 					} else {
-						base.Log().Printf("Completed ent: %p", a.ent)
+						base.DeprecatedLog().Printf("Completed ent: %p", a.ent)
 					}
 					a.active_set <- false
 					a.execs <- nil
-					base.Log().Printf("Sent nil value")
+					base.DeprecatedLog().Printf("Sent nil value")
 				}()
 			}
 		}
@@ -258,7 +258,7 @@ func (a *Ai) Terminate() {
 
 func (a *Ai) Activate() {
 	if a.ent != nil {
-		base.Log().Printf("Activated entity: %v", a.ent.Name)
+		base.DeprecatedLog().Printf("Activated entity: %v", a.ent.Name)
 	}
 	reload := false
 	for {
@@ -272,7 +272,7 @@ func (a *Ai) Activate() {
 no_more_events:
 	if reload {
 		a.setupLuaState()
-		base.Log().Printf("Reloaded lua state for '%p'", a)
+		base.DeprecatedLog().Printf("Reloaded lua state for '%p'", a)
 	}
 	a.active_set <- true
 }

@@ -31,7 +31,7 @@ func MakeGamePanel(script string, p *Player, data map[string]string, game_key mr
 	if p == nil {
 		p = &Player{}
 	}
-	base.Log().Printf("Script path: %s / %s", script, p.Script_path)
+	base.DeprecatedLog().Printf("Script path: %s / %s", script, p.Script_path)
 	if script == "" {
 		script = p.Script_path
 	}
@@ -81,7 +81,7 @@ func (g *Game) SpawnEntity(spawn *Entity, x, y int) bool {
 	for i := range g.Ents {
 		cx, cy := g.Ents[i].Pos()
 		if cx == x && cy == y {
-			base.Warn().Printf("Can't spawn entity at (%d, %d) - already occupied by '%s'.", x, y, g.Ents[i].Name)
+			base.DeprecatedWarn().Printf("Can't spawn entity at (%d, %d) - already occupied by '%s'.", x, y, g.Ents[i].Name)
 			return false
 		}
 	}
@@ -103,7 +103,7 @@ func (g *Game) SetCurrentAction(action Action) bool {
 	// the action should be one that belongs to the current entity, if not then
 	// we need to bail out immediately
 	if g.selected_ent == nil {
-		base.Warn().Printf("Tried to SetCurrentAction() without a selected entity.")
+		base.DeprecatedWarn().Printf("Tried to SetCurrentAction() without a selected entity.")
 		return action == nil
 	}
 	if action != nil {
@@ -115,7 +115,7 @@ func (g *Game) SetCurrentAction(action Action) bool {
 			}
 		}
 		if !valid {
-			base.Warn().Printf("Tried to SetCurrentAction() with an action that did not belong to the selected entity.")
+			base.DeprecatedWarn().Printf("Tried to SetCurrentAction() with an action that did not belong to the selected entity.")
 			return action == nil
 		}
 	}
@@ -305,16 +305,16 @@ func spawnEnts(g *Game, ents []*Entity, spawns []*house.SpawnPoint) {
 		}
 	}
 	if sanity > 0 {
-		base.Log().Printf("Placed all objects with %d sanity remaining", sanity)
+		base.DeprecatedLog().Printf("Placed all objects with %d sanity remaining", sanity)
 	} else {
-		base.Warn().Printf("Only able to place %d out of %d objects", len(places), len(spawns))
+		base.DeprecatedWarn().Printf("Only able to place %d out of %d objects", len(places), len(spawns))
 	}
 	for _, place := range places {
 		place.ent.X = float64(place.spawn.X + rand.Intn(place.spawn.Dx-place.ent.Dx+1))
 		place.ent.Y = float64(place.spawn.Y + rand.Intn(place.spawn.Dy-place.ent.Dy+1))
 		g.viewer.AddDrawable(place.ent)
 		g.Ents = append(g.Ents, place.ent)
-		base.Log().Printf("Using object '%s' at (%.0f, %.0f)", place.ent.Name, place.ent.X, place.ent.Y)
+		base.DeprecatedLog().Printf("Using object '%s' at (%.0f, %.0f)", place.ent.Name, place.ent.X, place.ent.Y)
 	}
 }
 

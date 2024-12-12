@@ -49,7 +49,7 @@ func GetAllPlayers() map[string]string {
 		}
 		f, err := os.Open(path)
 		if err != nil {
-			base.Warn().Printf("Unable to open player file: %s.", path)
+			base.DeprecatedWarn().Printf("Unable to open player file: %s.", path)
 			return nil
 		}
 		defer f.Close()
@@ -57,7 +57,7 @@ func GetAllPlayers() map[string]string {
 		var name string
 		err = dec.Decode(&name)
 		if err != nil {
-			base.Warn().Printf("Unable to read player file: %s.", path)
+			base.DeprecatedWarn().Printf("Unable to read player file: %s.", path)
 			return nil
 		}
 		players[name] = path
@@ -71,7 +71,7 @@ func UpdatePlayer(p *Player, L *lua.State) {
 	L.GetGlobal("store")
 	err := LuaEncodeTable(buffer, L, -1)
 	if err != nil {
-		base.Warn().Printf("Error encoding lua state: %v", err)
+		base.DeprecatedWarn().Printf("Error encoding lua state: %v", err)
 	}
 	L.Pop(1)
 	p.Lua_store = buffer.Bytes()

@@ -68,7 +68,7 @@ func LoggingSpec() {
 	Convey("using logging through the base package", func() {
 		Convey("the source attribute in a log message", func() {
 			logOutput := logging.SetupLogger("../testdata")
-			base.Log().Info("a test message")
+			base.DeprecatedLog().Info("a test message")
 
 			Convey("should reference the client code", func() {
 				So(logOutput, ShouldReference, "logging/logging_test.go")
@@ -76,7 +76,7 @@ func LoggingSpec() {
 		})
 		Convey("should print when running tests", func() {
 			lines := logtesting.CollectOutput(func() {
-				base.Log().Error("collected message")
+				base.DeprecatedLog().Error("collected message")
 			})
 			So(strings.Join(lines, "\n"), ShouldContainSubstring, "collected message")
 		})

@@ -406,31 +406,31 @@ func (a *Interact) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Mai
 		exec := ae.(*interactExec)
 		a.ent = g.EntityById(ae.EntityId())
 		if (exec.Target != 0) == (exec.Toggle_door) {
-			base.Error().Printf("Got an interact that tried to target a door and an entity: %v", exec)
+			base.DeprecatedError().Printf("Got an interact that tried to target a door and an entity: %v", exec)
 			return game.Complete
 		}
 		if exec.Target != 0 {
 			target := g.EntityById(exec.Target)
 			if target == nil {
-				base.Error().Printf("Tried to interact with an entity that doesn't exist: %v", exec)
+				base.DeprecatedError().Printf("Tried to interact with an entity that doesn't exist: %v", exec)
 				return game.Complete
 			}
 			if target.ObjectEnt == nil {
-				base.Error().Printf("Tried to interact with an entity that wasn't an object: %v", exec)
+				base.DeprecatedError().Printf("Tried to interact with an entity that wasn't an object: %v", exec)
 				return game.Complete
 			}
 			if target.Sprite().State() != "ready" {
-				base.Error().Printf("Tried to interact with an object that wasn't in its ready state: %v", exec)
+				base.DeprecatedError().Printf("Tried to interact with an object that wasn't in its ready state: %v", exec)
 				return game.Complete
 			}
 			if distBetweenEnts(a.ent, target) > a.Range {
-				base.Error().Printf("Tried to interact with an object that was out of range: %v", exec)
+				base.DeprecatedError().Printf("Tried to interact with an object that was out of range: %v", exec)
 				return game.Complete
 			}
 			x, y := target.Pos()
 			dx, dy := target.Dims()
 			if !a.ent.HasLos(x, y, dx, dy) {
-				base.Error().Printf("Tried to interact with an object without having los: %v", exec)
+				base.DeprecatedError().Printf("Tried to interact with an object without having los: %v", exec)
 				return game.Complete
 			}
 			a.ent.Stats.ApplyDamage(-a.Ap, 0, status.Unspecified)
@@ -439,17 +439,17 @@ func (a *Interact) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Mai
 		} else {
 			// We're interacting with a door here
 			if exec.Floor < 0 || exec.Floor >= len(g.House.Floors) {
-				base.Error().Printf("Specified an unknown floor %v", exec)
+				base.DeprecatedError().Printf("Specified an unknown floor %v", exec)
 				return game.Complete
 			}
 			floor := g.House.Floors[exec.Floor]
 			if exec.Room < 0 || exec.Room >= len(floor.Rooms) {
-				base.Error().Printf("Specified an unknown room %v", exec)
+				base.DeprecatedError().Printf("Specified an unknown room %v", exec)
 				return game.Complete
 			}
 			room := floor.Rooms[exec.Room]
 			if exec.Door < 0 || exec.Door >= len(room.Doors) {
-				base.Error().Printf("Specified an unknown door %v", exec)
+				base.DeprecatedError().Printf("Specified an unknown door %v", exec)
 				return game.Complete
 			}
 			door := room.Doors[exec.Door]
@@ -458,7 +458,7 @@ func (a *Interact) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Mai
 			dx, dy := a.ent.Dims()
 			ent_rect := makeIntFrect(x, y, x+dx, y+dy)
 			if !ent_rect.Overlaps(makeRectForDoor(room, door)) {
-				base.Error().Printf("Tried to open a door that was out of range: %v", exec)
+				base.DeprecatedError().Printf("Tried to open a door that was out of range: %v", exec)
 				return game.Complete
 			}
 
@@ -474,7 +474,7 @@ func (a *Interact) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Mai
 				g.RecalcLos()
 				a.ent.Stats.ApplyDamage(-a.Ap, 0, status.Unspecified)
 			} else {
-				base.Error().Printf("Couldn't find matching door: %v", exec)
+				base.DeprecatedError().Printf("Couldn't find matching door: %v", exec)
 				return game.Complete
 			}
 		}

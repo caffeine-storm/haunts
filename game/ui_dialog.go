@@ -299,7 +299,7 @@ func (mdb *MediumDialogBox) Draw(region gui.Region, ctx gui.DrawingContext) {
 		case "center":
 			just = gui.Center
 		default:
-			base.Error().Printf("Unknown justification '%s'", p.Halign)
+			base.DeprecatedError().Printf("Unknown justification '%s'", p.Halign)
 			p.Halign = "left"
 		}
 		var valign gui.Justification
@@ -311,7 +311,7 @@ func (mdb *MediumDialogBox) Draw(region gui.Region, ctx gui.DrawingContext) {
 		case "center":
 			valign = gui.Center
 		default:
-			base.Error().Printf("Unknown justification '%s'", p.Valign)
+			base.DeprecatedError().Printf("Unknown justification '%s'", p.Valign)
 			p.Valign = "top"
 		}
 		gl.Color4ub(255, 255, 255, 255)

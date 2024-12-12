@@ -147,7 +147,7 @@ func InsertOnlineMenu(ui gui.WidgetParent) error {
 			}()
 			if resp.Err != "" {
 				sm.layout.Error.err = resp.Err
-				base.Error().Printf("Couldn't make new game: %v", resp.Err)
+				base.DeprecatedError().Printf("Couldn't make new game: %v", resp.Err)
 				return
 			}
 			ui.RemoveChild(&sm)
@@ -159,7 +159,7 @@ func InsertOnlineMenu(ui gui.WidgetParent) error {
 				InsertOnlineMenu,
 			)
 			if err != nil {
-				base.Error().Printf("Error making Map Chooser: %v", err)
+				base.DeprecatedError().Printf("Error making Map Chooser: %v", err)
 			}
 		}()
 	}
@@ -273,7 +273,7 @@ func (sm *OnlineMenu) Think(g *gui.Gui, t int64) {
 			for j := range list.Games {
 				var b Button
 				var name string
-				base.Log().Printf("Adding button: %s", list.Games[j].Name)
+				base.DeprecatedLog().Printf("Adding button: %s", list.Games[j].Name)
 				b.Text.Justification = sm.layout.Text.Justification
 				b.Text.Size = sm.layout.Text.Size
 				if net_id == list.Games[j].Denizens_id {
@@ -313,7 +313,7 @@ func (sm *OnlineMenu) Think(g *gui.Gui, t int64) {
 							}()
 							if resp.Err != "" || resp.Game == nil {
 								sm.layout.Error.err = resp.Err
-								base.Error().Printf("Couldn't join game: %v", resp.Err)
+								base.DeprecatedError().Printf("Couldn't join game: %v", resp.Err)
 								return
 							}
 							sm.ui.RemoveChild(sm)
@@ -342,7 +342,7 @@ func (sm *OnlineMenu) Think(g *gui.Gui, t int64) {
 							}()
 							if resp.Err != "" || !resp.Successful {
 								sm.layout.Error.err = resp.Err
-								base.Error().Printf("Couldn't join game: %v", resp.Err)
+								base.DeprecatedError().Printf("Couldn't join game: %v", resp.Err)
 								return
 							}
 							sm.ui.RemoveChild(sm)
@@ -374,7 +374,7 @@ func (sm *OnlineMenu) Think(g *gui.Gui, t int64) {
 							<-sm.control.in
 							if resp.Err != "" {
 								sm.layout.Error.err = resp.Err
-								base.Error().Printf("Couldn't kill game: %v", resp.Err)
+								base.DeprecatedError().Printf("Couldn't kill game: %v", resp.Err)
 							} else {
 								algorithm.Choose(&glb.games, func(gf gameField) bool {
 									return gf.key != req.Game_key

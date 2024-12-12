@@ -32,7 +32,7 @@ func (t *TextArea) RenderString(s string) {
 	case "right":
 		just = gui.Right
 	default:
-		base.Warn().Printf("Unknown justification '%s' in main gui bar.", t.Justification)
+		base.DeprecatedWarn().Printf("Unknown justification '%s' in main gui bar.", t.Justification)
 		t.Justification = "center"
 	}
 	px := t.X
@@ -616,7 +616,7 @@ func (m *MainBar) Draw(region gui.Region, ctx gui.DrawingContext) {
 			x = int(m.layout.Conditions.X + m.layout.Conditions.Width/2)
 		case mouseOverGear:
 		default:
-			base.Warn().Printf("Got an unknown mouseover location: %d", m.state.MouseOver.location)
+			base.DeprecatedWarn().Printf("Got an unknown mouseover location: %d", m.state.MouseOver.location)
 			m.state.MouseOver.active = false
 		}
 		y := m.layout.Background.Data().Dy() - 40
