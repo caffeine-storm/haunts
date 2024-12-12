@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/console"
 	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/house"
@@ -328,7 +329,7 @@ func main() {
 	game.Restart()
 
 	if base.IsDevel() {
-		ui.AddChild(base.MakeConsole(logReader))
+		ui.AddChild(console.MakeConsole(logReader))
 	}
 	sys.Think()
 	// Wait until now to create the dictionary because the render thread needs

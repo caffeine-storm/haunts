@@ -1,4 +1,4 @@
-package base
+package console
 
 import (
 	"bufio"
@@ -6,6 +6,7 @@ import (
 	"strings"
 	"unicode"
 
+	"github.com/MobRulesGames/haunts/base"
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
@@ -28,9 +29,6 @@ type Console struct {
 }
 
 func MakeConsole(rdr io.Reader) *Console {
-	if log_console == nil {
-		panic("Cannot make a console until the logging system has been set up.")
-	}
 	var c Console
 	c.BasicZone.Ex = true
 	c.BasicZone.Ey = true
@@ -54,7 +52,7 @@ func (c *Console) Think(ui *gui.Gui, dt int64) {
 }
 
 func (c *Console) Respond(ui *gui.Gui, group gui.EventGroup) bool {
-	if found, event := group.FindEvent(GetDefaultKeyMap()["console"].Id()); found && event.Type == gin.Press {
+	if found, event := group.FindEvent(base.GetDefaultKeyMap()["console"].Id()); found && event.Type == gin.Press {
 		if group.Focus {
 			ui.DropFocus()
 		} else {
