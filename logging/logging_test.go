@@ -9,7 +9,7 @@ import (
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/logging"
-	"github.com/runningwild/glop/gloptest"
+	"github.com/MobRulesGames/haunts/logging/logtesting"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -75,7 +75,7 @@ func LoggingSpec() {
 
 		})
 		SkipConvey("should print when running tests", func() {
-			lines := gloptest.CollectOutput(func() {
+			lines := logtesting.CollectOutput(func() {
 				base.SetupLogger("../testdata")
 				base.Log().Error("collected message")
 			})
@@ -84,10 +84,33 @@ func LoggingSpec() {
 	})
 
 	Convey("using logging directly", func() {
-		lines := gloptest.CollectOutput(func() {
-			logging.Error("collected message")
+		Convey("should print when running tests", func() {
+			lines := logtesting.CollectOutput(func() {
+				logging.Error("collected message")
+			})
+			So(strings.Join(lines, "\n"), ShouldContainSubstring, "collected message")
 		})
-		So(strings.Join(lines, "\n"), ShouldContainSubstring, "collected message")
+	})
+
+	Convey("redirection should be resettable", func() {
+		buf1 := &bytes.Buffer{}
+
+		oldErrorLogger := logging.ErrorLogger()
+		resetRedirect := logging.Redirect(buf1)
+
+		oldErrorLogger.Error("oldErrorLogger message 1")
+		logging.Error("logging.Error() message 1")
+
+		resetRedirect()
+
+		oldErrorLogger.Error("oldErrorLogger message 2")
+		logging.Error("logging.Error() message 2")
+
+		// Only 'logging.Error() message 1' should have been sent to buf1
+		bufferedOut := buf1.String()
+		So(bufferedOut, ShouldContainSubstring, "logging.Error() message 1")
+		So(bufferedOut, ShouldNotContainSubstring, "message 2")
+		So(bufferedOut, ShouldNotContainSubstring, "oldErrorLogger")
 	})
 }
 
