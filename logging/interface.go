@@ -157,12 +157,12 @@ func doLog(lvl slog.Level, msg string, args ...interface{}) {
 	infoLogger.Handler().Handle(context.Background(), r)
 }
 
-// Equivalent to glog.ErrorLogger().Error
+// Equivalent to glog.InfoLogger().Error
 func (*baseLogger) Error(msg string, args ...interface{}) {
 	doLog(slog.LevelError, msg, args...)
 }
 
-// Equivalent to glog.WarningLogger().Warn
+// Equivalent to glog.InfoLogger().Warn
 func (*baseLogger) Warn(msg string, args ...interface{}) {
 	doLog(slog.LevelWarn, msg, args...)
 }
@@ -170,6 +170,11 @@ func (*baseLogger) Warn(msg string, args ...interface{}) {
 // Equivalent to glog.InfoLogger().Info
 func (*baseLogger) Info(msg string, args ...interface{}) {
 	doLog(slog.LevelInfo, msg, args...)
+}
+
+// Equivalent to glog.InfoLogger().Debug
+func (*baseLogger) Debug(msg string, args ...interface{}) {
+	doLog(slog.LevelDebug, msg, args...)
 }
 
 // Equivalent to glog.InfoLogger().Trace
