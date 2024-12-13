@@ -26,17 +26,23 @@ type hauntsLogger struct {
 }
 
 func (log *hauntsLogger) Printf(msg string, args ...interface{}) {
-	log.Logger.Log(context.Background(), slog.LevelInfo, msg, args...)
+	doLog(log, slog.LevelInfo, msg, args...)
 }
 
 var _ Logger = (*hauntsLogger)(nil)
 
+var traceLogger *hauntsLogger
 var debugLogger *hauntsLogger
 var infoLogger *hauntsLogger
 var warnLogger *hauntsLogger
 var errorLogger *hauntsLogger
 
 func init() {
+	traceLogger = &hauntsLogger{
+		Logger: glog.New(&glog.Opts{
+			Level: glog.LevelTrace,
+		}),
+	}
 	debugLogger = &hauntsLogger{
 		Logger: glog.New(&glog.Opts{
 			Level: slog.LevelDebug,
@@ -63,6 +69,10 @@ func DefaultLogger() Logger {
 	return InfoLogger()
 }
 
+func TraceLogger() Logger {
+	return traceLogger
+}
+
 func DebugLogger() Logger {
 	return debugLogger
 }
@@ -80,28 +90,45 @@ func ErrorLogger() Logger {
 }
 
 func Log(msg string, args ...interface{}) {
-	DefaultLogger().Info(msg, args...)
+	doLog(infoLogger, slog.LevelInfo, msg, args...)
+}
+
+func Trace(msg string, args ...interface{}) {
+	doLog(traceLogger, glog.LevelTrace, msg, args...)
 }
 
 func Debug(msg string, args ...interface{}) {
-	DebugLogger().Debug(msg, args...)
+	doLog(debugLogger, slog.LevelDebug, msg, args...)
 }
 
 func Info(msg string, args ...interface{}) {
-	InfoLogger().Info(msg, args...)
+	doLog(infoLogger, slog.LevelInfo, msg, args...)
 }
 
 func Warn(msg string, args ...interface{}) {
-	WarnLogger().Info(msg, args...)
+	doLog(warnLogger, slog.LevelWarn, msg, args...)
 }
 
 func Error(msg string, args ...interface{}) {
-	ErrorLogger().Error(msg, args...)
+	doLog(errorLogger, slog.LevelError, msg, args...)
+}
+
+// Like 'Redirect' but also return a duped reader for watching log output.
+func RedirectAndSpy(out io.Writer) (func(), *bytes.Buffer) {
+	buffer := &bytes.Buffer{}
+	cleanup := Redirect(io.MultiWriter(out, buffer))
+
+	return cleanup, buffer
 }
 
 // Call this to redirect all logging output to the given io.Writer. A cleanup
 // function that undoes the redirect is returned.
 func Redirect(newOut io.Writer) func() {
+	oldTraceLogger := traceLogger
+	traceLogger = &hauntsLogger{
+		Logger: glog.WithRedirect(oldTraceLogger, newOut),
+	}
+
 	oldDebugLogger := debugLogger
 	debugLogger = &hauntsLogger{
 		Logger: glog.WithRedirect(oldDebugLogger, newOut),
@@ -122,6 +149,7 @@ func Redirect(newOut io.Writer) func() {
 		Logger: glog.WithRedirect(oldErrorLogger, newOut),
 	}
 	return func() {
+		traceLogger = oldTraceLogger
 		debugLogger = oldDebugLogger
 		infoLogger = oldInfoLogger
 		warnLogger = oldWarnLogger
@@ -140,52 +168,40 @@ type baseLogger struct {
 	gloggy
 }
 
-func doLog(lvl slog.Level, msg string, args ...interface{}) {
-	if !infoLogger.Enabled(context.Background(), lvl) {
+func doLog(logger *hauntsLogger, lvl slog.Level, msg string, args ...interface{}) {
+	if !logger.Enabled(context.Background(), lvl) {
 		return
 	}
 	var pcs [1]uintptr
-	runtime.Callers(3, pcs[:]) // skip [Callers, <helper>, doLog]
+	runtime.Callers(3, pcs[:]) // skip [Callers, doLog, <helper>]
 	r := slog.NewRecord(time.Now(), lvl, msg, pcs[0])
 	r.Add(args...)
-	infoLogger.Handler().Handle(context.Background(), r)
+	logger.Handler().Handle(context.Background(), r)
 }
 
 // Equivalent to glog.InfoLogger().Error
 func (*baseLogger) Error(msg string, args ...interface{}) {
-	doLog(slog.LevelError, msg, args...)
+	doLog(infoLogger, slog.LevelError, msg, args...)
 }
 
 // Equivalent to glog.InfoLogger().Warn
 func (*baseLogger) Warn(msg string, args ...interface{}) {
-	doLog(slog.LevelWarn, msg, args...)
+	doLog(infoLogger, slog.LevelWarn, msg, args...)
 }
 
 // Equivalent to glog.InfoLogger().Info
 func (*baseLogger) Info(msg string, args ...interface{}) {
-	doLog(slog.LevelInfo, msg, args...)
+	doLog(infoLogger, slog.LevelInfo, msg, args...)
 }
 
 // Equivalent to glog.InfoLogger().Debug
 func (*baseLogger) Debug(msg string, args ...interface{}) {
-	doLog(slog.LevelDebug, msg, args...)
+	doLog(infoLogger, slog.LevelDebug, msg, args...)
 }
 
 // Equivalent to glog.InfoLogger().Trace
 func (*baseLogger) Trace(msg string, args ...interface{}) {
-	doLog(glog.LevelTrace, msg, args...)
-}
-
-func RedirectOutput(logSink io.Writer) *bytes.Buffer {
-	logConsole := &bytes.Buffer{}
-	logWriter := io.MultiWriter(logConsole, logSink)
-
-	debugLogger.Logger = glog.WithRedirect(debugLogger.Logger, logWriter)
-	infoLogger.Logger = glog.WithRedirect(infoLogger.Logger, logWriter)
-	warnLogger.Logger = glog.WithRedirect(warnLogger.Logger, logWriter)
-	errorLogger.Logger = glog.WithRedirect(errorLogger.Logger, logWriter)
-
-	return logConsole
+	doLog(infoLogger, glog.LevelTrace, msg, args...)
 }
 
 // Tells the 'Default Logger' to changes its verbosity.

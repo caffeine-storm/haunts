@@ -66,13 +66,76 @@ func ShouldReference(actual interface{}, expected ...interface{}) string {
 }
 
 func LoggingSpec() {
+	Convey("Redircet should work", func() {
+		logOutput := &bytes.Buffer{}
+		undo := logging.Redirect(logOutput)
+
+		logging.Info("info should emit")
+		logging.Trace("trace should emit")
+
+		undo()
+
+		logging.Info("won't be captured")
+
+		So(logOutput.String(), ShouldNotContainSubstring, "won't be captured")
+		So(logOutput.String(), ShouldContainSubstring, "info should emit")
+		So(logOutput.String(), ShouldContainSubstring, "trace should emit")
+
+		Convey("cleanup should stop redirecting", func() {
+			logging.Info("should not get captured anymore")
+			So(logOutput.String(), ShouldNotContainSubstring, "should not get captured anymore")
+		})
+	})
+	Convey("RedircetOutput should work", func() {
+		alsoLogOutput := &bytes.Buffer{}
+		undo, logOutput := logging.RedirectAndSpy(alsoLogOutput)
+		defer undo()
+
+		logging.Trace("should be emitted")
+
+		So(len(logOutput.String()), ShouldBeGreaterThan, 0)
+		So(len(alsoLogOutput.String()), ShouldBeGreaterThan, 0)
+		So(logOutput.String(), ShouldContainSubstring, "should be emitted")
+		So(alsoLogOutput.String(), ShouldContainSubstring, "should be emitted")
+	})
+	Convey("calling log helpers should emit records", func() {
+		undo, logOutput := logging.RedirectAndSpy(io.Discard)
+		defer undo()
+		Convey("for tracing", func() {
+			logging.Trace("should be emitted")
+			So(logOutput.String(), ShouldNotContainSubstring, "ellided")
+			So(logOutput.String(), ShouldContainSubstring, "should be emitted")
+		})
+		Convey("for infoing", func() {
+			logging.Info("should be emitted")
+			So(len(logOutput.String()), ShouldBeGreaterThan, 0)
+			So(logOutput.String(), ShouldContainSubstring, "should be emitted")
+		})
+		Convey("for erroring", func() {
+			logging.Error("should be emitted")
+			So(len(logOutput.String()), ShouldBeGreaterThan, 0)
+			So(logOutput.String(), ShouldContainSubstring, "should be emitted")
+		})
+	})
+
 	Convey("using logging through the base package", func() {
 		Convey("the source attribute in a log message", func() {
-			logOutput := logging.RedirectOutput(io.Discard)
-			base.DeprecatedLog().Info("a test message")
-
+			undo, logOutput := logging.RedirectAndSpy(io.Discard)
+			defer undo()
 			Convey("should reference the client code", func() {
-				So(logOutput, ShouldReference, "logging/logging_test.go")
+				Convey("when calling 'Info'", func() {
+					base.DeprecatedLog().Info("a test message")
+					So(logOutput, ShouldReference, "logging/logging_test.go")
+				})
+				Convey("when calling 'Trace'", func() {
+					logging.SetLogLevel(glog.LevelTrace)
+					base.DeprecatedLog().Trace("a test message")
+					So(logOutput, ShouldReference, "logging/logging_test.go")
+				})
+				Convey("when calling 'Printf'", func() {
+					base.DeprecatedLog().Printf("a test message")
+					So(logOutput, ShouldReference, "logging/logging_test.go")
+				})
 			})
 		})
 		Convey("should print when running tests", func() {
@@ -85,11 +148,20 @@ func LoggingSpec() {
 
 	Convey("using logging directly", func() {
 		Convey("the source attribute in a log message", func() {
-			logOutput := logging.RedirectOutput(io.Discard)
-			logging.Info("a test message")
-
 			Convey("should reference the client code", func() {
-				So(logOutput, ShouldReference, "logging/logging_test.go")
+				undo, logOutput := logging.RedirectAndSpy(io.Discard)
+				defer undo()
+				Convey("when using package-level helper funcs", func() {
+					logging.Info("a test message")
+
+					So(logOutput, ShouldReference, "logging/logging_test.go")
+				})
+				Convey("when using a reference to a Logger instance", func() {
+					lgr := logging.InfoLogger()
+					lgr.Info("another test message")
+
+					So(logOutput, ShouldReference, "logging/logging_test.go")
+				})
 			})
 		})
 
@@ -101,7 +173,6 @@ func LoggingSpec() {
 		})
 
 		Convey("tracing should be supported during tests", func() {
-			logging.SetLogLevel(glog.LevelTrace)
 			lines := logtesting.CollectOutput(func() {
 				logging.Trace("a trace message")
 			})

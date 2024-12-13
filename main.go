@@ -94,6 +94,7 @@ func openLogFile(datadir string) (*os.File, error) {
 }
 
 func init() {
+	// TODO(tmckee): uhhh... shouldn't we _not_ call this here?
 	runtime.LockOSThread()
 	sys = system.Make(gos.GetSystemInterface())
 
@@ -109,7 +110,11 @@ func init() {
 		logFile = os.Stdout
 		err = nil
 	}
-	logReader = logging.RedirectOutput(logFile)
+
+	// Ignore the returned 'undo' func; it's only really for testing. We don't
+	// want to _not_ log to the log file.
+	_, logReader = logging.RedirectAndSpy(logFile)
+
 	base.DeprecatedLog().Printf("Setting datadir: %s", datadir)
 	err = house.SetDatadir(datadir)
 	if err != nil {

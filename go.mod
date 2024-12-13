@@ -17,7 +17,6 @@ require (
 	github.com/runningwild/glop v0.0.0-20130331194942-bcbcf4982510
 	github.com/smartystreets/goconvey v1.8.1
 	github.com/stretchr/testify v1.9.0
-	golang.org/x/exp v0.0.0-20241210194714-1829a127f884
 )
 
 require (
@@ -33,7 +32,7 @@ require (
 
 replace code.google.com/p/freetype-go => github.com/golang/freetype v0.0.0-20120725121025-28cc5fbc5d0b
 
-replace github.com/runningwild/glop => github.com/caffeine-storm/glop v0.0.0-20241212192713-21ce708de9c8
+replace github.com/runningwild/glop => github.com/caffeine-storm/glop v0.0.0-20241213185807-564356d8aedf
 
 replace github.com/go-gl-legacy/gl => github.com/caffeine-storm/gl v0.0.0-20240909160157-d1b38f2deb16
 
