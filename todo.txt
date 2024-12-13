@@ -8,6 +8,9 @@
 	  stop rendering properly once `haunts` hits the hitch
 		- this could indicate that something in WSL is crashing (maybe XWayland?)
 
+- skipping tests right now in house/ while things aren't correct; need to
+  enable and green them intead.
+
 - bug#1: The 'edit mode' screen doesn't render its text correctly
 
 - verify licenses
