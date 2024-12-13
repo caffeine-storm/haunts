@@ -109,7 +109,7 @@ func init() {
 		logFile = os.Stdout
 		err = nil
 	}
-	logReader = logging.SetupLogger(logFile)
+	logReader = logging.RedirectOutput(logFile)
 	base.DeprecatedLog().Printf("Setting datadir: %s", datadir)
 	err = house.SetDatadir(datadir)
 	if err != nil {

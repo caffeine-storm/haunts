@@ -176,7 +176,7 @@ func (*baseLogger) Trace(msg string, args ...interface{}) {
 	doLog(glog.LevelTrace, msg, args...)
 }
 
-func SetupLogger(logSink io.Writer) *bytes.Buffer {
+func RedirectOutput(logSink io.Writer) *bytes.Buffer {
 	logConsole := &bytes.Buffer{}
 	logWriter := io.MultiWriter(logConsole, logSink)
 

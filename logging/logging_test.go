@@ -67,7 +67,7 @@ func ShouldReference(actual interface{}, expected ...interface{}) string {
 func LoggingSpec() {
 	Convey("using logging through the base package", func() {
 		Convey("the source attribute in a log message", func() {
-			logOutput := logging.SetupLogger(io.Discard)
+			logOutput := logging.RedirectOutput(io.Discard)
 			base.DeprecatedLog().Info("a test message")
 
 			Convey("should reference the client code", func() {
