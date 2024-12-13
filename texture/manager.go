@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/mathgl"
 	"github.com/MobRulesGames/memory"
 	"github.com/go-gl-legacy/gl"
@@ -82,7 +83,7 @@ func setupTextureList() {
 
 // Renders the texture on a quad at the texture's natural size.
 func (d *Data) RenderNatural(x, y int) {
-	base.DeprecatedLog().Trace("render natural", "x", x, "y", y, "dx", d.dx, "dy", d.dy)
+	logging.TraceLogger().Trace("render natural", "x", x, "y", y, "dx", d.dx, "dy", d.dy)
 	d.Render(float64(x), float64(y), float64(d.dx), float64(d.dy))
 }
 
@@ -104,7 +105,7 @@ func Render(x, y, dx, dy float64) {
 
 func (d *Data) Render(x, y, dx, dy float64) {
 	if textureList == 0 {
-		base.DeprecatedWarn().Warn("Data.Render called before textureList setup!")
+		logging.Warn("Data.Render called before textureList setup!")
 		return
 	}
 	d.Bind()
@@ -113,7 +114,7 @@ func (d *Data) Render(x, y, dx, dy float64) {
 
 func (d *Data) RenderAdvanced(x, y, dx, dy, rot float64, flip bool) {
 	if textureList == 0 {
-		base.DeprecatedWarn().Warn("Data.RenderAdvanced called before textureList setup!")
+		logging.Warn("Data.RenderAdvanced called before textureList setup!")
 		return
 	}
 	d.Bind()
@@ -383,7 +384,6 @@ func handleLoadRequest(req loadRequest) {
 }
 
 func (m *Manager) LoadFromPath(path string) (*Data, error) {
-	fmt.Println("LoadFromPath", "path", path)
 	setupTextureList()
 	m.mutex.RLock()
 	var data *Data
@@ -420,7 +420,7 @@ func (m *Manager) LoadFromPath(path string) (*Data, error) {
 }
 
 func (m *Manager) BlockUntilLoaded(ctx context.Context, paths ...string) error {
-	base.DeprecatedLog().Trace("block until loaded called", "paths", paths)
+	logging.TraceLogger().Trace("block until loaded called", "paths", paths)
 	pathset := make(map[string]bool)
 	for _, path := range paths {
 		pathset[path] = true
@@ -447,7 +447,7 @@ func (m *Manager) BlockUntilLoaded(ctx context.Context, paths ...string) error {
 		for path := range pathset {
 			waitChan, found := m.loadWaiters[path]
 			if !found {
-				base.DeprecatedLog().Trace("waiter add", "path", path)
+				logging.TraceLogger().Trace("waiter add", "path", path)
 				waitChan = make(chan bool, 1)
 				m.loadWaiters[path] = waitChan
 			}
@@ -473,7 +473,7 @@ func (m *Manager) BlockUntilLoaded(ctx context.Context, paths ...string) error {
 		}
 	}
 
-	base.DeprecatedLog().Trace("done waiting", "times-waited", len(waitChannels))
+	logging.TraceLogger().Trace("done waiting", "times-waited", len(waitChannels))
 
 	if !loadOk {
 		return fmt.Errorf("texture load failure")
@@ -483,7 +483,7 @@ func (m *Manager) BlockUntilLoaded(ctx context.Context, paths ...string) error {
 }
 
 func (m *Manager) signalLoad(path string, success bool) {
-	base.DeprecatedLog().Trace("signalling load", "path", path, "success", success)
+	logging.TraceLogger().Trace("signalling load", "path", path, "success", success)
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 
