@@ -115,7 +115,7 @@ func init() {
 	// want to _not_ log to the log file.
 	_, logReader = logging.RedirectAndSpy(logFile)
 
-	base.DeprecatedLog().Printf("Setting datadir: %s", datadir)
+	logging.Info("Setting datadir: %s", datadir)
 	err = house.SetDatadir(datadir)
 	if err != nil {
 		panic(err.Error())
@@ -176,7 +176,7 @@ func gameMode(ui *gui.Gui) {
 }
 
 func editMode(ui *gui.Gui) {
-	base.DeprecatedLog().Trace("editMode entered")
+	logging.TraceLogger().Trace("editMode entered")
 	draggingAndZooming(ui, editor.GetViewer())
 	if ui.FocusWidget() == nil {
 		// Did a keypress come in for "change the type of editor"?
@@ -195,7 +195,7 @@ func editMode(ui *gui.Gui) {
 		if key_map["save"].FramePressCount() > 0 && chooser == nil {
 			path, err := editor.Save()
 			if err != nil {
-				base.DeprecatedWarn().Printf("Failed to save: %v", err.Error())
+				logging.Warn("Failed to save", "error", err.Error)
 			}
 			if path != "" && err == nil {
 				base.SetStoreVal(fmt.Sprintf("last %s path", editor_name), base.TryRelative(datadir, path))
@@ -210,7 +210,7 @@ func editMode(ui *gui.Gui) {
 				anchor = nil
 				err = editor.Load(path)
 				if err != nil {
-					base.DeprecatedWarn().Printf("Failed to load: %v", err.Error())
+					logging.Warn("Failed to load", "error", err.Error)
 				} else {
 					base.SetStoreVal(fmt.Sprintf("last %s path", editor_name), base.TryRelative(datadir, path))
 				}
@@ -243,7 +243,7 @@ func editMode(ui *gui.Gui) {
 		}
 	}
 
-	base.DeprecatedLog().Trace("editMode returning")
+	logging.TraceLogger().Trace("editMode returning")
 }
 
 type lowerLeftTable struct {
@@ -267,12 +267,11 @@ func (c *callsSys) Dims() gui.Dims {
 }
 
 func onHauntsPanic(recoveredValue interface{}) {
-	data := debug.Stack()
-	base.DeprecatedError().Printf("PANIC: %v\n", recoveredValue)
-	base.DeprecatedError().Printf("PANIC: %s\n", string(data))
+	stack := debug.Stack()
+	logging.Error("PANIC", "val", recoveredValue, "stack", stack)
 	logFile.Close()
 	fmt.Printf("PANIC: %v\n", recoveredValue)
-	fmt.Printf("PANIC: %s\n", string(data))
+	fmt.Printf("PANIC: %s\n", string(stack))
 }
 
 // TODO(tmckee): optimize things till we can reliably hit 144
@@ -281,7 +280,7 @@ const TargetFPS = 30
 func WatchForSlowJobs() *render.JobTimingListener {
 	return &render.JobTimingListener{
 		OnNotify: func(info *render.JobTimingInfo, attribution string) {
-			base.DeprecatedWarn().Warn("slow render job", "runtime", info.RunTime, "queuetime", info.QueueTime, "location", attribution)
+			logging.Warn("slow render job", "runtime", info.RunTime, "queuetime", info.QueueTime, "location", attribution)
 		},
 		Threshold: time.Second / TargetFPS,
 	}
@@ -296,7 +295,7 @@ func main() {
 	}()
 
 	// If 'Version' isn't found, try running 'go -C tools/ run version.go'
-	base.DeprecatedLog().Printf("Version %s", Version())
+	logging.Info("version", "version", Version())
 	sys.Startup()
 	sound.Init()
 	queue := render.MakeQueueWithTiming(func(queueState render.RenderQueueState) {
@@ -350,7 +349,7 @@ func main() {
 
 	currentMode := applicationStartupMode
 	game.Restart = func() {
-		base.DeprecatedLog().Printf("Restarting...")
+		logging.Info("Restarting...")
 		ui.RemoveChild(game_box)
 		game_box = &lowerLeftTable{gui.MakeAnchorBox(gui.Dims{1024, 768})}
 		err = game.InsertStartMenu(game_box)
@@ -358,7 +357,7 @@ func main() {
 			panic(err)
 		}
 		ui.AddChild(game_box)
-		base.DeprecatedLog().Printf("Restarted")
+		logging.Info("Restarted")
 	}
 	game.Restart()
 
@@ -379,7 +378,7 @@ func main() {
 	var horizon int64
 	var tickCount int64
 	for {
-		glopdebug.LogAndClearGlErrors(base.DeprecatedLog())
+		glopdebug.LogAndClearGlErrors(logging.WarnLogger())
 
 		if key_map["quit"].FramePressCount() != 0 {
 			break
@@ -398,7 +397,7 @@ func main() {
 		})
 		queue.Purge()
 		renderEnd := time.Now()
-		base.DeprecatedLog().Debug("renderwork", "duration", renderEnd.Sub(renderStart), "tick", tickCount)
+		logging.Debug("renderwork", "duration", renderEnd.Sub(renderStart), "tick", tickCount)
 
 		for _, child := range game_box.GetChildren() {
 			if gp, ok := child.(*game.GamePanel); ok {
@@ -413,13 +412,13 @@ func main() {
 					if err == nil {
 						err = pprof.StartCPUProfile(profile_output)
 						if err != nil {
-							base.DeprecatedLog().Printf("Unable to start CPU profile: %v\n", err)
+							logging.Error("cpu profile", "fail to start", err)
 							profile_output.Close()
 							profile_output = nil
 						}
-						base.DeprecatedLog().Printf("profout: %v\n", profile_output)
+						logging.Info("profile", "outputfile", profile_output)
 					} else {
-						base.DeprecatedLog().Printf("Unable to start CPU profile: %v\n", err)
+						logging.Error("cpu profile", "file creation failed", err)
 					}
 				} else {
 					pprof.StopCPUProfile()
@@ -435,15 +434,15 @@ func main() {
 					err = pprof.WriteHeapProfile(out)
 					out.Close()
 					if err != nil {
-						base.DeprecatedWarn().Printf("Unable to write heap profile: %v", err)
+						logging.Error("heap profile", "unable to write", err)
 					}
 				} else {
-					base.DeprecatedWarn().Printf("Unable to create heap profile: %v", err)
+					logging.Error("heap profile", "unable to create file", err)
 				}
 			}
 
 			if key_map["manual mem"].FramePressCount() > 0 {
-				base.DeprecatedLog().Printf(memory.TotalAllocations())
+				logging.Info("memory", "allocations", memory.TotalAllocations())
 			}
 
 			if key_map["screenshot"].FramePressCount() > 0 {
@@ -461,7 +460,6 @@ func main() {
 			}
 
 			if key_map["game mode"].FramePressCount() > 0 {
-				base.DeprecatedLog().Info("Game mode change", "currentMode", currentMode)
 				switch currentMode {
 				case applicationStartupMode:
 					fallthrough
@@ -476,7 +474,6 @@ func main() {
 				default:
 					panic(fmt.Errorf("bad applicationMode: %+v", currentMode))
 				}
-				base.DeprecatedLog().Info("Game mode changed", "currentMode", currentMode)
 
 				if key_map["row up"].FramePressCount() > 0 {
 					house.Num_rows += 25
@@ -499,8 +496,6 @@ func main() {
 				if key_map["foo"].FramePressCount() > 0 {
 					house.Foo = (house.Foo + 1) % 2
 				}
-
-				base.DeprecatedLog().Info("done switching modes")
 			}
 
 			switch currentMode {
