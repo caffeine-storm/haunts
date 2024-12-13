@@ -10,6 +10,7 @@ import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/logging/logtesting"
+	"github.com/runningwild/glop/glog"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -83,11 +84,31 @@ func LoggingSpec() {
 	})
 
 	Convey("using logging directly", func() {
+		Convey("the source attribute in a log message", func() {
+			logOutput := logging.RedirectOutput(io.Discard)
+			logging.Info("a test message")
+
+			Convey("should reference the client code", func() {
+				So(logOutput, ShouldReference, "logging/logging_test.go")
+			})
+		})
+
 		Convey("should print when running tests", func() {
 			lines := logtesting.CollectOutput(func() {
 				logging.Error("collected message")
 			})
 			So(strings.Join(lines, "\n"), ShouldContainSubstring, "collected message")
+		})
+
+		Convey("tracing should be supported during tests", func() {
+			logging.SetLogLevel(glog.LevelTrace)
+			lines := logtesting.CollectOutput(func() {
+				logging.Trace("a trace message")
+			})
+			So(strings.Join(lines, "\n"), ShouldContainSubstring, "a trace message")
+			Convey("traced messages should be properly attributed", func() {
+				So(strings.Join(lines, "\n"), ShouldContainSubstring, "logging/logging_test.go")
+			})
 		})
 	})
 
