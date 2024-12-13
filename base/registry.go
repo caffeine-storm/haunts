@@ -17,20 +17,23 @@ import (
 //     *fooDef
 //     FooInst
 //   }
-// Such that a Foo is something for which there can be multiple instances
-// (such as a hallway, or a couch), fooDef is the data that is constant between
-// all such instances, and FooInst is the data that makes each instance unique
+// Such that a Foo is something for which there can be multiple instances (such
+// as a hallway, or a couch), fooDef is the data that is constant between all
+// such instances, and FooInst is the data that makes each instance unique
 // (location, orientation, maybe textures, etc...)
 //
 // With things in this format it is convenient to have a registry structured
 // like this:
 //   foo_registry map[string]*fooDef
 // so that a Foo can be made from a fooDef just by supplying the name of the
-// fooDef.  Given all of this the following functions are very common to all
+// fooDef. Given all of this the following functions are very common to all
 // registries:
+//
 // GetAllFooNames() - Returns all keys in the foo_registry, in sorted order
+//
 // LoadAllFoosInDir(path string) - Finds every Foo that can be loaded in the
 // specified directory and loads it into the registry.
+//
 // MakeFoo(name string) - Makes a Foo by finding the fooDef in the registry and
 // embedding it in a Foo.
 //
@@ -54,7 +57,8 @@ func RemoveRegistry(name string) {
 	delete(registry_registry, name)
 }
 
-// Registers a registry which must be a map from string to pointers to something
+// Registers a registry which must be a map from string to
+// pointer-to-something.
 func RegisterRegistry(name string, registry interface{}) {
 	if strings.Contains(name, " ") {
 		logging.Error("Registry name cannot contain spaces", "name", name)
@@ -79,7 +83,7 @@ func RegisterRegistry(name string, registry interface{}) {
 }
 
 // Registers object in the named registry which must have already been
-// registered through RegisterRegistry().  object must be a pointer of the type
+// registered through RegisterRegistry(). object must be a pointer of the type
 // appropriate for the named registry.
 func RegisterObject(registry_name string, object interface{}) {
 	reg, ok := registry_registry[registry_name]
@@ -95,9 +99,9 @@ func RegisterObject(registry_name string, object interface{}) {
 		logging.Error("Registry type mismatch", "objtype", obj_val.Elem(), "registry", registry_name, "requiredtype", reg.Type().Elem().Elem())
 	}
 
-	// At this point we know we have the right type, and since registries can only
-	// exist that store values with a field called Name of type string we don't
-	// need to check for validity, we can assume it.
+	// At this point we know we have the right type, and since registries can
+	// only exist that store values with a field called Name of type string we
+	// don't need to check for validity, we can assume it.
 	object_name := obj_val.Elem().FieldByName("Name").String()
 	cur_val := reg.MapIndex(reflect.ValueOf(object_name))
 	if cur_val.IsValid() {
@@ -106,9 +110,9 @@ func RegisterObject(registry_name string, object interface{}) {
 	reg.SetMapIndex(reflect.ValueOf(object_name), obj_val)
 }
 
-// Loads an object using the specified registry.  object should have a field
-// called Defname of type string.  This name will be used to find the def in the
-// registry.  The object should also embed a field of this type which the value
+// Loads an object using the specified registry. object should have a field
+// called Defname of type string. This name will be used to find the def in the
+// registry. The object should also embed a field of this type which the value
 // in the registry will be assigned to.
 func GetObject(registry_name string, object interface{}) {
 	reg, ok := registry_registry[registry_name]
@@ -141,7 +145,7 @@ func GetObject(registry_name string, object interface{}) {
 	field.Set(cur_val)
 }
 
-// Returns a sorted list of all names in the specified registry
+// Returns a sorted list of all names in the specified registry.
 func GetAllNamesInRegistry(registry_name string) []string {
 	reg, ok := registry_registry[registry_name]
 	if !ok {
@@ -157,7 +161,7 @@ func GetAllNamesInRegistry(registry_name string) []string {
 }
 
 // Processes an object as it is normally processed when registered through
-// RegisterAllObjectsInDir().  Does NOT register the object in any registry.
+// RegisterAllObjectsInDir(). Does NOT register the object in any registry.
 func LoadAndProcessObject(path, format string, target interface{}) error {
 	logging.Info("LoadAndProcessObject", "path", path)
 	var err error
@@ -181,18 +185,18 @@ func LoadAndProcessObject(path, format string, target interface{}) error {
 }
 
 // Recursively decends through a value's type hierarchy and applies processing
-// according to any tags that have been set on those types
+// according to any tags that have been set on those types.
 func ProcessObject(val reflect.Value, tag string) {
 	switch val.Type().Kind() {
 	case reflect.Pointer:
 		if val.IsNil() {
 			break
 		}
-		// Any object marked with a tag of the form `registry:"loadfrom-foo"` will be
-		// loaded from the specified registry ("foo", in this example) as long as a
-		// Defname field of type string was in the same struct.  If it was then the
-		// value of that field will be used as the key when loading this object from
-		// the registry.
+		// Any object marked with a tag of the form `registry:"loadfrom-foo"` will
+		// be loaded from the specified registry ("foo", in this example) as long
+		// as a Defname field of type string was in the same struct. If it was then
+		// the value of that field will be used as the key when loading this object
+		// from the registry.
 		loadfrom_tag := "loadfrom-"
 		if strings.HasPrefix(tag, loadfrom_tag) {
 			source := tag[len(loadfrom_tag):]
@@ -216,7 +220,7 @@ func ProcessObject(val reflect.Value, tag string) {
 	}
 
 	// Anything that is tagged with autoload has its Load() method called if it
-	// exists and has zero inputs and outputs
+	// exists and has zero inputs and outputs.
 	if tag == "autoload" {
 		fmt.Printf("autoload tagged!!!\n")
 		load := val.MethodByName("Load")
@@ -232,8 +236,8 @@ func ProcessObject(val reflect.Value, tag string) {
 
 // Walks recursively through the specified directory and loads all files with
 // the specified suffix and loads them into the specified registry using
-// RegisterObject().  format should either be "json" or "gob"
-// Files begining with '.' are ignored in this process
+// RegisterObject(). format should either be "json" or "gob" Files begining
+// with '.' are ignored in this process.
 func RegisterAllObjectsInDir(registry_name, dir, suffix, format string) {
 	logging.Info("Registering directory", "dir", dir)
 	reg, ok := registry_registry[registry_name]
