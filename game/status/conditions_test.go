@@ -8,7 +8,6 @@ import (
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game/status"
-	"github.com/MobRulesGames/haunts/logging"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -17,7 +16,6 @@ var datadir string
 func init() {
 	datadir, _ = filepath.Abs("../../data_test")
 	base.SetDatadir(datadir)
-	logging.SetupLogger(datadir)
 }
 
 func TestConditions(t *testing.T) {

@@ -7,7 +7,6 @@ import (
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/house"
-	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/mathgl"
@@ -45,7 +44,6 @@ func loadRoom(roomName string) *house.Room {
 
 func RoomSpecs() {
 	base.SetDatadir("../data")
-	logging.SetupLogger("../data")
 	room := GivenARoom("restest")
 
 	Convey("construction succeeds", func() {

@@ -3,12 +3,9 @@ package logging
 import (
 	"bytes"
 	"context"
-	"fmt"
 	"io"
 	"log"
 	"log/slog"
-	"os"
-	"path/filepath"
 	"runtime"
 	"time"
 
@@ -137,9 +134,6 @@ func Redirect(newOut io.Writer) func() {
 // TODO(tmckee): delegate logging from 'logger' to 'slogger' so that all logs
 // are structured/leveled conveniently.
 
-var log_reader io.Reader
-var log_out *os.File
-
 type gloggy = glog.Logger
 type baseLogger struct {
 	*log.Logger
@@ -182,38 +176,19 @@ func (*baseLogger) Trace(msg string, args ...interface{}) {
 	doLog(glog.LevelTrace, msg, args...)
 }
 
-func SetupLogger(dir string) *bytes.Buffer {
-	// If an error happens when making this directory it might already exist,
-	// all that really matters is making the log file in the directory.
-	os.Mkdir(filepath.Join(dir, "logs"), 0777)
-	var err error
-	name := "haunts.log"
-	log_out, err = os.Create(filepath.Join(dir, "logs", name))
-	if err != nil {
-		fmt.Printf("Unable to open log file: %v\nLogging to stdout...\n", err.Error())
-		log_out = os.Stdout
-	}
-	log_console := &bytes.Buffer{}
-	log_writer := io.MultiWriter(log_console, log_out)
+func SetupLogger(logSink io.Writer) *bytes.Buffer {
+	logConsole := &bytes.Buffer{}
+	logWriter := io.MultiWriter(logConsole, logSink)
 
-	// logger = log.New(log_writer, "> ", log.Ltime|log.Lshortfile)
-	debugLogger.Logger = glog.WithRedirect(debugLogger.Logger, log_writer)
-	infoLogger.Logger = glog.WithRedirect(infoLogger.Logger, log_writer)
-	warnLogger.Logger = glog.WithRedirect(warnLogger.Logger, log_writer)
-	errorLogger.Logger = glog.WithRedirect(errorLogger.Logger, log_writer)
+	debugLogger.Logger = glog.WithRedirect(debugLogger.Logger, logWriter)
+	infoLogger.Logger = glog.WithRedirect(infoLogger.Logger, logWriter)
+	warnLogger.Logger = glog.WithRedirect(warnLogger.Logger, logWriter)
+	errorLogger.Logger = glog.WithRedirect(errorLogger.Logger, logWriter)
 
-	return log_console
+	return logConsole
 }
 
 // Tells the 'Default Logger' to changes its verbosity.
 func SetLogLevel(lvl slog.Level) {
 	infoLogger.Logger = glog.Relevel(infoLogger.Logger, lvl)
-}
-
-func CloseLog() {
-	if log_out == nil {
-		return
-	}
-	log_out.WriteString("END OF LOG\n\n\n\n")
-	log_out.Close()
 }

@@ -17,7 +17,6 @@ func TestBlockUntilLoaded(t *testing.T) {
 	// TODO(tmckee): BLECH! we're doing this to call base.SetupLogger() which
 	// should not be coupled to this test.
 	base.SetDatadir("../data")
-	logging.SetupLogger("../data")
 	queue := rendertest.MakeDiscardingRenderQueue()
 	texture.Init(queue)
 	t.Run("should take a context with deadline", func(t *testing.T) {

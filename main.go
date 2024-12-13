@@ -39,6 +39,7 @@ import (
 var (
 	sys                       system.System
 	datadir                   string
+	logFile                   *os.File
 	logReader                 io.Reader
 	key_map                   base.KeyMap
 	editors                   map[string]house.Editor
@@ -73,6 +74,25 @@ func (mode applicationMode) String() string {
 	panic(fmt.Errorf("unknown applicationMode: %v", int(mode)))
 }
 
+func ensureDirectory(filePath string) error {
+	return os.MkdirAll(filepath.Dir(filePath), 0755)
+}
+
+func openLogFile(datadir string) (*os.File, error) {
+	logFileName := filepath.Join(datadir, "logs", "haunts.log")
+
+	err := ensureDirectory(logFileName)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't create dir for %q: %w", logFileName, err)
+	}
+
+	f, err := os.Create(logFileName)
+	if err != nil {
+		return nil, fmt.Errorf("couldn't Os.Create %q: %w", logFileName, err)
+	}
+	return f, nil
+}
+
 func init() {
 	runtime.LockOSThread()
 	sys = system.Make(gos.GetSystemInterface())
@@ -82,9 +102,16 @@ func init() {
 	rand.Seed(100)
 	datadir = "data-runtime"
 	base.SetDatadir(datadir)
-	logReader = logging.SetupLogger(datadir)
+	var err error
+	logFile, err = openLogFile(base.GetDataDir())
+	if err != nil {
+		fmt.Printf("warning: couldn't open logfile in %q\nlogging to stdout instead\n", base.GetDataDir())
+		logFile = os.Stdout
+		err = nil
+	}
+	logReader = logging.SetupLogger(logFile)
 	base.DeprecatedLog().Printf("Setting datadir: %s", datadir)
-	err := house.SetDatadir(datadir)
+	err = house.SetDatadir(datadir)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -238,7 +265,7 @@ func onHauntsPanic(recoveredValue interface{}) {
 	data := debug.Stack()
 	base.DeprecatedError().Printf("PANIC: %v\n", recoveredValue)
 	base.DeprecatedError().Printf("PANIC: %s\n", string(data))
-	logging.CloseLog()
+	logFile.Close()
 	fmt.Printf("PANIC: %v\n", recoveredValue)
 	fmt.Printf("PANIC: %s\n", string(data))
 }

@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/MobRulesGames/haunts/base"
-	"github.com/MobRulesGames/haunts/logging"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -35,7 +34,6 @@ func TestRegistry(t *testing.T) {
 	// TODO(tmckee): we should either inject the logging dependency into
 	// registry things or make logging initialization transparent.
 	base.SetDatadir("../testdata")
-	logging.SetupLogger("../testdata")
 
 	t.Run("GetObject-CanAssignPayload", func(t *testing.T) {
 		aPayload := &TestPayload{
