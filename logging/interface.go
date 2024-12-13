@@ -139,7 +139,6 @@ func Redirect(newOut io.Writer) func() {
 
 var log_reader io.Reader
 var log_out *os.File
-var log_console *bytes.Buffer
 
 type gloggy = glog.Logger
 type baseLogger struct {
@@ -189,7 +188,7 @@ func SetupLogger(dir string) *bytes.Buffer {
 		fmt.Printf("Unable to open log file: %v\nLogging to stdout...\n", err.Error())
 		log_out = os.Stdout
 	}
-	log_console = &bytes.Buffer{}
+	log_console := &bytes.Buffer{}
 	log_writer := io.MultiWriter(log_console, log_out)
 
 	// logger = log.New(log_writer, "> ", log.Ltime|log.Lshortfile)
