@@ -2,7 +2,7 @@ package house_test
 
 import (
 	"context"
-	"fmt"
+	"log/slog"
 	"path"
 	"testing"
 	"time"
@@ -21,11 +21,11 @@ import (
 // TODO(tmckee): rename 'WallTexture' to 'Decal' or something.
 func TestWallTextureSpecs(t *testing.T) {
 	base.SetDatadir("../data")
-	logging.SetupLogger("../data")
 	Convey("Wall Textures", t, func() {
 		SkipConvey("can be made", func() {
 			rendertest.WithGlForTest(200, 200, func(sys system.System, queue render.RenderQueueInterface) {
-				fmt.Printf("the test is running!\n")
+				logging.SetLogLevel(slog.LevelDebug)
+				logging.Debug("the test is running!")
 				datadir := base.GetDataDir()
 				registry.LoadAllRegistries()
 				base.InitShaders(queue)
@@ -51,14 +51,14 @@ func TestWallTextureSpecs(t *testing.T) {
 					doneRendering <- true
 				})
 
-				fmt.Printf("going to wait for texture\n")
+				logging.Debug("going to wait for texture")
 				<-doneLoadingTexture
 
 				So(err, ShouldBeNil)
 
-				fmt.Printf("going to wait for render\n")
+				logging.Debug("going to wait for render")
 				<-doneRendering
-				fmt.Printf("done waiting\n")
+				logging.Debug("done waiting\n")
 
 				So(queue, rendertest.ShouldLookLikeFile, "cobweb-wall-texture")
 			})
