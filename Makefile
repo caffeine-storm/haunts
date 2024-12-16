@@ -9,6 +9,8 @@ else
 testrunargs:=
 endif
 
+XVFB_RUN:=xvfb-run -a
+
 SRC_DATADIR:=data
 RUNTIME_DATADIR:=data-runtime
 
@@ -67,17 +69,17 @@ lint:
 	go run github.com/mgechev/revive@v1.5.1 ./...
 
 test:
-	xvfb-run go test ${testrunargs}                     -tags nosound ./...
+	${XVFB_RUN} go test ${testrunargs}                     -tags nosound ./...
 
 test-nocache:
-	xvfb-run go test ${testrunargs} -count=1            -tags nosound ./...
+	${XVFB_RUN} go test ${testrunargs} -count=1            -tags nosound ./...
 
 test-dlv: singlepackage=${pkg}
 test-dlv:
 	dlv test --build-flags="-tags nosound" ${singlepackage} -- ${testrunargs}
 
 devtest: dev.go.mod dev.go.sum
-	xvfb-run go test ${testrunargs} -modfile dev.go.mod -tags nosound ./...
+	${XVFB_RUN} go test ${testrunargs} -modfile dev.go.mod -tags nosound ./...
 
 update-glop:
 	go -C tools/update-glop/ run cmd/main.go
