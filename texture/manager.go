@@ -56,34 +56,31 @@ func (d *Data) Dy() int {
 }
 
 var textureList uint
-var textureListSync sync.Once
 
-func setupTextureList() {
-	textureListSync.Do(func() {
-		manager.renderQueue.Queue(func(render.RenderQueueState) {
-			textureList = gl.GenLists(1)
-			gl.NewList(textureList, gl.COMPILE)
-			gl.Begin(gl.QUADS)
-			gl.TexCoord2d(0, 0)
-			gl.Vertex2i(0, 0)
+func setupTextureList(queue render.RenderQueueInterface) {
+	queue.Queue(func(render.RenderQueueState) {
+		textureList = gl.GenLists(1)
+		gl.NewList(textureList, gl.COMPILE)
+		gl.Begin(gl.QUADS)
+		gl.TexCoord2d(0, 0)
+		gl.Vertex2i(0, 0)
 
-			gl.TexCoord2d(0, -1)
-			gl.Vertex2i(0, 1)
+		gl.TexCoord2d(0, -1)
+		gl.Vertex2i(0, 1)
 
-			gl.TexCoord2d(1, -1)
-			gl.Vertex2i(1, 1)
+		gl.TexCoord2d(1, -1)
+		gl.Vertex2i(1, 1)
 
-			gl.TexCoord2d(1, 0)
-			gl.Vertex2i(1, 0)
-			gl.End()
-			gl.EndList()
-		})
+		gl.TexCoord2d(1, 0)
+		gl.Vertex2i(1, 0)
+		gl.End()
+		gl.EndList()
 	})
 }
 
 // Renders the texture on a quad at the texture's natural size.
 func (d *Data) RenderNatural(x, y int) {
-	logging.TraceLogger().Trace("render natural", "x", x, "y", y, "dx", d.dx, "dy", d.dy)
+	logging.Trace("render natural", "x", x, "y", y, "dx", d.dx, "dy", d.dy)
 	d.Render(float64(x), float64(y), float64(d.dx), float64(d.dy))
 }
 
@@ -288,6 +285,8 @@ func Init(renderQueue render.RenderQueueInterface) {
 	for i := 0; i < 4; i++ {
 		go loadTextureRoutine(pipe)
 	}
+
+	setupTextureList(manager.renderQueue)
 }
 
 // This routine waits for a filename and a data object, then loads the texture
@@ -384,7 +383,6 @@ func handleLoadRequest(req loadRequest) {
 }
 
 func (m *Manager) LoadFromPath(path string) (*Data, error) {
-	setupTextureList()
 	m.mutex.RLock()
 	var data *Data
 	var ok bool
@@ -420,7 +418,7 @@ func (m *Manager) LoadFromPath(path string) (*Data, error) {
 }
 
 func (m *Manager) BlockUntilLoaded(ctx context.Context, paths ...string) error {
-	logging.TraceLogger().Trace("block until loaded called", "paths", paths)
+	logging.Trace("block until loaded called", "paths", paths)
 	pathset := make(map[string]bool)
 	for _, path := range paths {
 		pathset[path] = true
@@ -447,7 +445,7 @@ func (m *Manager) BlockUntilLoaded(ctx context.Context, paths ...string) error {
 		for path := range pathset {
 			waitChan, found := m.loadWaiters[path]
 			if !found {
-				logging.TraceLogger().Trace("waiter add", "path", path)
+				logging.Trace("waiter add", "path", path)
 				waitChan = make(chan bool, 1)
 				m.loadWaiters[path] = waitChan
 			}
@@ -473,7 +471,7 @@ func (m *Manager) BlockUntilLoaded(ctx context.Context, paths ...string) error {
 		}
 	}
 
-	logging.TraceLogger().Trace("done waiting", "times-waited", len(waitChannels))
+	logging.Trace("done waiting", "times-waited", len(waitChannels))
 
 	if !loadOk {
 		return fmt.Errorf("texture load failure")
@@ -483,7 +481,7 @@ func (m *Manager) BlockUntilLoaded(ctx context.Context, paths ...string) error {
 }
 
 func (m *Manager) signalLoad(path string, success bool) {
-	logging.TraceLogger().Trace("signalling load", "path", path, "success", success)
+	logging.Trace("signalling load", "path", path, "success", success)
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 

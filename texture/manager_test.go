@@ -2,6 +2,7 @@ package texture_test
 
 import (
 	"context"
+	"fmt"
 	"path"
 	"testing"
 	"time"
@@ -10,16 +11,16 @@ import (
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/runningwild/glop/glog"
+	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
+	"github.com/runningwild/glop/system"
 )
 
 func TestBlockUntilLoaded(t *testing.T) {
-	// TODO(tmckee): BLECH! we're doing this to call base.SetupLogger() which
-	// should not be coupled to this test.
 	base.SetDatadir("../data")
-	queue := rendertest.MakeDiscardingRenderQueue()
-	texture.Init(queue)
 	t.Run("should take a context with deadline", func(t *testing.T) {
+		queue := rendertest.MakeDiscardingRenderQueue()
+		texture.Init(queue)
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Millisecond)
 		defer cancel()
 		err := texture.BlockUntilLoaded(ctx, "not-going-to-load")
@@ -29,19 +30,26 @@ func TestBlockUntilLoaded(t *testing.T) {
 	})
 
 	t.Run("can load a texture", func(t *testing.T) {
-		t.Skip()
-		logging.SetLogLevel(glog.LevelTrace)
-		base.DeprecatedLog().Trace("a test trace message")
-		texpath := path.Join(base.GetDataDir(), "textures", "cobweb.png")
-		_, err := texture.LoadFromPath(texpath)
-		if err != nil {
-			panic(err)
-		}
-		ctx, cancel := context.WithTimeout(context.Background(), 2500*time.Millisecond)
-		defer cancel()
-		err = texture.BlockUntilLoaded(ctx, texpath)
-		if err != nil {
-			t.Fatalf("cobweb.png should have loaded by now")
-		}
+		rendertest.WithGlForTest(50, 50, func(sys system.System, queue render.RenderQueueInterface) {
+			texture.Init(queue)
+			logging.SetLogLevel(glog.LevelTrace)
+			queue.Purge()
+
+			texpath := path.Join(base.GetDataDir(), "textures", "cobweb.png")
+			_, err := texture.LoadFromPath(texpath)
+			if err != nil {
+				panic(err)
+			}
+
+			start := time.Now()
+			ctx, cancel := context.WithTimeout(context.Background(), 250*time.Millisecond)
+			defer cancel()
+			err = texture.BlockUntilLoaded(ctx, texpath)
+			if err != nil {
+				t.Fatal(fmt.Errorf("cobweb.png should have loaded by now: %w", err))
+			}
+			delta := time.Now().Sub(start)
+			t.Logf("timings: elapsed: %dms, budget: %dms, util: %.2f%%\n", delta.Milliseconds(), 250, float64(delta.Milliseconds())/float64(250))
+		})
 	})
 }
