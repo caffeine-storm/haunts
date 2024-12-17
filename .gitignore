@@ -20,6 +20,7 @@ devhaunts
 __debug_bin*
 testdata/*/*.rej.*
 testdata/report.tar.gz
+dev.go.sum
+perftest
 perf.data
 perf.data.old
-dev.go.sum

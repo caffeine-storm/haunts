@@ -57,6 +57,11 @@ GEN_version.go: tools/genversion/version.go .git/HEAD
 clean:
 	rm -f ${TEST_REPORT_TAR}
 	rm -f devhaunts haunts
+	find . \( \
+		-name 'perf.data' \
+		-or -name 'perf.data.old' \
+		-or -name 'perftest' \
+	\) -exec rm "{}" +
 
 fmt:
 	go fmt ./...
@@ -78,6 +83,15 @@ test-dlv: singlepackage=${pkg}
 test-dlv:
 	dlv test --build-flags="-tags nosound" ${singlepackage} -- ${testrunargs}
 
+.PRECIOUS: %/perftest
+%/perftest: %
+	go test -tags nosound -o ./$@ -c ./$^
+
+.PRECIOUS: %/perf.data
+%/perf.data: %/perftest
+	cd $(dir $^) && \
+	perf record -g -o perf.data ./perftest
+
 devtest: dev.go.mod dev.go.sum
 	${XVFB_RUN} go test ${testrunargs} -modfile dev.go.mod -tags nosound ./...
 
@@ -88,8 +102,12 @@ update-glop:
 update-appveyor-image:
 	go run tools/update-appveyor-image/main.go ./appveyor.yml
 
-spawn-pprof:
-	pprof -http :8080 ./perf.data
+# TODO(tmckee): at least on WSL, getting errors that "Only 38% of samples had
+# all locations mapped to a module, expected at least 95%". Presumably, this is
+# to do with dynamic objects that have no source attribution. We ought to get a
+# graphics driver stack that has symbols/hasn't been stripped.
+spawn-pprof-%: %/perf.data
+	pprof -http :8080 ./$^
 
 # Deliberately signal failure from this recipe so that CI notices failing tests
 # are red.
@@ -115,5 +133,5 @@ ${TEST_REPORT_TAR}:
 .PHONY: devhaunts
 .PHONY: clean
 .PHONY: fmt lint
-.PHONY: test devtest spawn-pprof
+.PHONY: test devtest
 .PHONY: update-glop update-appveyor-image
