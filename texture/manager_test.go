@@ -8,9 +8,7 @@ import (
 	"time"
 
 	"github.com/MobRulesGames/haunts/base"
-	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/runningwild/glop/glog"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
 	"github.com/runningwild/glop/system"
@@ -32,7 +30,6 @@ func TestBlockUntilLoaded(t *testing.T) {
 	t.Run("can load a texture", func(t *testing.T) {
 		rendertest.WithGlForTest(50, 50, func(sys system.System, queue render.RenderQueueInterface) {
 			texture.Init(queue)
-			logging.SetLogLevel(glog.LevelTrace)
 			queue.Purge()
 
 			texpath := path.Join(base.GetDataDir(), "textures", "cobweb.png")
