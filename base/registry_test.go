@@ -31,9 +31,7 @@ type invalidPayloadField struct {
 }
 
 func TestRegistry(t *testing.T) {
-	// TODO(tmckee): we should either inject the logging dependency into
-	// registry things or make logging initialization transparent.
-	base.SetDatadir("../testdata")
+	base.SetDatadir("testdata")
 
 	t.Run("GetObject-CanAssignPayload", func(t *testing.T) {
 		aPayload := &TestPayload{
