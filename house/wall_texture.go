@@ -1,11 +1,12 @@
 package house
 
 import (
+	"unsafe"
+
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/mathgl"
 	"github.com/go-gl-legacy/gl"
-	"unsafe"
 )
 
 func MakeWallTexture(name string) *WallTexture {
@@ -83,9 +84,9 @@ func (wt *WallTexture) Color() (r, g, b, a byte) {
 }
 
 func (wt *WallTexture) Render() {
-	dx2 := float32(wt.Texture.Data().Dx()) / 100 / 2
-	dy2 := float32(wt.Texture.Data().Dy()) / 100 / 2
-	wt.Texture.Data().RenderAdvanced(float64(wt.X-dx2), float64(wt.Y-dy2), float64(2*dx2), float64(2*dy2), float64(wt.Rot), wt.Flip)
+	data := wt.Texture.Data()
+	dx, dy := data.Dx(), data.Dy()
+	wt.Texture.Data().RenderAdvanced(float64(wt.X), float64(wt.Y), float64(dx), float64(dy), float64(wt.Rot), wt.Flip)
 }
 
 func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, gl_ids *wallTextureGlIds) {

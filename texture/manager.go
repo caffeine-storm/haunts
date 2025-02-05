@@ -17,6 +17,7 @@ import (
 	"github.com/MobRulesGames/memory"
 	"github.com/go-gl-legacy/gl"
 	"github.com/go-gl-legacy/glu"
+	"github.com/runningwild/glop/imgmanip"
 	"github.com/runningwild/glop/render"
 )
 
@@ -54,6 +55,9 @@ func (d *Data) Dx() int {
 func (d *Data) Dy() int {
 	return d.dy
 }
+func (d *Data) GetGlTexture() gl.Texture {
+	return d.texture
+}
 
 var textureList uint
 
@@ -62,17 +66,23 @@ func setupTextureList(queue render.RenderQueueInterface) {
 		textureList = gl.GenLists(1)
 		gl.NewList(textureList, gl.COMPILE)
 		gl.Begin(gl.QUADS)
+
+		// bottom-left
 		gl.TexCoord2d(0, 0)
 		gl.Vertex2i(0, 0)
 
-		gl.TexCoord2d(0, -1)
+		// top-left
+		gl.TexCoord2d(0, 1)
 		gl.Vertex2i(0, 1)
 
-		gl.TexCoord2d(1, -1)
+		// top-right
+		gl.TexCoord2d(1, 1)
 		gl.Vertex2i(1, 1)
 
+		// bottom-right
 		gl.TexCoord2d(1, 0)
 		gl.Vertex2i(1, 0)
+
 		gl.End()
 		gl.EndList()
 	})
@@ -128,14 +138,14 @@ func RenderAdvanced(x, y, dx, dy, rot float64, flip bool) {
 	op.RotationZ(float32(rot))
 	run.Multiply(&op)
 	if flip {
-		op.Translation(float32(-dx/2), float32(-dy/2), 0)
-		run.Multiply(&op)
-		op.Scaling(float32(dx), float32(dy), 1)
-		run.Multiply(&op)
-	} else {
 		op.Translation(float32(dx/2), float32(-dy/2), 0)
 		run.Multiply(&op)
 		op.Scaling(float32(-dx), float32(dy), 1)
+		run.Multiply(&op)
+	} else {
+		op.Translation(float32(-dx/2), float32(-dy/2), 0)
+		run.Multiply(&op)
+		op.Scaling(float32(dx), float32(dy), 1)
 		run.Multiply(&op)
 	}
 	gl.MatrixMode(gl.PROJECTION)
@@ -330,18 +340,26 @@ func handleLoadRequest(req loadRequest) {
 			break
 		}
 	}
-	var canvas draw.Image
+	// Use an inverted image helper thing b/c OpenGL reads rows bottom-up but
+	// golang stores rows top-down.
+	var canvas *imgmanip.InvertedCanvas
 	var pix []byte
 	if gray {
-		ga := NewGrayAlpha(im.Bounds())
-		pix = ga.Pix
-		canvas = ga
+		pix = memory.GetBlock(2 * req.data.dx * req.data.dy)
+		ga := imgmanip.NewGrayAlpha(im.Bounds())
+		ga.Pix = pix
+		canvas = imgmanip.NewInvertedCanvas(ga)
 	} else {
 		// TODO(tmckee): reading from 'req.data' ought to synchronize with what's
 		// going on on the render thread... we ought to pass dx/dy explicity by
 		// value in a loadRequest instead.
 		pix = memory.GetBlock(4 * req.data.dx * req.data.dy)
-		canvas = &image.RGBA{pix, 4 * req.data.dx, im.Bounds()}
+		rgbaImage := &image.RGBA{
+			Pix:    pix,
+			Stride: 4 * req.data.dx,
+			Rect:   im.Bounds(),
+		}
+		canvas = imgmanip.NewInvertedCanvas(rgbaImage)
 	}
 	draw.Draw(canvas, im.Bounds(), im, image.Point{}, draw.Src)
 	load_mutex.Lock()
