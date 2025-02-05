@@ -19,9 +19,8 @@
 - Do we need to worry about building in devel mode?
 	- build-tag: // +build !release
 
-- bug#3: Trying to open the console only paints a pink layer on top of everything
-	- Note that the 'error texture' from glop's sprite manager is a
-	  semi-transparent pink rectangle.
+- bug#3: The console doesn't look right
+
 - bug#4: Can get locked up by repeatedly opening/closing the same door.
 	- needs repro
 - bug#5: Can have a door not connected to a room.
