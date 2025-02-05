@@ -71,7 +71,7 @@ func LoggingSpec() {
 		undo := logging.Redirect(logOutput)
 
 		logging.Info("info should emit")
-		logging.Trace("trace should emit")
+		logging.Trace("trace should not emit")
 
 		undo()
 
@@ -79,7 +79,7 @@ func LoggingSpec() {
 
 		So(logOutput.String(), ShouldNotContainSubstring, "won't be captured")
 		So(logOutput.String(), ShouldContainSubstring, "info should emit")
-		So(logOutput.String(), ShouldContainSubstring, "trace should emit")
+		So(logOutput.String(), ShouldNotContainSubstring, "trace should not emit")
 
 		Convey("cleanup should stop redirecting", func() {
 			logging.Info("should not get captured anymore")
@@ -91,7 +91,7 @@ func LoggingSpec() {
 		undo, logOutput := logging.RedirectAndSpy(alsoLogOutput)
 		defer undo()
 
-		logging.Trace("should be emitted")
+		logging.Info("should be emitted")
 
 		So(len(logOutput.String()), ShouldBeGreaterThan, 0)
 		So(len(alsoLogOutput.String()), ShouldBeGreaterThan, 0)
@@ -101,9 +101,13 @@ func LoggingSpec() {
 	Convey("calling log helpers should emit records", func() {
 		undo, logOutput := logging.RedirectAndSpy(io.Discard)
 		defer undo()
-		Convey("for tracing", func() {
-			logging.Trace("should be emitted")
+		Convey("for tracing if log-level is trace", func() {
+			logging.Trace("should not be emitted -- to verbose")
+			cleanup := logging.SetLoggingLevel(glog.LevelTrace)
+			logging.Trace("should be emitted -- we've releveled")
+			cleanup()
 			So(logOutput.String(), ShouldNotContainSubstring, "ellided")
+			So(logOutput.String(), ShouldNotContainSubstring, "should not be emitted")
 			So(logOutput.String(), ShouldContainSubstring, "should be emitted")
 		})
 		Convey("for infoing", func() {
@@ -128,7 +132,7 @@ func LoggingSpec() {
 					So(logOutput, ShouldReference, "logging/logging_test.go")
 				})
 				Convey("when calling 'Trace'", func() {
-					logging.SetLogLevel(glog.LevelTrace)
+					logging.SetDefaultLoggerLevel(glog.LevelTrace)
 					base.DeprecatedLog().Trace("a test message")
 					So(logOutput, ShouldReference, "logging/logging_test.go")
 				})
@@ -174,7 +178,10 @@ func LoggingSpec() {
 
 		Convey("tracing should be supported during tests", func() {
 			lines := logtesting.CollectOutput(func() {
+				logging.Trace("an ellided message")
+				cleanup := logging.SetLoggingLevel(glog.LevelTrace)
 				logging.Trace("a trace message")
+				cleanup()
 			})
 			So(strings.Join(lines, "\n"), ShouldContainSubstring, "a trace message")
 			Convey("traced messages should be properly attributed", func() {

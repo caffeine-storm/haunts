@@ -40,12 +40,12 @@ var errorLogger *hauntsLogger
 func init() {
 	traceLogger = &hauntsLogger{
 		Logger: glog.New(&glog.Opts{
-			Level: glog.LevelTrace,
+			Level: slog.LevelInfo,
 		}),
 	}
 	debugLogger = &hauntsLogger{
 		Logger: glog.New(&glog.Opts{
-			Level: slog.LevelDebug,
+			Level: slog.LevelInfo,
 		}),
 	}
 	infoLogger = &hauntsLogger{
@@ -205,6 +205,30 @@ func (*baseLogger) Trace(msg string, args ...interface{}) {
 }
 
 // Tells the 'Default Logger' to changes its verbosity.
-func SetLogLevel(lvl slog.Level) {
+func SetDefaultLoggerLevel(lvl slog.Level) {
 	infoLogger.Logger = glog.Relevel(infoLogger.Logger, lvl)
+}
+
+// Tells loggers to include messages at the given level. Returns an 'undo'
+// closure.
+func SetLoggingLevel(lvl slog.Level) func() {
+	oldTraceLogger := traceLogger.Logger
+	oldDebugLogger := debugLogger.Logger
+	oldInfoLogger := infoLogger.Logger
+	oldWarnLogger := warnLogger.Logger
+	oldErrorLogger := errorLogger.Logger
+
+	traceLogger.Logger = glog.Relevel(traceLogger, lvl)
+	debugLogger.Logger = glog.Relevel(debugLogger, lvl)
+	infoLogger.Logger = glog.Relevel(infoLogger, lvl)
+	warnLogger.Logger = glog.Relevel(warnLogger, lvl)
+	errorLogger.Logger = glog.Relevel(errorLogger, lvl)
+
+	return func() {
+		traceLogger.Logger = oldTraceLogger
+		debugLogger.Logger = oldDebugLogger
+		infoLogger.Logger = oldInfoLogger
+		warnLogger.Logger = oldWarnLogger
+		errorLogger.Logger = oldErrorLogger
+	}
 }

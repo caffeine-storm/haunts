@@ -12,7 +12,6 @@ import (
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/go-gl-legacy/gl"
-	"github.com/runningwild/glop/glog"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
 	"github.com/runningwild/glop/system"
@@ -29,7 +28,6 @@ func TestWallTextureSpecs(t *testing.T) {
 	rendertest.WithGlForTest(266, 246, func(sys system.System, queue render.RenderQueueInterface) {
 		Convey("Wall Textures", t, func() {
 			Convey("can be made", func() {
-				logging.SetLogLevel(glog.LevelTrace)
 				datadir := base.GetDataDir()
 				registry.LoadAllRegistries()
 				base.InitShaders(queue)
