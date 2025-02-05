@@ -76,6 +76,9 @@ lint:
 test:
 	${XVFB_RUN} go test ${testrunargs}                     -tags nosound ./...
 
+test-verbose:
+	${XVFB_RUN} go test ${testrunargs} -v                  -tags nosound ./...
+
 test-nocache:
 	${XVFB_RUN} go test ${testrunargs} -count=1            -tags nosound ./...
 
