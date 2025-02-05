@@ -117,7 +117,10 @@ appveyor-test-report-and-fail: test-report
 
 test-report: ${TEST_REPORT_TAR}
 
-${TEST_REPORT_TAR}:
+testdata:
+	mkdir testdata
+
+${TEST_REPORT_TAR}: testdata
 	tar \
 		--auto-compress \
 		--create \
