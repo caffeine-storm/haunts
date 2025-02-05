@@ -34,7 +34,7 @@ func TestWallTextureSpecs(t *testing.T) {
 				registry.LoadAllRegistries()
 				base.InitShaders(queue)
 				texture.Init(queue)
-				wt := house.MakeWallTexture("Cobweb")
+				wt := house.LoadWallTexture("Cobweb")
 				So(wt, ShouldNotBeNil)
 
 				Convey("texture loads successfully", func() {

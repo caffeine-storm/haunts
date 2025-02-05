@@ -30,7 +30,7 @@ func MakeWallPanel(room *Room, viewer *roomViewer) *WallPanel {
 	for i := range fnames {
 		name := fnames[i]
 		tex_table.AddChild(gui.MakeButton("standard_18", name, 300, 1, 1, 1, 1, func(t int64) {
-			wt := MakeWallTexture(name)
+			wt := LoadWallTexture(name)
 			if wt == nil {
 				return
 			}
