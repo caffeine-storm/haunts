@@ -533,11 +533,13 @@ func (f *Floor) RoomFurnSpawnAtPos(x, y int) (room *Room, furn *Furniture, spawn
 }
 
 func (f *Floor) render(region gui.Region, focusx, focusy, angle, zoom float32, drawables []Drawable, los_tex *LosTexture, floor_drawers []RenderOnFloorer) {
+	// TODO(tmckee): extract this "re-order rooms as RectObjects" stanza as a
+	// helper.
 	var ros []RectObject
 	algorithm.Map(f.Rooms, &ros, func(r *Room) RectObject { return r })
 	// Do not include temporary objects in the ordering, since they will likely
 	// overlap with other objects and make it difficult to determine the proper
-	// ordering.  Just draw the temporary ones last.
+	// ordering. Just draw the temporary ones last.
 	num_temp := 0
 	for i := range ros {
 		if ros[i].(*Room).temporary {
@@ -550,11 +552,12 @@ func (f *Floor) render(region gui.Region, focusx, focusy, angle, zoom float32, d
 	for i := range placed {
 		ros = append(ros, placed[i])
 	}
+
 	alpha_map := make(map[*Room]byte)
 	los_map := make(map[*Room]byte)
 
 	// First pass over the rooms - this will determine at what alpha the rooms
-	// should be draw.  We will use this data later to determine the alpha for
+	// should be drawn. We will use this data later to determine the alpha for
 	// the doors of adjacent rooms.
 	for i := len(ros) - 1; i >= 0; i-- {
 		room := ros[i].(*Room)

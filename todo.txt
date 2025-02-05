@@ -1,3 +1,5 @@
+- room.far_left.wall_alpha == room.far_right.wall_alpha == 0 ... which will make rendering on the wall transparent T_T
+
 - bug#6: The 'edit mode' screen can really lag out; afterwards, switching back to the startup screen seems to break
 	- we need to profile and optimize it
 	- blockage in drivers? __driDriverGetExtensions_d3d12 seems like the culprit

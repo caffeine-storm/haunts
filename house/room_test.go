@@ -2,11 +2,13 @@ package house_test
 
 import (
 	"fmt"
+	"log/slog"
 	"strings"
 	"testing"
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/house"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/mathgl"
@@ -45,12 +47,17 @@ func loadRoom(roomName string) *house.Room {
 func RoomSpecs() {
 	base.SetDatadir("../data")
 	room := GivenARoom("restest")
+	logging.SetLoggingLevel(slog.LevelDebug)
 
 	Convey("construction succeeds", func() {
 		So(room, ShouldNotBeNil)
 	})
 
-	/*
+	rendertest.WithGlForTest(200, 200, func(sys system.System, queue render.RenderQueueInterface) {
+		registry.LoadAllRegistries()
+		base.InitShaders(queue)
+		texture.Init(queue)
+
 		Convey("loading from registry", func() {
 			restestRoom := loadRoom("restest.room")
 
@@ -58,13 +65,8 @@ func RoomSpecs() {
 			So(restestRoom.Defname, ShouldEqual, "restest")
 			So(restestRoom.Doors, ShouldHaveLength, 0)
 		})
-	*/
 
-	SkipConvey("drawing restest", func() {
-		rendertest.WithGlForTest(200, 200, func(sys system.System, queue render.RenderQueueInterface) {
-			registry.LoadAllRegistries()
-			base.InitShaders(queue)
-			texture.Init(queue)
+		SkipConvey("drawing restest", func() {
 			restestRoom := loadRoom("restest.room")
 
 			id := mathgl.Mat4{}
@@ -79,6 +81,10 @@ func RoomSpecs() {
 				restestRoom.Render(id, id, id, nozoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
 			})
 			queue.Purge()
+
+			fmt.Printf("room: %+v\n", restestRoom)
+			fmt.Printf("roomDef: %+v\n", restestRoom.RoomDef)
+
 			So(queue, rendertest.ShouldLookLikeFile, "restest")
 		})
 	})

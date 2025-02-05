@@ -442,14 +442,21 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 
 		debug.LogAndClearGlErrors(logging.InfoLogger())
 
+		// TODO(tmckee): ??? 'vert' is always the zero value here and we only seem
+		// to read from it?
 		gl.ClientActiveTexture(gl.TEXTURE0)
 		gl.Buffer(room.vbuffer).Bind(gl.ARRAY_BUFFER)
+		// TODO(tmckee): ??? wait, wut? this says "look at a byte offset that is
+		// <some-stack-address> away from the start of the buffer object that
+		// room.vbuffer names". ... that's bad, right!?
 		gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.x)
 		gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.u)
 		gl.ClientActiveTexture(gl.TEXTURE1)
 		if los_tex != nil {
 			los_tex.Bind()
 		}
+		// TODO(tmckee): why do we rebind here? nothing has touch gl.ARRAY_BUFFER
+		// since the last time web bound room.vbuffer...
 		gl.Buffer(room.vbuffer).Bind(gl.ARRAY_BUFFER)
 		gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.los_u)
 		// Now draw the walls
