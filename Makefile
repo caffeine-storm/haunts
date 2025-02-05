@@ -1,6 +1,6 @@
 SHELL:=/bin/bash
 
-TEST_REPORT_TAR:=testdata/report.tar.gz
+TEST_REPORT_TAR:=test-report.tar.gz
 PERF?=perf
 
 ifneq "${testrun}" ""
@@ -120,16 +120,12 @@ appveyor-test-report-and-fail: test-report
 
 test-report: ${TEST_REPORT_TAR}
 
-testdata:
-	mkdir testdata
-
-${TEST_REPORT_TAR}: testdata
+${TEST_REPORT_TAR}:
 	tar \
 		--auto-compress \
 		--create \
 		--file $@ \
-		--directory testdata/ \
-		--files-from <(cd testdata; find  . -name '*.rej.*' | while read fname ; do \
+		--files-from <(find  . -name '*.rej.*' | while read fname ; do \
 				echo $$fname ; \
 				echo $${fname/.rej} ; \
 			done \
