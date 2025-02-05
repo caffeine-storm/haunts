@@ -163,7 +163,7 @@ func GetAllNamesInRegistry(registry_name string) []string {
 // Processes an object as it is normally processed when registered through
 // RegisterAllObjectsInDir(). Does NOT register the object in any registry.
 func LoadAndProcessObject(path, format string, target interface{}) error {
-	logging.Info("LoadAndProcessObject", "path", path)
+	logging.Trace("LoadAndProcessObject", "path", path)
 	var err error
 	switch format {
 	case "json":
@@ -199,7 +199,7 @@ func ProcessObject(val reflect.Value, tag string) {
 		loadfrom_tag := "loadfrom-"
 		if strings.HasPrefix(tag, loadfrom_tag) {
 			source := tag[len(loadfrom_tag):]
-			logging.Debug("ProcessObject calling GetObject", "registry", source)
+			logging.Trace("ProcessObject calling GetObject", "registry", source)
 			GetObject(source, val.Interface())
 		}
 		ProcessObject(val.Elem(), tag)
@@ -234,7 +234,7 @@ func ProcessObject(val reflect.Value, tag string) {
 // RegisterObject(). format should either be "json" or "gob" Files begining
 // with '.' are ignored in this process.
 func RegisterAllObjectsInDir(registry_name, dir, suffix, format string) {
-	logging.Info("Registering directory", "dir", dir)
+	logging.Trace("Registering directory", "dir", dir)
 	reg, ok := registry_registry[registry_name]
 	if !ok {
 		logging.Error("Tried to load objects into an unknown registry", "registry-name", registry_name)
@@ -263,5 +263,5 @@ func RegisterAllObjectsInDir(registry_name, dir, suffix, format string) {
 		}
 		return nil
 	})
-	logging.Info("Completed directory", "dir", dir)
+	logging.Trace("Completed directory", "dir", dir)
 }
