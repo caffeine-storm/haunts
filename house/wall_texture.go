@@ -123,10 +123,10 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, gl_ids *wallTextureGlIds) 
 
 	// Floor
 	verts := []mathgl.Vec2{
-		{-tdx / 2, -tdy / 2},
-		{-tdx / 2, tdy / 2},
-		{tdx / 2, tdy / 2},
-		{tdx / 2, -tdy / 2},
+		{X: -tdx / 2, Y: -tdy / 2},
+		{X: -tdx / 2, Y: tdy / 2},
+		{X: tdx / 2, Y: tdy / 2},
+		{X: tdx / 2, Y: -tdy / 2},
 	}
 	var m, run mathgl.Mat3
 	run.Identity()
@@ -142,10 +142,10 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, gl_ids *wallTextureGlIds) 
 		verts[i].Transform(&run)
 	}
 	p := mathgl.Poly(verts)
-	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{0, 0}, B: mathgl.Vec2{0, frdy}})
-	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{0, frdy}, B: mathgl.Vec2{frdx, frdy}})
-	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{frdx, frdy}, B: mathgl.Vec2{frdx, 0}})
-	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{frdx, 0}, B: mathgl.Vec2{0, 0}})
+	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{X: 0, Y: 0}, B: mathgl.Vec2{X: 0, Y: frdy}})
+	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{X: 0, Y: frdy}, B: mathgl.Vec2{X: frdx, Y: frdy}})
+	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{X: frdx, Y: frdy}, B: mathgl.Vec2{X: frdx, Y: 0}})
+	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{X: frdx, Y: 0}, B: mathgl.Vec2{X: 0, Y: 0}})
 	if len(p) >= 3 {
 		// floor indices
 		var is []uint16
@@ -163,7 +163,7 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, gl_ids *wallTextureGlIds) 
 
 		run.Inverse()
 		for i := range p {
-			v := mathgl.Vec2{p[i].X, p[i].Y}
+			v := mathgl.Vec2{X: p[i].X, Y: p[i].Y}
 			v.Transform(&run)
 			vs = append(vs, roomVertex{
 				x:     p[i].X,
@@ -178,10 +178,10 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, gl_ids *wallTextureGlIds) 
 
 	// Left Wall
 	verts = []mathgl.Vec2{
-		{-tdx / 2, -tdy / 2},
-		{-tdx / 2, tdy / 2},
-		{tdx / 2, tdy / 2},
-		{tdx / 2, -tdy / 2},
+		{X: -tdx / 2, Y: -tdy / 2},
+		{X: -tdx / 2, Y: tdy / 2},
+		{X: tdx / 2, Y: tdy / 2},
+		{X: tdx / 2, Y: -tdy / 2},
 	}
 	run.Identity()
 	m.Translation(wtx, wty)
@@ -196,9 +196,9 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, gl_ids *wallTextureGlIds) 
 		verts[i].Transform(&run)
 	}
 	p = mathgl.Poly(verts)
-	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{0, 0}, B: mathgl.Vec2{0, frdy}})
-	p.Clip(&mathgl.Seg2{B: mathgl.Vec2{0, frdy}, A: mathgl.Vec2{frdx, frdy}})
-	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{frdx, frdy}, B: mathgl.Vec2{frdx, 0}})
+	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{X: 0, Y: 0}, B: mathgl.Vec2{X: 0, Y: frdy}})
+	p.Clip(&mathgl.Seg2{B: mathgl.Vec2{X: 0, Y: frdy}, A: mathgl.Vec2{X: frdx, Y: frdy}})
+	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{X: frdx, Y: frdy}, B: mathgl.Vec2{X: frdx, Y: 0}})
 	if len(p) >= 3 {
 		// floor indices
 		var is []uint16
@@ -214,7 +214,7 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, gl_ids *wallTextureGlIds) 
 
 		run.Inverse()
 		for i := range p {
-			v := mathgl.Vec2{p[i].X, p[i].Y}
+			v := mathgl.Vec2{X: p[i].X, Y: p[i].Y}
 			v.Transform(&run)
 			vs = append(vs, roomVertex{
 				x:     p[i].X,
@@ -230,10 +230,10 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, gl_ids *wallTextureGlIds) 
 
 	// Right Wall
 	verts = []mathgl.Vec2{
-		{-tdx / 2, -tdy / 2},
-		{-tdx / 2, tdy / 2},
-		{tdx / 2, tdy / 2},
-		{tdx / 2, -tdy / 2},
+		{X: -tdx / 2, Y: -tdy / 2},
+		{X: -tdx / 2, Y: tdy / 2},
+		{X: tdx / 2, Y: tdy / 2},
+		{X: tdx / 2, Y: -tdy / 2},
 	}
 	run.Identity()
 	m.Translation(wtx, wty)
@@ -248,9 +248,9 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, gl_ids *wallTextureGlIds) 
 		verts[i].Transform(&run)
 	}
 	p = mathgl.Poly(verts)
-	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{0, frdy}, B: mathgl.Vec2{frdx, frdy}})
-	p.Clip(&mathgl.Seg2{B: mathgl.Vec2{frdx, frdy}, A: mathgl.Vec2{frdx, 0}})
-	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{frdx, 0}, B: mathgl.Vec2{0, 0}})
+	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{X: 0, Y: frdy}, B: mathgl.Vec2{X: frdx, Y: frdy}})
+	p.Clip(&mathgl.Seg2{B: mathgl.Vec2{X: frdx, Y: frdy}, A: mathgl.Vec2{X: frdx, Y: 0}})
+	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{X: frdx, Y: 0}, B: mathgl.Vec2{X: 0, Y: 0}})
 	if len(p) >= 3 {
 		// floor indices
 		var is []uint16
@@ -266,7 +266,7 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, gl_ids *wallTextureGlIds) 
 
 		run.Inverse()
 		for i := range p {
-			v := mathgl.Vec2{p[i].X, p[i].Y}
+			v := mathgl.Vec2{X: p[i].X, Y: p[i].Y}
 			v.Transform(&run)
 			vs = append(vs, roomVertex{
 				x:     frdx,
