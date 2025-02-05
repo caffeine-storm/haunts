@@ -19,7 +19,7 @@ lib/linux/libglop.so
 devhaunts
 __debug_bin*
 testdata/*/*.rej.*
-testdata/report.tar.gz
+test-report.tar.gz
 dev.go.sum
 perftest
 perf.data
