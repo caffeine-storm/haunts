@@ -53,7 +53,7 @@ type Room struct {
 		wall_tex_dx, wall_tex_dy int
 	}
 
-	wall_texture_gl_map    map[*WallTexture]wallTextureGlIds
+	wall_texture_gl_map    map[*WallTexture]wallTextureGlIDs
 	wall_texture_state_map map[*WallTexture]wallTextureState
 }
 

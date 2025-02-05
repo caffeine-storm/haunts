@@ -29,15 +29,15 @@ func (wt *WallTexture) Load() {
 	base.GetObject("wall_textures", wt)
 }
 
-type wallTextureGlIds struct {
-	vbuffer uint32
+type wallTextureGlIDs struct {
+	vBuffer uint32
 
-	left_buffer  uint32
-	left_count   gl.GLsizei
-	right_buffer uint32
-	right_count  gl.GLsizei
-	floor_buffer uint32
-	floor_count  gl.GLsizei
+	leftBuffer  uint32
+	leftCount   gl.GLsizei
+	rightBuffer uint32
+	rightCount  gl.GLsizei
+	floorBuffer uint32
+	floorCount  gl.GLsizei
 }
 
 type wallTextureState struct {
@@ -89,16 +89,16 @@ func (wt *WallTexture) Render() {
 	wt.Texture.Data().RenderAdvanced(float64(wt.X), float64(wt.Y), float64(dx), float64(dy), float64(wt.Rot), wt.Flip)
 }
 
-func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, gl_ids *wallTextureGlIds) {
-	if gl_ids.vbuffer != 0 {
-		gl.Buffer(gl_ids.vbuffer).Delete()
-		gl.Buffer(gl_ids.left_buffer).Delete()
-		gl.Buffer(gl_ids.right_buffer).Delete()
-		gl.Buffer(gl_ids.floor_buffer).Delete()
-		gl_ids.vbuffer = 0
-		gl_ids.left_buffer = 0
-		gl_ids.right_buffer = 0
-		gl_ids.floor_buffer = 0
+func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, gl_ids *wallTextureGlIDs) {
+	if gl_ids.vBuffer != 0 {
+		gl.Buffer(gl_ids.vBuffer).Delete()
+		gl.Buffer(gl_ids.leftBuffer).Delete()
+		gl.Buffer(gl_ids.rightBuffer).Delete()
+		gl.Buffer(gl_ids.floorBuffer).Delete()
+		gl_ids.vBuffer = 0
+		gl_ids.leftBuffer = 0
+		gl_ids.rightBuffer = 0
+		gl_ids.floorBuffer = 0
 	}
 
 	// All vertices for both walls and the floor will go here and get sent to
@@ -156,10 +156,10 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, gl_ids *wallTextureGlIds) 
 		}
 		// TODO(tmckee): don't store uint32 and cast-to-buffer; just store a
 		// gl.Buffer
-		gl_ids.floor_buffer = uint32(gl.GenBuffer())
-		gl.Buffer(gl_ids.floor_buffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
+		gl_ids.floorBuffer = uint32(gl.GenBuffer())
+		gl.Buffer(gl_ids.floorBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
 		gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, (int(unsafe.Sizeof(is[0])) * len(is)), is, gl.STATIC_DRAW)
-		gl_ids.floor_count = gl.GLsizei(len(is))
+		gl_ids.floorCount = gl.GLsizei(len(is))
 
 		run.Inverse()
 		for i := range p {
@@ -207,10 +207,10 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, gl_ids *wallTextureGlIds) 
 			is = append(is, uint16(len(vs)+i))
 			is = append(is, uint16(len(vs)+i+1))
 		}
-		gl_ids.left_buffer = uint32(gl.GenBuffer())
-		gl.Buffer(gl_ids.left_buffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
+		gl_ids.leftBuffer = uint32(gl.GenBuffer())
+		gl.Buffer(gl_ids.leftBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
 		gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
-		gl_ids.left_count = gl.GLsizei(len(is))
+		gl_ids.leftCount = gl.GLsizei(len(is))
 
 		run.Inverse()
 		for i := range p {
@@ -259,10 +259,10 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, gl_ids *wallTextureGlIds) 
 			is = append(is, uint16(len(vs)+i))
 			is = append(is, uint16(len(vs)+i+1))
 		}
-		gl_ids.right_buffer = uint32(gl.GenBuffer())
-		gl.Buffer(gl_ids.right_buffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
+		gl_ids.rightBuffer = uint32(gl.GenBuffer())
+		gl.Buffer(gl_ids.rightBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
 		gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
-		gl_ids.right_count = gl.GLsizei(len(is))
+		gl_ids.rightCount = gl.GLsizei(len(is))
 
 		run.Inverse()
 		for i := range p {
@@ -281,8 +281,8 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, gl_ids *wallTextureGlIds) 
 	}
 
 	if len(vs) > 0 {
-		gl_ids.vbuffer = uint32(gl.GenBuffer())
-		gl.Buffer(gl_ids.vbuffer).Bind(gl.ARRAY_BUFFER)
+		gl_ids.vBuffer = uint32(gl.GenBuffer())
+		gl.Buffer(gl_ids.vBuffer).Bind(gl.ARRAY_BUFFER)
 		size := int(unsafe.Sizeof(roomVertex{}))
 		gl.BufferData(gl.ARRAY_BUFFER, size*len(vs), vs, gl.STATIC_DRAW)
 	}

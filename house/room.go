@@ -267,7 +267,7 @@ func (room *Room) RenderWalls(floor *mathgl.Mat4, base_alpha byte) {
 	for _, wt := range room.WallTextures {
 
 		if room.wall_texture_gl_map == nil {
-			room.wall_texture_gl_map = make(map[*WallTexture]wallTextureGlIds)
+			room.wall_texture_gl_map = make(map[*WallTexture]wallTextureGlIDs)
 			room.wall_texture_state_map = make(map[*WallTexture]wallTextureState)
 		}
 
@@ -289,34 +289,34 @@ func (room *Room) RenderWalls(floor *mathgl.Mat4, base_alpha byte) {
 		}
 
 		gl.LoadMatrixf((*[16]float32)(floor))
-		if ids.vbuffer != 0 {
+		if ids.vBuffer != 0 {
 			wt.Texture.Data().Bind()
 			R, G, B, A := wt.Color()
 
 			gl.ClientActiveTexture(gl.TEXTURE0)
-			gl.Buffer(ids.vbuffer).Bind(gl.ARRAY_BUFFER)
+			gl.Buffer(ids.vBuffer).Bind(gl.ARRAY_BUFFER)
 			gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.x)
 			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.u)
 			gl.ClientActiveTexture(gl.TEXTURE1)
 			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.los_u)
 			gl.ClientActiveTexture(gl.TEXTURE0)
-			if ids.floor_buffer != 0 {
+			if ids.floorBuffer != 0 {
 				gl.StencilFunc(gl.ALWAYS, 2, 2)
-				gl.Buffer(ids.floor_buffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
+				gl.Buffer(ids.floorBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
 				gl.Color4ub(R, G, B, A)
-				gl.DrawElements(gl.TRIANGLES, int(ids.floor_count), gl.UNSIGNED_SHORT, nil)
+				gl.DrawElements(gl.TRIANGLES, int(ids.floorCount), gl.UNSIGNED_SHORT, nil)
 			}
-			if ids.left_buffer != 0 {
+			if ids.leftBuffer != 0 {
 				gl.StencilFunc(gl.ALWAYS, 1, 1)
-				gl.Buffer(ids.left_buffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
+				gl.Buffer(ids.leftBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
 				doColour(room, R, G, B, alphaMult(A, room.far_left.wall_alpha), base_alpha)
-				gl.DrawElements(gl.TRIANGLES, int(ids.left_count), gl.UNSIGNED_SHORT, nil)
+				gl.DrawElements(gl.TRIANGLES, int(ids.leftCount), gl.UNSIGNED_SHORT, nil)
 			}
-			if ids.right_buffer != 0 {
+			if ids.rightBuffer != 0 {
 				gl.StencilFunc(gl.ALWAYS, 1, 1)
-				gl.Buffer(ids.right_buffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
+				gl.Buffer(ids.rightBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
 				doColour(room, R, G, B, alphaMult(A, room.far_right.wall_alpha), base_alpha)
-				gl.DrawElements(gl.TRIANGLES, int(ids.right_count), gl.UNSIGNED_SHORT, nil)
+				gl.DrawElements(gl.TRIANGLES, int(ids.rightCount), gl.UNSIGNED_SHORT, nil)
 			}
 		}
 	}
