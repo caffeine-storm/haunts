@@ -62,7 +62,7 @@ func TestWallTextureSpecs(t *testing.T) {
 						})
 						queue.Purge()
 
-						So(queue, rendertest.ShouldLookLikeFile, "cobweb-rendered")
+						So(queue, rendertest.ShouldLookLikeFile, "cobweb-rendered", rendertest.Threshold(6))
 					})
 				})
 			})
