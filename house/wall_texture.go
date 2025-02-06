@@ -1,6 +1,7 @@
 package house
 
 import (
+	"fmt"
 	"unsafe"
 
 	"github.com/MobRulesGames/haunts/base"
@@ -41,18 +42,18 @@ type wallTextureGlIDs struct {
 }
 
 func (ids *wallTextureGlIDs) Reset() {
-	if ids.vBuffer == 0 {
-		return
+	deleteIfNeeded := func(buffid *uint32) {
+		if *buffid == 0 {
+			return
+		}
+		gl.Buffer(*buffid).Delete()
+		*buffid = 0
 	}
 
-	gl.Buffer(ids.vBuffer).Delete()
-	gl.Buffer(ids.leftBuffer).Delete()
-	gl.Buffer(ids.rightBuffer).Delete()
-	gl.Buffer(ids.floorBuffer).Delete()
-	ids.vBuffer = 0
-	ids.leftBuffer = 0
-	ids.rightBuffer = 0
-	ids.floorBuffer = 0
+	deleteIfNeeded(&ids.vBuffer)
+	deleteIfNeeded(&ids.leftBuffer)
+	deleteIfNeeded(&ids.rightBuffer)
+	deleteIfNeeded(&ids.floorBuffer)
 }
 
 func (ids *wallTextureGlIDs) setVertexData(verts []roomVertex) {
@@ -114,6 +115,14 @@ func (wt *WallTexture) Render() {
 func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, glIDs *wallTextureGlIDs) {
 	glIDs.Reset()
 
+	// If we panic, don't leak GL resources
+	defer func() {
+		if e := recover(); e != nil {
+			glIDs.Reset()
+			panic(e)
+		}
+	}()
+
 	// All vertices for both walls and the floor will go here and get sent to
 	// opengl all at once
 	var vs []roomVertex
@@ -159,34 +168,36 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, glIDs *wallTextureGlIDs) {
 	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{X: 0, Y: frdy}, B: mathgl.Vec2{X: frdx, Y: frdy}})
 	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{X: frdx, Y: frdy}, B: mathgl.Vec2{X: frdx, Y: 0}})
 	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{X: frdx, Y: 0}, B: mathgl.Vec2{X: 0, Y: 0}})
-	if len(p) >= 3 {
-		// floor indices
-		var is []uint16
-		for i := 1; i < len(p)-1; i++ {
-			is = append(is, uint16(len(vs)+0))
-			is = append(is, uint16(len(vs)+i))
-			is = append(is, uint16(len(vs)+i+1))
-		}
-		// TODO(tmckee): don't store uint32 and cast-to-buffer; just store a
-		// gl.Buffer
-		glIDs.floorBuffer = uint32(gl.GenBuffer())
-		gl.Buffer(glIDs.floorBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
-		gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, (int(unsafe.Sizeof(is[0])) * len(is)), is, gl.STATIC_DRAW)
-		glIDs.floorCount = gl.GLsizei(len(is))
+	if len(p) < 3 {
+		panic(fmt.Errorf("must not clip out wall texture"))
+	}
 
-		run.Inverse()
-		for i := range p {
-			v := mathgl.Vec2{X: p[i].X, Y: p[i].Y}
-			v.Transform(&run)
-			vs = append(vs, roomVertex{
-				x:     p[i].X,
-				y:     p[i].Y,
-				u:     v.X/tdx + 0.5,
-				v:     -(v.Y/tdy + 0.5),
-				los_u: (fry + p[i].Y) / LosTextureSize,
-				los_v: (frx + p[i].X) / LosTextureSize,
-			})
-		}
+	// floor indices
+	var is []uint16
+	for i := 1; i < len(p)-1; i++ {
+		is = append(is, uint16(len(vs)+0))
+		is = append(is, uint16(len(vs)+i))
+		is = append(is, uint16(len(vs)+i+1))
+	}
+	// TODO(tmckee): don't store uint32 and cast-to-buffer; just store a
+	// gl.Buffer
+	glIDs.floorBuffer = uint32(gl.GenBuffer())
+	gl.Buffer(glIDs.floorBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
+	gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, (int(unsafe.Sizeof(is[0])) * len(is)), is, gl.STATIC_DRAW)
+	glIDs.floorCount = gl.GLsizei(len(is))
+
+	run.Inverse()
+	for i := range p {
+		v := mathgl.Vec2{X: p[i].X, Y: p[i].Y}
+		v.Transform(&run)
+		vs = append(vs, roomVertex{
+			x:     p[i].X,
+			y:     p[i].Y,
+			u:     v.X/tdx + 0.5,
+			v:     -(v.Y/tdy + 0.5),
+			los_u: (fry + p[i].Y) / LosTextureSize,
+			los_v: (frx + p[i].X) / LosTextureSize,
+		})
 	}
 
 	// Left Wall
@@ -212,33 +223,35 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, glIDs *wallTextureGlIDs) {
 	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{X: 0, Y: 0}, B: mathgl.Vec2{X: 0, Y: frdy}})
 	p.Clip(&mathgl.Seg2{B: mathgl.Vec2{X: 0, Y: frdy}, A: mathgl.Vec2{X: frdx, Y: frdy}})
 	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{X: frdx, Y: frdy}, B: mathgl.Vec2{X: frdx, Y: 0}})
-	if len(p) >= 3 {
-		// left wall indices
-		var is []uint16
-		for i := 1; i < len(p)-1; i++ {
-			is = append(is, uint16(len(vs)+0))
-			is = append(is, uint16(len(vs)+i))
-			is = append(is, uint16(len(vs)+i+1))
-		}
-		glIDs.leftBuffer = uint32(gl.GenBuffer())
-		gl.Buffer(glIDs.leftBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
-		gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
-		glIDs.leftCount = gl.GLsizei(len(is))
+	if len(p) < 3 {
+		panic(fmt.Errorf("must not clip out wall texture"))
+	}
 
-		run.Inverse()
-		for i := range p {
-			v := mathgl.Vec2{X: p[i].X, Y: p[i].Y}
-			v.Transform(&run)
-			vs = append(vs, roomVertex{
-				x:     p[i].X,
-				y:     frdy,
-				z:     frdy - p[i].Y,
-				u:     v.X/tdx + 0.5,
-				v:     -(v.Y/tdy + 0.5),
-				los_u: (fry + frdy - 0.5) / LosTextureSize,
-				los_v: (frx + p[i].X) / LosTextureSize,
-			})
-		}
+	// left wall indices
+	is = nil
+	for i := 1; i < len(p)-1; i++ {
+		is = append(is, uint16(len(vs)+0))
+		is = append(is, uint16(len(vs)+i))
+		is = append(is, uint16(len(vs)+i+1))
+	}
+	glIDs.leftBuffer = uint32(gl.GenBuffer())
+	gl.Buffer(glIDs.leftBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
+	gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
+	glIDs.leftCount = gl.GLsizei(len(is))
+
+	run.Inverse()
+	for i := range p {
+		v := mathgl.Vec2{X: p[i].X, Y: p[i].Y}
+		v.Transform(&run)
+		vs = append(vs, roomVertex{
+			x:     p[i].X,
+			y:     frdy,
+			z:     frdy - p[i].Y,
+			u:     v.X/tdx + 0.5,
+			v:     -(v.Y/tdy + 0.5),
+			los_u: (fry + frdy - 0.5) / LosTextureSize,
+			los_v: (frx + p[i].X) / LosTextureSize,
+		})
 	}
 
 	// Right Wall
@@ -264,36 +277,40 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, glIDs *wallTextureGlIDs) {
 	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{X: 0, Y: frdy}, B: mathgl.Vec2{X: frdx, Y: frdy}})
 	p.Clip(&mathgl.Seg2{B: mathgl.Vec2{X: frdx, Y: frdy}, A: mathgl.Vec2{X: frdx, Y: 0}})
 	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{X: frdx, Y: 0}, B: mathgl.Vec2{X: 0, Y: 0}})
-	if len(p) >= 3 {
-		// right wall indices
-		var is []uint16
-		for i := 1; i < len(p)-1; i++ {
-			is = append(is, uint16(len(vs)+0))
-			is = append(is, uint16(len(vs)+i))
-			is = append(is, uint16(len(vs)+i+1))
-		}
-		glIDs.rightBuffer = uint32(gl.GenBuffer())
-		gl.Buffer(glIDs.rightBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
-		gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
-		glIDs.rightCount = gl.GLsizei(len(is))
-
-		run.Inverse()
-		for i := range p {
-			v := mathgl.Vec2{X: p[i].X, Y: p[i].Y}
-			v.Transform(&run)
-			vs = append(vs, roomVertex{
-				x:     frdx,
-				y:     p[i].Y,
-				z:     frdx - p[i].X,
-				u:     v.X/tdx + 0.5,
-				v:     -(v.Y/tdy + 0.5),
-				los_u: (fry + p[i].Y) / LosTextureSize,
-				los_v: (frx + frdx - 0.5) / LosTextureSize,
-			})
-		}
+	if len(p) < 3 {
+		panic(fmt.Errorf("must not clip out wall texture"))
 	}
 
-	if len(vs) > 0 {
-		glIDs.setVertexData(vs)
+	// right wall indices
+	is = nil
+	for i := 1; i < len(p)-1; i++ {
+		is = append(is, uint16(len(vs)+0))
+		is = append(is, uint16(len(vs)+i))
+		is = append(is, uint16(len(vs)+i+1))
 	}
+	glIDs.rightBuffer = uint32(gl.GenBuffer())
+	gl.Buffer(glIDs.rightBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
+	gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
+	glIDs.rightCount = gl.GLsizei(len(is))
+
+	run.Inverse()
+	for i := range p {
+		v := mathgl.Vec2{X: p[i].X, Y: p[i].Y}
+		v.Transform(&run)
+		vs = append(vs, roomVertex{
+			x:     frdx,
+			y:     p[i].Y,
+			z:     frdx - p[i].X,
+			u:     v.X/tdx + 0.5,
+			v:     -(v.Y/tdy + 0.5),
+			los_u: (fry + p[i].Y) / LosTextureSize,
+			los_v: (frx + frdx - 0.5) / LosTextureSize,
+		})
+	}
+
+	if len(vs) == 0 {
+		panic(fmt.Errorf("sanity draining"))
+	}
+
+	glIDs.setVertexData(vs)
 }
