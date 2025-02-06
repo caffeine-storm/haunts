@@ -262,6 +262,27 @@ var Noise_rate float32 = 60
 var Num_steps float32 = 3
 var Foo int = 0
 
+func (room *Room) getWallTextureState(wt *WallTexture) wallTextureGlIDs {
+	result := room.wall_texture_gl_map[wt]
+	cachedState := room.wall_texture_state_map[wt]
+	var new_state wallTextureState
+	new_state.flip = wt.Flip
+	new_state.rot = wt.Rot
+	new_state.x = wt.X
+	new_state.y = wt.Y
+	new_state.room.x = room.X
+	new_state.room.y = room.Y
+	new_state.room.dx = room.Size.Dx
+	new_state.room.dy = room.Size.Dy
+	if new_state != cachedState {
+		wt.setupGlStuff(room.X, room.Y, room.Size.Dx, room.Size.Dy, &result)
+		room.wall_texture_gl_map[wt] = result
+		room.wall_texture_state_map[wt] = new_state
+	}
+
+	return result
+}
+
 func (room *Room) RenderWalls(floor *mathgl.Mat4, base_alpha byte) {
 	if room.wall_texture_gl_map == nil {
 		room.wall_texture_gl_map = make(map[*WallTexture]wallTextureGlIDs)
@@ -270,54 +291,39 @@ func (room *Room) RenderWalls(floor *mathgl.Mat4, base_alpha byte) {
 
 	var vert roomVertex
 	for _, wt := range room.WallTextures {
-
-		ids := room.wall_texture_gl_map[wt]
-		cachedState := room.wall_texture_state_map[wt]
-		var new_state wallTextureState
-		new_state.flip = wt.Flip
-		new_state.rot = wt.Rot
-		new_state.x = wt.X
-		new_state.y = wt.Y
-		new_state.room.x = room.X
-		new_state.room.y = room.Y
-		new_state.room.dx = room.Size.Dx
-		new_state.room.dy = room.Size.Dy
-		if new_state != cachedState {
-			wt.setupGlStuff(room.X, room.Y, room.Size.Dx, room.Size.Dy, &ids)
-			room.wall_texture_gl_map[wt] = ids
-			room.wall_texture_state_map[wt] = new_state
+		ids := room.getWallTextureState(wt)
+		if ids.vBuffer == 0 {
+			continue
 		}
 
 		gl.LoadMatrixf((*[16]float32)(floor))
-		if ids.vBuffer != 0 {
-			wt.Texture.Data().Bind()
-			R, G, B, A := wt.Color()
+		wt.Texture.Data().Bind()
+		R, G, B, A := wt.Color()
 
-			gl.ClientActiveTexture(gl.TEXTURE0)
-			gl.Buffer(ids.vBuffer).Bind(gl.ARRAY_BUFFER)
-			gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.x)
-			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.u)
-			gl.ClientActiveTexture(gl.TEXTURE1)
-			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.los_u)
-			gl.ClientActiveTexture(gl.TEXTURE0)
-			if ids.floorBuffer != 0 {
-				gl.StencilFunc(gl.ALWAYS, 2, 2)
-				gl.Buffer(ids.floorBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
-				gl.Color4ub(R, G, B, A)
-				gl.DrawElements(gl.TRIANGLES, int(ids.floorCount), gl.UNSIGNED_SHORT, nil)
-			}
-			if ids.leftBuffer != 0 {
-				gl.StencilFunc(gl.ALWAYS, 1, 1)
-				gl.Buffer(ids.leftBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
-				doColour(room, R, G, B, alphaMult(A, room.far_left.wall_alpha), base_alpha)
-				gl.DrawElements(gl.TRIANGLES, int(ids.leftCount), gl.UNSIGNED_SHORT, nil)
-			}
-			if ids.rightBuffer != 0 {
-				gl.StencilFunc(gl.ALWAYS, 1, 1)
-				gl.Buffer(ids.rightBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
-				doColour(room, R, G, B, alphaMult(A, room.far_right.wall_alpha), base_alpha)
-				gl.DrawElements(gl.TRIANGLES, int(ids.rightCount), gl.UNSIGNED_SHORT, nil)
-			}
+		gl.ClientActiveTexture(gl.TEXTURE0)
+		gl.Buffer(ids.vBuffer).Bind(gl.ARRAY_BUFFER)
+		gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.x)
+		gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.u)
+		gl.ClientActiveTexture(gl.TEXTURE1)
+		gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.los_u)
+		gl.ClientActiveTexture(gl.TEXTURE0)
+		if ids.floorBuffer != 0 {
+			gl.StencilFunc(gl.ALWAYS, 2, 2)
+			gl.Buffer(ids.floorBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
+			gl.Color4ub(R, G, B, A)
+			gl.DrawElements(gl.TRIANGLES, int(ids.floorCount), gl.UNSIGNED_SHORT, nil)
+		}
+		if ids.leftBuffer != 0 {
+			gl.StencilFunc(gl.ALWAYS, 1, 1)
+			gl.Buffer(ids.leftBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
+			doColour(room, R, G, B, alphaMult(A, room.far_left.wall_alpha), base_alpha)
+			gl.DrawElements(gl.TRIANGLES, int(ids.leftCount), gl.UNSIGNED_SHORT, nil)
+		}
+		if ids.rightBuffer != 0 {
+			gl.StencilFunc(gl.ALWAYS, 1, 1)
+			gl.Buffer(ids.rightBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
+			doColour(room, R, G, B, alphaMult(A, room.far_right.wall_alpha), base_alpha)
+			gl.DrawElements(gl.TRIANGLES, int(ids.rightCount), gl.UNSIGNED_SHORT, nil)
 		}
 	}
 }
