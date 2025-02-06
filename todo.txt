@@ -1,8 +1,7 @@
 - room.far_left.wall_alpha == room.far_right.wall_alpha == 0 ... which will make rendering on the wall transparent T_T
 	- not-test calls to room.Render do a _bunch_ of math to get the left, right and floor matrices
 	- need proper encapsulation on gl ID holding structs
-	- need to DRY out WallTexture.Render; lot of duplication between floor, left-wall and right-wall
-	- need to panic on problems in WallTexture.Render instead of not setting things
+	- need to DRY out WallTexture.setupGlStuff; lot of duplication between floor, left-wall and right-wall
 
 - bug#6: The 'edit mode' screen can really lag out; afterwards, switching back to the startup screen seems to break
 	- we need to profile and optimize it
