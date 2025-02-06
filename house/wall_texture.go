@@ -40,6 +40,21 @@ type wallTextureGlIDs struct {
 	floorCount  gl.GLsizei
 }
 
+func (ids *wallTextureGlIDs) Reset() {
+	if ids.vBuffer == 0 {
+		return
+	}
+
+	gl.Buffer(ids.vBuffer).Delete()
+	gl.Buffer(ids.leftBuffer).Delete()
+	gl.Buffer(ids.rightBuffer).Delete()
+	gl.Buffer(ids.floorBuffer).Delete()
+	ids.vBuffer = 0
+	ids.leftBuffer = 0
+	ids.rightBuffer = 0
+	ids.floorBuffer = 0
+}
+
 func (ids *wallTextureGlIDs) setVertexData(verts []roomVertex) {
 	ids.vBuffer = uint32(gl.GenBuffer())
 	gl.Buffer(ids.vBuffer).Bind(gl.ARRAY_BUFFER)
@@ -97,16 +112,7 @@ func (wt *WallTexture) Render() {
 }
 
 func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, glIDs *wallTextureGlIDs) {
-	if glIDs.vBuffer != 0 {
-		gl.Buffer(glIDs.vBuffer).Delete()
-		gl.Buffer(glIDs.leftBuffer).Delete()
-		gl.Buffer(glIDs.rightBuffer).Delete()
-		gl.Buffer(glIDs.floorBuffer).Delete()
-		glIDs.vBuffer = 0
-		glIDs.leftBuffer = 0
-		glIDs.rightBuffer = 0
-		glIDs.floorBuffer = 0
-	}
+	glIDs.Reset()
 
 	// All vertices for both walls and the floor will go here and get sent to
 	// opengl all at once
