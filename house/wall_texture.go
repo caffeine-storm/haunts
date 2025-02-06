@@ -200,7 +200,7 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, glIDs *wallTextureGlIDs) {
 	p.Clip(&mathgl.Seg2{B: mathgl.Vec2{X: 0, Y: frdy}, A: mathgl.Vec2{X: frdx, Y: frdy}})
 	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{X: frdx, Y: frdy}, B: mathgl.Vec2{X: frdx, Y: 0}})
 	if len(p) >= 3 {
-		// floor indices
+		// left wall indices
 		var is []uint16
 		for i := 1; i < len(p)-1; i++ {
 			is = append(is, uint16(len(vs)+0))
@@ -252,7 +252,7 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, glIDs *wallTextureGlIDs) {
 	p.Clip(&mathgl.Seg2{B: mathgl.Vec2{X: frdx, Y: frdy}, A: mathgl.Vec2{X: frdx, Y: 0}})
 	p.Clip(&mathgl.Seg2{A: mathgl.Vec2{X: frdx, Y: 0}, B: mathgl.Vec2{X: 0, Y: 0}})
 	if len(p) >= 3 {
-		// floor indices
+		// right wall indices
 		var is []uint16
 		for i := 1; i < len(p)-1; i++ {
 			is = append(is, uint16(len(vs)+0))
