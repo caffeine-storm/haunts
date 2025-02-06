@@ -31,22 +31,22 @@ func (wt *WallTexture) Load() {
 }
 
 type wallTextureGlIDs struct {
-	vBuffer uint32
+	vBuffer gl.Buffer
 
-	leftBuffer  uint32
+	leftBuffer  gl.Buffer
 	leftCount   gl.GLsizei
-	rightBuffer uint32
+	rightBuffer gl.Buffer
 	rightCount  gl.GLsizei
-	floorBuffer uint32
+	floorBuffer gl.Buffer
 	floorCount  gl.GLsizei
 }
 
 func (ids *wallTextureGlIDs) Reset() {
-	deleteIfNeeded := func(buffid *uint32) {
+	deleteIfNeeded := func(buffid *gl.Buffer) {
 		if *buffid == 0 {
 			return
 		}
-		gl.Buffer(*buffid).Delete()
+		buffid.Delete()
 		*buffid = 0
 	}
 
@@ -57,7 +57,7 @@ func (ids *wallTextureGlIDs) Reset() {
 }
 
 func (ids *wallTextureGlIDs) setVertexData(verts []roomVertex) {
-	ids.vBuffer = uint32(gl.GenBuffer())
+	ids.vBuffer = gl.GenBuffer()
 	gl.Buffer(ids.vBuffer).Bind(gl.ARRAY_BUFFER)
 	size := int(unsafe.Sizeof(roomVertex{}))
 	gl.BufferData(gl.ARRAY_BUFFER, size*len(verts), verts, gl.STATIC_DRAW)
@@ -179,9 +179,8 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, glIDs *wallTextureGlIDs) {
 		is = append(is, uint16(len(vs)+i))
 		is = append(is, uint16(len(vs)+i+1))
 	}
-	// TODO(tmckee): don't store uint32 and cast-to-buffer; just store a
-	// gl.Buffer
-	glIDs.floorBuffer = uint32(gl.GenBuffer())
+
+	glIDs.floorBuffer = gl.GenBuffer()
 	gl.Buffer(glIDs.floorBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
 	gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, (int(unsafe.Sizeof(is[0])) * len(is)), is, gl.STATIC_DRAW)
 	glIDs.floorCount = gl.GLsizei(len(is))
@@ -234,7 +233,7 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, glIDs *wallTextureGlIDs) {
 		is = append(is, uint16(len(vs)+i))
 		is = append(is, uint16(len(vs)+i+1))
 	}
-	glIDs.leftBuffer = uint32(gl.GenBuffer())
+	glIDs.leftBuffer = gl.GenBuffer()
 	gl.Buffer(glIDs.leftBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
 	gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
 	glIDs.leftCount = gl.GLsizei(len(is))
@@ -288,7 +287,7 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, glIDs *wallTextureGlIDs) {
 		is = append(is, uint16(len(vs)+i))
 		is = append(is, uint16(len(vs)+i+1))
 	}
-	glIDs.rightBuffer = uint32(gl.GenBuffer())
+	glIDs.rightBuffer = gl.GenBuffer()
 	gl.Buffer(glIDs.rightBuffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
 	gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
 	glIDs.rightCount = gl.GLsizei(len(is))
