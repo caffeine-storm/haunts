@@ -40,6 +40,13 @@ type wallTextureGlIDs struct {
 	floorCount  gl.GLsizei
 }
 
+func (ids *wallTextureGlIDs) setVertexData(verts []roomVertex) {
+	ids.vBuffer = uint32(gl.GenBuffer())
+	gl.Buffer(ids.vBuffer).Bind(gl.ARRAY_BUFFER)
+	size := int(unsafe.Sizeof(roomVertex{}))
+	gl.BufferData(gl.ARRAY_BUFFER, size*len(verts), verts, gl.STATIC_DRAW)
+}
+
 type wallTextureState struct {
 	// for tracking whether the buffers are dirty
 	x, y, rot float32
@@ -281,9 +288,6 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, glIDs *wallTextureGlIDs) {
 	}
 
 	if len(vs) > 0 {
-		glIDs.vBuffer = uint32(gl.GenBuffer())
-		gl.Buffer(glIDs.vBuffer).Bind(gl.ARRAY_BUFFER)
-		size := int(unsafe.Sizeof(roomVertex{}))
-		gl.BufferData(gl.ARRAY_BUFFER, size*len(vs), vs, gl.STATIC_DRAW)
+		glIDs.setVertexData(vs)
 	}
 }
