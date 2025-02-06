@@ -263,13 +263,13 @@ var Num_steps float32 = 3
 var Foo int = 0
 
 func (room *Room) RenderWalls(floor *mathgl.Mat4, base_alpha byte) {
+	if room.wall_texture_gl_map == nil {
+		room.wall_texture_gl_map = make(map[*WallTexture]wallTextureGlIDs)
+		room.wall_texture_state_map = make(map[*WallTexture]wallTextureState)
+	}
+
 	var vert roomVertex
 	for _, wt := range room.WallTextures {
-
-		if room.wall_texture_gl_map == nil {
-			room.wall_texture_gl_map = make(map[*WallTexture]wallTextureGlIDs)
-			room.wall_texture_state_map = make(map[*WallTexture]wallTextureState)
-		}
 
 		ids := room.wall_texture_gl_map[wt]
 		cachedState := room.wall_texture_state_map[wt]
