@@ -109,7 +109,7 @@ func (wt *WallTexture) Color() (r, g, b, a byte) {
 func (wt *WallTexture) Render() {
 	data := wt.Texture.Data()
 	dx, dy := data.Dx(), data.Dy()
-	wt.Texture.Data().RenderAdvanced(float64(wt.X), float64(wt.Y), float64(dx), float64(dy), float64(wt.Rot), wt.Flip)
+	data.RenderAdvanced(float64(wt.X), float64(wt.Y), float64(dx), float64(dy), float64(wt.Rot), wt.Flip)
 }
 
 func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, glIDs *wallTextureGlIDs) {
