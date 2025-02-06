@@ -1,4 +1,5 @@
 - room.far_left.wall_alpha == room.far_right.wall_alpha == 0 ... which will make rendering on the wall transparent T_T
+	- not-test calls to room.Render do a _bunch_ of math to get the left, right and floor matrices
 
 - bug#6: The 'edit mode' screen can really lag out; afterwards, switching back to the startup screen seems to break
 	- we need to profile and optimize it
