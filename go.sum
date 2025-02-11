@@ -57,8 +57,8 @@ github.com/bgentry/speakeasy v0.1.0/go.mod h1:+zsyZBPWlz7T6j88CTgSN5bM796AkVf0kB
 github.com/bketelsen/crypt v0.0.4/go.mod h1:aI6NrJ0pMGgvZKL1iVgXLnfIFJtfV+bKCoqOes/6LfM=
 github.com/caffeine-storm/gl v0.0.0-20240909160157-d1b38f2deb16 h1:lHq5YECDcjZKieQW2YWLh8AjJ9Gs/2jIiXcJjbsJGqU=
 github.com/caffeine-storm/gl v0.0.0-20240909160157-d1b38f2deb16/go.mod h1:5WNXbhdBMLerIscVkSVTRwGcsRywYKYHRKFEBZOUBEA=
-github.com/caffeine-storm/glop v0.0.0-20250130162853-13f3842eea80 h1:gSgKP//KGHnCio8nFTDo5o9TAf6YcaUXSysjaezaKQY=
-github.com/caffeine-storm/glop v0.0.0-20250130162853-13f3842eea80/go.mod h1:W1jxVhqNlbsEZ9S5xbwy80C1DJpwuXoXcnofsa2vwok=
+github.com/caffeine-storm/glop v0.0.0-20250211150721-5a57fe9ca734 h1:MRyYzjFCjSwFbu6UCF9iFoR5Wg9sYJtTAl1zmRSBeKo=
+github.com/caffeine-storm/glop v0.0.0-20250211150721-5a57fe9ca734/go.mod h1:W1jxVhqNlbsEZ9S5xbwy80C1DJpwuXoXcnofsa2vwok=
 github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c h1:KqJxBrec/mnKQ+QgBu3/iJvaiurKpNDsXLrrXSau73U=
 github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c/go.mod h1:ntYmIr0ULu7QxKlmOE6cC87X4pWDG8jO/wSUBn2ZzJY=
 github.com/caffeine-storm/golua v0.0.0-20240910150920-bb0104c032e4 h1:zTOKTYGNmZCZVDgvjsTEXhaFIcTWiccPHKBFaWQzo80=
