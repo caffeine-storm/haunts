@@ -115,7 +115,7 @@ func init() {
 	// want to _not_ log to the log file.
 	_, logReader = logging.RedirectAndSpy(logFile)
 
-	logging.Info("Setting datadir: %s", datadir)
+	logging.Info("Setting datadir", "datadir", datadir)
 	err = house.SetDatadir(datadir)
 	if err != nil {
 		panic(err.Error())
