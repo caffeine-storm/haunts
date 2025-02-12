@@ -102,12 +102,10 @@ func Render(x, y, dx, dy float64) {
 	op.Scaling(float32(dx), float32(dy), 1)
 	run.Multiply(&op)
 
-	gl.MatrixMode(gl.PROJECTION)
-	gl.PushMatrix()
-	gl.Enable(gl.TEXTURE_2D)
-	gl.MultMatrixf((*[16]float32)(&run))
-	gl.CallList(textureList)
-	gl.PopMatrix()
+	render.WithMultMatrixInMode(&run, render.MatrixModeProjection, func() {
+		gl.Enable(gl.TEXTURE_2D)
+		gl.CallList(textureList)
+	})
 }
 
 func (d *Data) Render(x, y, dx, dy float64) {
@@ -148,12 +146,11 @@ func RenderAdvanced(x, y, dx, dy, rot float64, flip bool) {
 		op.Scaling(float32(dx), float32(dy), 1)
 		run.Multiply(&op)
 	}
-	gl.MatrixMode(gl.PROJECTION)
-	gl.PushMatrix()
-	gl.MultMatrixf((*[16]float32)(&run))
-	gl.Enable(gl.TEXTURE_2D)
-	gl.CallList(textureList)
-	gl.PopMatrix()
+
+	render.WithMultMatrixInMode(&run, render.MatrixModeProjection, func() {
+		gl.Enable(gl.TEXTURE_2D)
+		gl.CallList(textureList)
+	})
 }
 
 func (d *Data) Bind() {
