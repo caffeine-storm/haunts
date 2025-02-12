@@ -140,6 +140,8 @@ func (gdt *gameDataTransient) alloc() {
 	if gdt.los.denizens.tex != nil {
 		return
 	}
+	// TODO(#8): farm these MakeLosTexture calls out to a render thread and
+	// update house.MakeLosTexture to expect to be called from a render thread.
 	gdt.los.denizens.tex = house.MakeLosTexture()
 	gdt.los.intruders.tex = house.MakeLosTexture()
 	gdt.los.full_merger = make([]bool, house.LosTextureSizeSquared)

@@ -1,3 +1,9 @@
+- bug#8: house.MakeLosTexture should either always get called on a render
+  thread or never get called on a render thread. If we refactor game/los.go's
+	alloc() to farm out the call to a render thread, we can remove the
+	queue-from-within in house.MakeLosTexture, then always call the whole
+	function on a render thread.
+
 - room.far_left.wall_alpha == room.far_right.wall_alpha == 0 ... which will make rendering on the wall transparent T_T
 	- not-test calls to room.Render do a _bunch_ of math to get the left, right and floor matrices
 	- need proper encapsulation on gl ID holding structs
@@ -31,4 +37,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#8: <next>
+- bug#9: <next>
