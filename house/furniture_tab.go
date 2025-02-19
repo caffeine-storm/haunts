@@ -4,6 +4,7 @@ import (
 	"image"
 
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/util/algorithm"
@@ -79,11 +80,11 @@ func makeFurniturePanel(room *Room, viewer *roomViewer) *FurniturePanel {
 
 	furn_table := gui.MakeVerticalTable()
 	fnames := GetAllFurnitureNames()
-	for i := range fnames {
-		name := fnames[i]
-		furn_table.AddChild(gui.MakeButton("standard_18", name, 300, 1, 1, 1, 1, func(t int64) {
-			f := MakeFurniture(name)
+	for _, fname := range fnames {
+		furn_table.AddChild(gui.MakeButton("standard_18", fname, 300, 1, 1, 1, 1, func(t int64) {
+			f := MakeFurniture(fname)
 			if f == nil {
+				logging.Error("makeFurniturePanel>MakeFurniture(fname) failed", "fnames", fnames)
 				return
 			}
 			fp.furniture = f
