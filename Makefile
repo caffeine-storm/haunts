@@ -82,6 +82,9 @@ test-verbose:
 test-nocache:
 	${XVFB_RUN} go test ${testrunargs} -count=1            -tags nosound ./...
 
+test-fresh: |clean_rejects
+test-fresh: test-nocache
+
 test-dlv: singlepackage=${pkg}
 test-dlv:
 	dlv test --build-flags="-tags nosound" ${singlepackage} -- ${testrunargs}
@@ -97,6 +100,33 @@ test-dlv:
 
 devtest: dev.go.mod dev.go.sum
 	${XVFB_RUN} go test ${testrunargs} -modfile dev.go.mod -tags nosound ./...
+
+list_rejects:
+	@find . -name testdata -type d | while read testdatadir ; do \
+		find "$$testdatadir" -name '*.rej.*' ; \
+	done
+
+# opens expected and rejected files in 'feh'
+view_rejects:
+	@find . -name testdata -type d | while read testdatadir ; do \
+		find "$$testdatadir" -name '*.rej.*' | while read rejfile ; do \
+			echo -e >&2 "$${rejfile/.rej}\n$$rejfile" ; \
+			echo "$${rejfile/.rej}" "$$rejfile" ; \
+		done ; \
+	done | xargs -r feh
+
+clean_rejects:
+	find . -name testdata -type d | while read testdatadir ; do \
+		find "$$testdatadir" -name '*.rej.*' -exec rm "{}" + ; \
+	done
+
+promote_rejects:
+	@find . -name testdata -type d | while read testdatadir ; do \
+		find "$$testdatadir" -name '*.rej.*' | while read rejfile ; do \
+			echo mv "$$rejfile" "$${rejfile/.rej}" ; \
+			mv "$$rejfile" "$${rejfile/.rej}" ; \
+		done \
+	done
 
 update-glop:
 	go -C tools/update-glop/ run cmd/main.go
@@ -133,7 +163,7 @@ ${TEST_REPORT_TAR}:
 # Let go tooling decide if things are out-of-date
 .PHONY: haunts
 .PHONY: devhaunts
-.PHONY: clean
-.PHONY: fmt lint
-.PHONY: test devtest
-.PHONY: update-glop update-appveyor-image
+.PHONY: clean fmt lint
+.PHONY: devtest test test-dlv test-fresh test-nocache test-report test-verbose
+.PHONY: clean_rejects list_rejects promote_rejects view_rejects
+.PHONY: update-appveyor-image update-glop
