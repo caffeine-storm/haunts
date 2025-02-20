@@ -11,7 +11,7 @@ import (
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/MobRulesGames/mathgl"
+	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
 	"github.com/runningwild/glop/system"
@@ -77,16 +77,23 @@ func RoomSpecs() {
 		SkipConvey("drawing restest", func() {
 			restestRoom := loadRoom("restest.room")
 
-			id := mathgl.Mat4{}
-			id.Identity()
-
 			nozoom := float32(1.0)
 			opaquealpha := byte(255)
 			noDrawables := []house.Drawable{}
 			var nilLos *house.LosTexture = nil
 			noFloorDrawers := []house.RenderOnFloorer{}
+			region := gui.Region{
+				Point: gui.Point{X: 0, Y: 0},
+				Dims:  gui.Dims{Dx: 200, Dy: 200},
+			}
+			focusx := float32(100)
+			focusy := float32(100)
+			angle := float32(30)
+			zoom := float32(100)
+			floor, _, left, _, right, _ := house.MakeRoomMatsForTest(restestRoom, region, focusx, focusy, angle, zoom)
+			fmt.Printf("floor, left, right: \n%+v\n%+v\n%+v\n", floor, left, right)
 			queue.Queue(func(render.RenderQueueState) {
-				restestRoom.Render(id, id, id, nozoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
+				restestRoom.Render(floor, left, right, nozoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
 			})
 			queue.Purge()
 

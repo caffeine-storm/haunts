@@ -146,6 +146,10 @@ func (rv *roomViewer) makeMat() {
 	rv.mat, rv.imat, rv.left_wall_mat, rv.left_wall_imat, rv.right_wall_mat, rv.right_wall_imat = makeRoomMats(rv.room, rv.Render_region, rv.fx, rv.fy, rv.angle, rv.zoom)
 }
 
+func MakeRoomMatsForTest(room *Room, region gui.Region, focusx, focusy, angle, zoom float32) (floor, ifloor, left, ileft, right, iright mathgl.Mat4) {
+	return makeRoomMats(room, region, focusx, focusy, angle, zoom)
+}
+
 func makeRoomMats(room *Room, region gui.Region, focusx, focusy, angle, zoom float32) (floor, ifloor, left, ileft, right, iright mathgl.Mat4) {
 	var m mathgl.Mat4
 	floor.Translation(float32(region.Dx/2+region.X), float32(region.Dy/2+region.Y), 0)
