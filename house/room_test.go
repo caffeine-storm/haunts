@@ -93,6 +93,7 @@ func RoomSpecs() {
 			floor, _, left, _, right, _ := house.MakeRoomMatsForTest(restestRoom, region, focusx, focusy, angle, zoom)
 			fmt.Printf("floor, left, right: \n%+v\n%+v\n%+v\n", floor, left, right)
 			queue.Queue(func(render.RenderQueueState) {
+				restestRoom.SetupGlStuff(nil)
 				restestRoom.Render(floor, left, right, nozoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
 			})
 			queue.Purge()
