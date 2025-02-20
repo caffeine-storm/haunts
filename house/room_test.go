@@ -61,7 +61,7 @@ func RoomSpecs() {
 		So(room, ShouldNotBeNil)
 	})
 
-	rendertest.WithGlForTest(200, 200, func(sys system.System, queue render.RenderQueueInterface) {
+	rendertest.WithGlForTest(266, 246, func(sys system.System, queue render.RenderQueueInterface) {
 		registry.LoadAllRegistries()
 		base.InitShaders(queue)
 		texture.Init(queue)
