@@ -19,7 +19,15 @@ import (
 )
 
 func GivenARoomDef() *house.RoomDef {
-	return &house.RoomDef{}
+	smallSizeRoom := house.RoomSize{
+		Name: "Small",
+		Dx:   10,
+		Dy:   10,
+	}
+
+	return &house.RoomDef{
+		Size: smallSizeRoom,
+	}
 }
 
 func GivenARoom(defname string) *house.Room {
