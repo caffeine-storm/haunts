@@ -468,8 +468,9 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 			if los_tex != nil {
 				los_tex.Bind()
 			}
-			// TODO(tmckee): why do we rebind here? nothing has touch gl.ARRAY_BUFFER
-			// since the last time web bound room.glData.vbuffer...
+			// TODO(tmckee): why do we rebind here? nothing has touched
+			// gl.ARRAY_BUFFER since the last time we bound room.glData.vbuffer...
+			// right?
 			room.glData.vbuffer.Bind(gl.ARRAY_BUFFER)
 			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.los_u)
 			// Now draw the walls
