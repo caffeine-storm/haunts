@@ -35,21 +35,21 @@ type Room struct {
 		wall_alpha byte
 	}
 
-	// opengl stuff
-	// Vertex buffer storing the vertices of the room as well as the texture
-	// coordinates for the los texture.
-	vbuffer gl.Buffer
-
-	// index buffers
-	left_buffer  gl.Buffer
-	right_buffer gl.Buffer
-	floor_buffer gl.Buffer
-	floor_count  int
-
-	// we don't want to redo all of the vertex and index buffers unless we
-	// need to, so we keep track of the position and size of the room when they
-	// were made so we don't have to.
 	glData struct {
+		// Vertex buffer storing the vertices of the room as well as the texture
+		// coordinates for the los texture.
+		vbuffer gl.Buffer
+
+		// index buffers
+		left_buffer  gl.Buffer
+		right_buffer gl.Buffer
+		floor_buffer gl.Buffer
+		floor_count  int
+	}
+
+	// We only need to rebuild 'glData' if there was a change to one of the
+	// relevant inputs.
+	glDataInputs struct {
 		x, y, dx, dy             int
 		wall_tex_dx, wall_tex_dy int
 	}

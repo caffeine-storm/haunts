@@ -366,9 +366,9 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 		var vert roomVertex
 
 		planes := []plane{
-			{room.left_buffer, room.Wall, &left},
-			{room.right_buffer, room.Wall, &right},
-			{room.floor_buffer, room.Floor, &floor},
+			{room.glData.left_buffer, room.Wall, &left},
+			{room.glData.right_buffer, room.Wall, &right},
+			{room.glData.floor_buffer, room.Floor, &floor},
 		}
 
 		if los_tex != nil {
@@ -379,7 +379,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 			gl.Enable(gl.TEXTURE_2D)
 			gl.EnableClientState(gl.TEXTURE_COORD_ARRAY)
 			los_tex.Bind()
-			room.vbuffer.Bind(gl.ARRAY_BUFFER)
+			room.glData.vbuffer.Bind(gl.ARRAY_BUFFER)
 			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.los_u)
 			gl.ClientActiveTexture(gl.TEXTURE0)
 			gl.ActiveTexture(gl.TEXTURE0)
@@ -458,10 +458,10 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 			// TODO(tmckee): ??? 'vert' is always the zero value here and we only seem
 			// to read from it?
 			gl.ClientActiveTexture(gl.TEXTURE0)
-			room.vbuffer.Bind(gl.ARRAY_BUFFER)
+			room.glData.vbuffer.Bind(gl.ARRAY_BUFFER)
 			// TODO(tmckee): ??? wait, wut? this says "look at a byte offset that is
 			// <some-stack-address> away from the start of the buffer object that
-			// room.vbuffer names". ... that's bad, right!?
+			// room.glData.vbuffer names". ... that's bad, right!?
 			gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.x)
 			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.u)
 			gl.ClientActiveTexture(gl.TEXTURE1)
@@ -469,8 +469,8 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 				los_tex.Bind()
 			}
 			// TODO(tmckee): why do we rebind here? nothing has touch gl.ARRAY_BUFFER
-			// since the last time web bound room.vbuffer...
-			room.vbuffer.Bind(gl.ARRAY_BUFFER)
+			// since the last time web bound room.glData.vbuffer...
+			room.glData.vbuffer.Bind(gl.ARRAY_BUFFER)
 			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.los_u)
 			// Now draw the walls
 			gl.LoadMatrixf((*[16]float32)(&floor))
@@ -509,7 +509,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 				R, G, B, _ := room.Color()
 				gl.Color4ub(R, G, B, 255)
 			}
-			gl.DrawElements(gl.TRIANGLES, int(room.floor_count), gl.UNSIGNED_SHORT, nil)
+			gl.DrawElements(gl.TRIANGLES, int(room.glData.floor_count), gl.UNSIGNED_SHORT, nil)
 			if los_tex != nil {
 				base.EnableShader("los")
 			} else {
@@ -601,26 +601,26 @@ func (*RoomRealGl) BufferData(target gl.GLenum, size int, data interface{}, usag
 }
 
 func (room *Room) SetupGlStuff(glProxy RoomGlProxy) {
-	if room.X == room.glData.x &&
-		room.Y == room.glData.y &&
-		room.Size.Dx == room.glData.dx &&
-		room.Size.Dy == room.glData.dy &&
-		room.Wall.Data().Dx() == room.glData.wall_tex_dx &&
-		room.Wall.Data().Dy() == room.glData.wall_tex_dy {
+	if room.X == room.glDataInputs.x &&
+		room.Y == room.glDataInputs.y &&
+		room.Size.Dx == room.glDataInputs.dx &&
+		room.Size.Dy == room.glDataInputs.dy &&
+		room.Wall.Data().Dx() == room.glDataInputs.wall_tex_dx &&
+		room.Wall.Data().Dy() == room.glDataInputs.wall_tex_dy {
 		logging.Trace("room.SetupGlStuff: bailing")
 		return
 	}
-	room.glData.x = room.X
-	room.glData.y = room.Y
-	room.glData.dx = room.Size.Dx
-	room.glData.dy = room.Size.Dy
-	room.glData.wall_tex_dx = room.Wall.Data().Dx()
-	room.glData.wall_tex_dy = room.Wall.Data().Dy()
-	if room.vbuffer != 0 {
-		room.vbuffer.Delete()
-		room.left_buffer.Delete()
-		room.right_buffer.Delete()
-		room.floor_buffer.Delete()
+	room.glDataInputs.x = room.X
+	room.glDataInputs.y = room.Y
+	room.glDataInputs.dx = room.Size.Dx
+	room.glDataInputs.dy = room.Size.Dy
+	room.glDataInputs.wall_tex_dx = room.Wall.Data().Dx()
+	room.glDataInputs.wall_tex_dy = room.Wall.Data().Dy()
+	if room.glData.vbuffer != 0 {
+		room.glData.vbuffer.Delete()
+		room.glData.left_buffer.Delete()
+		room.glData.right_buffer.Delete()
+		room.glData.floor_buffer.Delete()
 	}
 	dx := float32(room.Size.Dx)
 	dy := float32(room.Size.Dy)
@@ -706,21 +706,21 @@ func (room *Room) SetupGlStuff(glProxy RoomGlProxy) {
 		{dx, 0.5, 0, 1, 1 - 0.5/dy, lt_lly_ep, lt_urx_ep},
 		{dx, 0, 0, 1, 1, lt_lly_ep, lt_urx_ep},
 	}
-	room.vbuffer = glProxy.GenBuffer()
-	room.vbuffer.Bind(gl.ARRAY_BUFFER)
+	room.glData.vbuffer = glProxy.GenBuffer()
+	room.glData.vbuffer.Bind(gl.ARRAY_BUFFER)
 	size := int(unsafe.Sizeof(roomVertex{}))
 	glProxy.BufferData(gl.ARRAY_BUFFER, size*len(vs), vs, gl.STATIC_DRAW)
 
 	// left wall indices
 	is := []uint16{0, 3, 4, 0, 4, 1}
-	room.left_buffer = glProxy.GenBuffer()
-	room.left_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+	room.glData.left_buffer = glProxy.GenBuffer()
+	room.glData.left_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 	glProxy.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
 
 	// right wall indices
 	is = []uint16{1, 4, 5, 1, 5, 2}
-	room.right_buffer = glProxy.GenBuffer()
-	room.right_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+	room.glData.right_buffer = glProxy.GenBuffer()
+	room.glData.right_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 	glProxy.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
 
 	// floor indices
@@ -735,10 +735,10 @@ func (room *Room) SetupGlStuff(glProxy RoomGlProxy) {
 		34, 35, 36, 34, 36, 37, // upper right corner
 		38, 39, 40, 38, 40, 41, // lower right corner
 	}
-	room.floor_buffer = glProxy.GenBuffer()
-	room.floor_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+	room.glData.floor_buffer = glProxy.GenBuffer()
+	room.glData.floor_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 	glProxy.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
-	room.floor_count = len(is)
+	room.glData.floor_count = len(is)
 }
 
 func (room *RoomDef) Dims() (dx, dy int) {
