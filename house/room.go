@@ -600,16 +600,23 @@ func (*RoomRealGl) BufferData(target gl.GLenum, size int, data interface{}, usag
 	gl.BufferData(target, size, data, usage)
 }
 
-func (room *Room) SetupGlStuff(glProxy RoomGlProxy) {
-	if room.X == room.glDataInputs.x &&
+// Check if the current configuration of the room matches the configuration it
+// had during the last GL initialization run.
+func (room *Room) glDataInputsDiffer() bool {
+	return room.X == room.glDataInputs.x &&
 		room.Y == room.glDataInputs.y &&
 		room.Size.Dx == room.glDataInputs.dx &&
 		room.Size.Dy == room.glDataInputs.dy &&
 		room.Wall.Data().Dx() == room.glDataInputs.wall_tex_dx &&
-		room.Wall.Data().Dy() == room.glDataInputs.wall_tex_dy {
+		room.Wall.Data().Dy() == room.glDataInputs.wall_tex_dy
+}
+
+func (room *Room) SetupGlStuff(glProxy RoomGlProxy) {
+	if room.glDataInputsDiffer() {
 		logging.Trace("room.SetupGlStuff: bailing")
 		return
 	}
+
 	room.glDataInputs.x = room.X
 	room.glDataInputs.y = room.Y
 	room.glDataInputs.dx = room.Size.Dx
