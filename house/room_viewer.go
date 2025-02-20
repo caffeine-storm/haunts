@@ -897,7 +897,7 @@ func (rv *roomViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
 	}
 
 	render.WithMatrixInMode(&rv.mat, render.MatrixModeModelView, func() {
-		rv.room.setupGlStuff()
+		rv.room.SetupGlStuff(nil)
 		rv.room.far_left.wall_alpha = 255
 		rv.room.far_right.wall_alpha = 255
 		rv.room.Render(rv.mat, rv.left_wall_mat, rv.right_wall_mat, rv.zoom, 255, nil, nil, nil)

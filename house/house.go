@@ -564,7 +564,7 @@ func (f *Floor) render(region gui.Region, focusx, focusy, angle, zoom float32, d
 	for i := len(ros) - 1; i >= 0; i-- {
 		room := ros[i].(*Room)
 		los_alpha := room.getMaxLosAlpha(los_tex)
-		room.setupGlStuff()
+		room.SetupGlStuff(nil)
 		tx := (focusx + 3) - float32(room.X+room.Size.Dx)
 		if tx < 0 {
 			tx = 0

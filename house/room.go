@@ -583,7 +583,10 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 	})
 }
 
-func (room *Room) setupGlStuff() {
+type RoomGlProxy interface {
+}
+
+func (room *Room) SetupGlStuff(glProxy RoomGlProxy) {
 	if room.X == room.glData.x &&
 		room.Y == room.glData.y &&
 		room.Size.Dx == room.glData.dx &&
