@@ -1,16 +1,17 @@
 package house
 
 import (
+	"image"
+	"math"
+	"path/filepath"
+	"unsafe"
+
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/util/algorithm"
-	"image"
-	"math"
-	"path/filepath"
-	"unsafe"
 )
 
 // TODO(tmckee): ??? why is this not in house/room.go?
@@ -564,7 +565,7 @@ func (f *Floor) render(region gui.Region, focusx, focusy, angle, zoom float32, d
 	for i := len(ros) - 1; i >= 0; i-- {
 		room := ros[i].(*Room)
 		los_alpha := room.getMaxLosAlpha(los_tex)
-		room.SetupGlStuff(nil)
+		room.SetupGlStuff(&RoomRealGl{})
 		tx := (focusx + 3) - float32(room.X+room.Size.Dx)
 		if tx < 0 {
 			tx = 0

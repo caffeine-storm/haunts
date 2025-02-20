@@ -584,6 +584,20 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 }
 
 type RoomGlProxy interface {
+	GenBuffer() gl.Buffer
+	BufferData(target gl.GLenum, size int, data interface{}, usage gl.GLenum)
+}
+
+type RoomRealGl struct{}
+
+var _ RoomGlProxy = ((*RoomRealGl)(nil))
+
+func (*RoomRealGl) GenBuffer() gl.Buffer {
+	return gl.GenBuffer()
+}
+
+func (*RoomRealGl) BufferData(target gl.GLenum, size int, data interface{}, usage gl.GLenum) {
+	gl.BufferData(target, size, data, usage)
 }
 
 func (room *Room) SetupGlStuff(glProxy RoomGlProxy) {
@@ -692,22 +706,22 @@ func (room *Room) SetupGlStuff(glProxy RoomGlProxy) {
 		{dx, 0.5, 0, 1, 1 - 0.5/dy, lt_lly_ep, lt_urx_ep},
 		{dx, 0, 0, 1, 1, lt_lly_ep, lt_urx_ep},
 	}
-	room.vbuffer = gl.GenBuffer()
+	room.vbuffer = glProxy.GenBuffer()
 	room.vbuffer.Bind(gl.ARRAY_BUFFER)
 	size := int(unsafe.Sizeof(roomVertex{}))
-	gl.BufferData(gl.ARRAY_BUFFER, size*len(vs), vs, gl.STATIC_DRAW)
+	glProxy.BufferData(gl.ARRAY_BUFFER, size*len(vs), vs, gl.STATIC_DRAW)
 
 	// left wall indices
 	is := []uint16{0, 3, 4, 0, 4, 1}
-	room.left_buffer = gl.GenBuffer()
+	room.left_buffer = glProxy.GenBuffer()
 	room.left_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
-	gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
+	glProxy.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
 
 	// right wall indices
 	is = []uint16{1, 4, 5, 1, 5, 2}
-	room.right_buffer = gl.GenBuffer()
+	room.right_buffer = glProxy.GenBuffer()
 	room.right_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
-	gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
+	glProxy.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
 
 	// floor indices
 	is = []uint16{
@@ -721,9 +735,9 @@ func (room *Room) SetupGlStuff(glProxy RoomGlProxy) {
 		34, 35, 36, 34, 36, 37, // upper right corner
 		38, 39, 40, 38, 40, 41, // lower right corner
 	}
-	room.floor_buffer = gl.GenBuffer()
+	room.floor_buffer = glProxy.GenBuffer()
 	room.floor_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
-	gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
+	glProxy.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
 	room.floor_count = len(is)
 }
 
