@@ -171,9 +171,9 @@ type doorState struct {
 }
 
 type doorGlIds struct {
-	vbuffer uint32
+	vbuffer gl.Buffer
 
-	floor_buffer uint32
+	floor_buffer gl.Buffer
 	floor_count  gl.GLsizei
 }
 
@@ -195,14 +195,16 @@ func (d *Door) setupGlStuff(room *Room) {
 	}
 	d.state = state
 	if d.threshold_glids.vbuffer != 0 {
-		gl.Buffer(d.threshold_glids.vbuffer).Delete()
-		gl.Buffer(d.threshold_glids.floor_buffer).Delete()
+		// TODO(tmckee): we should DRY out resetting these buffers with a
+		// d.threshold_glids.Reset() call (or w/e)
+		d.threshold_glids.vbuffer.Delete()
+		d.threshold_glids.floor_buffer.Delete()
 		d.threshold_glids.vbuffer = 0
 		d.threshold_glids.floor_buffer = 0
 	}
 	if d.door_glids.vbuffer != 0 {
-		gl.Buffer(d.door_glids.vbuffer).Delete()
-		gl.Buffer(d.door_glids.floor_buffer).Delete()
+		d.door_glids.vbuffer.Delete()
+		d.door_glids.floor_buffer.Delete()
 		d.door_glids.vbuffer = 0
 		d.door_glids.floor_buffer = 0
 	}
@@ -314,21 +316,21 @@ func (d *Door) setupGlStuff(room *Room) {
 			los_v: los_v2,
 		})
 	}
-	d.threshold_glids.vbuffer = uint32(gl.GenBuffer())
-	gl.Buffer(d.threshold_glids.vbuffer).Bind(gl.ARRAY_BUFFER)
+	d.threshold_glids.vbuffer = gl.GenBuffer()
+	d.threshold_glids.vbuffer.Bind(gl.ARRAY_BUFFER)
 	size := int(unsafe.Sizeof(roomVertex{}))
 	gl.BufferData(gl.ARRAY_BUFFER, size*len(vs), gl.Pointer(&vs[0].x), gl.STATIC_DRAW)
 
 	is := []uint16{0, 1, 2, 0, 2, 3}
-	d.threshold_glids.floor_buffer = uint32(gl.GenBuffer())
-	gl.Buffer(d.threshold_glids.floor_buffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
+	d.threshold_glids.floor_buffer = gl.GenBuffer()
+	d.threshold_glids.floor_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 	gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), gl.Pointer(&is[0]), gl.STATIC_DRAW)
 	d.threshold_glids.floor_count = 6
 
 	if d.Facing == FarLeft || d.Facing == FarRight {
 		is2 := []uint16{4, 5, 6, 4, 6, 7}
-		d.door_glids.floor_buffer = uint32(gl.GenBuffer())
-		gl.Buffer(d.door_glids.floor_buffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
+		d.door_glids.floor_buffer = gl.GenBuffer()
+		d.door_glids.floor_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 		gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is2), gl.Pointer(&is2[0]), gl.STATIC_DRAW)
 		d.door_glids.floor_count = 6
 	}
