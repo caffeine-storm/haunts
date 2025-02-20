@@ -372,6 +372,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 		}
 
 		if los_tex != nil {
+			logging.Trace("los_tex not nil")
 			gl.LoadMatrixf((*[16]float32)(&floor))
 			gl.ClientActiveTexture(gl.TEXTURE1)
 			gl.ActiveTexture(gl.TEXTURE1)
@@ -387,7 +388,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 		}
 
 		var mul, run mathgl.Mat4
-		for _, plane := range planes {
+		for planeIdx, plane := range planes {
 			gl.LoadMatrixf((*[16]float32)(&floor))
 			run.Assign(&floor)
 
@@ -476,6 +477,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 			plane.texture.Data().Bind()
 			gl.Buffer(plane.index_buffer).Bind(gl.ELEMENT_ARRAY_BUFFER)
 			if (plane.mat == &left || plane.mat == &right) && strings.Contains(string(room.Wall.Path), "gradient.png") {
+				logging.Trace("seeing a gradient.png texture; enabling 'gorey' shader", "planeIdx", planeIdx)
 				base.EnableShader("gorey")
 				base.SetUniformI("gorey", "tex", 0)
 				base.SetUniformI("gorey", "foo", Foo)
@@ -484,6 +486,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 				base.SetUniformF("gorey", "num_steps", Num_steps)
 			}
 			if plane.mat == &floor && strings.Contains(string(room.Floor.Path), "gradient.png") {
+				logging.Trace("seeing a gradient.png texture; enabling 'gorey' shader", "planeIdx", planeIdx)
 				base.EnableShader("gorey")
 				base.SetUniformI("gorey", "tex", 0)
 				base.SetUniformI("gorey", "foo", Foo)
@@ -587,6 +590,7 @@ func (room *Room) setupGlStuff() {
 		room.Size.Dy == room.gl.dy &&
 		room.Wall.Data().Dx() == room.gl.wall_tex_dx &&
 		room.Wall.Data().Dy() == room.gl.wall_tex_dy {
+		logging.Trace("room.SetupGlStuff: bailing")
 		return
 	}
 	room.gl.x = room.X
