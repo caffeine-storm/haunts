@@ -584,21 +584,21 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 }
 
 func (room *Room) setupGlStuff() {
-	if room.X == room.gl.x &&
-		room.Y == room.gl.y &&
-		room.Size.Dx == room.gl.dx &&
-		room.Size.Dy == room.gl.dy &&
-		room.Wall.Data().Dx() == room.gl.wall_tex_dx &&
-		room.Wall.Data().Dy() == room.gl.wall_tex_dy {
+	if room.X == room.glData.x &&
+		room.Y == room.glData.y &&
+		room.Size.Dx == room.glData.dx &&
+		room.Size.Dy == room.glData.dy &&
+		room.Wall.Data().Dx() == room.glData.wall_tex_dx &&
+		room.Wall.Data().Dy() == room.glData.wall_tex_dy {
 		logging.Trace("room.SetupGlStuff: bailing")
 		return
 	}
-	room.gl.x = room.X
-	room.gl.y = room.Y
-	room.gl.dx = room.Size.Dx
-	room.gl.dy = room.Size.Dy
-	room.gl.wall_tex_dx = room.Wall.Data().Dx()
-	room.gl.wall_tex_dy = room.Wall.Data().Dy()
+	room.glData.x = room.X
+	room.glData.y = room.Y
+	room.glData.dx = room.Size.Dx
+	room.glData.dy = room.Size.Dy
+	room.glData.wall_tex_dx = room.Wall.Data().Dx()
+	room.glData.wall_tex_dy = room.Wall.Data().Dy()
 	if room.vbuffer != 0 {
 		gl.Buffer(room.vbuffer).Delete()
 		gl.Buffer(room.left_buffer).Delete()

@@ -48,7 +48,7 @@ type Room struct {
 	// we don't want to redo all of the vertex and index buffers unless we
 	// need to, so we keep track of the position and size of the room when they
 	// were made so we don't have to.
-	gl struct {
+	glData struct {
 		x, y, dx, dy             int
 		wall_tex_dx, wall_tex_dy int
 	}
