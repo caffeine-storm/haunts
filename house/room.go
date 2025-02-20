@@ -611,12 +611,7 @@ func (room *Room) glDataInputsDiffer() bool {
 		room.Wall.Data().Dy() == room.glDataInputs.wall_tex_dy
 }
 
-func (room *Room) SetupGlStuff(glProxy RoomGlProxy) {
-	if room.glDataInputsDiffer() {
-		logging.Trace("room.SetupGlStuff: bailing")
-		return
-	}
-
+func (room *Room) reconfigureGlData() {
 	room.glDataInputs.x = room.X
 	room.glDataInputs.y = room.Y
 	room.glDataInputs.dx = room.Size.Dx
@@ -629,6 +624,15 @@ func (room *Room) SetupGlStuff(glProxy RoomGlProxy) {
 		room.glData.right_buffer.Delete()
 		room.glData.floor_buffer.Delete()
 	}
+}
+
+func (room *Room) SetupGlStuff(glProxy RoomGlProxy) {
+	if room.glDataInputsDiffer() {
+		logging.Trace("room.SetupGlStuff: bailing")
+		return
+	}
+	room.reconfigureGlData()
+
 	dx := float32(room.Size.Dx)
 	dy := float32(room.Size.Dy)
 	var dz float32
