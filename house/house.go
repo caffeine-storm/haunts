@@ -37,12 +37,12 @@ type Room struct {
 	// opengl stuff
 	// Vertex buffer storing the vertices of the room as well as the texture
 	// coordinates for the los texture.
-	vbuffer uint32
+	vbuffer gl.Buffer
 
 	// index buffers
-	left_buffer  uint32
-	right_buffer uint32
-	floor_buffer uint32
+	left_buffer  gl.Buffer
+	right_buffer gl.Buffer
+	floor_buffer gl.Buffer
 	floor_count  int
 
 	// we don't want to redo all of the vertex and index buffers unless we
