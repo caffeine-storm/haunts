@@ -160,6 +160,10 @@ ${TEST_REPORT_TAR}:
 				echo $${fname/.rej} ; \
 			done \
 		)
+
+trace-house-test:
+	go test ${testrunargs} -exec ../tools/apitrace/trace-gl.sh -tags nosound ./house
+
 # Let go tooling decide if things are out-of-date
 .PHONY: haunts
 .PHONY: devhaunts
