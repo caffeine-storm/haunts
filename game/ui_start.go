@@ -57,6 +57,8 @@ func InsertStartMenu(ui gui.WidgetParent) error {
 		err := InsertMapChooser(
 			ui,
 			func(name string) {
+				// TODO(tmckee): why is this MakeGamePanel? Shouldn't it be
+				// game.InsertVersusMenu?
 				ui.AddChild(MakeGamePanel(name, nil, nil, ""))
 			},
 			InsertStartMenu,
