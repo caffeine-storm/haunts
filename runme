@@ -1,3 +1,0 @@
-#!/bin/bash
-GOMAXPROCS=1 open haunts.app/
-
