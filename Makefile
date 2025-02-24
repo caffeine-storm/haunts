@@ -20,7 +20,7 @@ it: haunts
 go: haunts ${RUNTIME_DATADIR}
 	./haunts
 
-debug: devhaunts
+debug: devhaunts ${RUNTIME_DATADIR}
 	./$^
 
 dev.go.mod: go.mod
@@ -44,10 +44,10 @@ haunts: |go.mod go.sum
 haunts: GEN_version.go
 	go build -x -o $@ -tags nosound main.go $^
 
-profile-haunts: haunts
+profile-haunts: haunts ${RUNTIME_DATADIR}
 	${PERF} record -g ./$^
 
-profile-dev-haunts: devhaunts
+profile-dev-haunts: devhaunts ${RUNTIME_DATADIR}
 	${PERF} record -g ./$^
 
 # TODO(tmckee): this should use 'go gen' instead
@@ -86,7 +86,7 @@ test-fresh: |clean_rejects
 test-fresh: test-nocache
 
 test-dlv: singlepackage=${pkg}
-test-dlv:
+test-dlv: ${RUNTIME_DATADIR}
 	dlv test --build-flags="-tags nosound" ${singlepackage} -- ${testrunargs}
 
 .PRECIOUS: %/perftest
