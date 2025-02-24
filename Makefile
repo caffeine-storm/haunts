@@ -85,9 +85,13 @@ test-nocache:
 test-fresh: |clean_rejects
 test-fresh: test-nocache
 
+pkg?= -- set 'pkg' to the package under test --
 test-dlv: singlepackage=${pkg}
 test-dlv: ${RUNTIME_DATADIR}
-	dlv test --build-flags="-tags nosound" ${singlepackage} -- ${testrunargs}
+# delve wants exactly one package at a time so "testrunargs" isn't what we
+# want here. We use a var specifically for pointing at a single directory.
+	[ -d "${singlepackage}" ] && \
+	${XVFB_RUN} dlv test --build-flags="-tags nosound" ${singlepackage} -- ${testrunargs}
 
 .PRECIOUS: %/perftest
 %/perftest: %
