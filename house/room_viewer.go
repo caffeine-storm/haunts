@@ -130,9 +130,9 @@ func (rv *roomViewer) AdjAngle(ang float32) {
 
 func (rv *roomViewer) Drag(dx, dy float64) {
 	v := mathgl.Vec3{X: rv.fx, Y: rv.fy}
-	vx := mathgl.Vec3{1, -1, 0}
+	vx := mathgl.Vec3{X: 1, Y: -1, Z: 0}
 	vx.Normalize()
-	vy := mathgl.Vec3{1, 1, 0}
+	vy := mathgl.Vec3{X: 1, Y: 1, Z: 0}
 	vy.Normalize()
 	vx.Scale(float32(dx) / rv.zoom * 2)
 	vy.Scale(float32(dy) / rv.zoom * 2)
@@ -245,7 +245,7 @@ func (rv *roomViewer) BoardToWindowf(bx, by float32) (float32, float32) {
 }
 
 func (rv *roomViewer) modelviewToLeftWall(mx, my float32) (x, y, dist float32) {
-	mz := d2p(rv.left_wall_mat, mathgl.Vec3{mx, my, 0}, mathgl.Vec3{0, 0, 1})
+	mz := d2p(rv.left_wall_mat, mathgl.Vec3{X: mx, Y: my, Z: 0}, mathgl.Vec3{X: 0, Y: 0, Z: 1})
 	v := mathgl.Vec4{X: mx, Y: my, Z: mz, W: 1}
 	v.Transform(&rv.left_wall_imat)
 	if v.X > float32(rv.room.Size.Dx) {
@@ -255,7 +255,7 @@ func (rv *roomViewer) modelviewToLeftWall(mx, my float32) (x, y, dist float32) {
 }
 
 func (rv *roomViewer) modelviewToRightWall(mx, my float32) (x, y, dist float32) {
-	mz := d2p(rv.right_wall_mat, mathgl.Vec3{mx, my, 0}, mathgl.Vec3{0, 0, 1})
+	mz := d2p(rv.right_wall_mat, mathgl.Vec3{X: mx, Y: my, Z: 0}, mathgl.Vec3{X: 0, Y: 0, Z: 1})
 	v := mathgl.Vec4{X: mx, Y: my, Z: mz, W: 1}
 	v.Transform(&rv.right_wall_imat)
 	if v.Y > float32(rv.room.Size.Dy) {
@@ -297,7 +297,7 @@ func d2p(tmat mathgl.Mat4, point, ray mathgl.Vec3) float32 {
 }
 
 func (rv *roomViewer) modelviewToBoard(mx, my float32) (x, y, dist float32) {
-	mz := d2p(rv.mat, mathgl.Vec3{mx, my, 0}, mathgl.Vec3{0, 0, 1})
+	mz := d2p(rv.mat, mathgl.Vec3{X: mx, Y: my, Z: 0}, mathgl.Vec3{X: 0, Y: 0, Z: 1})
 	//  mz := (my - float32(rv.Render_region.Y+rv.Render_region.Dy/2)) * float32(math.Tan(float64(rv.angle*math.Pi/180)))
 	v := mathgl.Vec4{X: mx, Y: my, Z: mz, W: 1}
 	v.Transform(&rv.imat)
@@ -876,12 +876,12 @@ func drawFurniture(roomx, roomy int, mat mathgl.Mat4, zoom float32, furniture []
 			cstack.Pop()
 			switch d := f.(type) {
 			case *Furniture:
-				d.Render(mathgl.Vec2{leftx, boty}, rightx-leftx)
+				d.Render(mathgl.Vec2{X: leftx, Y: boty}, rightx-leftx)
 
 			case Drawable:
 				gl.Enable(gl.TEXTURE_2D)
 				x := (leftx + rightx) / 2
-				d.Render(mathgl.Vec2{x, boty}, rightx-leftx)
+				d.Render(mathgl.Vec2{X: x, Y: boty}, rightx-leftx)
 			}
 		}
 	})
