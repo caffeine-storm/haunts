@@ -2,6 +2,7 @@ package house
 
 import (
 	"math"
+	"runtime"
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/logging"
@@ -201,6 +202,17 @@ func makeRoomMats(room *Room, region gui.Region, focusx, focusy, angle, zoom flo
 	iright.Assign(&right)
 	iright.Inverse()
 
+	logging.Trace("makeRoomMats returning",
+		"roomsize", room.Size,
+		"region", region,
+		"focusx", focusx,
+		"focusy", focusy,
+		"angle", angle,
+		"zoom", zoom,
+		"floor", floor,
+		"left", left,
+		"right", right,
+	)
 	return floor, ifloor, left, ileft, right, iright
 }
 
@@ -887,9 +899,17 @@ func drawFurniture(roomx, roomy int, mat mathgl.Mat4, zoom float32, furniture []
 	})
 }
 
+func generateCallstack() string {
+	buf := make([]byte, 1024)
+	numWritten := runtime.Stack(buf, false)
+	return string(buf[0:numWritten])
+}
+
 func (rv *roomViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
 	region.PushClipPlanes()
 	defer region.PopClipPlanes()
+
+	logging.Trace("roomViewer.Draw", "region", region, "rv.Render_region", rv.Render_region, "generateCallstack", generateCallstack())
 
 	if rv.Render_region.X != region.X || rv.Render_region.Y != region.Y || rv.Render_region.Dx != region.Dx || rv.Render_region.Dy != region.Dy {
 		rv.Render_region = region

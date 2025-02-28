@@ -6,6 +6,7 @@ import (
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/house"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/mathgl"
@@ -65,40 +66,85 @@ func TestMath(t *testing.T) {
 }
 
 func TestMakeRoomMats(t *testing.T) {
-	DefaultRoomMatrices := func() []mathgl.Mat4 {
-		defaultRoom := house.BlankRoom()
-		defaultRegion := gui.Region{
-			Point: gui.Point{X: 0, Y: 0},
-			Dims:  gui.Dims{Dx: 10, Dy: 10},
+	t.Run("blank room", func(t *testing.T) {
+		DefaultRoomMatrices := func() []mathgl.Mat4 {
+			defaultRoom := house.BlankRoom()
+			defaultRegion := gui.Region{
+				Point: gui.Point{X: 0, Y: 0},
+				Dims:  gui.Dims{Dx: 10, Dy: 10},
+			}
+			defaultFocus := struct {
+				X, Y float32
+			}{
+				X: 0,
+				Y: 0,
+			}
+			defaultAngle := float32(0)
+			defaultZoom := float32(1)
+			var a, b, c, d, e, f mathgl.Mat4
+			logging.TraceBracket(func() {
+				a, b, c, d, e, f = house.MakeRoomMatsForTest(defaultRoom, defaultRegion, defaultFocus.X, defaultFocus.Y, defaultAngle, defaultZoom)
+			})
+
+			return []mathgl.Mat4{a, b, c, d, e, f}
 		}
-		defaultFocus := struct {
-			X, Y float32
-		}{
-			X: 0,
-			Y: 0,
+
+		roomMats := DefaultRoomMatrices()
+
+		jankyOneOverRoot2 := mathgl.Fsin32(math.Pi / 4)
+
+		// The floor transform should rotate its input by 45 degrees about
+		// the z-axis, then translate to adjust by the focus.
+		defaultFloor := mathgl.Mat4{
+			jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
+			-jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
+			0, 0, 1, 0,
+			5, 5, 0, 1,
 		}
-		defaultAngle := float32(0)
-		defaultZoom := float32(1)
-		a, b, c, d, e, f := house.MakeRoomMatsForTest(defaultRoom, defaultRegion, defaultFocus.X, defaultFocus.Y, defaultAngle, defaultZoom)
+		if !matsAreEqual(roomMats[0], defaultFloor) {
+			t.Fatalf("expected matrix mismatch: expected %+v, got %+v", defaultFloor, roomMats[0])
+		}
+	})
+	t.Run("non-zero-zero focus", func(t *testing.T) {
+		MakeRoomMatrices := func() []mathgl.Mat4 {
+			defaultRoom := house.BlankRoom()
+			defaultRegion := gui.Region{
+				Point: gui.Point{X: 0, Y: 0},
+				Dims:  gui.Dims{Dx: 10, Dy: 10},
+			}
+			nonZeroFocus := struct {
+				X, Y float32
+			}{
+				X: 5,
+				Y: 5,
+			}
+			defaultAngle := float32(0)
+			defaultZoom := float32(1)
+			var a, b, c, d, e, f mathgl.Mat4
+			logging.TraceBracket(func() {
+				a, b, c, d, e, f = house.MakeRoomMatsForTest(defaultRoom, defaultRegion, nonZeroFocus.X, nonZeroFocus.Y, defaultAngle, defaultZoom)
+			})
 
-		return []mathgl.Mat4{a, b, c, d, e, f}
-	}
+			return []mathgl.Mat4{a, b, c, d, e, f}
+		}
 
-	roomMats := DefaultRoomMatrices()
+		roomMats := MakeRoomMatrices()
 
-	jankyOneOverRoot2 := mathgl.Fsin32(math.Pi / 4)
+		jankyOneOverRoot2 := mathgl.Fsin32(math.Pi / 4)
 
-	// The default floor transform should rotate its input by 45 degrees about
-	// the z-axis, then translate to adjust by the
-	defaultFloor := mathgl.Mat4{
-		jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
-		-jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
-		0, 0, 1, 0,
-		5, 5, 0, 1,
-	}
-	if !matsAreEqual(roomMats[0], defaultFloor) {
-		t.Fatalf("expected matrix mismatch: expected %+v, got %+v", defaultFloor, roomMats[0])
-	}
+		// The floor transform should rotate its input by 45 degrees about
+		// the z-axis, then translate to adjust by the focus.
+		expectedFloor := mathgl.Mat4{
+			jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
+			-jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
+			0, 0, 1, 0,
+			5, 5, 0, 1,
+		}
+
+		if !matsAreEqual(roomMats[0], expectedFloor) {
+			t.Fatalf("expected matrix mismatch:\nexpected:\n%v\ngot:\n%v", render.Showmat(expectedFloor), render.Showmat(roomMats[0]))
+		}
+	})
 }
 
 func RoomViewerSpecs() {
@@ -115,14 +161,19 @@ func RoomViewerSpecs() {
 			So(rv, ShouldNotBeNil)
 
 			Convey("can be drawn", func() {
-				twoFiveSixSquare := gui.Dims{
-					Dx: 256, Dy: 256,
+				reg := gui.Region{
+					Point: gui.Point{
+						X: 0, Y: 0,
+					},
+					Dims: gui.Dims{
+						Dx: 256, Dy: 256,
+					},
 				}
-				reg := gui.Region{}
-				reg.Dims = twoFiveSixSquare
-				g := guitest.MakeStubbedGui(twoFiveSixSquare)
+				g := guitest.MakeStubbedGui(reg.Dims)
 				queue.Queue(func(render.RenderQueueState) {
-					rv.Draw(reg, g)
+					logging.TraceBracket(func() {
+						rv.Draw(reg, g)
+					})
 				})
 
 				So(queue, rendertest.ShouldLookLikeFile, "room-viewer")

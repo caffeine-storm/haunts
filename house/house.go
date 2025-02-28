@@ -60,7 +60,15 @@ type Room struct {
 
 func BlankRoom() *Room {
 	return &Room{
-		RoomDef: &RoomDef{},
+		Defname: "blank",
+		RoomDef: &RoomDef{
+			Name: "blank",
+			Size: RoomSize{
+				Name: "Blank(Small)",
+				Dx:   10,
+				Dy:   10,
+			},
+		},
 	}
 }
 
