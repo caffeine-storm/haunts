@@ -113,7 +113,7 @@ func MakeRoomViewer(room *Room, angle float32) *roomViewer {
 	rv.angle = angle
 	rv.fx = float32(rv.room.Size.Dx / 2)
 	rv.fy = float32(rv.room.Size.Dy / 2)
-	rv.Zoom(1)
+	rv.zoom = 1.0
 	rv.size = rv.room.Size
 	rv.makeMat()
 	rv.Request_dims.Dx = 100
