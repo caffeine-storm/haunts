@@ -1,5 +1,9 @@
-- bug#9: house/room.go is calling gl.DrawElements in room.Render but it doesn't look
-	to be using the correct count of elements; it's counting vertices _and_
+- bug#10: tests that need to be skipped for now can be tagged with this bug.
+	That way, we can easily find them and disable higher-level tests when we need
+	to re-focus.
+
+- bug#9: house/room.go is calling gl.DrawElements in room.Render but it doesn't
+	look to be using the correct count of elements; it's counting vertices _and_
 	vertices that aren't part of the ARRAY_BUFFER being rendered!!!
 
 - console is getting input even when it's not open
@@ -9,7 +13,7 @@
 	- r.n., some furniture (or some other text-line, tbh) has a name 'data-runtime' which seems wrong? see house/furniture_tab.go:54
 
 - bug#8: house.MakeLosTexture should either always get called on a render
-  thread or never get called on a render thread. If we refactor game/los.go's
+	thread or never get called on a render thread. If we refactor game/los.go's
 	alloc() to farm out the call to a render thread, we can remove the
 	queue-from-within in house.MakeLosTexture, then always call the whole
 	function on a render thread.
@@ -29,9 +33,6 @@
 	  stop rendering properly once `haunts` hits the hitch
 		- this could indicate that something in WSL is crashing (maybe XWayland?)
 
-- skipping tests right now in house/ while things aren't correct; need to
-  enable and green them intead.
-
 - bug#1: The 'edit mode' screen doesn't render its text correctly
 
 - verify licenses
@@ -47,4 +48,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#10: <next>
+- bug#11: <next>
