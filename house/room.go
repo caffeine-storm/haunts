@@ -15,6 +15,7 @@ import (
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/debug"
 	"github.com/runningwild/glop/gui"
+	"github.com/runningwild/glop/render"
 )
 
 func GetAllRoomNames() []string {
@@ -347,11 +348,9 @@ func withRoomGlSettings(fn func()) {
 	defer gl.DisableClientState(gl.VERTEX_ARRAY)
 	defer gl.DisableClientState(gl.TEXTURE_COORD_ARRAY)
 
-	gl.MatrixMode(gl.MODELVIEW)
-	gl.PushMatrix()
-	defer gl.PopMatrix()
-
-	fn()
+	render.WithMatrixMode(render.MatrixModeModelView, func() {
+		fn()
+	})
 }
 
 // Need floor, right wall, and left wall matrices to draw the details
