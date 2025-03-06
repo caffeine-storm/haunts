@@ -447,8 +447,10 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 				do_color(255, 255, 255, room.far_right.wall_alpha)
 
 			case &floor:
+				// Write '0b00000010' to the stencil buffer when stencil testing.
 				gl.StencilFunc(gl.ALWAYS, 2, 2)
 				gl.StencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE)
+
 				do_color(255, 255, 255, 255)
 			}
 
@@ -467,12 +469,10 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 			if los_tex != nil {
 				los_tex.Bind()
 			}
-			// TODO(tmckee): why do we rebind here? nothing has touched
-			// gl.ARRAY_BUFFER since the last time we bound room.glData.vbuffer...
-			// right?
+			// Rebind vbuffer so that it is asociated to texture-unit-1 too
 			room.glData.vbuffer.Bind(gl.ARRAY_BUFFER)
 			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.los_u)
-			// Now draw the walls
+			// Now draw the plane
 			gl.LoadMatrixf((*[16]float32)(&floor))
 			plane.texture.Data().Bind()
 			plane.index_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
@@ -509,6 +509,10 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 				R, G, B, _ := room.Color()
 				gl.Color4ub(R, G, B, 255)
 			}
+
+			// XXX(tmckee): ummm... isn't room.glData.floor_count the number of
+			// vertices needed to draw the floor? Why are we trying to draw that many
+			// elements?
 			gl.DrawElements(gl.TRIANGLES, int(room.glData.floor_count), gl.UNSIGNED_SHORT, nil)
 			if los_tex != nil {
 				base.EnableShader("los")
@@ -516,6 +520,10 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 				base.EnableShader("")
 			}
 		}
+
+		// XXX(tmckee): room.RenderWalls seems to corrupt everything right now;
+		// we'll bail out here until it's fixed.
+		return
 
 		room.RenderWalls(&floor, base_alpha)
 
@@ -723,6 +731,9 @@ func (room *Room) SetupGlStuff(glProxy RoomGlProxy) {
 		{dx, 0.5, 0, 1, 1 - 0.5/dy, lt_lly_ep, lt_urx_ep},
 		{dx, 0, 0, 1, 1, lt_lly_ep, lt_urx_ep},
 	}
+
+	logging.Trace("ohboy", "dz", dz, "c", c, "vs", vs)
+
 	room.glData.vbuffer = glProxy.GenBuffer()
 	room.glData.vbuffer.Bind(gl.ARRAY_BUFFER)
 	size := int(unsafe.Sizeof(roomVertex{}))
