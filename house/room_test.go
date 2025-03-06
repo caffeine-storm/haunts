@@ -11,6 +11,7 @@ import (
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
+	"github.com/MobRulesGames/mathgl"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
@@ -72,6 +73,20 @@ func RoomSpecs() {
 			So(restestRoom, ShouldNotBeNil)
 			So(restestRoom.Defname, ShouldEqual, "restest")
 			So(restestRoom.Doors, ShouldHaveLength, 0)
+		})
+
+		Convey("drawing walls", func() {
+			room := loadRoom("restest.room")
+			id := &mathgl.Mat4{}
+			id.Identity()
+
+			queue.Queue(func(render.RenderQueueState) {
+				room.SetupGlStuff(&house.RoomRealGl{})
+				room.RenderWalls(id, 255)
+			})
+			queue.Purge()
+
+			So(queue, rendertest.ShouldLookLikeFile, "restest-walls")
 		})
 
 		SkipConvey("drawing restest", func() {
