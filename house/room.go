@@ -510,7 +510,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 				gl.Color4ub(R, G, B, 255)
 			}
 
-			// XXX(tmckee): ummm... isn't room.glData.floor_count the number of
+			// TODO(#9): ummm... isn't room.glData.floor_count the number of
 			// vertices needed to draw the floor? Why are we trying to draw that many
 			// elements?
 			gl.DrawElements(gl.TRIANGLES, int(room.glData.floor_count), gl.UNSIGNED_SHORT, nil)

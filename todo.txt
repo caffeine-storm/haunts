@@ -1,3 +1,7 @@
+- bug#9: house/room.go is calling gl.DrawElements in room.Render but it doesn't look
+	to be using the correct count of elements; it's counting vertices _and_
+	vertices that aren't part of the ARRAY_BUFFER being rendered!!!
+
 - console is getting input even when it's not open
 
 - edit screen is showing a furniture editor by default
@@ -43,4 +47,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#9: <next>
+- bug#10: <next>
