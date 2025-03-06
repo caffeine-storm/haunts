@@ -145,6 +145,54 @@ func TestMakeRoomMats(t *testing.T) {
 			t.Fatalf("expected matrix mismatch:\nexpected:\n%v\ngot:\n%v", render.Showmat(expectedFloor), render.Showmat(roomMats[0]))
 		}
 	})
+
+	t.Run("floor matrix properly smushes a floor image", func(t *testing.T) {
+		floorMatrix := &mathgl.Mat4{
+			8.622922, 8.622922, 0, 0,
+			-8.622922, 8.622922, 0, 0,
+			0, 0, 1, 0,
+			128, 41.770782, 0, 1,
+		}
+
+		imageName := "floor_21_mahogany_tiny"
+		screenRegion := image.Rect(0, 0, 400, 400)
+		expected := rendertest.MustLoadImage(fmt.Sprintf("testdata/images/%s_expected.png", imageName))
+
+		rendertest.WithGlForTest(screenRegion.Dx(), screenRegion.Dy(), func(sys system.System, queue render.RenderQueueInterface) {
+
+			var result image.Image
+			queue.Queue(func(st render.RenderQueueState) {
+				tex := debugtest.GivenATexture(fmt.Sprintf("images/%s.png", imageName))
+				render.WithMatrixInMode(floorMatrix, render.MatrixModeModelView, func() {
+					debugtest.DrawTexturedQuad(screenRegion, tex, st.Shaders())
+				})
+
+				debug.LogAndClearGlErrors(logging.ErrorLogger())
+
+				result = debug.ScreenShotRgba(screenRegion.Dx(), screenRegion.Dy())
+			})
+			queue.Purge()
+
+			ok := rendertest.ImagesAreWithinThreshold(result, expected, rendertest.Threshold(3), color.RGBA{A: 255})
+
+			if !ok {
+				outfileName := fmt.Sprintf("testdata/images/%s.rej.png", imageName)
+				outfile, err := os.Create(outfileName)
+				if err != nil {
+					panic(fmt.Errorf("couldn't os.Create %q: %w", outfileName, err))
+				}
+				defer outfile.Close()
+
+				err = png.Encode(outfile, result)
+				if err != nil {
+					panic(fmt.Errorf("couldn't png.Encode %q: %w", outfileName, err))
+				}
+
+				t.Fatalf("image mismatch")
+			}
+		})
+
+	})
 }
 
 func RoomViewerSpecs() {
