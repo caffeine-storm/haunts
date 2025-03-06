@@ -45,8 +45,6 @@ github.com/MobRulesGames/fmod v0.0.0-20121207023041-90f897047d59 h1:liMev5j3+XXr
 github.com/MobRulesGames/fmod v0.0.0-20121207023041-90f897047d59/go.mod h1:6X6o4I+6yNjDUZpbmGIK94Ia6BCrRkxCK/No4CaifWw=
 github.com/MobRulesGames/fsnotify v0.0.0-20121110053322-1b2bc1227408 h1:wdcx9XfxtL1WHzALG+Iht+wvWpMT8zH551YykTGIxVg=
 github.com/MobRulesGames/fsnotify v0.0.0-20121110053322-1b2bc1227408/go.mod h1:OEDqSJUPW/UJ6q25GvbR9CiCUNEutiy1VyBd2GbsTxY=
-github.com/MobRulesGames/mathgl v0.0.0-20120424214601-79bd4ce3042d h1:Rh3yrqrbhJpaxmPYreA73YB5yBl7f9ULUMeZcaHmEag=
-github.com/MobRulesGames/mathgl v0.0.0-20120424214601-79bd4ce3042d/go.mod h1:wXL75i6wDmeUURnQnNtW2xpiuPmDzPk2JnpQbm7Esu0=
 github.com/MobRulesGames/memory v0.0.0-20120626004817-db5bb35fd894 h1:26ZCnKDg9vNxiOK0VZ/tN2tg34DfrhKB0Xg5jUWkO8A=
 github.com/MobRulesGames/memory v0.0.0-20120626004817-db5bb35fd894/go.mod h1:w5jrl1aXV+AZaP1ye7wO8xB3ne7U2CkweE0atB7FPwk=
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=
@@ -63,6 +61,8 @@ github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c h1:KqJxBrec/mnK
 github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c/go.mod h1:ntYmIr0ULu7QxKlmOE6cC87X4pWDG8jO/wSUBn2ZzJY=
 github.com/caffeine-storm/golua v0.0.0-20240910150920-bb0104c032e4 h1:zTOKTYGNmZCZVDgvjsTEXhaFIcTWiccPHKBFaWQzo80=
 github.com/caffeine-storm/golua v0.0.0-20240910150920-bb0104c032e4/go.mod h1:W2FXrOPfx0i3wMe8N+ExY0xSvdN/VcY2/SmVHKMloqA=
+github.com/caffeine-storm/mathgl v0.0.0-20250304142043-9a68bb7bb47a h1:lue1B3UPQUKws55YJJPwQvMN3HYGeqawlQ7EAtRymVc=
+github.com/caffeine-storm/mathgl v0.0.0-20250304142043-9a68bb7bb47a/go.mod h1:JlFSX0xZ9cH22/kshJBkZR2+vbnASPDP0tvRnvKh64c=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWRnGsAI=
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=

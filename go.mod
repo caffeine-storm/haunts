@@ -1,8 +1,6 @@
 module github.com/MobRulesGames/haunts
 
-go 1.22.0
-
-toolchain go1.23.0
+go 1.23.0
 
 require (
 	code.google.com/p/freetype-go v0.0.0-20120725121025-28cc5fbc5d0b
@@ -31,6 +29,8 @@ require (
 )
 
 replace code.google.com/p/freetype-go => github.com/golang/freetype v0.0.0-20120725121025-28cc5fbc5d0b
+
+replace github.com/MobRulesGames/mathgl => github.com/caffeine-storm/mathgl v0.0.0-20250304142043-9a68bb7bb47a
 
 replace github.com/runningwild/glop => github.com/caffeine-storm/glop v0.0.0-20250228151531-bafe0e44d3a3
 
