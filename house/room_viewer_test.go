@@ -138,7 +138,7 @@ func TestMakeRoomMats(t *testing.T) {
 			jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
 			-jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
 			0, 0, 1, 0,
-			5, 5, 0, 1,
+			5, 5 - 10*jankyOneOverRoot2, 0, 1,
 		}
 
 		if !matsAreEqual(roomMats[0], expectedFloor) {
