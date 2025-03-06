@@ -1,7 +1,12 @@
 package house_test
 
 import (
+	"fmt"
+	"image"
+	"image/color"
+	"image/png"
 	"math"
+	"os"
 	"testing"
 
 	"github.com/MobRulesGames/haunts/base"
@@ -10,6 +15,8 @@ import (
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/mathgl"
+	"github.com/runningwild/glop/debug"
+	"github.com/runningwild/glop/debug/debugtest"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/gui/guitest"
 	"github.com/runningwild/glop/render"
@@ -198,7 +205,15 @@ func TestMakeRoomMats(t *testing.T) {
 func RoomViewerSpecs() {
 	base.SetDatadir("../data")
 
-	rendertest.WithGlForTest(256, 256, func(sys system.System, queue render.RenderQueueInterface) {
+	screenRegion := gui.Region{
+		Point: gui.Point{
+			X: 0, Y: 0,
+		},
+		Dims: gui.Dims{
+			Dx: 256, Dy: 256,
+		},
+	}
+	rendertest.WithGlForTest(screenRegion.Dx, screenRegion.Dy, func(sys system.System, queue render.RenderQueueInterface) {
 		registry.LoadAllRegistries()
 		base.InitShaders(queue)
 		texture.Init(queue)
@@ -209,22 +224,16 @@ func RoomViewerSpecs() {
 			So(rv, ShouldNotBeNil)
 
 			Convey("can be drawn", func() {
-				reg := gui.Region{
-					Point: gui.Point{
-						X: 0, Y: 0,
-					},
-					Dims: gui.Dims{
-						Dx: 256, Dy: 256,
-					},
-				}
-				g := guitest.MakeStubbedGui(reg.Dims)
+				g := guitest.MakeStubbedGui(screenRegion.Dims)
+				g.AddChild(rv)
 				queue.Queue(func(render.RenderQueueState) {
 					logging.TraceBracket(func() {
-						rv.Draw(reg, g)
+						g.Draw()
 					})
 				})
+				queue.Purge()
 
-				So(queue, rendertest.ShouldLookLikeFile, "room-viewer")
+				So(queue, rendertest.ShouldLookLikeFile, "room-viewer", rendertest.Threshold(0))
 			})
 		})
 	})
