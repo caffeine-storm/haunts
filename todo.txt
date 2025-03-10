@@ -1,3 +1,8 @@
+- bug#12: improve APIs so that we don't have to _remember_ to call SetupGLStuff
+	everywhere.
+
+- bug#11: clean things up from getting room.RenderWalls working
+
 - bug#10: tests that need to be skipped for now can be tagged with this bug.
 	That way, we can easily find them and disable higher-level tests when we need
 	to re-focus.
@@ -48,4 +53,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#11: <next>
+- bug#13: <next>

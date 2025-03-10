@@ -83,6 +83,8 @@ func RoomSpecs() {
 			queue.Queue(func(render.RenderQueueState) {
 				room.SetupGlStuff(&house.RoomRealGl{})
 				room.RenderWalls(id, 255)
+				// TODO(#12): having to remember to call some weird init function is
+				// sad making.
 			})
 			queue.Purge()
 

@@ -285,6 +285,7 @@ func (room *Room) getWallTextureState(wt *WallTexture) wallTextureGlIDs {
 }
 
 func (room *Room) RenderWalls(floor *mathgl.Mat4, base_alpha byte) {
+	// TODO(#11): don't lazily initialize these maps, do it during construction!
 	if room.wall_texture_gl_map == nil {
 		room.wall_texture_gl_map = make(map[*WallTexture]wallTextureGlIDs)
 		room.wall_texture_state_map = make(map[*WallTexture]wallTextureState)

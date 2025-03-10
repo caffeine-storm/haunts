@@ -143,6 +143,8 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, glIDs *wallTextureGlIDs) {
 	}
 
 	// Floor
+	// TODO(tmckee): readability: we can factor out a "gimme a polygon,
+	// transformed by such-and-such a matrix, clipped by such-and-such extents".
 	verts := []mathgl.Vec2{
 		{X: -tdx / 2, Y: -tdy / 2},
 		{X: -tdx / 2, Y: tdy / 2},
@@ -179,6 +181,7 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, glIDs *wallTextureGlIDs) {
 		A: mathgl.Vec2{X: frdx, Y: 0},
 		B: mathgl.Vec2{X: 0, Y: 0},
 	})
+	// TODO(tmckee): readability: (end-of-refactor noted above)
 	if len(p) >= 3 {
 		// floor indices
 		var is []uint16

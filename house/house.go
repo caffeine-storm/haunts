@@ -41,6 +41,8 @@ type Room struct {
 		vbuffer gl.Buffer
 
 		// index buffers
+		// TODO(tmckee#11): rename these to indicate that they're index buffers,
+		// not vertex bufffers.
 		left_buffer  gl.Buffer
 		right_buffer gl.Buffer
 		floor_buffer gl.Buffer
