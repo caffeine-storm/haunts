@@ -87,11 +87,15 @@ type RoomDef struct {
 	Decor map[string]bool
 }
 
+// Data for an individual vertex that is used to render rooms.
 type roomVertex struct {
+	// World space co-ordinates of this vertex.
 	x, y, z float32
-	u, v    float32
 
-	// Texture coordinates for the los texture
+	// Texture space co-ordinates for shading fragments.
+	u, v float32
+
+	// Texture coordinates for the los texture.
 	los_u, los_v float32
 }
 
