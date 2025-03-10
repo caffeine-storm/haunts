@@ -7,9 +7,10 @@ import (
 )
 
 func ParseRev(goGetCommandData string) (string, error) {
-	line, _, found := strings.Cut(goGetCommandData, ": parsing go.mod")
+	anchor := ": parsing go.mod"
+	line, _, found := strings.Cut(goGetCommandData, anchor)
 	if !found {
-		return "", fmt.Errorf("couldn't strings.Cut input")
+		return "", fmt.Errorf("couldn't strings.Cut %q from %q", anchor, goGetCommandData)
 	}
 
 	target := "glop@"
