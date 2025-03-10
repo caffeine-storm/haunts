@@ -107,15 +107,11 @@ func RoomSpecs() {
 			focusy := float32(0)
 			angle := float32(0)
 			floor, _, left, _, right, _ := house.MakeRoomMatsForTest(restestRoom, region, focusx, focusy, angle, nozoom)
-			fmt.Printf("floor, left, right: \n%+v\n%+v\n%+v\n", floor, left, right)
 			queue.Queue(func(render.RenderQueueState) {
 				restestRoom.SetupGlStuff(&house.RoomRealGl{})
 				restestRoom.Render(floor, left, right, nozoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
 			})
 			queue.Purge()
-
-			fmt.Printf("room: %+v\n", restestRoom)
-			fmt.Printf("roomDef: %+v\n", restestRoom.RoomDef)
 
 			So(queue, rendertest.ShouldLookLikeFile, "restest")
 		})

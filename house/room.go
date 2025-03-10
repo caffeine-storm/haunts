@@ -288,50 +288,57 @@ func (room *Room) getWallTextureState(wt *WallTexture) wallTextureGlIDs {
 	return result
 }
 
-func (room *Room) RenderWalls(floor *mathgl.Mat4, base_alpha byte) {
+func (room *Room) RenderWalls(modelToWorld *mathgl.Mat4, base_alpha byte) {
 	// TODO(#11): don't lazily initialize these maps, do it during construction!
 	if room.wall_texture_gl_map == nil {
 		room.wall_texture_gl_map = make(map[*WallTexture]wallTextureGlIDs)
 		room.wall_texture_state_map = make(map[*WallTexture]wallTextureState)
 	}
 
+	logging.Trace("RenderWallTextures", "modelToWorld", modelToWorld)
+
 	var vert roomVertex
-	for _, wt := range room.WallTextures {
-		ids := room.getWallTextureState(wt)
-		if ids.vBuffer == 0 {
-			continue
-		}
+	render.WithMatrixInMode(modelToWorld, render.MatrixModeModelView, func() {
+		for _, wt := range room.WallTextures {
+			var ids wallTextureGlIDs = room.getWallTextureState(wt)
+			if ids.vBuffer == 0 {
+				logging.Warn("wall texture state had zeroed vBuffer", "name", wt.Defname)
+				continue
+			}
 
-		gl.LoadMatrixf((*[16]float32)(floor))
-		wt.Texture.Data().Bind()
-		R, G, B, A := wt.Color()
+			wt.Texture.Data().Bind()
+			R, G, B, A := wt.Color()
 
-		gl.ClientActiveTexture(gl.TEXTURE0)
-		ids.vBuffer.Bind(gl.ARRAY_BUFFER)
-		gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.x)
-		gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.u)
-		gl.ClientActiveTexture(gl.TEXTURE1)
-		gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.los_u)
-		gl.ClientActiveTexture(gl.TEXTURE0)
-		if ids.floorBuffer != 0 {
-			gl.StencilFunc(gl.ALWAYS, 2, 2)
-			ids.floorBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
-			gl.Color4ub(R, G, B, A)
-			gl.DrawElements(gl.TRIANGLES, int(ids.floorCount), gl.UNSIGNED_SHORT, nil)
+			logging.Trace("wall texture", "glstate", debug.GetGlState(), "name", wt.Defname, "ids", ids)
+
+			gl.ClientActiveTexture(gl.TEXTURE0)
+			ids.vBuffer.Bind(gl.ARRAY_BUFFER)
+			gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.x))
+			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.u))
+			gl.ClientActiveTexture(gl.TEXTURE1)
+			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.los_u))
+			gl.ClientActiveTexture(gl.TEXTURE0)
+			if ids.floorBuffer != 0 {
+				gl.StencilFunc(gl.ALWAYS, 2, 2)
+				ids.floorBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+				gl.Color4ub(R, G, B, A)
+				gl.DrawElements(gl.TRIANGLES, int(ids.floorCount), gl.UNSIGNED_SHORT, nil)
+			}
+			if ids.leftBuffer != 0 {
+				gl.StencilFunc(gl.ALWAYS, 1, 1)
+				ids.leftBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+				doColour(room, R, G, B, alphaMult(A, room.far_left.wall_alpha), base_alpha)
+				gl.DrawElements(gl.TRIANGLES, int(ids.leftCount), gl.UNSIGNED_SHORT, nil)
+			}
+			if ids.rightBuffer != 0 {
+				gl.StencilFunc(gl.ALWAYS, 1, 1)
+				ids.rightBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+				doColour(room, R, G, B, alphaMult(A, room.far_right.wall_alpha), base_alpha)
+
+				gl.DrawElements(gl.TRIANGLES, int(ids.rightCount), gl.UNSIGNED_SHORT, nil)
+			}
 		}
-		if ids.leftBuffer != 0 {
-			gl.StencilFunc(gl.ALWAYS, 1, 1)
-			ids.leftBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
-			doColour(room, R, G, B, alphaMult(A, room.far_left.wall_alpha), base_alpha)
-			gl.DrawElements(gl.TRIANGLES, int(ids.leftCount), gl.UNSIGNED_SHORT, nil)
-		}
-		if ids.rightBuffer != 0 {
-			gl.StencilFunc(gl.ALWAYS, 1, 1)
-			ids.rightBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
-			doColour(room, R, G, B, alphaMult(A, room.far_right.wall_alpha), base_alpha)
-			gl.DrawElements(gl.TRIANGLES, int(ids.rightCount), gl.UNSIGNED_SHORT, nil)
-		}
-	}
+	})
 }
 
 func doColour(room *Room, r, g, b, a, base_alpha byte) {
@@ -340,11 +347,12 @@ func doColour(room *Room, r, g, b, a, base_alpha byte) {
 	gl.Color4ub(alphaMult(R, r), alphaMult(G, g), alphaMult(B, b), alphaMult(A, a))
 }
 
-func withRoomGlSettings(fn func()) {
+func WithRoomRenderGlSettings(fn func()) {
 	gl.Enable(gl.TEXTURE_2D)
 	gl.Enable(gl.BLEND)
 	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 	gl.Enable(gl.STENCIL_TEST)
+	defer gl.Disable(gl.STENCIL_TEST)
 	gl.ClearStencil(0)
 	gl.Clear(gl.STENCIL_BUFFER_BIT)
 
@@ -366,7 +374,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 		doColour(room, r, g, b, a, base_alpha)
 	}
 
-	withRoomGlSettings(func() {
+	WithRoomRenderGlSettings(func() {
 		var vert roomVertex
 
 		planes := []plane{

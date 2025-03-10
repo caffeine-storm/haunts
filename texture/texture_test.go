@@ -5,6 +5,7 @@ import (
 	"unsafe"
 
 	"github.com/go-gl-legacy/gl"
+	"github.com/runningwild/glop/debug/debugtest"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
 	"github.com/runningwild/glop/system"
@@ -66,7 +67,7 @@ func TestTextureDrawElements(t *testing.T) {
 			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(point{})), unsafe.Offsetof(geometry[0].s))
 
 			// setup a texture
-			tex := rendertest.GivenATexture("checker/0.png")
+			tex := debugtest.GivenATexture("checker/0.png")
 			gl.ActiveTexture(gl.TEXTURE0)
 			tex.Bind(gl.TEXTURE_2D)
 
