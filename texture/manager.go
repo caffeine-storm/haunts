@@ -315,6 +315,7 @@ func BlockUntilLoaded(ctx context.Context, paths ...string) error {
 }
 
 func handleLoadRequest(req loadRequest) {
+	logging.Trace("texture manager: handleLoadRequest", "path", req.path)
 	f, _ := os.Open(req.path)
 	im, _, err := image.Decode(f)
 	f.Close()
@@ -428,6 +429,7 @@ func (m *Manager) LoadFromPath(path string) (*Data, error) {
 	data.dx = config.Width
 	data.dy = config.Height
 
+	logging.Trace("texture manager: sending load request", "path", path)
 	load_requests <- loadRequest{path, data}
 	return data, nil
 }
