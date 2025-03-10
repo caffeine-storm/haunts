@@ -1,6 +1,7 @@
 package house
 
 import (
+	"context"
 	"fmt"
 	"image"
 	"math"
@@ -288,7 +289,35 @@ func (room *Room) getWallTextureState(wt *WallTexture) wallTextureGlIDs {
 	return result
 }
 
-func (room *Room) RenderWalls(modelToWorld *mathgl.Mat4, base_alpha byte) {
+func (room *Room) SetWallTransparency(transparent bool) {
+	alphavalue := byte(255)
+	if transparent {
+		alphavalue = 0
+	}
+
+	room.far_right.wall_alpha = alphavalue
+	room.far_left.wall_alpha = alphavalue
+}
+
+func (room *Room) LoadAndWaitForTexturesForTest() {
+	paths := []string{}
+	for _, wt := range room.WallTextures {
+		paths = append(paths, string(wt.Texture.Path))
+	}
+	paths = append(paths, string(room.Floor.Path))
+	paths = append(paths, string(room.Wall.Path))
+
+	for _, path := range paths {
+		_, err := texture.LoadFromPath(path)
+		if err != nil {
+			panic(fmt.Errorf("couldn't load texture %q: %w", path, err))
+		}
+	}
+
+	texture.BlockUntilLoaded(context.Background(), paths...)
+}
+
+func (room *Room) RenderWallTextures(modelToWorld *mathgl.Mat4, base_alpha byte) {
 	// TODO(#11): don't lazily initialize these maps, do it during construction!
 	if room.wall_texture_gl_map == nil {
 		room.wall_texture_gl_map = make(map[*WallTexture]wallTextureGlIDs)
@@ -538,7 +567,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 		// we'll bail out here until it's fixed.
 		return
 
-		room.RenderWalls(&floor, base_alpha)
+		room.RenderWallTextures(&floor, base_alpha)
 
 		base.EnableShader("marble")
 		base.SetUniformI("marble", "tex2", 1)
@@ -604,14 +633,14 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 	})
 }
 
-type RoomGlProxy interface {
+type RoomSetupGlProxy interface {
 	GenBuffer() gl.Buffer
 	BufferData(target gl.GLenum, size int, data interface{}, usage gl.GLenum)
 }
 
 type RoomRealGl struct{}
 
-var _ RoomGlProxy = ((*RoomRealGl)(nil))
+var _ RoomSetupGlProxy = ((*RoomRealGl)(nil))
 
 func (*RoomRealGl) GenBuffer() gl.Buffer {
 	return gl.GenBuffer()
@@ -652,7 +681,7 @@ func (room *Room) resetGlData() {
 	room.glData.floor_buffer.Delete()
 }
 
-func (room *Room) SetupGlStuff(glProxy RoomGlProxy) {
+func (room *Room) SetupGlStuff(glProxy RoomSetupGlProxy) {
 	if room.glDataInputsDiffer() {
 		logging.Trace("room.SetupGlStuff: bailing")
 		return

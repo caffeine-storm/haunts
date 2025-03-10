@@ -16,7 +16,6 @@ import (
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/mathgl"
 	"github.com/runningwild/glop/debug"
-	"github.com/runningwild/glop/debug/debugtest"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/gui/guitest"
 	"github.com/runningwild/glop/render"
@@ -172,9 +171,9 @@ func TestMakeRoomMats(t *testing.T) {
 
 			var result image.Image
 			queue.Queue(func(st render.RenderQueueState) {
-				tex := debugtest.GivenATexture(fmt.Sprintf("images/%s.png", imageName))
+				tex := rendertest.GivenATexture(fmt.Sprintf("images/%s.png", imageName))
 				render.WithMatrixInMode(floorMatrix, render.MatrixModeModelView, func() {
-					debugtest.DrawTexturedQuad(screenRegion, tex, st.Shaders())
+					rendertest.DrawTexturedQuad(screenRegion, tex, st.Shaders())
 				})
 
 				debug.LogAndClearGlErrors(logging.ErrorLogger())

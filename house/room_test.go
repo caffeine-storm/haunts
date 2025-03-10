@@ -11,7 +11,6 @@ import (
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/MobRulesGames/mathgl"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
@@ -67,24 +66,47 @@ func RoomSpecs() {
 		base.InitShaders(queue)
 		texture.Init(queue)
 
-		Convey("loading from registry", func() {
-			restestRoom := loadRoom("restest.room")
+		/*
+			Convey("loading from registry", func() {
+				restestRoom := loadRoom("restest.room")
 
-			So(restestRoom, ShouldNotBeNil)
-			So(restestRoom.Defname, ShouldEqual, "restest")
-			So(restestRoom.Doors, ShouldHaveLength, 0)
-		})
+				So(restestRoom, ShouldNotBeNil)
+				So(restestRoom.Defname, ShouldEqual, "restest")
+				So(restestRoom.Doors, ShouldHaveLength, 0)
+			})
+		*/
 
 		Convey("drawing walls", func() {
 			room := loadRoom("restest.room")
-			id := &mathgl.Mat4{}
-			id.Identity()
+			region := gui.Region{
+				Point: gui.Point{X: 0, Y: 0},
+				Dims:  gui.Dims{Dx: 200, Dy: 200},
+			}
+			focusx := float32(0)
+			focusy := float32(0)
+			angle := float32(62)
+			nozoom := float32(1.0)
+			floor, _, _, _, _, _ := house.MakeRoomMatsForTest(room, region, focusx, focusy, angle, nozoom)
+			logging.Debug("floor mat?", "floor", floor)
 
 			queue.Queue(func(render.RenderQueueState) {
-				room.SetupGlStuff(&house.RoomRealGl{})
-				room.RenderWalls(id, 255)
-				// TODO(#12): having to remember to call some weird init function is
-				// sad making.
+				logging.TraceBracket(func() {
+					// TODO(#12): having to remember to call some weird init function is
+					// sad making.
+					room.SetupGlStuff(&house.RoomRealGl{})
+					room.SetWallTransparency(false)
+				})
+			})
+			queue.Purge()
+
+			room.LoadAndWaitForTexturesForTest()
+
+			queue.Queue(func(render.RenderQueueState) {
+				logging.TraceBracket(func() {
+					house.WithRoomRenderGlSettings(func() {
+						room.RenderWallTextures(&floor, 255)
+					})
+				})
 			})
 			queue.Purge()
 

@@ -1,8 +1,6 @@
 module github.com/MobRulesGames/haunts
 
-go 1.22.0
-
-toolchain go1.23.0
+go 1.23.0
 
 require (
 	code.google.com/p/freetype-go v0.0.0-20120725121025-28cc5fbc5d0b
@@ -16,7 +14,7 @@ require (
 	github.com/go-gl-legacy/glu v0.0.0-20150315173544-b54aa06bc77a
 	github.com/runningwild/glop v0.0.0-20130331194942-bcbcf4982510
 	github.com/smartystreets/goconvey v1.8.1
-	github.com/stretchr/testify v1.9.0
+	github.com/stretchr/testify v1.10.0
 )
 
 require (
@@ -24,6 +22,7 @@ require (
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
 	github.com/howeyc/fsnotify v0.9.0 // indirect
 	github.com/jtolds/gls v4.20.0+incompatible // indirect
+	github.com/kr/text v0.2.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/runningwild/yedparse v0.0.0-20120306014153-f7df1db2f9d9 // indirect
 	github.com/smarty/assertions v1.15.0 // indirect
@@ -31,6 +30,8 @@ require (
 )
 
 replace code.google.com/p/freetype-go => github.com/golang/freetype v0.0.0-20120725121025-28cc5fbc5d0b
+
+replace github.com/MobRulesGames/mathgl => github.com/caffeine-storm/mathgl v0.0.0-20250304142043-9a68bb7bb47a
 
 replace github.com/runningwild/glop => ../deps-for-haunts/glop
 

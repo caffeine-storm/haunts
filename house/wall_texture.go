@@ -131,6 +131,8 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, glIDs *wallTextureGlIDs) {
 	fry := float32(y)
 	frdx := float32(dx)
 	frdy := float32(dy)
+
+	// TODO(tmckee): why are we doing division by 100?
 	tdx := float32(wt.Texture.Data().Dx()) / 100
 	tdy := float32(wt.Texture.Data().Dy()) / 100
 
