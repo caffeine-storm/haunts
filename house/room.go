@@ -317,17 +317,17 @@ func (room *Room) LoadAndWaitForTexturesForTest() {
 	texture.BlockUntilLoaded(context.Background(), paths...)
 }
 
-func (room *Room) RenderWallTextures(modelToWorld *mathgl.Mat4, base_alpha byte) {
+func (room *Room) RenderWallTextures(worldToView *mathgl.Mat4, base_alpha byte) {
 	// TODO(#11): don't lazily initialize these maps, do it during construction!
 	if room.wall_texture_gl_map == nil {
 		room.wall_texture_gl_map = make(map[*WallTexture]wallTextureGlIDs)
 		room.wall_texture_state_map = make(map[*WallTexture]wallTextureState)
 	}
 
-	logging.Trace("RenderWallTextures", "modelToWorld", modelToWorld)
+	logging.Trace("RenderWallTextures", "worldToView", worldToView)
 
 	var vert roomVertex
-	render.WithMatrixInMode(modelToWorld, render.MatrixModeModelView, func() {
+	render.WithMatrixInMode(worldToView, render.MatrixModeModelView, func() {
 		for _, wt := range room.WallTextures {
 			var ids wallTextureGlIDs = room.getWallTextureState(wt)
 			if ids.vBuffer == 0 {
@@ -335,6 +335,7 @@ func (room *Room) RenderWallTextures(modelToWorld *mathgl.Mat4, base_alpha byte)
 				continue
 			}
 
+			// Bind the the texture for the decal.
 			wt.Texture.Data().Bind()
 			R, G, B, A := wt.Color()
 

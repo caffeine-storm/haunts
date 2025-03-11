@@ -1,6 +1,7 @@
 package house
 
 import (
+	"math"
 	"unsafe"
 
 	"github.com/MobRulesGames/haunts/base"
@@ -82,7 +83,7 @@ type WallTexture struct {
 	X, Y float32
 	Rot  float32
 
-	// Whether or not to flip the texture about one of its axes
+	// Whether or not to mirror the decal about a vertical midline.
 	Flip bool
 
 	// If this is currently being dragged around it will be marked as temporary
@@ -111,7 +112,7 @@ func (wt *WallTexture) Render() {
 	data.RenderAdvanced(float64(wt.X), float64(wt.Y), float64(dx), float64(dy), float64(wt.Rot), wt.Flip)
 }
 
-func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, glIDs *wallTextureGlIDs) {
+func (wt *WallTexture) setupGlStuff(roomX, roomY, roomDx, roomDy int, glIDs *wallTextureGlIDs) {
 	glIDs.Reset()
 
 	// If we panic, don't leak GL resources
@@ -127,22 +128,31 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, glIDs *wallTextureGlIDs) {
 	var vs []roomVertex
 
 	// Conveniently casted values
-	frx := float32(x)
-	fry := float32(y)
-	frdx := float32(dx)
-	frdy := float32(dy)
+	frx := float32(roomX)
+	fry := float32(roomY)
+	frdx := float32(roomDx)
+	frdy := float32(roomDy)
 
-	// TODO(tmckee): why are we doing division by 100?
-	tdx := float32(wt.Texture.Data().Dx()) / 100
-	tdy := float32(wt.Texture.Data().Dy()) / 100
+	// TODO(tmckee): we _were_ dividing these by 100 ... why?
+	// Maybe the source images for the textures were much larger than the
+	// expected size of the decal?
+	tdx := float32(wt.Texture.Data().Dx())
+	tdy := float32(wt.Texture.Data().Dy())
 
 	wtx := wt.X
 	wty := wt.Y
 	wtr := wt.Rot
 
+	// If the wall-texture is positioned to the right of the room's floor, that
+	// means it's on the wall to the viewer's right. Rotate it 90 degrees
+	// clockwise about the z-axis so that when we 'stand it up', the texture will
+	// be right-side up w.r.t. the rest of the scene.
 	if wtx > frdx {
-		wtr -= 3.1415926535 / 2
+		wtr -= math.Pi / 2
 	}
+
+	// Build geometry for each of the three surfaces that might have a piece of
+	// the decal.
 
 	// Floor
 	// TODO(tmckee): readability: we can factor out a "gimme a polygon,
@@ -284,6 +294,10 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, glIDs *wallTextureGlIDs) {
 	run.Identity()
 	m.Translation(wtx, wty)
 	run.Multiply(&m)
+
+	// Because the texture geometry starts centred about the origin, we can
+	// combine any aesthic rotations with the rotation needed to align our decal
+	// with the right-hand wall
 	m.RotationZ(wtr)
 	run.Multiply(&m)
 	if wt.Flip {
@@ -295,17 +309,26 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, glIDs *wallTextureGlIDs) {
 	}
 	p = mathgl.Poly(verts)
 	p.Clip(&mathgl.Seg2{
+		// Clip out whatever is north of the top of the floor; anything in that
+		// region is outside this room.
 		A: mathgl.Vec2{X: 0, Y: frdy},
 		B: mathgl.Vec2{X: frdx, Y: frdy},
 	})
 	p.Clip(&mathgl.Seg2{
+		// Clip out whatever is west of the right-most edge of the floor; anything
+		// in that region is either on the floor or outside of the room.
 		B: mathgl.Vec2{X: frdx, Y: frdy},
 		A: mathgl.Vec2{X: frdx, Y: 0},
 	})
 	p.Clip(&mathgl.Seg2{
+		// Clip out whatever is south of the bottom of the floor; anything in that
+		// region is outside this room.
 		A: mathgl.Vec2{X: frdx, Y: 0},
 		B: mathgl.Vec2{X: 0, Y: 0},
 	})
+
+	// We may have clipped the entire decal out; skip buffering data if there's
+	// nothing left in the polygon.
 	if len(p) >= 3 {
 		// right wall indices
 		var is []uint16
@@ -320,16 +343,28 @@ func (wt *WallTexture) setupGlStuff(x, y, dx, dy int, glIDs *wallTextureGlIDs) {
 		glIDs.rightCount = gl.GLsizei(len(is))
 
 		run.Inverse()
-		for i := range p {
-			v := mathgl.Vec2{X: p[i].X, Y: p[i].Y}
-			v.Transform(&run)
+		for _, polyVert := range p {
+			preImage := mathgl.Vec2{X: polyVert.X, Y: polyVert.Y}
+			preImage.Transform(&run)
 			vs = append(vs, roomVertex{
-				x:     frdx,
-				y:     p[i].Y,
-				z:     frdx - p[i].X,
-				u:     v.X/tdx + 0.5,
-				v:     -(v.Y/tdy + 0.5),
-				los_u: (fry + p[i].Y) / LosTextureSize,
+				// everything on the right wall exists at the right-edge of the room.
+				x: frdx,
+
+				// the left-right co-ordinate along the wall is how far the polygon's
+				// vertex is away from the 'right' edge of the wall.
+				y: polyVert.Y,
+
+				// the top-bottom co-ordinate on the wall is how far the polygon's
+				// vertex is from the 'bottom' edge of the wall.
+				z: frdx - polyVert.X,
+
+				// transform from centred at (0,0) to an origin in the bottom-left of
+				// the texture image.
+				u: preImage.X/tdx + 0.5,
+				v: -(preImage.Y/tdy + 0.5),
+
+				// TODO: grok LoS shading and inputs
+				los_u: (fry + polyVert.Y) / LosTextureSize,
 				los_v: (frx + frdx - 0.5) / LosTextureSize,
 			})
 		}
