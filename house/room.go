@@ -422,7 +422,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 			gl.EnableClientState(gl.TEXTURE_COORD_ARRAY)
 			los_tex.Bind()
 			room.glData.vbuffer.Bind(gl.ARRAY_BUFFER)
-			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.los_u)
+			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.los_u))
 			gl.ClientActiveTexture(gl.TEXTURE0)
 			gl.ActiveTexture(gl.TEXTURE0)
 			base.EnableShader("los")
@@ -451,11 +451,11 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 					door.TextureData().Bind()
 					if door.door_glids.floor_buffer != 0 {
 						door.threshold_glids.vbuffer.Bind(gl.ARRAY_BUFFER)
-						gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.x)
+						gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.x))
 						door.door_glids.floor_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
-						gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.u)
+						gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.u))
 						gl.ClientActiveTexture(gl.TEXTURE1)
-						gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.los_u)
+						gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.los_u))
 						gl.DrawElements(gl.TRIANGLES, int(door.door_glids.floor_count), gl.UNSIGNED_SHORT, nil)
 					}
 				}
@@ -477,11 +477,11 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 					door.TextureData().Bind()
 					if door.door_glids.floor_buffer != 0 {
 						door.threshold_glids.vbuffer.Bind(gl.ARRAY_BUFFER)
-						gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.x)
+						gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.x))
 						door.door_glids.floor_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
-						gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.u)
+						gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.u))
 						gl.ClientActiveTexture(gl.TEXTURE1)
-						gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.los_u)
+						gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.los_u))
 						gl.DrawElements(gl.TRIANGLES, int(door.door_glids.floor_count), gl.UNSIGNED_SHORT, nil)
 					}
 				}
@@ -499,22 +499,17 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 
 			debug.LogAndClearGlErrors(logging.InfoLogger())
 
-			// TODO(tmckee): ??? 'vert' is always the zero value here and we only seem
-			// to read from it?
 			gl.ClientActiveTexture(gl.TEXTURE0)
 			room.glData.vbuffer.Bind(gl.ARRAY_BUFFER)
-			// TODO(tmckee): ??? wait, wut? this says "look at a byte offset that is
-			// <some-stack-address> away from the start of the buffer object that
-			// room.glData.vbuffer names". ... that's bad, right!?
-			gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.x)
-			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.u)
+			gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.x))
+			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.u))
 			gl.ClientActiveTexture(gl.TEXTURE1)
 			if los_tex != nil {
 				los_tex.Bind()
 			}
-			// Rebind vbuffer so that it is asociated to texture-unit-1 too
+			// Rebind vbuffer so that it is asociated to texture-unit-1 too (i guess?)
 			room.glData.vbuffer.Bind(gl.ARRAY_BUFFER)
-			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.los_u)
+			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.los_u))
 			// Now draw the plane
 			gl.LoadMatrixf((*[16]float32)(&floor))
 			plane.texture.Data().Bind()
@@ -588,10 +583,10 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 				gl.Color4ub(128, 128, 128, 255)
 			}
 			door.threshold_glids.vbuffer.Bind(gl.ARRAY_BUFFER)
-			gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.x)
-			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.u)
+			gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.x))
+			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.u))
 			gl.ClientActiveTexture(gl.TEXTURE1)
-			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), &vert.los_u)
+			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.los_u))
 			gl.ClientActiveTexture(gl.TEXTURE0)
 			door.threshold_glids.floor_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 			gl.DrawElements(gl.TRIANGLES, int(door.threshold_glids.floor_count), gl.UNSIGNED_SHORT, nil)
