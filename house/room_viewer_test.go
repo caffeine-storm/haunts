@@ -77,7 +77,7 @@ func TestMakeRoomMats(t *testing.T) {
 			defaultRoom := house.BlankRoom()
 			defaultRegion := gui.Region{
 				Point: gui.Point{X: 0, Y: 0},
-				Dims:  gui.Dims{Dx: 10, Dy: 10},
+				Dims:  gui.Dims{Dx: 200, Dy: 200},
 			}
 			defaultFocus := struct {
 				X, Y float32
@@ -87,10 +87,7 @@ func TestMakeRoomMats(t *testing.T) {
 			}
 			defaultAngle := float32(0)
 			defaultZoom := float32(1)
-			var a, b, c, d, e, f mathgl.Mat4
-			logging.TraceBracket(func() {
-				a, b, c, d, e, f = house.MakeRoomMatsForTest(defaultRoom, defaultRegion, defaultFocus.X, defaultFocus.Y, defaultAngle, defaultZoom)
-			})
+			a, b, c, d, e, f := house.MakeRoomMatsForTest(defaultRoom, defaultRegion, defaultFocus.X, defaultFocus.Y, defaultAngle, defaultZoom)
 
 			return []mathgl.Mat4{a, b, c, d, e, f}
 		}
@@ -99,16 +96,17 @@ func TestMakeRoomMats(t *testing.T) {
 
 		jankyOneOverRoot2 := mathgl.Fsin32(math.Pi / 4)
 
-		// The floor transform should rotate its input by 45 degrees about
-		// the z-axis, then translate to adjust by the focus.
+		// The floor transform should rotate its input by 45 degrees about the
+		// z-axis, then translate to adjust to the middle of the room then by the
+		// focus.
 		defaultFloor := mathgl.Mat4{
 			jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
 			-jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
 			0, 0, 1, 0,
-			5, 5, 0, 1,
+			100, 100, 0, 1,
 		}
 		if !matsAreEqual(roomMats[0], defaultFloor) {
-			t.Fatalf("expected matrix mismatch: expected %+v, got %+v", defaultFloor, roomMats[0])
+			t.Fatalf("expected matrix mismatch: expected %+v, got %+v", render.Showmat(defaultFloor), render.Showmat(roomMats[0]))
 		}
 	})
 	t.Run("non-zero-zero focus", func(t *testing.T) {
@@ -116,7 +114,7 @@ func TestMakeRoomMats(t *testing.T) {
 			defaultRoom := house.BlankRoom()
 			defaultRegion := gui.Region{
 				Point: gui.Point{X: 0, Y: 0},
-				Dims:  gui.Dims{Dx: 10, Dy: 10},
+				Dims:  gui.Dims{Dx: 200, Dy: 200},
 			}
 			nonZeroFocus := struct {
 				X, Y float32
@@ -126,10 +124,7 @@ func TestMakeRoomMats(t *testing.T) {
 			}
 			defaultAngle := float32(0)
 			defaultZoom := float32(1)
-			var a, b, c, d, e, f mathgl.Mat4
-			logging.TraceBracket(func() {
-				a, b, c, d, e, f = house.MakeRoomMatsForTest(defaultRoom, defaultRegion, nonZeroFocus.X, nonZeroFocus.Y, defaultAngle, defaultZoom)
-			})
+			a, b, c, d, e, f := house.MakeRoomMatsForTest(defaultRoom, defaultRegion, nonZeroFocus.X, nonZeroFocus.Y, defaultAngle, defaultZoom)
 
 			return []mathgl.Mat4{a, b, c, d, e, f}
 		}
@@ -144,7 +139,7 @@ func TestMakeRoomMats(t *testing.T) {
 			jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
 			-jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
 			0, 0, 1, 0,
-			5, 5 - 10*jankyOneOverRoot2, 0, 1,
+			100, 100 - 10*jankyOneOverRoot2, 0, 1,
 		}
 
 		if !matsAreEqual(roomMats[0], expectedFloor) {
