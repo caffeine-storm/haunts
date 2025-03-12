@@ -5,6 +5,7 @@ import (
 	"unsafe"
 
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/mathgl"
 	"github.com/go-gl-legacy/gl"
@@ -151,6 +152,18 @@ func (wt *WallTexture) setupGlStuff(roomX, roomY, roomDx, roomDy int, glIDs *wal
 		wtr -= math.Pi / 2
 	}
 
+	logging.Trace("wall texture>setupGlStuff", "all the stuff", map[string]any{
+		"frx":  frx,
+		"fry":  fry,
+		"frdx": frdx,
+		"frdy": frdy,
+		"tdx":  tdx,
+		"tdy":  tdy,
+		"wtx":  wtx,
+		"wty":  wty,
+		"wtr":  wtr,
+	})
+
 	// Build geometry for each of the three surfaces that might have a piece of
 	// the decal.
 
@@ -178,18 +191,22 @@ func (wt *WallTexture) setupGlStuff(roomX, roomY, roomDx, roomDy int, glIDs *wal
 	}
 	p := mathgl.Poly(verts)
 	p.Clip(&mathgl.Seg2{
+		// Clip out things to the left of the floor.
 		A: mathgl.Vec2{X: 0, Y: 0},
 		B: mathgl.Vec2{X: 0, Y: frdy},
 	})
 	p.Clip(&mathgl.Seg2{
+		// Clip out things above the floor.
 		A: mathgl.Vec2{X: 0, Y: frdy},
 		B: mathgl.Vec2{X: frdx, Y: frdy},
 	})
 	p.Clip(&mathgl.Seg2{
+		// Clip out things to the right of the floor.
 		A: mathgl.Vec2{X: frdx, Y: frdy},
 		B: mathgl.Vec2{X: frdx, Y: 0},
 	})
 	p.Clip(&mathgl.Seg2{
+		// Clip out things below the floor.
 		A: mathgl.Vec2{X: frdx, Y: 0},
 		B: mathgl.Vec2{X: 0, Y: 0},
 	})
@@ -209,16 +226,16 @@ func (wt *WallTexture) setupGlStuff(roomX, roomY, roomDx, roomDy int, glIDs *wal
 		glIDs.floorCount = gl.GLsizei(len(is))
 
 		run.Inverse()
-		for i := range p {
-			v := mathgl.Vec2{X: p[i].X, Y: p[i].Y}
-			v.Transform(&run)
+		for _, polyVert := range p {
+			preimage := mathgl.Vec2{X: polyVert.X, Y: polyVert.Y}
+			preimage.Transform(&run)
 			vs = append(vs, roomVertex{
-				x:     p[i].X,
-				y:     p[i].Y,
-				u:     v.X/tdx + 0.5,
-				v:     -(v.Y/tdy + 0.5),
-				los_u: (fry + p[i].Y) / LosTextureSize,
-				los_v: (frx + p[i].X) / LosTextureSize,
+				x:     polyVert.X,
+				y:     polyVert.Y,
+				u:     preimage.X/tdx + 0.5,
+				v:     -(preimage.Y/tdy + 0.5),
+				los_u: (fry + polyVert.Y) / LosTextureSize,
+				los_v: (frx + polyVert.X) / LosTextureSize,
 			})
 		}
 	}
