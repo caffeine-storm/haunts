@@ -243,6 +243,8 @@ func (d *Door) setupGlStuff(room *Room) {
 	// near left, far right, do threshold
 	// far left, far right, do door
 	var vs []roomVertex
+	// TODO(tmckee): DRY out this code; we're really just x-y swapping between
+	// the two cases.
 	if d.Facing == FarLeft || d.Facing == NearRight {
 		x1 := float32(d.Pos)
 		x2 := float32(d.Pos + d.Width)
