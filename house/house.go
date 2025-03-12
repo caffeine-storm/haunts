@@ -38,15 +38,16 @@ type Room struct {
 	glData struct {
 		// Vertex buffer storing the vertices of the room as well as the texture
 		// coordinates for the los texture.
-		vbuffer gl.Buffer
+		vBuffer gl.Buffer
 
-		// index buffers
-		// TODO(tmckee#11): rename these to indicate that they're index buffers,
-		// not vertex bufffers.
-		left_buffer  gl.Buffer
-		right_buffer gl.Buffer
-		floor_buffer gl.Buffer
-		floor_count  int
+		// Buffers of indices referencing the data in vBuffer.
+		leftWallIBuffer  gl.Buffer // assumed to be 6 indices long
+		rightWallIBuffer gl.Buffer // assumed to be 6 indices long
+
+		floorIBuffer gl.Buffer
+		// TODO(tmckee): we shouldn't need to store floor_count; it's always 9
+		// quads, a.k.a. 54 vertices.
+		floor_count int // holds how many indices are in 'floorIBuffer'
 	}
 
 	// We only need to rebuild 'glData' if there was a change to one of the
@@ -187,7 +188,8 @@ type doorGlIds struct {
 	// TODO(tmckee:#14): why are these called floor_*? Do they affect pixels
 	// associated with the floor? Or is this just a copy-pasta artifact?
 	floor_buffer gl.Buffer
-	floor_count  gl.GLsizei
+	// TODO(tmckee): we ought not need to do this, it's always 6, no?
+	floor_count gl.GLsizei
 }
 
 func (d *Door) setupGlStuff(room *Room) {

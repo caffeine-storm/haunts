@@ -410,9 +410,9 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 		var vert roomVertex
 
 		planes := []plane{
-			{room.glData.left_buffer, room.Wall, &left},
-			{room.glData.right_buffer, room.Wall, &right},
-			{room.glData.floor_buffer, room.Floor, &floor},
+			{room.glData.leftWallIBuffer, room.Wall, &left},
+			{room.glData.rightWallIBuffer, room.Wall, &right},
+			{room.glData.floorIBuffer, room.Floor, &floor},
 		}
 
 		if los_tex != nil {
@@ -423,7 +423,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 			gl.Enable(gl.TEXTURE_2D)
 			gl.EnableClientState(gl.TEXTURE_COORD_ARRAY)
 			los_tex.Bind()
-			room.glData.vbuffer.Bind(gl.ARRAY_BUFFER)
+			room.glData.vBuffer.Bind(gl.ARRAY_BUFFER)
 			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.los_u))
 			gl.ClientActiveTexture(gl.TEXTURE0)
 			gl.ActiveTexture(gl.TEXTURE0)
@@ -502,7 +502,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 			debug.LogAndClearGlErrors(logging.InfoLogger())
 
 			gl.ClientActiveTexture(gl.TEXTURE0)
-			room.glData.vbuffer.Bind(gl.ARRAY_BUFFER)
+			room.glData.vBuffer.Bind(gl.ARRAY_BUFFER)
 			gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.x))
 			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.u))
 			gl.ClientActiveTexture(gl.TEXTURE1)
@@ -510,7 +510,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 				los_tex.Bind()
 			}
 			// Rebind vbuffer so that it is asociated to texture-unit-1 too (i guess?)
-			room.glData.vbuffer.Bind(gl.ARRAY_BUFFER)
+			room.glData.vBuffer.Bind(gl.ARRAY_BUFFER)
 			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.los_u))
 			// Now draw the plane
 			gl.LoadMatrixf((*[16]float32)(&floor))
@@ -550,9 +550,8 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 				gl.Color4ub(R, G, B, 255)
 			}
 
-			// TODO(#9): ummm... isn't room.glData.floor_count the number of
-			// vertices needed to draw the floor? Why are we trying to draw that many
-			// elements?
+			// Draw triangles using the vertices and indices that we buffered in
+			// 'vBuffer' and 'index_buffer', respectively.
 			gl.DrawElements(gl.TRIANGLES, int(room.glData.floor_count), gl.UNSIGNED_SHORT, nil)
 			if los_tex != nil {
 				base.EnableShader("los")
@@ -669,14 +668,14 @@ func (room *Room) resetGlDataInputs() {
 }
 
 func (room *Room) resetGlData() {
-	if room.glData.vbuffer == 0 {
+	if room.glData.vBuffer == 0 {
 		return
 	}
 
-	room.glData.vbuffer.Delete()
-	room.glData.left_buffer.Delete()
-	room.glData.right_buffer.Delete()
-	room.glData.floor_buffer.Delete()
+	room.glData.vBuffer.Delete()
+	room.glData.leftWallIBuffer.Delete()
+	room.glData.rightWallIBuffer.Delete()
+	room.glData.floorIBuffer.Delete()
 }
 
 func (room *Room) SetupGlStuff(glProxy RoomSetupGlProxy) {
@@ -774,21 +773,21 @@ func (room *Room) SetupGlStuff(glProxy RoomSetupGlProxy) {
 
 	logging.Trace("ohboy", "dz", dz, "c", c, "vs", vs)
 
-	room.glData.vbuffer = glProxy.GenBuffer()
-	room.glData.vbuffer.Bind(gl.ARRAY_BUFFER)
+	room.glData.vBuffer = glProxy.GenBuffer()
+	room.glData.vBuffer.Bind(gl.ARRAY_BUFFER)
 	size := int(unsafe.Sizeof(roomVertex{}))
 	glProxy.BufferData(gl.ARRAY_BUFFER, size*len(vs), vs, gl.STATIC_DRAW)
 
 	// left wall indices
 	is := []uint16{0, 3, 4, 0, 4, 1}
-	room.glData.left_buffer = glProxy.GenBuffer()
-	room.glData.left_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+	room.glData.leftWallIBuffer = glProxy.GenBuffer()
+	room.glData.leftWallIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 	glProxy.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
 
 	// right wall indices
 	is = []uint16{1, 4, 5, 1, 5, 2}
-	room.glData.right_buffer = glProxy.GenBuffer()
-	room.glData.right_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+	room.glData.rightWallIBuffer = glProxy.GenBuffer()
+	room.glData.rightWallIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 	glProxy.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
 
 	// floor indices
@@ -803,8 +802,8 @@ func (room *Room) SetupGlStuff(glProxy RoomSetupGlProxy) {
 		34, 35, 36, 34, 36, 37, // upper right corner
 		38, 39, 40, 38, 40, 41, // lower right corner
 	}
-	room.glData.floor_buffer = glProxy.GenBuffer()
-	room.glData.floor_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+	room.glData.floorIBuffer = glProxy.GenBuffer()
+	room.glData.floorIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 	glProxy.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
 	room.glData.floor_count = len(is)
 }
