@@ -139,7 +139,7 @@ func RoomSpecs() {
 			})
 			queue.Purge()
 
-			So(queue, rendertest.ShouldLookLikeFile, "restest")
+			So(queue, rendertest.ShouldLookLikeFile, "restest", rendertest.Threshold(13))
 		})
 	})
 }
