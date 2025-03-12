@@ -88,6 +88,77 @@ type RoomDef struct {
 	Decor map[string]bool
 }
 
+type Room struct {
+	Defname string
+	*RoomDef
+
+	// The placement of doors in this room
+	Doors []*Door `registry:"loadfrom-doors"`
+
+	// The offset of this room on this floor
+	X, Y int
+
+	temporary, invalid bool
+
+	// whether or not to draw the walls transparent
+	far_left struct {
+		wall_alpha byte
+	}
+	far_right struct {
+		wall_alpha byte
+	}
+
+	glData struct {
+		// Vertex buffer storing the vertices of the room as well as the texture
+		// coordinates for the los texture.
+		vBuffer gl.Buffer
+
+		// Buffers of indices referencing the data in vBuffer.
+		leftWallIBuffer  gl.Buffer // assumed to be 6 indices long
+		rightWallIBuffer gl.Buffer // assumed to be 6 indices long
+
+		floorIBuffer gl.Buffer
+		// TODO(tmckee): we shouldn't need to store floorICount; it's always 9
+		// quads, a.k.a. 54 vertices.
+		floorICount int // holds how many indices are in 'floorIBuffer'
+	}
+
+	// We only need to rebuild 'glData' if there was a change to one of the
+	// relevant inputs.
+	glDataInputs struct {
+		x, y, dx, dy             int
+		wall_tex_dx, wall_tex_dy int
+	}
+
+	wall_texture_gl_map    map[*WallTexture]wallTextureGlIDs
+	wall_texture_state_map map[*WallTexture]wallTextureState
+}
+
+func BlankRoom() *Room {
+	return &Room{
+		Defname: "blank",
+		RoomDef: &RoomDef{
+			Name: "blank",
+			Size: RoomSize{
+				Name: "Blank(Small)",
+				Dx:   10,
+				Dy:   10,
+			},
+		},
+	}
+}
+
+func (room *Room) Color() (r, g, b, a byte) {
+	if room.temporary {
+		if room.invalid {
+			return 255, 127, 127, 200
+		} else {
+			return 127, 127, 255, 200
+		}
+	}
+	return 255, 255, 255, 255
+}
+
 // Data for an individual vertex that is used to render rooms.
 type roomVertex struct {
 	// World space co-ordinates of this vertex.
@@ -819,6 +890,46 @@ func (r *RoomDef) Resize(size RoomSize) {
 	r.Size = size
 }
 
+func (r *Room) Pos() (x, y int) {
+	return r.X, r.Y
+}
+
+func (room *Room) canAddDoor(door *Door) bool {
+	if door.Pos < 0 {
+		return false
+	}
+
+	// Make sure that the door only occupies valid cells
+	if door.Facing == FarLeft || door.Facing == NearRight {
+		if door.Pos+door.Width >= room.Size.Dx {
+			return false
+		}
+	}
+	if door.Facing == FarRight || door.Facing == NearLeft {
+		if door.Pos+door.Width >= room.Size.Dy {
+			return false
+		}
+	}
+
+	// Now make sure that the door doesn't overlap any other doors
+	for _, other := range room.Doors {
+		if other.Facing != door.Facing {
+			continue
+		}
+		if other.temporary {
+			continue
+		}
+		if other.Pos >= door.Pos && other.Pos-door.Pos < door.Width {
+			return false
+		}
+		if door.Pos >= other.Pos && door.Pos-other.Pos < other.Width {
+			return false
+		}
+	}
+
+	return true
+}
+
 func imagePathFilter(path string, isdir bool) bool {
 	if isdir {
 		return path[0] != '.'
@@ -952,6 +1063,7 @@ func (rep *RoomEditorPanel) Reload() {
 	}
 }
 
+// TODO(tmckee): this is dead code
 type selectMode int
 
 const (
