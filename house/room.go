@@ -1062,12 +1062,3 @@ func (rep *RoomEditorPanel) Reload() {
 		tab.Reload()
 	}
 }
-
-// TODO(tmckee): this is dead code
-type selectMode int
-
-const (
-	modeNoSelect selectMode = iota
-	modeSelect
-	modeDeselect
-)
