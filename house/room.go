@@ -101,9 +101,9 @@ type roomVertex struct {
 }
 
 type plane struct {
-	index_buffer gl.Buffer
-	texture      texture.Object
-	mat          *mathgl.Mat4
+	iBuffer gl.Buffer
+	texture texture.Object
+	mat     *mathgl.Mat4
 }
 
 func visibilityOfObject(xoff, yoff int, ro RectObject, los_tex *LosTexture) byte {
@@ -515,7 +515,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 			// Now draw the plane
 			gl.LoadMatrixf((*[16]float32)(&floor))
 			plane.texture.Data().Bind()
-			plane.index_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+			plane.iBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 			if (plane.mat == &left || plane.mat == &right) && strings.Contains(string(room.Wall.Path), "gradient.png") {
 				logging.Trace("seeing a gradient.png texture; enabling 'gorey' shader", "planeIdx", planeIdx)
 				base.EnableShader("gorey")
