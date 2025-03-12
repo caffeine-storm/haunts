@@ -379,7 +379,7 @@ func doColour(room *Room, r, g, b, a, base_alpha byte) {
 	gl.Color4ub(alphaMult(R, r), alphaMult(G, g), alphaMult(B, b), alphaMult(A, a))
 }
 
-func WithRoomRenderGlSettings(fn func()) {
+func WithRoomRenderGlSettings(modelView mathgl.Mat4, fn func()) {
 	gl.Enable(gl.TEXTURE_2D)
 	gl.Enable(gl.BLEND)
 	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
@@ -393,7 +393,7 @@ func WithRoomRenderGlSettings(fn func()) {
 	defer gl.DisableClientState(gl.VERTEX_ARRAY)
 	defer gl.DisableClientState(gl.TEXTURE_COORD_ARRAY)
 
-	render.WithMatrixMode(render.MatrixModeModelView, func() {
+	render.WithMatrixInMode(&modelView, render.MatrixModeModelView, func() {
 		fn()
 	})
 }
@@ -406,7 +406,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 		doColour(room, r, g, b, a, base_alpha)
 	}
 
-	WithRoomRenderGlSettings(func() {
+	WithRoomRenderGlSettings(floor, func() {
 		var vert roomVertex
 
 		planes := []plane{
@@ -431,11 +431,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 			base.SetUniformI("los", "tex2", 1)
 		}
 
-		var mul, run mathgl.Mat4
 		for planeIdx, plane := range planes {
-			gl.LoadMatrixf((*[16]float32)(&floor))
-			run.Assign(&floor)
-
 			// Render the doors and cut out the stencil buffer so we leave them empty
 			// if they're open
 			switch plane.mat {
@@ -603,6 +599,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 			gl.ClientActiveTexture(gl.TEXTURE0)
 		}
 
+		var mul, run mathgl.Mat4
 		run.Assign(&floor)
 		mul.Translation(float32(-room.X), float32(-room.Y), 0)
 		run.Multiply(&mul)

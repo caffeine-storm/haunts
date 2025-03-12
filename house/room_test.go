@@ -103,7 +103,7 @@ func RoomSpecs() {
 
 			queue.Queue(func(render.RenderQueueState) {
 				logging.TraceBracket(func() {
-					house.WithRoomRenderGlSettings(func() {
+					house.WithRoomRenderGlSettings(floor, func() {
 						room.RenderWallTextures(&floor, 255)
 					})
 				})
