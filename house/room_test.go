@@ -85,8 +85,8 @@ func RoomSpecs() {
 			focusx := float32(0)
 			focusy := float32(0)
 			angle := float32(62)
-			nozoom := float32(1.0)
-			floor, _, _, _, _, _ := house.MakeRoomMatsForTest(room, region, focusx, focusy, angle, nozoom)
+			zoom := float32(3.0)
+			floor, _, _, _, _, _ := house.MakeRoomMatsForTest(room, region, focusx, focusy, angle, zoom)
 			logging.Debug("floor mat?", "floor", floor)
 
 			queue.Queue(func(render.RenderQueueState) {
