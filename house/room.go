@@ -299,18 +299,28 @@ func (room *Room) SetWallTransparency(transparent bool) {
 	room.far_left.wall_alpha = alphavalue
 }
 
+func showpaths(parts []string) string {
+	dup := make([]string, len(parts))
+	for i, part := range parts {
+		dup[i] = fmt.Sprintf("%q", part)
+	}
+	return strings.Join(dup, ", ")
+}
+
 func (room *Room) LoadAndWaitForTexturesForTest() {
 	paths := []string{}
 	for _, wt := range room.WallTextures {
+		logging.Warn("wall texture blocking", "path", wt.Texture.Path)
 		paths = append(paths, string(wt.Texture.Path))
 	}
 	paths = append(paths, string(room.Floor.Path))
 	paths = append(paths, string(room.Wall.Path))
 
-	for _, path := range paths {
+	logging.Warn("going to block on textures", "paths", showpaths(paths), "wall", room.Wall.Path, "floor", room.Floor.Path)
+	for i, path := range paths {
 		_, err := texture.LoadFromPath(path)
 		if err != nil {
-			panic(fmt.Errorf("couldn't load texture %q: %w", path, err))
+			panic(fmt.Errorf("couldn't load texture %d, %q: %w", i, path, err))
 		}
 	}
 

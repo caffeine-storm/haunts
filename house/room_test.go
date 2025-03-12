@@ -54,27 +54,20 @@ func loadRoom(roomName string) *house.Room {
 
 func RoomSpecs() {
 	base.SetDatadir("../data")
-	room := GivenARoom("restest")
 	logging.SetLoggingLevel(slog.LevelDebug)
-
-	Convey("construction succeeds", func() {
-		So(room, ShouldNotBeNil)
-	})
 
 	rendertest.WithGlForTest(266, 246, func(sys system.System, queue render.RenderQueueInterface) {
 		registry.LoadAllRegistries()
 		base.InitShaders(queue)
 		texture.Init(queue)
 
-		/*
-			Convey("loading from registry", func() {
-				restestRoom := loadRoom("restest.room")
+		Convey("loading from registry", func() {
+			restestRoom := loadRoom("restest.room")
 
-				So(restestRoom, ShouldNotBeNil)
-				So(restestRoom.Defname, ShouldEqual, "restest")
-				So(restestRoom.Doors, ShouldHaveLength, 0)
-			})
-		*/
+			So(restestRoom, ShouldNotBeNil)
+			So(restestRoom.Defname, ShouldEqual, "restest")
+			So(restestRoom.Doors, ShouldHaveLength, 0)
+		})
 
 		Convey("drawing walls", func() {
 			room := loadRoom("restest.room")
@@ -113,25 +106,36 @@ func RoomSpecs() {
 			So(queue, rendertest.ShouldLookLikeFile, "restest-walls")
 		})
 
-		SkipConvey("drawing restest", func() {
+		Convey("drawing restest", func() {
 			restestRoom := loadRoom("restest.room")
-
-			nozoom := float32(1.0)
-			opaquealpha := byte(255)
-			noDrawables := []house.Drawable{}
-			var nilLos *house.LosTexture = nil
-			noFloorDrawers := []house.RenderOnFloorer{}
+			if restestRoom.Wall.Path == "" {
+				panic("ya done goofed")
+			}
+			logging.Warn("wait, wut?", "wall", restestRoom.Wall.Path, "string-it", string(restestRoom.Wall.Path))
 			region := gui.Region{
 				Point: gui.Point{X: 0, Y: 0},
 				Dims:  gui.Dims{Dx: 200, Dy: 200},
 			}
 			focusx := float32(0)
 			focusy := float32(0)
-			angle := float32(0)
-			floor, _, left, _, right, _ := house.MakeRoomMatsForTest(restestRoom, region, focusx, focusy, angle, nozoom)
+			angle := float32(62)
+			zoom := float32(3.0)
+			floor, _, left, _, right, _ := house.MakeRoomMatsForTest(restestRoom, region, focusx, focusy, angle, zoom)
+
 			queue.Queue(func(render.RenderQueueState) {
 				restestRoom.SetupGlStuff(&house.RoomRealGl{})
-				restestRoom.Render(floor, left, right, nozoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
+				restestRoom.SetWallTransparency(false)
+			})
+			queue.Purge()
+
+			restestRoom.LoadAndWaitForTexturesForTest()
+
+			opaquealpha := byte(255)
+			noDrawables := []house.Drawable{}
+			var nilLos *house.LosTexture = nil
+			noFloorDrawers := []house.RenderOnFloorer{}
+			queue.Queue(func(render.RenderQueueState) {
+				restestRoom.Render(floor, left, right, zoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
 			})
 			queue.Purge()
 
