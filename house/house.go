@@ -1,6 +1,7 @@
 package house
 
 import (
+	"fmt"
 	"image"
 	"math"
 	"path/filepath"
@@ -94,6 +95,20 @@ const (
 	FarLeft
 	FarRight
 )
+
+func (f WallFacing) String() string {
+	switch f {
+	case NearLeft:
+		return "NearLeft"
+	case NearRight:
+		return "NearRight"
+	case FarLeft:
+		return "FarLeft"
+	case FarRight:
+		return "FarRight"
+	}
+	return fmt.Sprintf("invalid facing (%d)", int(f))
+}
 
 func MakeDoor(name string) *Door {
 	d := Door{Defname: name}
@@ -246,8 +261,7 @@ func (d *Door) setupGlStuff(room *Room) {
 			vs[i].los_u = (y2 + float32(room.Y)) / LosTextureSize
 			vs[i].los_v = (vs[i].x + float32(room.X)) / LosTextureSize
 		}
-	}
-	if d.Facing == FarRight || d.Facing == NearLeft {
+	} else if d.Facing == FarRight || d.Facing == NearLeft {
 		y1 := float32(d.Pos)
 		y2 := float32(d.Pos + d.Width)
 		var x1 float32 = -0.25
@@ -265,6 +279,8 @@ func (d *Door) setupGlStuff(room *Room) {
 			vs[i].los_u = (vs[i].y + float32(room.Y)) / LosTextureSize
 			vs[i].los_v = (x2 + float32(room.X)) / LosTextureSize
 		}
+	} else {
+		panic(fmt.Errorf("can't orient door by facing: %s", d.Facing))
 	}
 	dz := -float32(d.Width*d.TextureData().Dy()) / float32(d.TextureData().Dx())
 	if d.Facing == FarRight {
