@@ -167,9 +167,9 @@ type Door struct {
 	highlight_threshold bool
 
 	// gl stuff for drawing the threshold on the ground
-	threshold_glids doorGlIds
-	door_glids      doorGlIds
-	state           doorState
+	thresholdIds doorGlIds
+	doorGlIds    doorGlIds
+	state        doorState
 }
 
 func (d *Door) AlwaysOpen() bool {
@@ -200,11 +200,9 @@ type doorState struct {
 type doorGlIds struct {
 	vBuffer gl.Buffer
 
-	// TODO(tmckee:#14): why are these called floorI*? Do they affect pixels
-	// associated with the floor? Or is this just a copy-pasta artifact?
-	floorIBuffer gl.Buffer
-	// TODO(tmckee): we ought not need to do this, it's always 6, no?
-	floorICount gl.GLsizei
+	iBuffer gl.Buffer
+	// TODO(tmckee): we ought not need to store this, it's always 6.
+	iCount gl.GLsizei
 }
 
 func (ids *doorGlIds) Reset() {
@@ -214,9 +212,9 @@ func (ids *doorGlIds) Reset() {
 
 	ids.vBuffer.Delete()
 	ids.vBuffer = 0
-	ids.floorIBuffer.Delete()
-	ids.floorIBuffer = 0
-	ids.floorICount = 0
+	ids.iBuffer.Delete()
+	ids.iBuffer = 0
+	ids.iCount = 0
 }
 
 func (d *Door) setupGlStuff(room *Room) {
@@ -236,8 +234,8 @@ func (d *Door) setupGlStuff(room *Room) {
 		return
 	}
 	d.state = state
-	d.threshold_glids.Reset()
-	d.door_glids.Reset()
+	d.thresholdIds.Reset()
+	d.doorGlIds.Reset()
 
 	// far left, near right, do threshold
 	// near left, far right, do threshold
@@ -349,23 +347,23 @@ func (d *Door) setupGlStuff(room *Room) {
 			los_v: los_v2,
 		})
 	}
-	d.threshold_glids.vBuffer = gl.GenBuffer()
-	d.threshold_glids.vBuffer.Bind(gl.ARRAY_BUFFER)
+	d.thresholdIds.vBuffer = gl.GenBuffer()
+	d.thresholdIds.vBuffer.Bind(gl.ARRAY_BUFFER)
 	size := int(unsafe.Sizeof(roomVertex{}))
 	gl.BufferData(gl.ARRAY_BUFFER, size*len(vs), gl.Pointer(&vs[0].x), gl.STATIC_DRAW)
 
 	is := []uint16{0, 1, 2, 0, 2, 3}
-	d.threshold_glids.floorIBuffer = gl.GenBuffer()
-	d.threshold_glids.floorIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+	d.thresholdIds.iBuffer = gl.GenBuffer()
+	d.thresholdIds.iBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 	gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), gl.Pointer(&is[0]), gl.STATIC_DRAW)
-	d.threshold_glids.floorICount = 6
+	d.thresholdIds.iCount = 6
 
 	if d.Facing == FarLeft || d.Facing == FarRight {
 		is2 := []uint16{4, 5, 6, 4, 6, 7}
-		d.door_glids.floorIBuffer = gl.GenBuffer()
-		d.door_glids.floorIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+		d.doorGlIds.iBuffer = gl.GenBuffer()
+		d.doorGlIds.iBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 		gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is2), gl.Pointer(&is2[0]), gl.STATIC_DRAW)
-		d.door_glids.floorICount = 6
+		d.doorGlIds.iCount = 6
 	}
 }
 
