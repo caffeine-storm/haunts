@@ -192,6 +192,18 @@ type doorGlIds struct {
 	floorICount gl.GLsizei
 }
 
+func (ids *doorGlIds) Reset() {
+	if ids.vBuffer == 0 {
+		return
+	}
+
+	ids.vBuffer.Delete()
+	ids.vBuffer = 0
+	ids.floorIBuffer.Delete()
+	ids.floorIBuffer = 0
+	ids.floorICount = 0
+}
+
 func (d *Door) setupGlStuff(room *Room) {
 	var state doorState
 	state.facing = d.Facing
@@ -209,20 +221,8 @@ func (d *Door) setupGlStuff(room *Room) {
 		return
 	}
 	d.state = state
-	if d.threshold_glids.vBuffer != 0 {
-		// TODO(tmckee): we should DRY out resetting these buffers with a
-		// d.threshold_glids.Reset() call (or w/e)
-		d.threshold_glids.vBuffer.Delete()
-		d.threshold_glids.floorIBuffer.Delete()
-		d.threshold_glids.vBuffer = 0
-		d.threshold_glids.floorIBuffer = 0
-	}
-	if d.door_glids.vBuffer != 0 {
-		d.door_glids.vBuffer.Delete()
-		d.door_glids.floorIBuffer.Delete()
-		d.door_glids.vBuffer = 0
-		d.door_glids.floorIBuffer = 0
-	}
+	d.threshold_glids.Reset()
+	d.door_glids.Reset()
 
 	// far left, near right, do threshold
 	// near left, far right, do threshold
