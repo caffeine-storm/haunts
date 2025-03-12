@@ -566,10 +566,6 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 			}
 		}
 
-		// XXX(tmckee): room.RenderWalls seems to corrupt everything right now;
-		// we'll bail out here until it's fixed.
-		return
-
 		room.RenderWallTextures(&floor, base_alpha)
 
 		base.EnableShader("marble")

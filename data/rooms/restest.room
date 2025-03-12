@@ -8,7 +8,7 @@
   "Furniture": [],
   "WallTextures": [
     {
-      "Defname": "Debug Texture",
+      "Defname": "Cobweb",
       "X": 15.754118,
       "Y": 1.2256411,
       "Rot": 0,
@@ -17,7 +17,7 @@
   ],
   "debug-disabled": [
     {
-      "Defname": "Cobweb",
+      "Defname": "Debug Texture",
       "X": 15.754118,
       "Y": 1.2256411,
       "Rot": 0,
