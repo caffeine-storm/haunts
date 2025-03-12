@@ -1,3 +1,7 @@
+- bug#14: naming in door.go seems weird. It might be that 'floor' things are
+	_actually_ referring to drawing operations that will affect the look of the
+	floor, but I kinda doubt it.
+
 - bug#13: improve base.registry APIs;
 	- lots of reflection was needed b/c of a lack of generics back in the day
 	- there seems to be the start of a "use this initializer hook" with the
@@ -59,4 +63,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#14: <next>
+- bug#15: <next>

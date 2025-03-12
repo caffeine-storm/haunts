@@ -184,6 +184,8 @@ type doorState struct {
 type doorGlIds struct {
 	vbuffer gl.Buffer
 
+	// TODO(tmckee:#14): why are these called floor_*? Do they affect pixels
+	// associated with the floor? Or is this just a copy-pasta artifact?
 	floor_buffer gl.Buffer
 	floor_count  gl.GLsizei
 }
