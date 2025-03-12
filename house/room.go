@@ -360,24 +360,24 @@ func (room *Room) RenderWallTextures(worldToView *mathgl.Mat4, base_alpha byte) 
 			gl.ClientActiveTexture(gl.TEXTURE1)
 			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.los_u))
 			gl.ClientActiveTexture(gl.TEXTURE0)
-			if ids.floorBuffer != 0 {
+			if ids.floorIBuffer != 0 {
 				gl.StencilFunc(gl.ALWAYS, 2, 2)
-				ids.floorBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+				ids.floorIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 				gl.Color4ub(R, G, B, A)
-				gl.DrawElements(gl.TRIANGLES, int(ids.floorCount), gl.UNSIGNED_SHORT, nil)
+				gl.DrawElements(gl.TRIANGLES, int(ids.floorICount), gl.UNSIGNED_SHORT, nil)
 			}
-			if ids.leftBuffer != 0 {
+			if ids.leftIBuffer != 0 {
 				gl.StencilFunc(gl.ALWAYS, 1, 1)
-				ids.leftBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+				ids.leftIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 				doColour(room, R, G, B, alphaMult(A, room.far_left.wall_alpha), base_alpha)
-				gl.DrawElements(gl.TRIANGLES, int(ids.leftCount), gl.UNSIGNED_SHORT, nil)
+				gl.DrawElements(gl.TRIANGLES, int(ids.leftICount), gl.UNSIGNED_SHORT, nil)
 			}
-			if ids.rightBuffer != 0 {
+			if ids.rightIBuffer != 0 {
 				gl.StencilFunc(gl.ALWAYS, 1, 1)
-				ids.rightBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+				ids.rightIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 				doColour(room, R, G, B, alphaMult(A, room.far_right.wall_alpha), base_alpha)
 
-				gl.DrawElements(gl.TRIANGLES, int(ids.rightCount), gl.UNSIGNED_SHORT, nil)
+				gl.DrawElements(gl.TRIANGLES, int(ids.rightICount), gl.UNSIGNED_SHORT, nil)
 			}
 		}
 	})
@@ -457,14 +457,14 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 					do_color(R, G, B, alphaMult(A, room.far_left.wall_alpha))
 					gl.ClientActiveTexture(gl.TEXTURE0)
 					door.TextureData().Bind()
-					if door.door_glids.floor_buffer != 0 {
-						door.threshold_glids.vbuffer.Bind(gl.ARRAY_BUFFER)
+					if door.door_glids.floorIBuffer != 0 {
+						door.threshold_glids.vBuffer.Bind(gl.ARRAY_BUFFER)
 						gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.x))
-						door.door_glids.floor_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+						door.door_glids.floorIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 						gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.u))
 						gl.ClientActiveTexture(gl.TEXTURE1)
 						gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.los_u))
-						gl.DrawElements(gl.TRIANGLES, int(door.door_glids.floor_count), gl.UNSIGNED_SHORT, nil)
+						gl.DrawElements(gl.TRIANGLES, int(door.door_glids.floorICount), gl.UNSIGNED_SHORT, nil)
 					}
 				}
 				gl.StencilFunc(gl.NOTEQUAL, 1, 1)
@@ -483,14 +483,14 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 					do_color(R, G, B, alphaMult(A, room.far_right.wall_alpha))
 					gl.ClientActiveTexture(gl.TEXTURE0)
 					door.TextureData().Bind()
-					if door.door_glids.floor_buffer != 0 {
-						door.threshold_glids.vbuffer.Bind(gl.ARRAY_BUFFER)
+					if door.door_glids.floorIBuffer != 0 {
+						door.threshold_glids.vBuffer.Bind(gl.ARRAY_BUFFER)
 						gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.x))
-						door.door_glids.floor_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+						door.door_glids.floorIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 						gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.u))
 						gl.ClientActiveTexture(gl.TEXTURE1)
 						gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.los_u))
-						gl.DrawElements(gl.TRIANGLES, int(door.door_glids.floor_count), gl.UNSIGNED_SHORT, nil)
+						gl.DrawElements(gl.TRIANGLES, int(door.door_glids.floorICount), gl.UNSIGNED_SHORT, nil)
 					}
 				}
 				gl.StencilFunc(gl.NOTEQUAL, 1, 1)
@@ -558,7 +558,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 
 			// Draw triangles using the vertices and indices that we buffered in
 			// 'vBuffer' and 'index_buffer', respectively.
-			gl.DrawElements(gl.TRIANGLES, int(room.glData.floor_count), gl.UNSIGNED_SHORT, nil)
+			gl.DrawElements(gl.TRIANGLES, int(room.glData.floorICount), gl.UNSIGNED_SHORT, nil)
 			if los_tex != nil {
 				base.EnableShader("los")
 			} else {
@@ -574,7 +574,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 		base.SetUniformF("marble", "room_y", float32(room.Y))
 		for _, door := range room.Doors {
 			door.setupGlStuff(room)
-			if door.threshold_glids.vbuffer == 0 {
+			if door.threshold_glids.vBuffer == 0 {
 				continue
 			}
 			if door.AlwaysOpen() {
@@ -585,14 +585,14 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 			} else {
 				gl.Color4ub(128, 128, 128, 255)
 			}
-			door.threshold_glids.vbuffer.Bind(gl.ARRAY_BUFFER)
+			door.threshold_glids.vBuffer.Bind(gl.ARRAY_BUFFER)
 			gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.x))
 			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.u))
 			gl.ClientActiveTexture(gl.TEXTURE1)
 			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.los_u))
 			gl.ClientActiveTexture(gl.TEXTURE0)
-			door.threshold_glids.floor_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
-			gl.DrawElements(gl.TRIANGLES, int(door.threshold_glids.floor_count), gl.UNSIGNED_SHORT, nil)
+			door.threshold_glids.floorIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+			gl.DrawElements(gl.TRIANGLES, int(door.threshold_glids.floorICount), gl.UNSIGNED_SHORT, nil)
 		}
 		base.EnableShader("")
 		if los_tex != nil {
@@ -808,7 +808,7 @@ func (room *Room) SetupGlStuff(glProxy RoomSetupGlProxy) {
 	room.glData.floorIBuffer = glProxy.GenBuffer()
 	room.glData.floorIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 	glProxy.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
-	room.glData.floor_count = len(is)
+	room.glData.floorICount = len(is)
 }
 
 func (room *RoomDef) Dims() (dx, dy int) {

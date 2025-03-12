@@ -45,9 +45,9 @@ type Room struct {
 		rightWallIBuffer gl.Buffer // assumed to be 6 indices long
 
 		floorIBuffer gl.Buffer
-		// TODO(tmckee): we shouldn't need to store floor_count; it's always 9
+		// TODO(tmckee): we shouldn't need to store floorICount; it's always 9
 		// quads, a.k.a. 54 vertices.
-		floor_count int // holds how many indices are in 'floorIBuffer'
+		floorICount int // holds how many indices are in 'floorIBuffer'
 	}
 
 	// We only need to rebuild 'glData' if there was a change to one of the
@@ -183,13 +183,13 @@ type doorState struct {
 }
 
 type doorGlIds struct {
-	vbuffer gl.Buffer
+	vBuffer gl.Buffer
 
-	// TODO(tmckee:#14): why are these called floor_*? Do they affect pixels
+	// TODO(tmckee:#14): why are these called floorI*? Do they affect pixels
 	// associated with the floor? Or is this just a copy-pasta artifact?
-	floor_buffer gl.Buffer
+	floorIBuffer gl.Buffer
 	// TODO(tmckee): we ought not need to do this, it's always 6, no?
-	floor_count gl.GLsizei
+	floorICount gl.GLsizei
 }
 
 func (d *Door) setupGlStuff(room *Room) {
@@ -209,19 +209,19 @@ func (d *Door) setupGlStuff(room *Room) {
 		return
 	}
 	d.state = state
-	if d.threshold_glids.vbuffer != 0 {
+	if d.threshold_glids.vBuffer != 0 {
 		// TODO(tmckee): we should DRY out resetting these buffers with a
 		// d.threshold_glids.Reset() call (or w/e)
-		d.threshold_glids.vbuffer.Delete()
-		d.threshold_glids.floor_buffer.Delete()
-		d.threshold_glids.vbuffer = 0
-		d.threshold_glids.floor_buffer = 0
+		d.threshold_glids.vBuffer.Delete()
+		d.threshold_glids.floorIBuffer.Delete()
+		d.threshold_glids.vBuffer = 0
+		d.threshold_glids.floorIBuffer = 0
 	}
-	if d.door_glids.vbuffer != 0 {
-		d.door_glids.vbuffer.Delete()
-		d.door_glids.floor_buffer.Delete()
-		d.door_glids.vbuffer = 0
-		d.door_glids.floor_buffer = 0
+	if d.door_glids.vBuffer != 0 {
+		d.door_glids.vBuffer.Delete()
+		d.door_glids.floorIBuffer.Delete()
+		d.door_glids.vBuffer = 0
+		d.door_glids.floorIBuffer = 0
 	}
 
 	// far left, near right, do threshold
@@ -331,23 +331,23 @@ func (d *Door) setupGlStuff(room *Room) {
 			los_v: los_v2,
 		})
 	}
-	d.threshold_glids.vbuffer = gl.GenBuffer()
-	d.threshold_glids.vbuffer.Bind(gl.ARRAY_BUFFER)
+	d.threshold_glids.vBuffer = gl.GenBuffer()
+	d.threshold_glids.vBuffer.Bind(gl.ARRAY_BUFFER)
 	size := int(unsafe.Sizeof(roomVertex{}))
 	gl.BufferData(gl.ARRAY_BUFFER, size*len(vs), gl.Pointer(&vs[0].x), gl.STATIC_DRAW)
 
 	is := []uint16{0, 1, 2, 0, 2, 3}
-	d.threshold_glids.floor_buffer = gl.GenBuffer()
-	d.threshold_glids.floor_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+	d.threshold_glids.floorIBuffer = gl.GenBuffer()
+	d.threshold_glids.floorIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 	gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), gl.Pointer(&is[0]), gl.STATIC_DRAW)
-	d.threshold_glids.floor_count = 6
+	d.threshold_glids.floorICount = 6
 
 	if d.Facing == FarLeft || d.Facing == FarRight {
 		is2 := []uint16{4, 5, 6, 4, 6, 7}
-		d.door_glids.floor_buffer = gl.GenBuffer()
-		d.door_glids.floor_buffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+		d.door_glids.floorIBuffer = gl.GenBuffer()
+		d.door_glids.floorIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 		gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is2), gl.Pointer(&is2[0]), gl.STATIC_DRAW)
-		d.door_glids.floor_count = 6
+		d.door_glids.floorICount = 6
 	}
 }
 

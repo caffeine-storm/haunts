@@ -34,12 +34,12 @@ func (wt *WallTexture) Load() {
 type wallTextureGlIDs struct {
 	vBuffer gl.Buffer
 
-	leftBuffer  gl.Buffer
-	leftCount   gl.GLsizei
-	rightBuffer gl.Buffer
-	rightCount  gl.GLsizei
-	floorBuffer gl.Buffer
-	floorCount  gl.GLsizei
+	leftIBuffer  gl.Buffer
+	leftICount   gl.GLsizei
+	rightIBuffer gl.Buffer
+	rightICount  gl.GLsizei
+	floorIBuffer gl.Buffer
+	floorICount  gl.GLsizei
 }
 
 func (ids *wallTextureGlIDs) Reset() {
@@ -52,9 +52,9 @@ func (ids *wallTextureGlIDs) Reset() {
 	}
 
 	deleteIfNeeded(&ids.vBuffer)
-	deleteIfNeeded(&ids.leftBuffer)
-	deleteIfNeeded(&ids.rightBuffer)
-	deleteIfNeeded(&ids.floorBuffer)
+	deleteIfNeeded(&ids.leftIBuffer)
+	deleteIfNeeded(&ids.rightIBuffer)
+	deleteIfNeeded(&ids.floorIBuffer)
 }
 
 func (ids *wallTextureGlIDs) setVertexData(verts []roomVertex) {
@@ -220,10 +220,10 @@ func (wt *WallTexture) setupGlStuff(roomX, roomY, roomDx, roomDy int, glIDs *wal
 			is = append(is, uint16(len(vs)+i+1))
 		}
 
-		glIDs.floorBuffer = gl.GenBuffer()
-		glIDs.floorBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+		glIDs.floorIBuffer = gl.GenBuffer()
+		glIDs.floorIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 		gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, (int(unsafe.Sizeof(is[0])) * len(is)), is, gl.STATIC_DRAW)
-		glIDs.floorCount = gl.GLsizei(len(is))
+		glIDs.floorICount = gl.GLsizei(len(is))
 
 		run.Inverse()
 		for _, polyVert := range p {
@@ -280,10 +280,10 @@ func (wt *WallTexture) setupGlStuff(roomX, roomY, roomDx, roomDy int, glIDs *wal
 			is = append(is, uint16(len(vs)+i))
 			is = append(is, uint16(len(vs)+i+1))
 		}
-		glIDs.leftBuffer = gl.GenBuffer()
-		glIDs.leftBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+		glIDs.leftIBuffer = gl.GenBuffer()
+		glIDs.leftIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 		gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
-		glIDs.leftCount = gl.GLsizei(len(is))
+		glIDs.leftICount = gl.GLsizei(len(is))
 
 		run.Inverse()
 		for i := range p {
@@ -354,10 +354,10 @@ func (wt *WallTexture) setupGlStuff(roomX, roomY, roomDx, roomDy int, glIDs *wal
 			is = append(is, uint16(len(vs)+i))
 			is = append(is, uint16(len(vs)+i+1))
 		}
-		glIDs.rightBuffer = gl.GenBuffer()
-		glIDs.rightBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+		glIDs.rightIBuffer = gl.GenBuffer()
+		glIDs.rightIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 		gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
-		glIDs.rightCount = gl.GLsizei(len(is))
+		glIDs.rightICount = gl.GLsizei(len(is))
 
 		run.Inverse()
 		for _, polyVert := range p {
