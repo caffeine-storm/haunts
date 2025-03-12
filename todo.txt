@@ -1,3 +1,9 @@
+- bug#13: improve base.registry APIs;
+	- lots of reflection was needed b/c of a lack of generics back in the day
+	- there seems to be the start of a "use this initializer hook" with the
+		"autoload" tag but there doesn't seem to be any real use of it? Perhaps
+		redesign how/where/if a constructor runs when loading the object.
+
 - bug#12: improve APIs so that we don't have to _remember_ to call SetupGLStuff
 	everywhere.
 
@@ -53,4 +59,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#13: <next>
+- bug#14: <next>

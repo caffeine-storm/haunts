@@ -318,7 +318,9 @@ func (room *Room) LoadAndWaitForTexturesForTest() {
 }
 
 func (room *Room) RenderWallTextures(worldToView *mathgl.Mat4, base_alpha byte) {
-	// TODO(#11): don't lazily initialize these maps, do it during construction!
+	// TODO(#13): once the registry supports it, initialize Room instances while
+	// loading them from the registry so we don't have to guard/deal with
+	// half-initialized rooms here.
 	if room.wall_texture_gl_map == nil {
 		room.wall_texture_gl_map = make(map[*WallTexture]wallTextureGlIDs)
 		room.wall_texture_state_map = make(map[*WallTexture]wallTextureState)
