@@ -317,7 +317,7 @@ func main() {
 
 	base.InitShaders(queue)
 	runtime.GOMAXPROCS(8)
-	ui, err := gui.Make(gin.In(), gui.Dims{Dx: wdx, Dy: wdy})
+	ui, err := gui.Make(gui.Dims{Dx: wdx, Dy: wdy}, gin.In())
 	if err != nil {
 		panic(err.Error())
 	}
