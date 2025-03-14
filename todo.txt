@@ -1,5 +1,11 @@
+- bug#16: `rand.Seed(100)` in main.go is there for testing (we want the same
+	sequence of random nums for reproducibility) but that form of seeding is bad;
+	it couples to package-level state and should be replaced with
+	`rng := rand.New(rand.NewSource(100))` and then pipe `rng` everywhere but I
+	can't be bothered right now.
+
 - bug#15: glop has its own texture package/manager but there is another,
-  similar-but-not-the-same, one in haunts. We should DRY it out.
+	similar-but-not-the-same, one in haunts. We should DRY it out.
 
 - bug#14: naming in door.go seems weird. It might be that 'floor' things are
 	_actually_ referring to drawing operations that will affect the look of the
@@ -64,4 +70,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#16: <next>
+- bug#17: <next>
