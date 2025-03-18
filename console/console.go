@@ -76,7 +76,7 @@ func (c *Console) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 	if group.Events[0].Type == gin.Press {
 		r := rune(group.Events[0].Key.Id().Index)
 		if r < 256 {
-			if gin.In().GetKey(gin.AnyLeftShift).IsDown() || gin.In().GetKey(gin.AnyRightShift).IsDown() {
+			if gin.In().GetKeyById(gin.AnyLeftShift).IsDown() || gin.In().GetKeyById(gin.AnyRightShift).IsDown() {
 				r = unicode.ToUpper(r)
 			}
 			c.cmd = append(c.cmd, byte(r))

@@ -758,16 +758,16 @@ func (hdt *houseRelicsTab) Think(ui *gui.Gui, t int64) {
 	if hdt.temp_relic != nil {
 		hdt.temp_relic.X = bx
 		hdt.temp_relic.Y = by
-		hdt.temp_relic.Dx += gin.In().GetKey(gin.AnyRight).FramePressCount()
-		hdt.temp_relic.Dx -= gin.In().GetKey(gin.AnyLeft).FramePressCount()
+		hdt.temp_relic.Dx += gin.In().GetKeyById(gin.AnyRight).FramePressCount()
+		hdt.temp_relic.Dx -= gin.In().GetKeyById(gin.AnyLeft).FramePressCount()
 		if hdt.temp_relic.Dx < 1 {
 			hdt.temp_relic.Dx = 1
 		}
 		if hdt.temp_relic.Dx > 10 {
 			hdt.temp_relic.Dx = 10
 		}
-		hdt.temp_relic.Dy += gin.In().GetKey(gin.AnyUp).FramePressCount()
-		hdt.temp_relic.Dy -= gin.In().GetKey(gin.AnyDown).FramePressCount()
+		hdt.temp_relic.Dy += gin.In().GetKeyById(gin.AnyUp).FramePressCount()
+		hdt.temp_relic.Dy -= gin.In().GetKeyById(gin.AnyDown).FramePressCount()
 		if hdt.temp_relic.Dy < 1 {
 			hdt.temp_relic.Dy = 1
 		}
@@ -788,7 +788,7 @@ func (hdt *houseRelicsTab) Think(ui *gui.Gui, t int64) {
 
 	// TODO(tmckee): do we need to distinguish between 'N' and 'n'? This was
 	// originally 'n'.
-	if hdt.temp_relic == nil && gin.In().GetKey(gin.AnyKeyN).FramePressCount() > 0 && ui.FocusWidget() == nil {
+	if hdt.temp_relic == nil && gin.In().GetKeyById(gin.AnyKeyN).FramePressCount() > 0 && ui.FocusWidget() == nil {
 		hdt.newSpawn()
 	}
 }

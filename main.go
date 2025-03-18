@@ -143,8 +143,8 @@ func draggingAndZooming(ui *gui.Gui, dz draggerZoomer) {
 	}
 
 	var zoom float64
-	if gin.In().GetKey(gin.AnySpace).FramePressAmt() > 0 {
-		zoom = gin.In().GetKey(gin.AnyMouseWheelVertical).FramePressAmt()
+	if gin.In().GetKeyById(gin.AnySpace).FramePressAmt() > 0 {
+		zoom = gin.In().GetKeyById(gin.AnyMouseWheelVertical).FramePressAmt()
 	}
 	dz.Zoom(zoom / 100)
 
@@ -155,8 +155,8 @@ func draggingAndZooming(ui *gui.Gui, dz draggerZoomer) {
 		dragging = !dragging
 	}
 	if dragging {
-		mx := gin.In().GetKey(gin.AnyMouseXAxis).FramePressAmt()
-		my := gin.In().GetKey(gin.AnyMouseYAxis).FramePressAmt()
+		mx := gin.In().GetKeyById(gin.AnyMouseXAxis).FramePressAmt()
+		my := gin.In().GetKeyById(gin.AnyMouseYAxis).FramePressAmt()
 		if mx != 0 || my != 0 {
 			dz.Drag(-mx, my)
 		}
@@ -235,7 +235,7 @@ func editMode(ui *gui.Gui) {
 			for i := 1; i <= 9; i++ {
 				idx := int(gin.AnyKeyPad0.Index) + i
 				numericKeyId.Index = gin.KeyIndex(idx)
-				if gin.In().GetKey(numericKeyId).FramePressCount() > 0 {
+				if gin.In().GetKeyById(numericKeyId).FramePressCount() > 0 {
 					editor.SelectTab(i - 1)
 				}
 			}

@@ -95,7 +95,7 @@ func (kb KeyBinds) MakeKeyMap() KeyMap {
 			kids := getKeysFromString(part)
 
 			if len(kids) == 1 {
-				binds = append(binds, gin.In().GetKey(kids[0]))
+				binds = append(binds, gin.In().GetKeyById(kids[0]))
 			} else {
 				// The last kid is the main kid and the rest are modifiers
 				main := kids[len(kids)-1]

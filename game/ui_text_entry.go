@@ -152,10 +152,10 @@ func (te *TextEntry) Respond(group gui.EventGroup, data interface{}) bool {
 			id := event.Key.Id()
 			if id.Index <= 255 && valid_keys[byte(id.Index)] {
 				b := byte(id.Index)
-				if gin.In().GetKey(gin.AnyLeftShift).CurPressAmt() > 0 {
+				if gin.In().GetKeyById(gin.AnyLeftShift).CurPressAmt() > 0 {
 					b = shift_keys[b]
 				}
-				if gin.In().GetKey(gin.AnyRightShift).CurPressAmt() > 0 {
+				if gin.In().GetKeyById(gin.AnyRightShift).CurPressAmt() > 0 {
 					b = shift_keys[b]
 				}
 				t := te.Entry.text

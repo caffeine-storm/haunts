@@ -109,7 +109,7 @@ func (w *WallPanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		return true
 	}
 	if found, event := group.FindEvent(gin.AnyMouseWheelVertical); found {
-		if w.wall_texture != nil && gin.In().GetKey(gin.AnySpace).CurPressAmt() == 0 {
+		if w.wall_texture != nil && gin.In().GetKeyById(gin.AnySpace).CurPressAmt() == 0 {
 			w.wall_texture.Rot += float32(event.Key.CurPressAmt() / 100)
 		}
 	}
