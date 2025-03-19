@@ -169,6 +169,7 @@ func (sm *StartMenu) Draw(region gui.Region, ctx gui.DrawingContext) {
 }
 
 func (sm *StartMenu) DrawFocused(region gui.Region, ctx gui.DrawingContext) {
+	panic("NIY")
 }
 
 func (sm *StartMenu) String() string {
