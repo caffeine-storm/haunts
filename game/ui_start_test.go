@@ -19,9 +19,21 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
+func givenAStartLayout() game.StartLayout {
+	datadir := base.GetDataDir()
+
+	ret, err := game.LoadStartLayoutFromDatadir(datadir)
+	if err != nil {
+		panic(fmt.Errorf("couldn't LoadStartLayoutFromDatadir: %w", err))
+	}
+
+	return *ret
+}
+
 func givenAStartMenu() *game.StartMenu {
 	parent := &gui.StandardParent{}
-	err := game.InsertStartMenu(parent)
+	layout := givenAStartLayout()
+	err := game.InsertStartMenu(parent, layout)
 	if err != nil {
 		panic(fmt.Errorf("couldn't insert start menu: %w", err))
 	}

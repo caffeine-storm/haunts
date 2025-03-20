@@ -97,6 +97,10 @@ func InsertOnlineMenu(ui gui.WidgetParent) error {
 	if err != nil {
 		return err
 	}
+	layout, err := LoadStartLayoutFromDatadir(datadir)
+	if err != nil {
+		return err
+	}
 	sm.buttons = []ButtonLike{
 		&sm.layout.Back,
 		&sm.layout.Unstarted.Up,
@@ -110,7 +114,7 @@ func InsertOnlineMenu(ui gui.WidgetParent) error {
 	sm.control.out = make(chan struct{})
 	sm.layout.Back.f = func(interface{}) {
 		ui.RemoveChild(&sm)
-		InsertStartMenu(ui)
+		InsertStartMenu(ui, *layout)
 	}
 	sm.ui = ui
 

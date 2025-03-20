@@ -11,20 +11,33 @@ import (
 	"github.com/runningwild/glop/gui"
 )
 
-type startLayout struct {
-	Menu struct {
-		X, Y     int
-		Texture  texture.Object
-		Credits  Button
-		Versus   Button
-		Online   Button
-		Settings Button
-	}
+type MenuConfig struct {
+	X, Y     int
+	Texture  texture.Object
+	Credits  Button
+	Versus   Button
+	Online   Button
+	Settings Button
+}
+
+type StartLayout struct {
+	Menu       MenuConfig
 	Background texture.Object
 }
 
+func LoadStartLayoutFromDatadir(datadir string) (*StartLayout, error) {
+	ret := &StartLayout{}
+
+	err := base.LoadAndProcessObject(filepath.Join(datadir, "ui", "start", "layout.json"), "json", ret)
+	if err != nil {
+		return nil, err
+	}
+
+	return ret, nil
+}
+
 type StartMenu struct {
-	layout startLayout
+	layout StartLayout
 	// TODO(tmckee): clean: I don't think we need this; we're told the region to
 	// render into each frame, no?
 	region  gui.Region
@@ -33,13 +46,9 @@ type StartMenu struct {
 	last_t  int64
 }
 
-func InsertStartMenu(ui gui.WidgetParent) error {
+func InsertStartMenu(ui gui.WidgetParent, layout StartLayout) error {
 	var sm StartMenu
-	datadir := base.GetDataDir()
-	err := base.LoadAndProcessObject(filepath.Join(datadir, "ui", "start", "layout.json"), "json", &sm.layout)
-	if err != nil {
-		return err
-	}
+	sm.layout = layout
 	sm.buttons = []ButtonLike{
 		&sm.layout.Menu.Credits,
 		&sm.layout.Menu.Versus,
@@ -63,7 +72,9 @@ func InsertStartMenu(ui gui.WidgetParent) error {
 				// game.InsertVersusMenu?
 				ui.AddChild(MakeGamePanel(name, nil, nil, ""))
 			},
-			InsertStartMenu,
+			func(parent gui.WidgetParent) error {
+				return InsertStartMenu(parent, sm.layout)
+			},
 		)
 		if err != nil {
 			logging.Error("Unable to make Map Chooser", "err", err)

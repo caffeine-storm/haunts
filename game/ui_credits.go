@@ -41,6 +41,11 @@ func InsertCreditsMenu(ui gui.WidgetParent) error {
 	if err != nil {
 		return err
 	}
+	layout, err := LoadStartLayoutFromDatadir(datadir)
+	if err != nil {
+		return err
+	}
+
 	cm.buttons = []ButtonLike{
 		&cm.layout.Back,
 		&cm.layout.Up,
@@ -48,7 +53,7 @@ func InsertCreditsMenu(ui gui.WidgetParent) error {
 	}
 	cm.layout.Back.f = func(interface{}) {
 		ui.RemoveChild(&cm)
-		InsertStartMenu(ui)
+		InsertStartMenu(ui, *layout)
 	}
 	d := base.GetDictionary(cm.layout.Credits.Size)
 	cm.layout.Credits.Scroll.Height = len(cm.layout.Credits.Lines) * int(d.MaxHeight())

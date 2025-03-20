@@ -351,9 +351,13 @@ func main() {
 		logging.Info("Restarting...")
 		ui.RemoveChild(game_box)
 		game_box = &lowerLeftTable{gui.MakeAnchorBox(gui.Dims{1024, 768})}
-		err = game.InsertStartMenu(game_box)
+		layout, err := game.LoadStartLayoutFromDatadir(datadir)
 		if err != nil {
-			panic(err)
+			panic(fmt.Errorf("loading start layout failed: %w", err))
+		}
+		err = game.InsertStartMenu(game_box, *layout)
+		if err != nil {
+			panic(fmt.Errorf("couldn't insert start menu: %w", err))
 		}
 		ui.AddChild(game_box)
 		logging.Info("Restarted")
