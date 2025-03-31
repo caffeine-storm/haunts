@@ -369,7 +369,7 @@ func makeHouseDataTab(house *HouseDef, viewer *HouseViewer) *houseDataTab {
 	room_buttons := gui.MakeVerticalTable()
 	for _, name := range names {
 		n := name
-		room_buttons.AddChild(gui.MakeButton("standard_18", name, 300, 1, 1, 1, 1, func(int64) {
+		room_buttons.AddChild(gui.MakeButton("standard_18", name, 300, 1, 1, 1, 1, func(gui.EventHandlingContext, int64) {
 			if hdt.temp_room != nil {
 				return
 			}
@@ -479,7 +479,7 @@ func (hdt *houseDataTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 				hdt.viewer.SetBounds()
 			}
 		} else {
-			cx, cy := event.Key.Cursor().Point()
+			cx, cy := ui.GetMousePosition()
 			bx, by := hdt.viewer.WindowToBoard(cx, cy)
 			for i := range floor.Rooms {
 				x, y := floor.Rooms[i].Pos()
@@ -546,7 +546,7 @@ func makeHouseDoorTab(house *HouseDef, viewer *HouseViewer) *houseDoorTab {
 	door_buttons := gui.MakeVerticalTable()
 	for _, name := range names {
 		n := name
-		door_buttons.AddChild(gui.MakeButton("standard_18", name, 300, 1, 1, 1, 1, func(int64) {
+		door_buttons.AddChild(gui.MakeButton("standard_18", name, 300, 1, 1, 1, 1, func(gui.EventHandlingContext, int64) {
 			if len(hdt.house.Floors[0].Rooms) < 2 || hdt.temp_door != nil {
 				return
 			}
@@ -605,12 +605,13 @@ func (hdt *houseDoorTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		return true
 	}
 
-	cursor := group.Events[0].Key.Cursor()
 	var bx, by float32
-	if cursor != nil {
-		bx, by = hdt.viewer.WindowToBoard(cursor.Point())
+	isMouseEvent := ui.IsMouseEvent(group)
+	if isMouseEvent {
+		mx, my := ui.GetMousePosition()
+		bx, by = hdt.viewer.WindowToBoard(mx, my)
 	}
-	if cursor != nil && hdt.temp_door != nil {
+	if isMouseEvent && hdt.temp_door != nil {
 		room := hdt.viewer.FindClosestDoorPos(hdt.temp_door, bx, by)
 		if room != hdt.temp_room {
 			algorithm.Choose(&hdt.temp_room.Doors, func(d *Door) bool {
@@ -706,7 +707,7 @@ func makeHouseRelicsTab(house *HouseDef, viewer *HouseViewer) *houseRelicsTab {
 	hdt.spawn_name = gui.MakeTextEditLine("standard_18", "", 300, 1, 1, 1, 1)
 	hdt.VerticalTable.AddChild(hdt.spawn_name)
 
-	hdt.make_spawn = gui.MakeButton("standard_18", "New Spawn Point", 300, 1, 1, 1, 1, func(int64) {
+	hdt.make_spawn = gui.MakeButton("standard_18", "New Spawn Point", 300, 1, 1, 1, 1, func(gui.EventHandlingContext, int64) {
 		hdt.newSpawn()
 	})
 	hdt.VerticalTable.AddChild(hdt.make_spawn)
@@ -824,7 +825,7 @@ func (hdt *houseRelicsTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		return true
 	}
 
-	cursor := group.Events[0].Key.Cursor()
+	mx, my := ui.GetMousePosition()
 	floor := hdt.house.Floors[hdt.current_floor]
 	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
 		if hdt.temp_relic != nil {
@@ -834,7 +835,7 @@ func (hdt *houseRelicsTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 			}
 		} else {
 			for _, sp := range floor.Spawns {
-				fbx, fby := hdt.viewer.WindowToBoard(cursor.Point())
+				fbx, fby := hdt.viewer.WindowToBoard(mx, my)
 				bx, by := roundDown(fbx), roundDown(fby)
 				x, y := sp.Pos()
 				dx, dy := sp.Dims()

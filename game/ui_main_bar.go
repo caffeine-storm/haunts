@@ -373,9 +373,9 @@ func (m *MainBar) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	if g.FocusWidget() != nil {
 		return false
 	}
-	cursor := group.Events[0].Key.Cursor()
-	if cursor != nil {
-		m.mx, m.my = cursor.Point()
+	isMouseEvent := g.IsMouseEvent(group)
+	if isMouseEvent {
+		m.mx, m.my = g.GetMousePosition()
 		if m.my > m.layout.Background.Data().Dy() {
 			return false
 		}
@@ -415,7 +415,7 @@ func (m *MainBar) Respond(g *gui.Gui, group gui.EventGroup) bool {
 		}
 	}
 
-	return cursor != nil
+	return isMouseEvent
 }
 
 func (m *MainBar) Draw(region gui.Region, ctx gui.DrawingContext) {

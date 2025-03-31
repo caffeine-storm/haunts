@@ -348,7 +348,7 @@ func (a *Interact) Prep(ent *game.Entity, g *game.Game) bool {
 	}
 	return false
 }
-func (a *Interact) HandleInput(group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
+func (a *Interact) HandleInput(ctx gui.EventHandlingContext, group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
 	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
 		// TODO(tmckee): need to ask the gui for a cursor pos
 		// bx, by := g.GetViewer().WindowToBoard(gin.In().GetCursor("Mouse").Point())

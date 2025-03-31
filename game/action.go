@@ -166,7 +166,7 @@ type Action interface {
 	// otherwise, if it is not nil, it indicates that the entity has committed
 	// to this action.  That ActionExec should be passed to the Action on the
 	// next call to Maintain().
-	HandleInput(gui.EventGroup, *Game) (bool, ActionExec)
+	HandleInput(gui.EventHandlingContext, gui.EventGroup, *Game) (bool, ActionExec)
 
 	// Got to have some way for the user to see what is going on
 	house.RenderOnFloorer

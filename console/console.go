@@ -53,7 +53,7 @@ func (c *Console) Think(ui *gui.Gui, dt int64) {
 
 func (c *Console) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 	if found, event := group.FindEvent(base.GetDefaultKeyMap()["console"].Id()); found && event.Type == gin.Press {
-		if group.Focus {
+		if group.DispatchedToFocussedWidget {
 			ui.DropFocus()
 		} else {
 			ui.TakeFocus(c)
@@ -83,7 +83,7 @@ func (c *Console) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		}
 	}
 
-	return group.Focus
+	return group.DispatchedToFocussedWidget
 }
 
 func (c *Console) Draw(region gui.Region, ctx gui.DrawingContext) {

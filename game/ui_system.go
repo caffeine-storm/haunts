@@ -123,9 +123,8 @@ func (sm *SystemMenu) Think(g *gui.Gui, t int64) {
 }
 
 func (sm *SystemMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
-	cursor := group.Events[0].Key.Cursor()
-	if cursor != nil {
-		sm.mx, sm.my = cursor.Point()
+	if g.IsMouseEvent(group) {
+		sm.mx, sm.my = g.GetMousePosition()
 	}
 	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
 		if sm.layout.Main.handleClick(sm.mx, sm.my, g) {

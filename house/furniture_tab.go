@@ -81,7 +81,7 @@ func makeFurniturePanel(room *Room, viewer *roomViewer) *FurniturePanel {
 	furn_table := gui.MakeVerticalTable()
 	fnames := GetAllFurnitureNames()
 	for _, fname := range fnames {
-		furn_table.AddChild(gui.MakeButton("standard_18", fname, 300, 1, 1, 1, 1, func(t int64) {
+		furn_table.AddChild(gui.MakeButton("standard_18", fname, 300, 1, 1, 1, 1, func(ctx gui.EventHandlingContext, t int64) {
 			f := MakeFurniture(fname)
 			if f == nil {
 				logging.Error("makeFurniturePanel>MakeFurniture(fname) failed", "fnames", fnames)
@@ -164,7 +164,8 @@ func (w *FurniturePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 				w.furniture = nil
 			}
 		} else if w.furniture == nil {
-			bx, by := w.RoomViewer.WindowToBoard(event.Key.Cursor().Point())
+			mx, my := ui.GetMousePosition()
+			bx, by := w.RoomViewer.WindowToBoard(mx, my)
 			for i := range w.Room.Furniture {
 				x, y := w.Room.Furniture[i].Pos()
 				dx, dy := w.Room.Furniture[i].Dims()

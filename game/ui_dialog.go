@@ -224,9 +224,9 @@ func (mdb *MediumDialogBox) Think(g *gui.Gui, t int64) {
 }
 
 func (mdb *MediumDialogBox) Respond(g *gui.Gui, group gui.EventGroup) bool {
-	cursor := group.Events[0].Key.Cursor()
-	if cursor != nil {
-		mdb.mx, mdb.my = cursor.Point()
+	isMouseEvent := g.IsMouseEvent(group)
+	if isMouseEvent {
+		mdb.mx, mdb.my = g.GetMousePosition()
 		if !pointInsideRect(mdb.mx, mdb.my, mdb.region.X, mdb.region.Y, mdb.layout.Background.Data().Dx(), mdb.layout.Background.Data().Dy()) {
 			return false
 		}
@@ -268,7 +268,7 @@ func (mdb *MediumDialogBox) Respond(g *gui.Gui, group gui.EventGroup) bool {
 		}
 	}
 
-	return cursor != nil
+	return isMouseEvent
 }
 
 func (mdb *MediumDialogBox) Draw(region gui.Region, ctx gui.DrawingContext) {

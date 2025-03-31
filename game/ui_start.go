@@ -133,9 +133,10 @@ func (sm *StartMenu) SetOpacity(percent float64) {
 }
 
 func (sm *StartMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
-	cursor := group.Events[0].Key.Cursor()
-	if cursor != nil {
-		sm.mx, sm.my = cursor.Point()
+	logging.Trace("StartMenu.Respond called", "events", group)
+
+	if g.IsMouseEvent(group) {
+		sm.mx, sm.my = g.GetMousePosition()
 	}
 
 	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {

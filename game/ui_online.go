@@ -435,9 +435,9 @@ func (sm *OnlineMenu) Think(g *gui.Gui, t int64) {
 }
 
 func (sm *OnlineMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
-	cursor := group.Events[0].Key.Cursor()
-	if cursor != nil {
-		sm.mx, sm.my = cursor.Point()
+	isMouseEvent := g.IsMouseEvent(group)
+	if isMouseEvent {
+		sm.mx, sm.my = g.GetMousePosition()
 	}
 	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
 		for _, button := range sm.buttons {
@@ -447,7 +447,7 @@ func (sm *OnlineMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 		}
 		for _, glb := range []*gameListBox{&sm.layout.Active, &sm.layout.Unstarted} {
 			inside := gui.Point{sm.mx, sm.my}.Inside(glb.Scroll.Region())
-			if cursor == nil || inside {
+			if !isMouseEvent || inside {
 				for _, game := range glb.games {
 					if game.join.handleClick(sm.mx, sm.my, nil) {
 						return true
@@ -468,7 +468,7 @@ func (sm *OnlineMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	}
 	for _, glb := range []*gameListBox{&sm.layout.Active, &sm.layout.Unstarted} {
 		inside := gui.Point{sm.mx, sm.my}.Inside(glb.Scroll.Region())
-		if cursor == nil || inside {
+		if !isMouseEvent || inside {
 			for _, game := range glb.games {
 				if game.join.Respond(group, nil) {
 					hit = true

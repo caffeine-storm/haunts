@@ -163,10 +163,9 @@ func (a *AoeAttack) Prep(ent *game.Entity, g *game.Game) bool {
 	a.ty = int(by)
 	return true
 }
-func (a *AoeAttack) HandleInput(group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
-	cursor := group.Events[0].Key.Cursor()
-	if cursor != nil && cursor.Name() == "Mouse" {
-		bx, by := g.GetViewer().WindowToBoard(cursor.Point())
+func (a *AoeAttack) HandleInput(ctx gui.EventHandlingContext, group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
+	if ctx.IsMouseEvent(group) {
+		bx, by := g.GetViewer().WindowToBoard(ctx.GetMousePosition())
 		a.tx = int(bx)
 		a.ty = int(by)
 	}

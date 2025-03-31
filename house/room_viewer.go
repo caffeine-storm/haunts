@@ -49,9 +49,9 @@ type roomViewer struct {
 	gui.Childless
 	gui.EmbeddedWidget
 	gui.BasicZone
-	gui.NonFocuser
-	gui.NonResponder
-	gui.NonThinker
+	gui.StubDrawFocuseder
+	gui.StubDoResponder
+	gui.StubDoThinker
 
 	room *Room
 

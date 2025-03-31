@@ -36,7 +36,7 @@ type HouseViewerState struct {
 type HouseViewer struct {
 	gui.Childless
 	gui.BasicZone
-	gui.NonFocuser
+	gui.StubDrawFocuseder
 
 	house *HouseDef
 

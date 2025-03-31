@@ -29,7 +29,7 @@ func MakeWallPanel(room *Room, viewer *roomViewer) *WallPanel {
 	fnames := GetAllWallTextureNames()
 	for i := range fnames {
 		name := fnames[i]
-		tex_table.AddChild(gui.MakeButton("standard_18", name, 300, 1, 1, 1, 1, func(t int64) {
+		tex_table.AddChild(gui.MakeButton("standard_18", name, 300, 1, 1, 1, 1, func(ctx gui.EventHandlingContext, t int64) {
 			wt := LoadWallTexture(name)
 			if wt == nil {
 				return
@@ -118,14 +118,14 @@ func (w *WallPanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 			w.wall_texture.temporary = false
 			w.wall_texture = nil
 		} else if w.wall_texture == nil {
-			w.wall_texture = w.textureNear(event.Key.Cursor().Point())
+			w.wall_texture = w.textureNear(ui.GetMousePosition())
 			if w.wall_texture != nil {
 				w.prev_wall_texture = new(WallTexture)
 				*w.prev_wall_texture = *w.wall_texture
 				w.wall_texture.temporary = true
 
 				wx, wy := w.viewer.BoardToWindowf(w.wall_texture.X, w.wall_texture.Y)
-				px, py := event.Key.Cursor().Point()
+				px, py := ui.GetMousePosition()
 				w.drag_anchor.X = float32(px) - wx
 				w.drag_anchor.Y = float32(py) - wy
 			}

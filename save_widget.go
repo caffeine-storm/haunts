@@ -19,7 +19,7 @@ func MakeSaveWidget(on_save func(string)) *SaveWidget {
 	sw.AddChild(gui.MakeTextLine("standard_18", "Enter Filename", 300, 1, 1, 1, 1))
 	sw.filename = gui.MakeTextEditLine("standard_18", "filename", 300, 1, 1, 1, 1)
 	sw.AddChild(sw.filename)
-	sw.AddChild(gui.MakeButton("standard_18", "Save!", 300, 1, 1, 1, 1, func(int64) {
+	sw.AddChild(gui.MakeButton("standard_18", "Save!", 300, 1, 1, 1, 1, func(gui.EventHandlingContext, int64) {
 		sw.on_save(sw.filename.GetText())
 	}))
 

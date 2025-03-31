@@ -145,10 +145,9 @@ func (a *SummonAction) Prep(ent *game.Entity, g *game.Game) bool {
 	a.ent = ent
 	return true
 }
-func (a *SummonAction) HandleInput(group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
-	cursor := group.Events[0].Key.Cursor()
-	if cursor != nil {
-		bx, by := g.GetViewer().WindowToBoard(cursor.Point())
+func (a *SummonAction) HandleInput(ctx gui.EventHandlingContext, group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
+	if ctx.IsMouseEvent(group) {
+		bx, by := g.GetViewer().WindowToBoard(ctx.GetMousePosition())
 		bx += 0.5
 		by += 0.5
 		if bx < 0 {
