@@ -1,6 +1,7 @@
 package game
 
 import (
+	"fmt"
 	"path/filepath"
 
 	"github.com/MobRulesGames/haunts/base"
@@ -37,7 +38,7 @@ func LoadStartLayoutFromDatadir(datadir string) (*StartLayout, error) {
 }
 
 type StartMenu struct {
-	layout StartLayout
+	Layout StartLayout
 	// TODO(tmckee): clean: I don't think we need this; we're told the region to
 	// render into each frame, no?
 	region  gui.Region
@@ -46,16 +47,40 @@ type StartMenu struct {
 	last_t  int64
 }
 
+func (sm *StartMenu) PatchButtonForTest(buttonKey string, fn func()) {
+	var btn *Button = nil
+	switch buttonKey {
+	case "Credits":
+		btn = &sm.Layout.Menu.Credits
+	case "Versus":
+		btn = &sm.Layout.Menu.Versus
+	case "Online":
+		btn = &sm.Layout.Menu.Online
+	case "Settings":
+		btn = &sm.Layout.Menu.Settings
+	default:
+		panic(fmt.Errorf("unknown button key %q", buttonKey))
+	}
+
+	oldF := btn.f
+
+	btn.f = func(arg any) {
+		fn()
+		oldF(arg)
+	}
+}
+
 func InsertStartMenu(ui gui.WidgetParent, layout StartLayout) error {
 	var sm StartMenu
-	sm.layout = layout
+	sm.Layout = layout
 	sm.buttons = []ButtonLike{
-		&sm.layout.Menu.Credits,
-		&sm.layout.Menu.Versus,
-		&sm.layout.Menu.Online,
-		&sm.layout.Menu.Settings,
+		&sm.Layout.Menu.Credits,
+		&sm.Layout.Menu.Versus,
+		&sm.Layout.Menu.Online,
+		&sm.Layout.Menu.Settings,
 	}
-	sm.layout.Menu.Credits.f = func(interface{}) {
+	sm.Layout.Menu.Credits.f = func(interface{}) {
+		logging.Trace("sm.Layout.Menu.f called")
 		ui.RemoveChild(&sm)
 		err := InsertCreditsMenu(ui)
 		if err != nil {
@@ -63,7 +88,7 @@ func InsertStartMenu(ui gui.WidgetParent, layout StartLayout) error {
 			return
 		}
 	}
-	sm.layout.Menu.Versus.f = func(interface{}) {
+	sm.Layout.Menu.Versus.f = func(interface{}) {
 		ui.RemoveChild(&sm)
 		err := InsertMapChooser(
 			ui,
@@ -73,7 +98,7 @@ func InsertStartMenu(ui gui.WidgetParent, layout StartLayout) error {
 				ui.AddChild(MakeGamePanel(name, nil, nil, ""))
 			},
 			func(parent gui.WidgetParent) error {
-				return InsertStartMenu(parent, sm.layout)
+				return InsertStartMenu(parent, sm.Layout)
 			},
 		)
 		if err != nil {
@@ -81,8 +106,8 @@ func InsertStartMenu(ui gui.WidgetParent, layout StartLayout) error {
 			return
 		}
 	}
-	sm.layout.Menu.Settings.f = func(interface{}) {}
-	sm.layout.Menu.Online.f = func(interface{}) {
+	sm.Layout.Menu.Settings.f = func(interface{}) {}
+	sm.Layout.Menu.Online.f = func(interface{}) {
 		ui.RemoveChild(&sm)
 		err := InsertOnlineMenu(ui)
 		if err != nil {
@@ -171,9 +196,9 @@ func (sm *StartMenu) Draw(region gui.Region, ctx gui.DrawingContext) {
 	// texture manager but we immediately call RenderNatural. This is okayish IRL
 	// because eventually there'll be a frame where things _have_ loaded; we'll
 	// actually draw then. For testing, we can use texture.BlockUntilLoaded.
-	sm.layout.Background.Data().RenderNatural(sm.region.X, sm.region.Y)
-	sm.layout.Menu.Texture.Data().RenderNatural(sm.region.X+sm.layout.Menu.X, sm.region.Y+sm.layout.Menu.Y)
-	logging.Trace("StartMenu.Draw: about to render buttons", "numbuttons", len(sm.buttons), "sm.layout", sm.layout)
+	sm.Layout.Background.Data().RenderNatural(sm.region.X, sm.region.Y)
+	sm.Layout.Menu.Texture.Data().RenderNatural(sm.region.X+sm.Layout.Menu.X, sm.region.Y+sm.Layout.Menu.Y)
+	logging.Trace("StartMenu.Draw: about to render buttons", "numbuttons", len(sm.buttons), "sm.layout", sm.Layout)
 	for _, button := range sm.buttons {
 		// TODO(tmckee): clean: (x,y) given to RenderAt is not a target location
 		// but an offset from the button's (X,Y) fields. This does not seem clear
