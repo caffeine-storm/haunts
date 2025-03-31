@@ -86,12 +86,19 @@ test-fresh: |clean_rejects
 test-fresh: test-nocache
 
 pkg?= -- set 'pkg' to the package under test --
-test-dlv: singlepackage=${pkg}
-test-dlv: ${RUNTIME_DATADIR}
+dlv-test: singlepackage=${pkg}
+dlv-test: ${RUNTIME_DATADIR}
 # delve wants exactly one package at a time so "testrunargs" isn't what we
 # want here. We use a var specifically for pointing at a single directory.
 	[ -d "${singlepackage}" ] && \
 	${XVFB_RUN} dlv test --build-flags="-tags nosound" ${singlepackage} -- ${testrunargs}
+
+dlv-devtest: singlepackage=${pkg}
+dlv-devtest: ${RUNTIME_DATADIR}
+# delve wants exactly one package at a time so "testrunargs" isn't what we
+# want here. We use a var specifically for pointing at a single directory.
+	[ -d "${singlepackage}" ] && \
+	${XVFB_RUN} dlv test --build-flags="-modfile dev.go.mod -tags nosound" ${singlepackage} -- ${testrunargs}
 
 .PRECIOUS: %/perftest
 %/perftest: %
@@ -172,6 +179,7 @@ trace-house-test:
 .PHONY: haunts
 .PHONY: devhaunts
 .PHONY: clean fmt lint
-.PHONY: devtest test test-dlv test-fresh test-nocache test-report test-verbose
+.PHONY: devtest test test-fresh test-nocache test-report test-verbose
+.PHONY: dlv-devtest dlv-test
 .PHONY: clean_rejects list_rejects promote_rejects view_rejects
 .PHONY: update-appveyor-image update-glop
