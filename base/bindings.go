@@ -2,8 +2,9 @@ package base
 
 import (
 	"fmt"
-	"github.com/runningwild/glop/gin"
 	"strings"
+
+	"github.com/runningwild/glop/gin"
 )
 
 type KeyBinds map[string]string
@@ -87,8 +88,8 @@ func getKeysFromString(str string) []gin.KeyId {
 }
 
 func (kb KeyBinds) MakeKeyMap() KeyMap {
-	key_map := make(KeyMap)
-	for key, val := range kb {
+	var key_map KeyMap = map[string]gin.Key{}
+	for keyName, val := range kb {
 		parts := strings.Split(val, ",")
 		var binds []gin.Key
 		for i, part := range parts {
@@ -101,20 +102,23 @@ func (kb KeyBinds) MakeKeyMap() KeyMap {
 				main := kids[len(kids)-1]
 				kids = kids[0 : len(kids)-1]
 				var down []bool
-				for _ = range kids {
+				for range kids {
 					down = append(down, true)
 				}
-				binds = append(binds, gin.In().BindDerivedKey(fmt.Sprintf("%s:%d", key, i), gin.In().MakeBinding(main, kids, down)))
+				binds = append(binds, gin.In().BindDerivedKey(fmt.Sprintf("%s:%d", keyName, i), gin.In().MakeBinding(main, kids, down)))
 			}
 		}
 		if len(binds) == 1 {
-			key_map[key] = binds[0]
+			key_map[keyName] = binds[0]
 		} else {
 			var actual_binds []gin.Binding
-			for i := range binds {
-				actual_binds = append(actual_binds, gin.In().MakeBinding(binds[i].Id(), nil, nil))
+			for _, bind := range binds {
+				// TODO(#17): uhh... doesn't passing nil, nil at the end mean we don't
+				// support modifiers for compound derived-keys? Shouldn't we just pass
+				// in bind.Modifiers and bind.Down???
+				actual_binds = append(actual_binds, gin.In().MakeBinding(bind.Id(), nil, nil))
 			}
-			key_map[key] = gin.In().BindDerivedKey("name", actual_binds...)
+			key_map[keyName] = gin.In().BindDerivedKey(keyName, actual_binds...)
 		}
 	}
 	return key_map

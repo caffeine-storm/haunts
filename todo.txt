@@ -1,3 +1,6 @@
+- bug#17: we're doing something weird with key binds in base/bindings.go. We
+  should make sure that we support modifiers on compound derived-keys.
+
 - bug#16: `rand.Seed(100)` in main.go is there for testing (we want the same
 	sequence of random nums for reproducibility) but that form of seeding is bad;
 	it couples to package-level state and should be replaced with
@@ -70,4 +73,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#17: <next>
+- bug#18: <next>
