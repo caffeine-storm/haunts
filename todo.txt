@@ -1,3 +1,7 @@
+- hover effect starts but doesn't persist
+
+- clicking on 'versus mode' or 'play online' panics
+
 - bug#17: we're doing something weird with key binds in base/bindings.go. We
   should make sure that we support modifiers on compound derived-keys.
 
