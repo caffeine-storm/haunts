@@ -8,7 +8,6 @@ import (
 	"github.com/MobRulesGames/mathgl"
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/debug"
-	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
 )
@@ -57,9 +56,6 @@ type roomViewer struct {
 
 	// In case the size of the room changes we will need to update the matrices
 	size RoomSize
-
-	// All events received by the viewer are passed to the handler
-	handler gin.EventHandler
 
 	// Focus, in map coordinates
 	fx, fy float32
@@ -956,10 +952,6 @@ func (rv *roomViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
 
 		debug.LogAndClearGlErrors(logging.DebugLogger())
 	})
-}
-
-func (rv *roomViewer) SetEventHandler(handler gin.EventHandler) {
-	rv.handler = handler
 }
 
 func (rv *roomViewer) Think(*gui.Gui, int64) {
