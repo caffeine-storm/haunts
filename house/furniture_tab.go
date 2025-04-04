@@ -164,23 +164,26 @@ func (w *FurniturePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 				w.furniture = nil
 			}
 		} else if w.furniture == nil {
-			mx, my := ui.GetMousePosition(group)
-			bx, by := w.RoomViewer.WindowToBoard(mx, my)
-			for i := range w.Room.Furniture {
-				x, y := w.Room.Furniture[i].Pos()
-				dx, dy := w.Room.Furniture[i].Dims()
-				if int(bx) >= x && int(bx) < x+dx && int(by) >= y && int(by) < y+dy {
-					w.furniture = w.Room.Furniture[i]
-					w.prev_object = new(Furniture)
-					*w.prev_object = *w.furniture
-					w.furniture.temporary = true
-					px, py := w.furniture.Pos()
-					w.drag_anchor.x = bx - float32(px)
-					w.drag_anchor.y = by - float32(py)
-					break
+			if mpos, ok := ui.UseMousePosition(group); ok {
+				mx, my := mpos.X, mpos.Y
+				bx, by := w.RoomViewer.WindowToBoard(mx, my)
+				for i := range w.Room.Furniture {
+					x, y := w.Room.Furniture[i].Pos()
+					dx, dy := w.Room.Furniture[i].Dims()
+					if int(bx) >= x && int(bx) < x+dx && int(by) >= y && int(by) < y+dy {
+						w.furniture = w.Room.Furniture[i]
+						w.prev_object = new(Furniture)
+						*w.prev_object = *w.furniture
+						w.furniture.temporary = true
+						px, py := w.furniture.Pos()
+						w.drag_anchor.x = bx - float32(px)
+						w.drag_anchor.y = by - float32(py)
+						break
+					}
 				}
 			}
 		}
+
 		return true
 	}
 	return false

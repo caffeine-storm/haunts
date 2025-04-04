@@ -155,8 +155,8 @@ func (sm *StartMenu) SetOpacity(percent float64) {
 func (sm *StartMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	logging.Trace("StartMenu.Respond called", "events", group)
 
-	if g.IsMouseEvent(group) {
-		sm.mx, sm.my = g.GetMousePosition(group)
+	if mpos, ok := g.UseMousePosition(group); ok {
+		sm.mx, sm.my = mpos.X, mpos.Y
 		logging.Debug("setting mouse pos", "pos", []int{sm.mx, sm.my}, "evgroup", group)
 	}
 

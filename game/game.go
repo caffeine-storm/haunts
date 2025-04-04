@@ -147,12 +147,11 @@ func (gp *GamePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		return false
 	}
 
-	if ui.IsMouseEvent(group) {
+	if mpos, ok := ui.UseMousePosition(group); ok {
 		if gp.game.hovered_ent != nil {
 			gp.game.hovered_ent.hovered = false
 		}
 		gp.game.hovered_ent = nil
-		mx, my := ui.GetMousePosition(group)
 		for i := range gp.game.Ents {
 			fx, fy := gp.game.Ents[i].FPos()
 			wx, wy := gp.game.viewer.BoardToWindow(float32(fx), float32(fy))
@@ -163,7 +162,7 @@ func (gp *GamePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 			y := wy
 			x2 := wx + int(gp.game.Ents[i].last_render_width/2)
 			y2 := wy + int(150*gp.game.Ents[i].last_render_width/100)
-			if mx >= x && mx <= x2 && my >= y && my <= y2 {
+			if mpos.X >= x && mpos.X <= x2 && mpos.Y >= y && mpos.Y <= y2 {
 				if gp.game.hovered_ent != nil {
 					gp.game.hovered_ent.hovered = false
 				}

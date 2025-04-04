@@ -146,8 +146,8 @@ func (a *SummonAction) Prep(ent *game.Entity, g *game.Game) bool {
 	return true
 }
 func (a *SummonAction) HandleInput(ctx gui.EventHandlingContext, group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
-	if ctx.IsMouseEvent(group) {
-		bx, by := g.GetViewer().WindowToBoard(ctx.GetMousePosition(group))
+	if mpos, ok := ctx.UseMousePosition(group); ok {
+		bx, by := g.GetViewer().WindowToBoard(mpos.X, mpos.Y)
 		bx += 0.5
 		by += 0.5
 		if bx < 0 {

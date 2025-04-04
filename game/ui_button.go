@@ -3,6 +3,7 @@ package game
 import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/globals"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/sound"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/go-gl-legacy/gl"
@@ -107,6 +108,8 @@ func (b *Button) Think(x, y, mx, my int, dt int64) {
 	} else {
 		b.valid = true
 	}
+
+	logging.Info("button.Think", "x y mx my", []any{x, y, mx, my})
 
 	in := b.valid && pointInsideRect(mx, my, b.bounds.x, b.bounds.y, b.bounds.dx, b.bounds.dy)
 	if in && !b.was_in {

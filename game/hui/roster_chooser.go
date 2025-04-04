@@ -188,30 +188,30 @@ func (rc *RosterChooser) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		return true
 	}
 	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
-		x, y := ui.GetMousePosition(group)
-		gp := gui.Point{X: x, Y: y}
-		if gp.Inside(rc.render.down) {
-			rc.focus += rc.layout.Num_options
-			return true
-		} else if gp.Inside(rc.render.up) {
-			rc.focus -= rc.layout.Num_options
-			return true
-		} else if gp.Inside(rc.render.all_options) {
-			for i := range rc.render.options {
-				if gp.Inside(rc.render.options[i]) {
-					rc.selector(i, rc.selected, true)
-					return true
+		if gp, ok := ui.UseMousePosition(group); ok {
+			if gp.Inside(rc.render.down) {
+				rc.focus += rc.layout.Num_options
+				return true
+			} else if gp.Inside(rc.render.up) {
+				rc.focus -= rc.layout.Num_options
+				return true
+			} else if gp.Inside(rc.render.all_options) {
+				for i := range rc.render.options {
+					if gp.Inside(rc.render.options[i]) {
+						rc.selector(i, rc.selected, true)
+						return true
+					}
 				}
+			} else if gp.Inside(rc.render.done) {
+				if rc.selector(-1, rc.selected, false) {
+					base.DeprecatedLog().Info("calling on-complete")
+					rc.on_complete(rc.selected)
+				}
+				return true
+			} else if rc.on_undo != nil && gp.Inside(rc.render.undo) {
+				rc.on_undo()
+				return true
 			}
-		} else if gp.Inside(rc.render.done) {
-			if rc.selector(-1, rc.selected, false) {
-				base.DeprecatedLog().Info("calling on-complete")
-				rc.on_complete(rc.selected)
-			}
-			return true
-		} else if rc.on_undo != nil && gp.Inside(rc.render.undo) {
-			rc.on_undo()
-			return true
 		}
 	}
 	return false

@@ -269,8 +269,8 @@ func (a *Move) Prep(ent *game.Entity, g *game.Game) bool {
 	return true
 }
 func (a *Move) HandleInput(ctx gui.EventHandlingContext, group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
-	if ctx.IsMouseEvent(group) {
-		fx, fy := g.GetViewer().WindowToBoard(ctx.GetMousePosition(group))
+	if mpos, ok := ctx.UseMousePosition(group); ok {
+		fx, fy := g.GetViewer().WindowToBoard(mpos.X, mpos.Y)
 		a.findPath(a.ent, int(fx), int(fy))
 	}
 	if found, _ := group.FindEvent(gin.AnyMouseLButton); found {

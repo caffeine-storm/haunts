@@ -479,19 +479,21 @@ func (hdt *houseDataTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 				hdt.viewer.SetBounds()
 			}
 		} else {
-			cx, cy := ui.GetMousePosition(group)
-			bx, by := hdt.viewer.WindowToBoard(cx, cy)
-			for i := range floor.Rooms {
-				x, y := floor.Rooms[i].Pos()
-				dx, dy := floor.Rooms[i].Dims()
-				if int(bx) >= x && int(bx) < x+dx && int(by) >= y && int(by) < y+dy {
-					hdt.temp_room = floor.Rooms[i]
-					hdt.prev_room = new(Room)
-					*hdt.prev_room = *hdt.temp_room
-					hdt.temp_room.temporary = true
-					hdt.drag_anchor.x = bx - float32(x)
-					hdt.drag_anchor.y = by - float32(y)
-					break
+			if mpos, ok := ui.UseMousePosition(group); ok {
+				cx, cy := mpos.X, mpos.Y
+				bx, by := hdt.viewer.WindowToBoard(cx, cy)
+				for i := range floor.Rooms {
+					x, y := floor.Rooms[i].Pos()
+					dx, dy := floor.Rooms[i].Dims()
+					if int(bx) >= x && int(bx) < x+dx && int(by) >= y && int(by) < y+dy {
+						hdt.temp_room = floor.Rooms[i]
+						hdt.prev_room = new(Room)
+						*hdt.prev_room = *hdt.temp_room
+						hdt.temp_room.temporary = true
+						hdt.drag_anchor.x = bx - float32(x)
+						hdt.drag_anchor.y = by - float32(y)
+						break
+					}
 				}
 			}
 			if hdt.temp_room != nil {
@@ -606,10 +608,9 @@ func (hdt *houseDoorTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 	}
 
 	var bx, by float32
-	isMouseEvent := ui.IsMouseEvent(group)
+	mpos, isMouseEvent := ui.UseMousePosition(group)
 	if isMouseEvent {
-		mx, my := ui.GetMousePosition(group)
-		bx, by = hdt.viewer.WindowToBoard(mx, my)
+		bx, by = hdt.viewer.WindowToBoard(mpos.X, mpos.Y)
 	}
 	if isMouseEvent && hdt.temp_door != nil {
 		room := hdt.viewer.FindClosestDoorPos(hdt.temp_door, bx, by)
@@ -825,34 +826,36 @@ func (hdt *houseRelicsTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		return true
 	}
 
-	mx, my := ui.GetMousePosition(group)
 	floor := hdt.house.Floors[hdt.current_floor]
 	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
-		if hdt.temp_relic != nil {
-			if !hdt.temp_relic.invalid {
-				hdt.temp_relic.temporary = false
-				hdt.temp_relic = nil
-			}
-		} else {
-			for _, sp := range floor.Spawns {
-				fbx, fby := hdt.viewer.WindowToBoard(mx, my)
-				bx, by := roundDown(fbx), roundDown(fby)
-				x, y := sp.Pos()
-				dx, dy := sp.Dims()
-				if bx >= x && bx < x+dx && by >= y && by < y+dy {
-					hdt.temp_relic = sp
-					hdt.prev_relic = new(SpawnPoint)
-					*hdt.prev_relic = *hdt.temp_relic
-					hdt.temp_relic.temporary = true
-					hdt.drag_anchor.x = fbx - float32(hdt.temp_relic.X)
-					hdt.drag_anchor.y = fby - float32(hdt.temp_relic.Y)
-					break
+		if mpos, ok := ui.UseMousePosition(group); ok {
+			if hdt.temp_relic != nil {
+				if !hdt.temp_relic.invalid {
+					hdt.temp_relic.temporary = false
+					hdt.temp_relic = nil
+				}
+			} else {
+				for _, sp := range floor.Spawns {
+					fbx, fby := hdt.viewer.WindowToBoard(mpos.X, mpos.Y)
+					bx, by := roundDown(fbx), roundDown(fby)
+					x, y := sp.Pos()
+					dx, dy := sp.Dims()
+					if bx >= x && bx < x+dx && by >= y && by < y+dy {
+						hdt.temp_relic = sp
+						hdt.prev_relic = new(SpawnPoint)
+						*hdt.prev_relic = *hdt.temp_relic
+						hdt.temp_relic.temporary = true
+						hdt.drag_anchor.x = fbx - float32(hdt.temp_relic.X)
+						hdt.drag_anchor.y = fby - float32(hdt.temp_relic.Y)
+						break
+					}
 				}
 			}
 		}
 	}
 	return false
 }
+
 func (hdt *houseRelicsTab) Collapse() {
 	PopSpawnRegexp()
 	hdt.onEscape()

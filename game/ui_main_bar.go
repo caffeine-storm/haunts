@@ -373,9 +373,10 @@ func (m *MainBar) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	if g.FocusWidget() != nil {
 		return false
 	}
-	isMouseEvent := g.IsMouseEvent(group)
+
+	mpos, isMouseEvent := g.UseMousePosition(group)
 	if isMouseEvent {
-		m.mx, m.my = g.GetMousePosition(group)
+		m.mx, m.my = mpos.X, mpos.Y
 		if m.my > m.layout.Background.Data().Dy() {
 			return false
 		}
