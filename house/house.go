@@ -479,7 +479,7 @@ func (hdt *houseDataTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 				hdt.viewer.SetBounds()
 			}
 		} else {
-			cx, cy := ui.GetMousePosition()
+			cx, cy := ui.GetMousePosition(group)
 			bx, by := hdt.viewer.WindowToBoard(cx, cy)
 			for i := range floor.Rooms {
 				x, y := floor.Rooms[i].Pos()
@@ -608,7 +608,7 @@ func (hdt *houseDoorTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 	var bx, by float32
 	isMouseEvent := ui.IsMouseEvent(group)
 	if isMouseEvent {
-		mx, my := ui.GetMousePosition()
+		mx, my := ui.GetMousePosition(group)
 		bx, by = hdt.viewer.WindowToBoard(mx, my)
 	}
 	if isMouseEvent && hdt.temp_door != nil {
@@ -825,7 +825,7 @@ func (hdt *houseRelicsTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		return true
 	}
 
-	mx, my := ui.GetMousePosition()
+	mx, my := ui.GetMousePosition(group)
 	floor := hdt.house.Floors[hdt.current_floor]
 	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
 		if hdt.temp_relic != nil {

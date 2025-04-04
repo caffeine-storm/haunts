@@ -188,7 +188,7 @@ func (rc *RosterChooser) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		return true
 	}
 	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
-		x, y := ui.GetMousePosition()
+		x, y := ui.GetMousePosition(group)
 		gp := gui.Point{X: x, Y: y}
 		if gp.Inside(rc.render.down) {
 			rc.focus += rc.layout.Num_options

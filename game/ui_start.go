@@ -120,7 +120,7 @@ func InsertStartMenu(ui gui.WidgetParent, layout StartLayout) error {
 }
 
 func (sm *StartMenu) Requested() gui.Dims {
-	return gui.Dims{1024, 768}
+	return gui.Dims{Dx: 1024, Dy: 768}
 }
 
 func (sm *StartMenu) Expandable() (bool, bool) {
@@ -139,11 +139,6 @@ func (sm *StartMenu) Think(g *gui.Gui, t int64) {
 	dt := t - sm.last_t
 	sm.last_t = t
 
-	if sm.mx == 0 && sm.my == 0 {
-		// TODO(tmckee): need to ask the gui for a cursor pos
-		// sm.mx, sm.my = gin.In().GetCursor("Mouse").Point()
-		sm.mx, sm.my = 0, 0
-	}
 	for _, button := range sm.buttons {
 		button.Think(sm.region.X, sm.region.Y, sm.mx, sm.my, dt)
 	}
@@ -161,7 +156,8 @@ func (sm *StartMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	logging.Trace("StartMenu.Respond called", "events", group)
 
 	if g.IsMouseEvent(group) {
-		sm.mx, sm.my = g.GetMousePosition()
+		sm.mx, sm.my = g.GetMousePosition(group)
+		logging.Debug("setting mouse pos", "pos", []int{sm.mx, sm.my}, "evgroup", group)
 	}
 
 	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {

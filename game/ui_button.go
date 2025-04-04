@@ -107,6 +107,7 @@ func (b *Button) Think(x, y, mx, my int, dt int64) {
 	} else {
 		b.valid = true
 	}
+
 	in := b.valid && pointInsideRect(mx, my, b.bounds.x, b.bounds.y, b.bounds.dx, b.bounds.dy)
 	if in && !b.was_in {
 		sound.PlaySound("Haunts/SFX/UI/Tick", 0.75)

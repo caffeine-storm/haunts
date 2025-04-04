@@ -375,7 +375,7 @@ func (m *MainBar) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	}
 	isMouseEvent := g.IsMouseEvent(group)
 	if isMouseEvent {
-		m.mx, m.my = g.GetMousePosition()
+		m.mx, m.my = g.GetMousePosition(group)
 		if m.my > m.layout.Background.Data().Dy() {
 			return false
 		}

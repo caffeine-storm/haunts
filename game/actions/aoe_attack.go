@@ -165,7 +165,7 @@ func (a *AoeAttack) Prep(ent *game.Entity, g *game.Game) bool {
 }
 func (a *AoeAttack) HandleInput(ctx gui.EventHandlingContext, group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
 	if ctx.IsMouseEvent(group) {
-		bx, by := g.GetViewer().WindowToBoard(ctx.GetMousePosition())
+		bx, by := g.GetViewer().WindowToBoard(ctx.GetMousePosition(group))
 		a.tx = int(bx)
 		a.ty = int(by)
 	}

@@ -118,14 +118,14 @@ func (w *WallPanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 			w.wall_texture.temporary = false
 			w.wall_texture = nil
 		} else if w.wall_texture == nil {
-			w.wall_texture = w.textureNear(ui.GetMousePosition())
+			w.wall_texture = w.textureNear(ui.GetMousePosition(group))
 			if w.wall_texture != nil {
 				w.prev_wall_texture = new(WallTexture)
 				*w.prev_wall_texture = *w.wall_texture
 				w.wall_texture.temporary = true
 
 				wx, wy := w.viewer.BoardToWindowf(w.wall_texture.X, w.wall_texture.Y)
-				px, py := ui.GetMousePosition()
+				px, py := ui.GetMousePosition(group)
 				w.drag_anchor.X = float32(px) - wx
 				w.drag_anchor.Y = float32(py) - wy
 			}

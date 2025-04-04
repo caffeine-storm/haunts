@@ -105,7 +105,7 @@ func (cm *CreditsMenu) Think(g *gui.Gui, t int64) {
 
 func (cm *CreditsMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	if g.IsMouseEvent(group) {
-		cm.mx, cm.my = g.GetMousePosition()
+		cm.mx, cm.my = g.GetMousePosition(group)
 	}
 	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
 		for _, button := range cm.buttons {

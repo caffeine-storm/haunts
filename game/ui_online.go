@@ -437,7 +437,7 @@ func (sm *OnlineMenu) Think(g *gui.Gui, t int64) {
 func (sm *OnlineMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	isMouseEvent := g.IsMouseEvent(group)
 	if isMouseEvent {
-		sm.mx, sm.my = g.GetMousePosition()
+		sm.mx, sm.my = g.GetMousePosition(group)
 	}
 	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
 		for _, button := range sm.buttons {

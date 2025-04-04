@@ -186,7 +186,7 @@ func (ep *EntityPlacer) Think(g *gui.Gui, t int64) {
 
 func (ep *EntityPlacer) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	if g.IsMouseEvent(group) {
-		ep.mx, ep.my = g.GetMousePosition()
+		ep.mx, ep.my = g.GetMousePosition(group)
 	}
 
 	// If we're dragging around an ent then we'll update its position here.

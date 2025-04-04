@@ -164,7 +164,7 @@ func (w *FurniturePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 				w.furniture = nil
 			}
 		} else if w.furniture == nil {
-			mx, my := ui.GetMousePosition()
+			mx, my := ui.GetMousePosition(group)
 			bx, by := w.RoomViewer.WindowToBoard(mx, my)
 			for i := range w.Room.Furniture {
 				x, y := w.Room.Furniture[i].Pos()

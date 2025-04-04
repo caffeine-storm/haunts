@@ -161,9 +161,6 @@ func RunStartupSpecs() {
 				wrapped: menu,
 			}
 			driver.AddInputListener(fel)
-			driver.AddMouseListener(func(evt gin.MouseEvent) {
-				fel.gui.UpdateMouseState(evt)
-			})
 
 			// calls system.Think(); captures the next 'batch' of input events and
 			// passess them to any "EventHandler" that got registered before this.

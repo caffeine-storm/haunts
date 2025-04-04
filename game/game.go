@@ -152,7 +152,7 @@ func (gp *GamePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 			gp.game.hovered_ent.hovered = false
 		}
 		gp.game.hovered_ent = nil
-		mx, my := ui.GetMousePosition()
+		mx, my := ui.GetMousePosition(group)
 		for i := range gp.game.Ents {
 			fx, fy := gp.game.Ents[i].FPos()
 			wx, wy := gp.game.viewer.BoardToWindow(float32(fx), float32(fy))

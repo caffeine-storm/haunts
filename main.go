@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"log/slog"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -95,9 +96,10 @@ func openLogFile(datadir string) (*os.File, error) {
 func init() {
 	// TODO(tmckee): uhhh... shouldn't we _not_ call this here?
 	runtime.LockOSThread()
-	sys = system.Make(gos.GetSystemInterface())
+	gin.In().SetLogger(logging.InfoLogger())
 
-	gin.In().SetLogger(logging.DebugLogger())
+	logging.SetLoggingLevel(slog.LevelDebug)
+	sys = system.Make(gos.NewSystemInterface(), gin.In())
 
 	rand.Seed(100)
 	datadir = "data-runtime"
@@ -400,7 +402,7 @@ func main() {
 		})
 		queue.Purge()
 		renderEnd := time.Now()
-		logging.Debug("renderwork", "duration", renderEnd.Sub(renderStart), "tick", tickCount)
+		logging.Trace("renderwork", "duration", renderEnd.Sub(renderStart), "tick", tickCount)
 
 		for _, child := range game_box.GetChildren() {
 			if gp, ok := child.(*game.GamePanel); ok {

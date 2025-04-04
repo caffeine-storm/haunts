@@ -412,7 +412,7 @@ func (c *Chooser) Think(g *gui.Gui, t int64) {
 }
 func (c *Chooser) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	if g.IsMouseEvent(group) {
-		c.mx, c.my = g.GetMousePosition()
+		c.mx, c.my = g.GetMousePosition(group)
 	}
 	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
 		buttons := c.buttons
