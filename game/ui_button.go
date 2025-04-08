@@ -11,6 +11,8 @@ import (
 )
 
 type ButtonLike interface {
+	// TODO(#18): 'handleClick' is a bit redundant; we should just always
+	// 'Respond' and call handleClick internally
 	handleClick(x, y int, data interface{}) bool
 	Respond(group gui.EventGroup, data interface{}) bool
 	Think(x, y, mx, my int, dt int64)
