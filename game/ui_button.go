@@ -3,7 +3,6 @@ package game
 import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/globals"
-	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/sound"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/go-gl-legacy/gl"
@@ -42,7 +41,7 @@ type Button struct {
 	f func(interface{})
 
 	// If not nil this function can return false to indicate that it cannot
-	// be clicked.  Will only be called during Think.
+	// be clicked.
 	valid_func func() bool
 	valid      bool
 
@@ -61,7 +60,7 @@ var _ SetOpacityer = (*Button)(nil)
 // If x,y is inside the button's region then it will run its function and
 // return true, otherwise it does nothing and returns false.
 func (b *Button) handleClick(x, y int, data interface{}) bool {
-	in := pointInsideRect(x, y, b.bounds.x, b.bounds.y, b.bounds.dx, b.bounds.dy)
+	in := b.Over(x, y)
 	if in && b.valid {
 		b.f(data)
 		sound.PlaySound("Haunts/SFX/UI/Select", 0.75)
@@ -109,9 +108,7 @@ func (b *Button) Think(x, y, mx, my int, dt int64) {
 		b.valid = true
 	}
 
-	logging.Info("button.Think", "x y mx my", []any{x, y, mx, my})
-
-	in := b.valid && pointInsideRect(mx, my, b.bounds.x, b.bounds.y, b.bounds.dx, b.bounds.dy)
+	in := b.valid && b.Over(mx, my)
 	if in && !b.was_in {
 		sound.PlaySound("Haunts/SFX/UI/Tick", 0.75)
 	}
@@ -121,7 +118,7 @@ func (b *Button) Think(x, y, mx, my int, dt int64) {
 
 func (b *Button) RenderAt(x, y int) {
 	// TODO(tmckee): clean: why not
-	// gl.Color4d(1, 1, 1, b.shade))
+	// gl.Color4d(1, 1, 1, b.opacity))
 	gl.Color4ub(255, 255, 255, byte(b.opacity*255))
 	base.DeprecatedLog().Trace("Button.RenderAt", "tex-path", b.Texture.Path)
 	if b.Texture.Path != "" {

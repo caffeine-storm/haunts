@@ -157,7 +157,6 @@ func (sm *StartMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 
 	if mpos, ok := g.UseMousePosition(group); ok {
 		sm.mx, sm.my = mpos.X, mpos.Y
-		logging.Debug("setting mouse pos", "pos", []int{sm.mx, sm.my}, "evgroup", group)
 	}
 
 	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {

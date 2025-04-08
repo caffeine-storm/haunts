@@ -380,7 +380,6 @@ func main() {
 	var profile_output *os.File
 	heap_prof_count := 0
 
-	var horizon int64
 	var tickCount int64
 	for {
 		glopdebug.LogAndClearGlErrors(logging.WarnLogger())
@@ -390,9 +389,8 @@ func main() {
 		}
 
 		renderStart := time.Now()
-		horizon = sys.Think()
+		sys.Think()
 		tickCount += 1
-		ui.Think(horizon)
 		queue.Queue(func(render.RenderQueueState) {
 			gl.Finish()
 		})
