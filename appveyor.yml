@@ -6,7 +6,7 @@ install:
   # setup and run it here each build :D
   # - git clone https://github.com/caffeine-storm/haunts-custom-build-image.git
   - export IMG=haunts-custom-build-image
-  - export HASH=8b79106d85fc0a42cab2c8326815044ca73a4ede
+  - export HASH=9ba2f4a4796659719640787b20f6011f152c0344
   - wget https://github.com/caffeine-storm/$IMG/archive/$HASH.tar.gz -O $IMG.tar.gz
   - mkdir $IMG
   - tar -C $IMG --strip-components=1 -xf $IMG.tar.gz
