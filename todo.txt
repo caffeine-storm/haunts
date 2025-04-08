@@ -46,7 +46,8 @@
 
 - edit screen is showing a furniture editor by default
 	- we should expect a list of furniture down the RHS
-	- r.n., some furniture (or some other text-line, tbh) has a name 'data-runtime' which seems wrong? see house/furniture_tab.go:54
+	- r.n., some furniture (or some other text-line, tbh) has a name
+	  'data-runtime' which seems wrong? see house/furniture_tab.go:54
 
 - bug#8: house.MakeLosTexture should either always get called on a render
 	thread or never get called on a render thread. If we refactor game/los.go's
@@ -54,12 +55,16 @@
 	queue-from-within in house.MakeLosTexture, then always call the whole
 	function on a render thread.
 
-- room.far_left.wall_alpha == room.far_right.wall_alpha == 0 ... which will make rendering on the wall transparent T_T
-	- not-test calls to room.Render do a _bunch_ of math to get the left, right and floor matrices
+- room.far_left.wall_alpha == room.far_right.wall_alpha == 0 ... which will
+  make rendering on the wall transparent T_T
+	- not-test calls to room.Render do a _bunch_ of math to get the left, right
+	  and floor matrices
 	- need proper encapsulation on gl ID holding structs
-	- need to DRY out WallTexture.setupGlStuff; lot of duplication between floor, left-wall and right-wall
+	- need to DRY out WallTexture.setupGlStuff; lot of duplication between floor,
+	  left-wall and right-wall
 
-- bug#6: The 'edit mode' screen can really lag out; afterwards, switching back to the startup screen seems to break
+- bug#6: The 'edit mode' screen can really lag out; afterwards, switching back
+  to the startup screen seems to break
 	- we need to profile and optimize it
 	- blockage in drivers? __driDriverGetExtensions_d3d12 seems like the culprit
 		; best guess is that it's building a string describing all the GL
