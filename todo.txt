@@ -1,3 +1,8 @@
+- bug#19: gin.EventGroup.FindEvent gets a lot of 'AnyXKey' but the search for a
+	matching event does equality checks for the KeyId ... this will only work
+	if 'Device.Index = DeviceIndexAny' events are injected into each
+	EventGroup
+
 - bug#18: the buttons in game/ui_button.go invoke their "on-click" in Respond
 	_and_ in "handleClick" ... it should really only be one or the
 	other!
@@ -79,4 +84,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#19: <next>
+- bug#20: <next>

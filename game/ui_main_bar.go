@@ -392,6 +392,7 @@ func (m *MainBar) Respond(g *gui.Gui, group gui.EventGroup) bool {
 		}
 	}
 
+	// TODO(#19): need a better API from glop for this
 	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
 		for _, button := range buttons {
 			if button.handleClick(m.mx, m.my, m) {

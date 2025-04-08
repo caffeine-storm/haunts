@@ -107,6 +107,8 @@ func (cm *CreditsMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	if mpos, ok := g.UseMousePosition(group); ok {
 		cm.mx, cm.my = mpos.X, mpos.Y
 	}
+
+	// TODO(#19): need a better API from glop for this
 	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
 		for _, button := range cm.buttons {
 			if button.handleClick(cm.mx, cm.my, nil) {
