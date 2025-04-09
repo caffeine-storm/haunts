@@ -8,7 +8,6 @@ _test
 *.sublime-workspace
 GEN*
 openme
-*.gob
 *.log
 data/store
 *.fsb
