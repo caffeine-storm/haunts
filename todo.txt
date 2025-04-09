@@ -1,3 +1,7 @@
+- bug#20: add better feedback for TextureManager.BlockUntilLoaded failures
+	- include the set of textures waited on
+	- include how long it took to successfully load the textures that _did_ load
+
 - bug#19: gin.EventGroup.FindEvent gets a lot of 'AnyXKey' but the search for a
 	matching event does equality checks for the KeyId ... this will only work
 	if 'Device.Index = DeviceIndexAny' events are injected into each
@@ -89,4 +93,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#20: <next>
+- bug#21: <next>
