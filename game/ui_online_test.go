@@ -10,6 +10,7 @@ import (
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
+	"github.com/MobRulesGames/haunts/game/gametest"
 	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/runningwild/glop/gui"
@@ -61,7 +62,7 @@ func TestUiOnline(t *testing.T) {
 				})
 				queue.Purge()
 
-				ctx := givenADrawingContext(windowRegion.Dims)
+				ctx := gametest.GivenADrawingContext(windowRegion.Dims)
 				base.InitDictionaries(ctx)
 				texture.Init(queue)
 
