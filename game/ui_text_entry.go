@@ -148,7 +148,7 @@ func (te *TextEntry) Respond(group gui.EventGroup, data interface{}) bool {
 		return false
 	}
 	for _, event := range group.Events {
-		if event.Type == gin.Press {
+		if event.IsPress() {
 			id := event.Key.Id()
 			if id.Index <= 255 && valid_keys[byte(id.Index)] {
 				b := byte(id.Index)

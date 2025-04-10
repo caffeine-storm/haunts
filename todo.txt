@@ -2,11 +2,6 @@
 	- include the set of textures waited on
 	- include how long it took to successfully load the textures that _did_ load
 
-- bug#19: gin.EventGroup.FindEvent gets a lot of 'AnyXKey' but the search for a
-	matching event does equality checks for the KeyId ... this will only work
-	if 'Device.Index = DeviceIndexAny' events are injected into each
-	EventGroup
-
 - bug#18: the buttons in game/ui_button.go invoke their "on-click" in Respond
 	_and_ in "handleClick" ... it should really only be one or the
 	other!

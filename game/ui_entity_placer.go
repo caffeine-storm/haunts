@@ -195,7 +195,7 @@ func (ep *EntityPlacer) Respond(g *gui.Gui, group gui.EventGroup) bool {
 		ep.game.new_ent.X, ep.game.new_ent.Y = float64(bx), float64(by)
 	}
 
-	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyMouseLButton) {
 		for _, button := range ep.buttons {
 			if button.handleClick(ep.mx, ep.my, nil) {
 				return true
@@ -203,7 +203,7 @@ func (ep *EntityPlacer) Respond(g *gui.Gui, group gui.EventGroup) bool {
 		}
 	}
 
-	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyMouseLButton) {
 		if pointInsideRect(ep.mx, ep.my, ep.region.X, ep.region.Y, ep.region.Dx, ep.region.Dy) {
 			return true
 		}
@@ -213,7 +213,7 @@ func (ep *EntityPlacer) Respond(g *gui.Gui, group gui.EventGroup) bool {
 		return false
 	}
 
-	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyMouseLButton) {
 		ent := ep.game.new_ent
 		if ep.game.placeEntity(ep.pattern) {
 			cost := ep.roster[ent.Name]

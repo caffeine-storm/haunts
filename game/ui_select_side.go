@@ -67,7 +67,7 @@ package game
 
 // func (ui *UiSelectSide) Respond(g *gui.Gui, group gui.EventGroup) bool {
 //   ui.mx, ui.my = gin.In().GetCursor("Mouse").Point()
-//   if found, event := group.FindEvent(gin.MouseLButton); found && event.Type == gin.Press {
+//   if group.IsPressed(gin.MouseLButton) {
 //     for _, button := range ui.buttons {
 //       if button.handleClick(ui.mx, ui.my, nil) {
 //         return true

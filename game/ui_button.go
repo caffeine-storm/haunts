@@ -84,13 +84,16 @@ func (b *Button) Respond(group gui.EventGroup, data interface{}) bool {
 	} else {
 		b.valid = true
 	}
-	if group.Events[0].Key.Id() == b.key && group.Events[0].Type == gin.Press {
-		if b.valid {
-			b.f(data)
-		}
-		return true
+
+	if !group.IsPressed(b.key) {
+		return false
 	}
-	return false
+
+	if b.valid {
+		b.f(data)
+	}
+
+	return true
 }
 
 func computeOpacity(current float64, in bool, dt int64) float64 {

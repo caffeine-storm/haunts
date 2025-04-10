@@ -126,7 +126,7 @@ func (sm *SystemMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	if mpos, ok := g.UseMousePosition(group); ok {
 		sm.mx, sm.my = mpos.X, mpos.Y
 	}
-	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyMouseLButton) {
 		if sm.layout.Main.handleClick(sm.mx, sm.my, g) {
 			if sm.focus {
 				g.DropFocus()

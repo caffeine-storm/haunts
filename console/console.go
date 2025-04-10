@@ -52,7 +52,7 @@ func (c *Console) Think(ui *gui.Gui, dt int64) {
 }
 
 func (c *Console) Respond(ui *gui.Gui, group gui.EventGroup) bool {
-	if found, event := group.FindEvent(base.GetDefaultKeyMap()["console"].Id()); found && event.Type == gin.Press {
+	if group.IsPressed(base.GetDefaultKeyMap()["console"].Id()) {
 		if group.DispatchedToFocussedWidget {
 			ui.DropFocus()
 		} else {
@@ -60,21 +60,21 @@ func (c *Console) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		}
 		return true
 	}
-	if found, event := group.FindEvent(gin.AnyLeft); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyLeft) {
 		c.xscroll += 250
 	}
-	if found, event := group.FindEvent(gin.AnyRight); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyRight) {
 		c.xscroll -= 250
 	}
 	if c.xscroll > 0 {
 		c.xscroll = 0
 	}
-	if found, event := group.FindEvent(gin.AnySpace); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnySpace) {
 		c.xscroll = 0
 	}
 
-	if group.Events[0].Type == gin.Press {
-		r := rune(group.Events[0].Key.Id().Index)
+	if group.PrimaryEvent().IsPress() {
+		r := rune(group.PrimaryEvent().Key.Id().Index)
 		if r < 256 {
 			if gin.In().GetKeyById(gin.AnyLeftShift).IsDown() || gin.In().GetKeyById(gin.AnyRightShift).IsDown() {
 				r = unicode.ToUpper(r)

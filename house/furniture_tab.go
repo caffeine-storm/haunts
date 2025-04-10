@@ -122,18 +122,14 @@ func (w *FurniturePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 	// On escape we want to revert the furniture we're moving back to where it was
 	// and what state it was in before we selected it.  If we don't have any
 	// furniture selected then we don't do anything.
-	if found, event := group.FindEvent(gin.AnyEscape); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyEscape) {
 		w.onEscape()
 		return true
 	}
 
 	// If we hit delete then we want to remove the furniture we're moving around
 	// from the room.  If we're not moving anything around then nothing happens.
-	found, event := group.FindEvent(gin.AnyBackspace)
-	if !found {
-		found, event = group.FindEvent(gin.AnyKeyDelete)
-	}
-	if found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyBackspace) || group.IsPressed(gin.AnyKeyDelete) {
 		algorithm.Choose(&w.Room.Furniture, func(f *Furniture) bool {
 			return f != w.furniture
 		})
@@ -142,22 +138,22 @@ func (w *FurniturePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		return true
 	}
 
-	if found, event := group.FindEvent(w.key_map["rotate left"].Id()); found && event.Type == gin.Press {
+	if group.IsPressed(w.key_map["rotate left"].Id()) {
 		if w.furniture != nil {
 			w.furniture.RotateLeft()
 		}
 	}
-	if found, event := group.FindEvent(w.key_map["rotate right"].Id()); found && event.Type == gin.Press {
+	if group.IsPressed(w.key_map["rotate right"].Id()) {
 		if w.furniture != nil {
 			w.furniture.RotateRight()
 		}
 	}
-	if found, event := group.FindEvent(w.key_map["flip"].Id()); found && event.Type == gin.Press {
+	if group.IsPressed(w.key_map["flip"].Id()) {
 		if w.furniture != nil {
 			w.furniture.Flip = !w.furniture.Flip
 		}
 	}
-	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyMouseLButton) {
 		if w.furniture != nil {
 			if !w.furniture.invalid {
 				w.furniture.temporary = false

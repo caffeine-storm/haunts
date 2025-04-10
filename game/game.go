@@ -143,7 +143,7 @@ func (gp *GamePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		return false
 	}
 
-	if group.Events[0].Type == gin.Release {
+	if group.PrimaryEvent().IsRelease() {
 		return false
 	}
 
@@ -172,7 +172,7 @@ func (gp *GamePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		}
 	}
 
-	if found, event := group.FindEvent(gin.AnyEscape); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyEscape) {
 		if gp.game.selected_ent != nil {
 			switch gp.game.Action_state {
 			case noAction:
@@ -192,7 +192,7 @@ func (gp *GamePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 	}
 
 	if gp.game.Action_state == noAction {
-		if found, _ := group.FindEvent(gin.AnyMouseLButton); found {
+		if group.IsPressed(gin.AnyMouseLButton) {
 			if gp.game.hovered_ent != nil && gp.game.hovered_ent.Side() == gp.game.Side {
 				if gp.game.selected_ent != nil {
 					gp.game.selected_ent.selected = false

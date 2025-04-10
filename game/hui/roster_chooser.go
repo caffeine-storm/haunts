@@ -178,16 +178,16 @@ func (rc *RosterChooser) Think(ui *gui.Gui, t int64) {
 func (rc *RosterChooser) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 	base.DeprecatedLog().Info("RosterChooser.Respond")
 	// TODO(tmckee): upper case 'L' vs lower case 'l'? Originally a rune, 'l'.
-	if found, event := group.FindEvent(gin.AnyKeyL); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyKeyL) {
 		rc.focus += rc.layout.Num_options
 		return true
 	}
 	// TODO(tmckee): upper case 'O' vs lower case 'o'? Originally a rune, 'o'.
-	if found, event := group.FindEvent(gin.AnyKeyO); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyKeyO) {
 		rc.focus -= rc.layout.Num_options
 		return true
 	}
-	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyMouseLButton) {
 		if gp, ok := ui.UseMousePosition(group); ok {
 			if gp.Inside(rc.render.down) {
 				rc.focus += rc.layout.Num_options

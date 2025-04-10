@@ -439,7 +439,7 @@ func (sm *OnlineMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	if isMouseEvent {
 		sm.mx, sm.my = mpos.X, mpos.Y
 	}
-	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyMouseLButton) {
 		for _, button := range sm.buttons {
 			if button.handleClick(sm.mx, sm.my, nil) {
 				return true

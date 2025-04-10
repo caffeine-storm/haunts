@@ -84,11 +84,7 @@ func (w *WallPanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		return true
 	}
 
-	found, event := group.FindEvent(gin.AnyBackspace)
-	if !found {
-		found, event = group.FindEvent(gin.AnyKeyDelete)
-	}
-	if found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyBackspace) || group.IsPressed(gin.AnyKeyDelete) {
 		algorithm.Choose(&w.room.WallTextures, func(wt *WallTexture) bool {
 			return wt != w.wall_texture
 		})
@@ -97,23 +93,28 @@ func (w *WallPanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		return true
 	}
 
-	if found, event := group.FindEvent(gin.AnyEscape); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyEscape) {
 		w.onEscape()
 		return true
 	}
 
-	if found, event := group.FindEvent(base.GetDefaultKeyMap()["flip"].Id()); found && event.Type == gin.Press {
+	if group.IsPressed(base.GetDefaultKeyMap()["flip"].Id()) {
 		if w.wall_texture != nil {
 			w.wall_texture.Flip = !w.wall_texture.Flip
 		}
 		return true
 	}
-	if found, event := group.FindEvent(gin.AnyMouseWheelVertical); found {
-		if w.wall_texture != nil && gin.In().GetKeyById(gin.AnySpace).CurPressAmt() == 0 {
-			w.wall_texture.Rot += float32(event.Key.CurPressAmt() / 100)
+
+	// Hold space and scroll to rotate the wall texture.
+	if w.wall_texture != nil {
+		if group.IsPressed(gin.AnySpace) {
+			if event, found := group.FindEvent(gin.AnyMouseWheelVertical); found {
+				w.wall_texture.Rot += float32(event.Key.CurPressAmt() / 100)
+			}
 		}
 	}
-	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
+
+	if group.IsPressed(gin.AnyMouseLButton) {
 		if w.wall_texture != nil {
 			w.wall_texture.temporary = false
 			w.wall_texture = nil

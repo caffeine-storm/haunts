@@ -159,8 +159,7 @@ func (sm *StartMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 		sm.mx, sm.my = mpos.X, mpos.Y
 	}
 
-	// TODO(#19): need a better API from glop for this
-	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyMouseLButton) {
 		hit := false
 		for _, button := range sm.buttons {
 			if button.handleClick(sm.mx, sm.my, nil) {

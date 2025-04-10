@@ -169,7 +169,7 @@ func (a *AoeAttack) HandleInput(ctx gui.EventHandlingContext, group gui.EventGro
 		a.tx = int(bx)
 		a.ty = int(by)
 	}
-	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyMouseLButton) {
 		ex, ey := a.ent.Pos()
 		if dist(ex, ey, a.tx, a.ty) <= a.Range && a.ent.HasLos(a.tx, a.ty, 1, 1) {
 			var exec aoeExec

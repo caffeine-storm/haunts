@@ -440,16 +440,12 @@ func (hdt *houseDataTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		return true
 	}
 
-	if found, event := group.FindEvent(gin.AnyEscape); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyEscape) {
 		hdt.onEscape()
 		return true
 	}
 
-	found, event := group.FindEvent(gin.AnyBackspace)
-	if !found {
-		found, event = group.FindEvent(gin.AnyKeyDelete)
-	}
-	if found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyBackspace) || group.IsPressed(gin.AnyKeyDelete) {
 		if hdt.temp_room != nil {
 			spawns := make(map[*SpawnPoint]bool)
 			for i := range hdt.temp_spawns {
@@ -469,7 +465,7 @@ func (hdt *houseDataTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 	}
 
 	floor := hdt.house.Floors[hdt.current_floor]
-	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyMouseLButton) {
 		if hdt.temp_room != nil {
 			if !hdt.temp_room.invalid {
 				hdt.temp_room.temporary = false
@@ -587,16 +583,12 @@ func (hdt *houseDoorTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		return true
 	}
 
-	if found, event := group.FindEvent(gin.AnyEscape); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyEscape) {
 		hdt.onEscape()
 		return true
 	}
 
-	found, event := group.FindEvent(gin.AnyBackspace)
-	if !found {
-		found, event = group.FindEvent(gin.AnyKeyDelete)
-	}
-	if found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyBackspace) || group.IsPressed(gin.AnyKeyDelete) {
 		algorithm.Choose(&hdt.temp_room.Doors, func(d *Door) bool {
 			return d != hdt.temp_door
 		})
@@ -631,7 +623,7 @@ func (hdt *houseDoorTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 	}
 
 	floor := hdt.house.Floors[hdt.current_floor]
-	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyMouseLButton) {
 		if hdt.temp_door != nil {
 			other_room, other_door := floor.findRoomForDoor(hdt.temp_room, hdt.temp_door)
 			if other_room != nil {
@@ -808,16 +800,12 @@ func (hdt *houseRelicsTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		return true
 	}
 
-	if found, event := group.FindEvent(gin.AnyEscape); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyEscape) {
 		hdt.onEscape()
 		return true
 	}
 
-	found, event := group.FindEvent(gin.AnyBackspace)
-	if !found {
-		found, event = group.FindEvent(gin.AnyKeyDelete)
-	}
-	if found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyBackspace) || group.IsPressed(gin.AnyKeyDelete) {
 		algorithm.Choose(&hdt.house.Floors[0].Spawns, func(s *SpawnPoint) bool {
 			return s != hdt.temp_relic
 		})
@@ -827,7 +815,7 @@ func (hdt *houseRelicsTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 	}
 
 	floor := hdt.house.Floors[hdt.current_floor]
-	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyMouseLButton) {
 		if mpos, ok := ui.UseMousePosition(group); ok {
 			if hdt.temp_relic != nil {
 				if !hdt.temp_relic.invalid {

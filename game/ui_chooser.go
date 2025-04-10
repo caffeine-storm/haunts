@@ -414,7 +414,7 @@ func (c *Chooser) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	if mpos, ok := g.UseMousePosition(group); ok {
 		c.mx, c.my = mpos.X, mpos.Y
 	}
-	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyMouseLButton) {
 		buttons := c.buttons
 		if c.optionsHeight() <= c.layout.Options.Dy {
 			buttons = c.non_scroll_buttons

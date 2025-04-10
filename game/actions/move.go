@@ -273,7 +273,7 @@ func (a *Move) HandleInput(ctx gui.EventHandlingContext, group gui.EventGroup, g
 		fx, fy := g.GetViewer().WindowToBoard(mpos.X, mpos.Y)
 		a.findPath(a.ent, int(fx), int(fy))
 	}
-	if found, _ := group.FindEvent(gin.AnyMouseLButton); found {
+	if group.IsPressed(gin.AnyMouseLButton) {
 		if len(a.path) > 0 {
 			if a.cost <= a.ent.Stats.ApCur() {
 				var exec moveExec

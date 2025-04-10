@@ -160,7 +160,7 @@ func (a *SummonAction) HandleInput(ctx gui.EventHandlingContext, group gui.Event
 		a.cy = int(by)
 	}
 
-	if found, event := group.FindEvent(gin.AnyMouseLButton); found && event.Type == gin.Press {
+	if group.IsPressed(gin.AnyMouseLButton) {
 		if g.IsCellOccupied(a.cx, a.cy) {
 			return true, nil
 		}
