@@ -21,6 +21,8 @@ func GetDefaultKeyMap() KeyMap {
 	return default_map
 }
 
+// TODO(tmckee): return an error instead of panicing if we don't recognize the
+// key by name.
 func getKeysFromString(str string) []gin.KeyId {
 	parts := strings.Split(str, "+")
 	var kids []gin.KeyId
@@ -76,11 +78,8 @@ func getKeysFromString(str string) []gin.KeyId {
 			kid = gin.AnyDown
 
 		default:
-			key := gin.In().GetKeyByName(part)
-			if key == nil {
-				panic(fmt.Sprintf("Unknown key '%s'", part))
-			}
-			kid = key.Id()
+			panic(fmt.Sprintf("Unknown key '%s'", part))
+
 		}
 		kids = append(kids, kid)
 	}
