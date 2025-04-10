@@ -1,9 +1,12 @@
 package game_test
 
 import (
+	"context"
 	"fmt"
+	"path"
 	"path/filepath"
 	"testing"
+	"time"
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
@@ -61,6 +64,29 @@ func TestUiOnline(t *testing.T) {
 				ctx := givenADrawingContext(windowRegion.Dims)
 				base.InitDictionaries(ctx)
 				texture.Init(queue)
+
+				datadir := base.GetDataDir()
+				texturePaths := []string{
+					"ui/arrow_lf.png",
+					"ui/dialog/large.png",
+					"ui/start/online/title.png",
+					"ui/arrow_down.png",
+					"ui/arrow_up.png",
+				}
+				for i, p := range texturePaths {
+					texturePaths[i] = path.Join(datadir, p)
+				}
+				for _, p := range texturePaths {
+					_, e := texture.LoadFromPath(p)
+					if e != nil {
+						panic(fmt.Errorf("couldn't LoadFromPath: %w", e))
+					}
+				}
+
+				deadlineContext, cancel := context.WithTimeout(context.Background(), time.Millisecond*250)
+				defer cancel()
+				err := texture.BlockUntilLoaded(deadlineContext, texturePaths...)
+				So(err, ShouldBeNil)
 
 				queue.Queue(func(st render.RenderQueueState) {
 					onlineScreen.Draw(windowRegion, ctx)
