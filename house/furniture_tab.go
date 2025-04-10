@@ -119,16 +119,15 @@ func (w *FurniturePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		return true
 	}
 
-	// On escape we want to revert the furniture we're moving back to where it was
-	// and what state it was in before we selected it.  If we don't have any
-	// furniture selected then we don't do anything.
+	// On escape we want to revert the furniture we're moving back to where it
+	// was and what state it was in before we selected it.
 	if group.IsPressed(gin.AnyEscape) {
 		w.onEscape()
 		return true
 	}
 
 	// If we hit delete then we want to remove the furniture we're moving around
-	// from the room.  If we're not moving anything around then nothing happens.
+	// from the room.
 	if group.IsPressed(gin.AnyBackspace) || group.IsPressed(gin.AnyKeyDelete) {
 		algorithm.Choose(&w.Room.Furniture, func(f *Furniture) bool {
 			return f != w.furniture
@@ -138,28 +137,25 @@ func (w *FurniturePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		return true
 	}
 
-	if group.IsPressed(w.key_map["rotate left"].Id()) {
-		if w.furniture != nil {
-			w.furniture.RotateLeft()
+	if f := w.furniture; f != nil {
+		if group.IsPressed(w.key_map["rotate left"].Id()) {
+			f.RotateLeft()
 		}
-	}
-	if group.IsPressed(w.key_map["rotate right"].Id()) {
-		if w.furniture != nil {
-			w.furniture.RotateRight()
+		if group.IsPressed(w.key_map["rotate right"].Id()) {
+			f.RotateRight()
 		}
-	}
-	if group.IsPressed(w.key_map["flip"].Id()) {
-		if w.furniture != nil {
-			w.furniture.Flip = !w.furniture.Flip
+		if group.IsPressed(w.key_map["flip"].Id()) {
+			f.Flip = !f.Flip
 		}
-	}
-	if group.IsPressed(gin.AnyMouseLButton) {
-		if w.furniture != nil {
-			if !w.furniture.invalid {
+		if group.IsPressed(gin.AnyMouseLButton) {
+			if !f.invalid {
 				w.furniture.temporary = false
 				w.furniture = nil
 			}
-		} else if w.furniture == nil {
+		}
+	} else {
+		// w.furniture == nil
+		if group.IsPressed(gin.AnyMouseLButton) {
 			if mpos, ok := ui.UseMousePosition(group); ok {
 				mx, my := mpos.X, mpos.Y
 				bx, by := w.RoomViewer.WindowToBoard(mx, my)
@@ -182,6 +178,7 @@ func (w *FurniturePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 
 		return true
 	}
+
 	return false
 }
 
