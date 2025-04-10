@@ -1,3 +1,12 @@
+- clicking on 'play online' panics
+	- stub as needed
+
+- clicking on 'versus mode' panics
+	- dig in
+
+- bug#21: sometimes (don't know why yet) the window doesn't get focus when
+  starting
+
 - bug#20: add better feedback for TextureManager.BlockUntilLoaded failures
 	- include the set of textures waited on
 	- include how long it took to successfully load the textures that _did_ load
@@ -5,8 +14,6 @@
 - bug#18: the buttons in game/ui_button.go invoke their "on-click" in Respond
 	_and_ in "handleClick" ... it should really only be one or the
 	other!
-
-- clicking on 'versus mode' or 'play online' panics
 
 - bug#17: we're doing something weird with key binds in base/bindings.go. We
 	should make sure that we support modifiers on compound derived-keys.
@@ -88,4 +95,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#21: <next>
+- bug#22: <next>
