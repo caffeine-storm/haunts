@@ -9,6 +9,7 @@
   "cpu profile"  : "alt+p",
   "heap profile" : "alt+h",
   "manual mem"   : "alt+m",
+  "screenshot"   : "alt+s",
   "console"      : "os+c",
   "zoom in"      : "gui+up",
   "zoom out"     : "gui+down",
