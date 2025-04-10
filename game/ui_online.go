@@ -36,7 +36,7 @@ type gameField struct {
 	game         mrgnet.Game
 }
 
-type onlineLayout struct {
+type OnlineLayout struct {
 	Title struct {
 		X, Y    int
 		Texture texture.Object
@@ -68,7 +68,7 @@ type onlineLayout struct {
 }
 
 type OnlineMenu struct {
-	layout  onlineLayout
+	layout  OnlineLayout
 	region  gui.Region
 	buttons []ButtonLike
 	mx, my  int
