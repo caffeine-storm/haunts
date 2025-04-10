@@ -1,8 +1,8 @@
-- clicking on 'play online' panics
-	- stub as needed
-
 - clicking on 'versus mode' panics
 	- dig in
+
+- bug#22: editing key_binds.json can cause panics; e.g. remove 'screenshot'
+  from the mapping in the .json file and main.go will panic
 
 - bug#21: sometimes (don't know why yet) the window doesn't get focus when
   starting
@@ -95,4 +95,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#22: <next>
+- bug#23: <next>
