@@ -198,6 +198,10 @@ func (w *FurniturePanel) Reload() {
 func (w *FurniturePanel) Think(ui *gui.Gui, t int64) {
 	if w.furniture != nil {
 		// TODO(tmckee): need to ask the gui where the mouse is.
+		// Typically, that means this stuff should be in Respond() instead of
+		// Think(); Think() means handle end-of-frame but does not really specify a
+		// mouse position because the position might have been changing during the
+		// frame.
 		// mx, my := gin.In().GetCursor("Mouse").Point()
 		mx, my := 0, 0
 		bx, by := w.RoomViewer.WindowToBoard(mx, my)
