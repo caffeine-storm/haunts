@@ -523,6 +523,13 @@ func (m *Manager) BlockUntilLoaded(ctx context.Context, paths ...string) error {
 }
 
 func (m *Manager) BlockUntilIdle(ctx context.Context) error {
+	for inFlight := m.GetInFlightRequests(); len(inFlight) > 0; inFlight = m.GetInFlightRequests() {
+		err := m.BlockUntilLoaded(ctx, inFlight...)
+		if err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
