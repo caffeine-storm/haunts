@@ -50,3 +50,25 @@ func TestBlockUntilLoaded(t *testing.T) {
 		})
 	})
 }
+
+func givenATimedOutContext() context.Context {
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	return ctx
+}
+
+func TestBlockUntilIdle(t *testing.T) {
+	t.Run("should take a context with deadline", func(t *testing.T) {
+		t.Run("is idle upon creation", func(t *testing.T) {
+			queue := rendertest.MakeDiscardingRenderQueue()
+			texture.Init(queue)
+			ctx := givenATimedOutContext()
+
+			// nothing's loading so it should be idle already
+			err := texture.BlockUntilIdle(ctx)
+			if err != nil {
+				t.Fatalf("a fresh texture manager should be idle")
+			}
+		})
+	})
+}
