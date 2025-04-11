@@ -2,7 +2,6 @@ package game_test
 
 import (
 	"fmt"
-	"path/filepath"
 	"testing"
 
 	"github.com/MobRulesGames/haunts/base"
@@ -14,20 +13,8 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func givenAnOnlineMenuLayout() *game.OnlineLayout {
-	ret := game.OnlineLayout{}
-
-	err := base.LoadAndProcessObject(filepath.Join(base.GetDataDir(), "ui", "start", "online", "layout.json"), "json", &ret)
-	if err != nil {
-		panic(fmt.Errorf("couldn't load layout: %w", err))
-	}
-
-	return &ret
-}
-
 func givenAnOnlineMenu() *game.OnlineMenu {
 	parent := &gui.StandardParent{}
-	// layout := givenAnOnlineMenuLayout()
 	err := game.InsertOnlineMenu(parent)
 	if err != nil {
 		panic(fmt.Errorf("couldn't insert start menu: %w", err))
