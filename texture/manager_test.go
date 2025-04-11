@@ -12,6 +12,7 @@ import (
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
 	"github.com/runningwild/glop/system"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestBlockUntilLoaded(t *testing.T) {
@@ -73,6 +74,11 @@ func TestBlockUntilIdle(t *testing.T) {
 	})
 }
 
+func givenATexturePath() string {
+	dataRef := rendertest.NewTestdataReference("checker")
+	return dataRef.Path()
+}
+
 func TestGetInFlightRequests(t *testing.T) {
 	t.Run("should return a slice of strings", func(t *testing.T) {
 		queue := rendertest.MakeDiscardingRenderQueue()
@@ -83,5 +89,19 @@ func TestGetInFlightRequests(t *testing.T) {
 		if len(noPaths) != 0 {
 			t.Fatalf("no load requests were issued so none should be in flight")
 		}
+	})
+	t.Run("returns paths that haven't loaded", func(t *testing.T) {
+		assert := assert.New(t)
+		queue := rendertest.MakeDiscardingRenderQueue()
+		texture.Init(queue)
+
+		texturePath := givenATexturePath()
+		_, err := texture.LoadFromPath(texturePath)
+		if err != nil {
+			panic(fmt.Errorf("couldn't LoadTexture(%q): %w", texturePath, err))
+		}
+
+		inFlight := texture.GetInFlightRequests()
+		assert.ElementsMatch([]string{texturePath}, inFlight)
 	})
 }
