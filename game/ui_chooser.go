@@ -117,7 +117,7 @@ func SelectExactlyOne(index int, selected map[int]bool, doit bool) (valid bool) 
 	}
 	if doit {
 		var other int
-		for k, _ := range selected {
+		for k := range selected {
 			other = k
 		}
 		delete(selected, other)
@@ -273,8 +273,14 @@ func InsertMapChooser(ui gui.WidgetParent, chosen func(string), resert func(ui g
 		ch.selector = SelectInRange(ch.min, ch.max)
 	}
 	ch.info_region = gui.Region{
-		gui.Point{ch.layout.Info.X, ch.layout.Info.Y},
-		gui.Dims{ch.layout.Info.Dx, ch.layout.Info.Dy},
+		Point: gui.Point{
+			X: ch.layout.Info.X,
+			Y: ch.layout.Info.Y,
+		},
+		Dims: gui.Dims{
+			Dx: ch.layout.Info.Dx,
+			Dy: ch.layout.Info.Dy,
+		},
 	}
 	ui.AddChild(&ch)
 	return nil
@@ -330,8 +336,14 @@ func MakeChooser(opts []Option) (*Chooser, <-chan []string, error) {
 		ch.selector = SelectInRange(ch.min, ch.max)
 	}
 	ch.info_region = gui.Region{
-		gui.Point{ch.layout.Info.X, ch.layout.Info.Y},
-		gui.Dims{ch.layout.Info.Dx, ch.layout.Info.Dy},
+		Point: gui.Point{
+			X: ch.layout.Info.X,
+			Y: ch.layout.Info.Y,
+		},
+		Dims: gui.Dims{
+			Dx: ch.layout.Info.Dx,
+			Dy: ch.layout.Info.Dy,
+		},
 	}
 	return &ch, done, nil
 }
@@ -377,7 +389,10 @@ func assymptoticApproach(cur, target float64, dt int64) float64 {
 	return cur
 }
 func (c *Chooser) Requested() gui.Dims {
-	return gui.Dims{1024, 768}
+	return gui.Dims{
+		Dx: 1024,
+		Dy: 768,
+	}
 }
 func (c *Chooser) Expandable() (bool, bool) {
 	return false, false
