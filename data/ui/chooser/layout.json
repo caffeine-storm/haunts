@@ -4,7 +4,10 @@
   },
   "Scroller": {
     "X": 170,
-    "Y": 50
+    "Y": 50,
+    "Texture": {
+      "Path": "gear/icons/goggles.png"
+    }
   },
   "Options": {
     "X": 180,
