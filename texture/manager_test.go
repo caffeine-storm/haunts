@@ -72,3 +72,16 @@ func TestBlockUntilIdle(t *testing.T) {
 		})
 	})
 }
+
+func TestGetInFlightRequests(t *testing.T) {
+	t.Run("should return a slice of strings", func(t *testing.T) {
+		queue := rendertest.MakeDiscardingRenderQueue()
+		texture.Init(queue)
+
+		noPaths := texture.GetInFlightRequests()
+
+		if len(noPaths) != 0 {
+			t.Fatalf("no load requests were issued so none should be in flight")
+		}
+	})
+}
