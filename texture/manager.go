@@ -322,6 +322,15 @@ func BlockUntilIdle(ctx context.Context) error {
 	return manager.BlockUntilIdle(ctx)
 }
 
+// Returns a slice of the texture paths that are currently loading.
+func GetInFlightRequests() []string {
+	if manager == nil {
+		panic("need to call texture.Init before texture.GetInFlightRequests")
+	}
+
+	return manager.GetInFlightRequests()
+}
+
 func handleLoadRequest(req loadRequest) {
 	logging.Trace("texture manager: handleLoadRequest", "path", req.path)
 	f, _ := os.Open(req.path)
@@ -507,6 +516,10 @@ func (m *Manager) BlockUntilLoaded(ctx context.Context, paths ...string) error {
 
 func (m *Manager) BlockUntilIdle(ctx context.Context) error {
 	return nil
+}
+
+func (m *Manager) GetInFlightRequests() []string {
+	return []string{}
 }
 
 func (m *Manager) signalLoad(path string, success bool) {
