@@ -7,7 +7,9 @@ import (
 	"image/draw"
 	_ "image/jpeg"
 	_ "image/png"
+	"maps"
 	"os"
+	"slices"
 	"sync"
 	"time"
 
@@ -236,6 +238,10 @@ type Manager struct {
 	// before.
 	deleted map[string]*Data
 
+	// If a texture is in the process of being loaded, there will be a
+	// corresponding entry in 'inFlight'.
+	inFlight map[string]bool
+
 	// Rendering queue/context that will be used for all gl operations.
 	renderQueue render.RenderQueueInterface
 
@@ -255,6 +261,7 @@ func Init(renderQueue render.RenderQueueInterface) {
 	manager = &Manager{
 		registry:    make(map[string]*Data),
 		deleted:     make(map[string]*Data),
+		inFlight:    make(map[string]bool),
 		renderQueue: renderQueue,
 		loadWaiters: make(map[string]chan bool),
 	}
@@ -435,6 +442,7 @@ func (m *Manager) LoadFromPath(path string) (*Data, error) {
 	}
 	data.accessed = generation
 	m.registry[path] = data
+	m.inFlight[path] = true
 	m.mutex.Unlock()
 
 	f, err := os.Open(path)
@@ -519,7 +527,10 @@ func (m *Manager) BlockUntilIdle(ctx context.Context) error {
 }
 
 func (m *Manager) GetInFlightRequests() []string {
-	return []string{}
+	m.mutex.RLock()
+	defer m.mutex.RUnlock()
+
+	return slices.Collect(maps.Keys(m.inFlight))
 }
 
 func (m *Manager) signalLoad(path string, success bool) {
