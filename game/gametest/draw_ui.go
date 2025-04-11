@@ -2,7 +2,6 @@ package gametest
 
 import (
 	"context"
-	"path"
 	"time"
 
 	"github.com/MobRulesGames/haunts/base"
@@ -58,30 +57,27 @@ func RunDrawingTest(thingToDraw Drawer, testid rendertest.TestDataReference, and
 		base.InitDictionaries(ctx)
 		texture.Init(queue)
 
-		startTexture := path.Join(base.GetDataDir(), "ui", "start", "start.png")
-		menuTexture := path.Join(base.GetDataDir(), "ui", "start", "menu.png")
-
-		var err error
-		_, err = texture.LoadFromPath(startTexture)
-		if err != nil {
-			panic(err)
-		}
-		_, err = texture.LoadFromPath(menuTexture)
-		if err != nil {
-			panic(err)
-		}
-
-		deadlineContext, cancel := context.WithTimeout(context.Background(), time.Millisecond*250)
-		defer cancel()
-		err = texture.BlockUntilLoaded(deadlineContext, startTexture, menuTexture)
-		So(err, ShouldBeNil)
-
+		// Draw it once to start loading textures.
 		queue.Queue(func(st render.RenderQueueState) {
 			thingToDraw.Draw(windowRegion, ctx)
 		})
 		queue.Purge()
 
-		Convey("should look like the start screen", func() {
+		deadlineContext, cancel := context.WithTimeout(context.Background(), time.Millisecond*250)
+		defer cancel()
+		err := texture.BlockUntilIdle(deadlineContext)
+		So(err, ShouldBeNil)
+
+		// Draw it again now that we know all the textures are loaded.
+		queue.Queue(func(st render.RenderQueueState) {
+			// First, blank the screen, though, because all UI expects to get a black
+			// background to begin with.
+			rendertest.ClearScreen()
+			thingToDraw.Draw(windowRegion, ctx)
+		})
+		queue.Purge()
+
+		Convey("should look like the expected screen", func() {
 			So(queue, rendertest.ShouldLookLikeFile, testid, rendertest.Threshold(8))
 		})
 
