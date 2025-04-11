@@ -1,10 +1,12 @@
 package game
 
 import (
+	"path/filepath"
+
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/util/algorithm"
-	"path/filepath"
 )
 
 // Choose side
@@ -57,15 +59,15 @@ func doChooserMenu(ui gui.WidgetParent, cm chooserMaker, r replacer, i inserter)
 		m := <-done
 		ui.RemoveChild(chooser)
 		if m != nil {
-			base.DeprecatedLog().Printf("Chose: %v", m)
+			logging.Info("doChooserMenu", "chose", m)
 			err = i(ui, r)
 			if err != nil {
-				base.DeprecatedError().Printf("Error making menu: %v", err)
+				logging.Error("doChooserMenu", "i(nsert) failed", err)
 			}
 		} else {
 			err := r(ui)
 			if err != nil {
-				base.DeprecatedError().Printf("Error replacing menu: %v", err)
+				logging.Error("doChooserMenu", "r(eplacing failed", err)
 			}
 		}
 	}()
@@ -82,15 +84,15 @@ func insertGoalMenu(ui gui.WidgetParent, replace replacer) error {
 		m := <-done
 		ui.RemoveChild(chooser)
 		if m != nil {
-			base.DeprecatedLog().Printf("Chose: %v", m)
+			logging.Info("insertGoalMenu", "chose", m)
 			err = insertGoalMenu(ui, replace)
 			if err != nil {
-				base.DeprecatedError().Printf("Error making goal menu: %v", err)
+				logging.Error("insertGoalMenu", "failed", err)
 			}
 		} else {
 			err := replace(ui)
 			if err != nil {
-				base.DeprecatedError().Printf("Error replacing menu: %v", err)
+				logging.Error("insertGoalMenu", "replacing failed", err)
 			}
 		}
 	}()
@@ -108,7 +110,7 @@ func InsertVersusMenu(ui gui.WidgetParent, replace func(gui.WidgetParent) error)
 		m := <-done
 		ui.RemoveChild(chooser)
 		if m != nil && len(m) == 1 {
-			base.DeprecatedLog().Printf("Chose: %v", m)
+			logging.Info("Versus Menu", "chose", m)
 			switch m[0] {
 			case "Select House":
 				ui.AddChild(MakeGamePanel("versus/basic.lua", nil, map[string]string{"map": "select"}, ""))
@@ -117,13 +119,13 @@ func InsertVersusMenu(ui gui.WidgetParent, replace func(gui.WidgetParent) error)
 			case "Continue":
 				ui.AddChild(MakeGamePanel("versus/basic.lua", nil, map[string]string{"map": "continue"}, ""))
 			default:
-				base.DeprecatedError().Printf("Unknown meta choice '%s'", m[0])
+				logging.Warn("unknown meta choice", "choice", m[0])
 				return
 			}
 		} else {
 			err := replace(ui)
 			if err != nil {
-				base.DeprecatedError().Printf("Error replacing menu: %v", err)
+				logging.Error("replacing menu", "err", err)
 			}
 		}
 	}()

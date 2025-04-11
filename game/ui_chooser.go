@@ -7,6 +7,7 @@ import (
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/globals"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/sound"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/go-gl-legacy/gl"
@@ -214,19 +215,17 @@ func InsertMapChooser(ui gui.WidgetParent, chosen func(string), resert func(ui g
 	datadir := base.GetDataDir()
 	err := base.LoadAndProcessObject(filepath.Join(datadir, "ui", "start", "versus", "map_select.json"), "json", &bops)
 	if err != nil {
-		base.DeprecatedError().Printf("Unable to insert MapChooser: %v", err)
+		logging.Error("InsertMapChooser failed", "LoadAndProcessObject(map_select.json) error", err)
 		return err
 	}
 	var opts []Option
 	algorithm.Map(bops, &opts, func(ob OptionBasic) Option { return &ob })
-	for _, opt := range opts {
-		base.DeprecatedLog().Printf(opt.String())
-	}
+	logging.Info("InsertMapChooser", "options", opts)
 
 	var ch Chooser
 	err = base.LoadAndProcessObject(filepath.Join(datadir, "ui", "chooser", "layout.json"), "json", &ch.layout)
 	if err != nil {
-		base.DeprecatedError().Printf("Unable to insert MapChooser: %v", err)
+		logging.Error("InsertMapChooser failed", "LoadAndProcessObject(chooser/layout.json) error", err)
 		return err
 	}
 	ch.options = opts
@@ -251,7 +250,7 @@ func InsertMapChooser(ui gui.WidgetParent, chosen func(string), resert func(ui g
 		ui.RemoveChild(&ch)
 		err := resert(ui)
 		if err != nil {
-			base.DeprecatedError().Printf("Unable to make Start Menu: %v", err)
+			logging.Error("InsertMapChooser", "resert failed", err)
 			return
 		}
 	}
@@ -409,11 +408,6 @@ func (c *Chooser) Think(g *gui.Gui, t int64) {
 	c.last_t = t
 	c.layout.Options.Height = c.optionsHeight()
 	c.layout.Options.Think(dt)
-	if c.mx == 0 && c.my == 0 {
-		// TODO(tmckee): ask the gui for a cursor pos
-		// c.mx, c.my = gin.In().GetCursor("Mouse").Point()
-		c.mx, c.my = 0, 0
-	}
 	buttons := c.buttons
 	if c.optionsHeight() <= c.layout.Options.Dy {
 		buttons = c.non_scroll_buttons
@@ -463,9 +457,11 @@ func (c *Chooser) Draw(region gui.Region, ctx gui.DrawingContext) {
 	if c.optionsHeight() <= c.layout.Options.Dy {
 		buttons = c.non_scroll_buttons
 	}
-	for _, button := range buttons {
-		button.RenderAt(region.X, region.Y)
-	}
+	logging.TraceBracket(func() {
+		for _, button := range buttons {
+			button.RenderAt(region.X, region.Y)
+		}
+	})
 
 	c.layout.Options.Region().PushClipPlanes()
 	hovered := -1

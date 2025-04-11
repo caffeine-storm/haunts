@@ -3,6 +3,7 @@ package game
 import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/globals"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/sound"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/go-gl-legacy/gl"
@@ -125,7 +126,7 @@ func (b *Button) RenderAt(x, y int) {
 	// TODO(tmckee): clean: why not
 	// gl.Color4d(1, 1, 1, b.opacity))
 	gl.Color4ub(255, 255, 255, byte(b.opacity*255))
-	base.DeprecatedLog().Trace("Button.RenderAt", "tex-path", b.Texture.Path)
+	logging.Trace("Button.RenderAt", "tex-path", b.Texture.Path)
 	if b.Texture.Path != "" {
 		b.Texture.Data().RenderNatural(b.X+x, b.Y+y)
 		b.bounds.x = b.X + x
@@ -153,7 +154,7 @@ func (b *Button) RenderAt(x, y int) {
 			b.bounds.x -= b.bounds.dx / 2
 			b.Text.Justification = "center"
 		}
-		base.DeprecatedLog().Trace("button.RenderAt", "b.Text.String", b.Text.String, "b.X", b.X, "b.Y", b.Y, "x", x, "y", y)
+		logging.Trace("button.RenderAt", "b.Text.String", b.Text.String, "b.X", b.X, "b.Y", b.Y, "x", x, "y", y)
 		shaderBank := globals.RenderQueueState().Shaders()
 		d.RenderString(b.Text.String, gui.Point{X: b.X + x, Y: b.Y + y}, d.MaxHeight(), just, shaderBank)
 	}
