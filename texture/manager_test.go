@@ -104,4 +104,28 @@ func TestGetInFlightRequests(t *testing.T) {
 		inFlight := texture.GetInFlightRequests()
 		assert.ElementsMatch([]string{texturePath}, inFlight)
 	})
+	t.Run("finished loads are not in flight", func(t *testing.T) {
+		assert := assert.New(t)
+
+		rendertest.WithGlForTest(50, 50, func(sys system.System, queue render.RenderQueueInterface) {
+			texture.Init(queue)
+			queue.Purge()
+
+			texturePath := givenATexturePath()
+			_, err := texture.LoadFromPath(texturePath)
+			if err != nil {
+				panic(err)
+			}
+
+			ctx, cancel := context.WithTimeout(context.Background(), 250*time.Millisecond)
+			defer cancel()
+			err = texture.BlockUntilLoaded(ctx, texturePath)
+			if err != nil {
+				t.Fatal(fmt.Errorf("%q should have loaded by now: %w", texturePath, err))
+			}
+
+			inFlight := texture.GetInFlightRequests()
+			assert.Empty(inFlight)
+		})
+	})
 }
