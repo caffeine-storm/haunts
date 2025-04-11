@@ -538,6 +538,8 @@ func (m *Manager) signalLoad(path string, success bool) {
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
 
+	delete(m.inFlight, path)
+
 	waitChan, found := m.loadWaiters[path]
 	if !found {
 		return
