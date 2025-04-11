@@ -71,6 +71,34 @@ func TestBlockUntilIdle(t *testing.T) {
 				t.Fatalf("a fresh texture manager should be idle")
 			}
 		})
+		t.Run("blocks callers when texture loads are in flight", func(t *testing.T) {
+			queue := rendertest.MakeDiscardingRenderQueue()
+			texture.Init(queue)
+			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Millisecond)
+			defer cancel()
+
+			texturePath := givenATexturePath()
+			_, err := texture.LoadFromPath(texturePath)
+			if err != nil {
+				panic(fmt.Errorf("LoadFromPath(%q) failed: %w", texturePath, err))
+			}
+
+			err = texture.BlockUntilIdle(ctx)
+			if err == nil {
+				// The texture load is not supposed to finish so we should have timed out.
+				t.Fatalf("the calling goroutine should have blocked until the texture manager was idle")
+			}
+
+			// Make sure the texture is still 'loading'.
+			requests := texture.GetInFlightRequests()
+			for _, req := range requests {
+				if req == texturePath {
+					return
+				}
+			}
+
+			t.Fatalf("expected %q to still be loading but couldn't find it in %v", texturePath, requests)
+		})
 	})
 }
 
