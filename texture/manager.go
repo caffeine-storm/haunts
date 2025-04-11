@@ -314,6 +314,14 @@ func BlockUntilLoaded(ctx context.Context, paths ...string) error {
 	return manager.BlockUntilLoaded(ctx, paths...)
 }
 
+func BlockUntilIdle(ctx context.Context) error {
+	if manager == nil {
+		panic("need to call texture.Init before texture.BlockUntilIdle")
+	}
+
+	return manager.BlockUntilIdle(ctx)
+}
+
 func handleLoadRequest(req loadRequest) {
 	logging.Trace("texture manager: handleLoadRequest", "path", req.path)
 	f, _ := os.Open(req.path)
@@ -494,6 +502,10 @@ func (m *Manager) BlockUntilLoaded(ctx context.Context, paths ...string) error {
 		return fmt.Errorf("texture load failure")
 	}
 
+	return nil
+}
+
+func (m *Manager) BlockUntilIdle(ctx context.Context) error {
 	return nil
 }
 
