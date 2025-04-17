@@ -381,7 +381,6 @@ func showpaths(parts []string) string {
 func (room *Room) LoadAndWaitForTexturesForTest() {
 	paths := []string{}
 	for _, wt := range room.WallTextures {
-		logging.Warn("wall texture blocking", "path", wt.Texture.Path)
 		paths = append(paths, string(wt.Texture.Path))
 	}
 	paths = append(paths, string(room.Floor.Path))
@@ -407,8 +406,6 @@ func (room *Room) RenderWallTextures(worldToView *mathgl.Mat4, base_alpha byte) 
 		room.wall_texture_state_map = make(map[*WallTexture]wallTextureState)
 	}
 
-	logging.Trace("RenderWallTextures", "worldToView", worldToView)
-
 	var vert roomVertex
 	render.WithMatrixInMode(worldToView, render.MatrixModeModelView, func() {
 		for _, wt := range room.WallTextures {
@@ -421,8 +418,6 @@ func (room *Room) RenderWallTextures(worldToView *mathgl.Mat4, base_alpha byte) 
 			// Bind the the texture for the decal.
 			wt.Texture.Data().Bind()
 			R, G, B, A := wt.Color()
-
-			logging.Trace("wall texture", "glstate", debug.GetGlState(), "name", wt.Defname, "ids", ids)
 
 			gl.ClientActiveTexture(gl.TEXTURE0)
 			ids.vBuffer.Bind(gl.ARRAY_BUFFER)
@@ -845,7 +840,7 @@ func (room *Room) SetupGlStuff(glProxy RoomSetupGlProxy) {
 		{dx, 0, 0, 1, 1, lt_lly_ep, lt_urx_ep},
 	}
 
-	logging.Trace("ohboy", "dz", dz, "c", c, "vs", vs)
+	logging.Trace("room geometry", "dx,dy,dz", []float32{dx, dy, dz}, "c", c, "vs", vs)
 
 	room.glData.vBuffer = glProxy.GenBuffer()
 	room.glData.vBuffer.Bind(gl.ARRAY_BUFFER)

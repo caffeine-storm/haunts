@@ -2,13 +2,11 @@ package house_test
 
 import (
 	"fmt"
-	"log/slog"
 	"strings"
 	"testing"
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/house"
-	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/runningwild/glop/gui"
@@ -54,7 +52,6 @@ func loadRoom(roomName string) *house.Room {
 
 func RoomSpecs() {
 	base.SetDatadir("../data")
-	logging.SetLoggingLevel(slog.LevelDebug)
 
 	rendertest.WithGlForTest(266, 246, func(sys system.System, queue render.RenderQueueInterface) {
 		registry.LoadAllRegistries()
@@ -80,25 +77,20 @@ func RoomSpecs() {
 			angle := float32(62)
 			zoom := float32(3.0)
 			floor, _, _, _, _, _ := house.MakeRoomMatsForTest(room, region, focusx, focusy, angle, zoom)
-			logging.Debug("floor mat?", "floor", floor)
 
 			queue.Queue(func(render.RenderQueueState) {
-				logging.TraceBracket(func() {
-					// TODO(#12): having to remember to call some weird init function is
-					// sad making.
-					room.SetupGlStuff(&house.RoomRealGl{})
-					room.SetWallTransparency(false)
-				})
+				// TODO(#12): having to remember to call some weird init function is
+				// sad making.
+				room.SetupGlStuff(&house.RoomRealGl{})
+				room.SetWallTransparency(false)
 			})
 			queue.Purge()
 
 			room.LoadAndWaitForTexturesForTest()
 
 			queue.Queue(func(render.RenderQueueState) {
-				logging.TraceBracket(func() {
-					house.WithRoomRenderGlSettings(floor, func() {
-						room.RenderWallTextures(&floor, 255)
-					})
+				house.WithRoomRenderGlSettings(floor, func() {
+					room.RenderWallTextures(&floor, 255)
 				})
 			})
 			queue.Purge()
@@ -109,9 +101,8 @@ func RoomSpecs() {
 		Convey("drawing restest", func() {
 			restestRoom := loadRoom("restest.room")
 			if restestRoom.Wall.Path == "" {
-				panic("ya done goofed")
+				panic("the 'restest.room' file doesn't specify a texture for the walls")
 			}
-			logging.Warn("wait, wut?", "wall", restestRoom.Wall.Path, "string-it", string(restestRoom.Wall.Path))
 			region := gui.Region{
 				Point: gui.Point{X: 0, Y: 0},
 				Dims:  gui.Dims{Dx: 200, Dy: 200},
