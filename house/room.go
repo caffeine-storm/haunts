@@ -407,46 +407,44 @@ func (room *Room) RenderWallTextures(worldToView *mathgl.Mat4, base_alpha byte) 
 	}
 
 	var vert roomVertex
-	render.WithMatrixInMode(worldToView, render.MatrixModeModelView, func() {
-		for _, wt := range room.WallTextures {
-			var ids wallTextureGlIDs = room.getWallTextureState(wt)
-			if ids.vBuffer == 0 {
-				logging.Warn("wall texture state had zeroed vBuffer", "name", wt.Defname)
-				continue
-			}
-
-			// Bind the the texture for the decal.
-			wt.Texture.Data().Bind()
-			R, G, B, A := wt.Color()
-
-			gl.ClientActiveTexture(gl.TEXTURE0)
-			ids.vBuffer.Bind(gl.ARRAY_BUFFER)
-			gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.x))
-			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.u))
-			gl.ClientActiveTexture(gl.TEXTURE1)
-			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.los_u))
-			gl.ClientActiveTexture(gl.TEXTURE0)
-			if ids.floorIBuffer != 0 {
-				gl.StencilFunc(gl.ALWAYS, 2, 2)
-				ids.floorIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
-				gl.Color4ub(R, G, B, A)
-				gl.DrawElements(gl.TRIANGLES, int(ids.floorICount), gl.UNSIGNED_SHORT, nil)
-			}
-			if ids.leftIBuffer != 0 {
-				gl.StencilFunc(gl.ALWAYS, 1, 1)
-				ids.leftIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
-				doColour(room, R, G, B, alphaMult(A, room.far_left.wall_alpha), base_alpha)
-				gl.DrawElements(gl.TRIANGLES, int(ids.leftICount), gl.UNSIGNED_SHORT, nil)
-			}
-			if ids.rightIBuffer != 0 {
-				gl.StencilFunc(gl.ALWAYS, 1, 1)
-				ids.rightIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
-				doColour(room, R, G, B, alphaMult(A, room.far_right.wall_alpha), base_alpha)
-
-				gl.DrawElements(gl.TRIANGLES, int(ids.rightICount), gl.UNSIGNED_SHORT, nil)
-			}
+	for _, wt := range room.WallTextures {
+		var ids wallTextureGlIDs = room.getWallTextureState(wt)
+		if ids.vBuffer == 0 {
+			logging.Warn("wall texture state had zeroed vBuffer", "name", wt.Defname)
+			continue
 		}
-	})
+
+		// Bind the the texture for the decal.
+		wt.Texture.Data().Bind()
+		R, G, B, A := wt.Color()
+
+		gl.ClientActiveTexture(gl.TEXTURE0)
+		ids.vBuffer.Bind(gl.ARRAY_BUFFER)
+		gl.VertexPointer(3, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.x))
+		gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.u))
+		gl.ClientActiveTexture(gl.TEXTURE1)
+		gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.los_u))
+		gl.ClientActiveTexture(gl.TEXTURE0)
+		if ids.floorIBuffer != 0 {
+			gl.StencilFunc(gl.ALWAYS, 2, 2)
+			ids.floorIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+			gl.Color4ub(R, G, B, A)
+			gl.DrawElements(gl.TRIANGLES, int(ids.floorICount), gl.UNSIGNED_SHORT, nil)
+		}
+		if ids.leftIBuffer != 0 {
+			gl.StencilFunc(gl.ALWAYS, 1, 1)
+			ids.leftIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+			doColour(room, R, G, B, alphaMult(A, room.far_left.wall_alpha), base_alpha)
+			gl.DrawElements(gl.TRIANGLES, int(ids.leftICount), gl.UNSIGNED_SHORT, nil)
+		}
+		if ids.rightIBuffer != 0 {
+			gl.StencilFunc(gl.ALWAYS, 1, 1)
+			ids.rightIBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
+			doColour(room, R, G, B, alphaMult(A, room.far_right.wall_alpha), base_alpha)
+
+			gl.DrawElements(gl.TRIANGLES, int(ids.rightICount), gl.UNSIGNED_SHORT, nil)
+		}
+	}
 }
 
 func doColour(room *Room, r, g, b, a, base_alpha byte) {
@@ -469,7 +467,7 @@ func WithRoomRenderGlSettings(modelView mathgl.Mat4, fn func()) {
 	defer gl.DisableClientState(gl.VERTEX_ARRAY)
 	defer gl.DisableClientState(gl.TEXTURE_COORD_ARRAY)
 
-	render.WithMatrixInMode(&modelView, render.MatrixModeModelView, func() {
+	render.WithMultMatrixInMode(&modelView, render.MatrixModeModelView, func() {
 		fn()
 	})
 }
@@ -477,6 +475,8 @@ func WithRoomRenderGlSettings(modelView mathgl.Mat4, fn func()) {
 // Need floor, right wall, and left wall matrices to draw the details
 func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alpha byte, drawables []Drawable, los_tex *LosTexture, floor_drawers []RenderOnFloorer) {
 	debug.LogAndClearGlErrors(logging.InfoLogger())
+
+	logging.Info("Room.Render called", "glstate", debug.GetGlState(), "floor", floor)
 
 	do_color := func(r, g, b, a byte) {
 		doColour(room, r, g, b, a, base_alpha)
@@ -493,6 +493,8 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 
 		if los_tex != nil {
 			logging.Trace("los_tex not nil")
+			// TODO: this won't work; we need to respect incoming modelviewmatrix
+			// state. Needs tests but removing this line is expected to solve.
 			gl.LoadMatrixf((*[16]float32)(&floor))
 			gl.ClientActiveTexture(gl.TEXTURE1)
 			gl.ActiveTexture(gl.TEXTURE1)
@@ -585,7 +587,6 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 			room.glData.vBuffer.Bind(gl.ARRAY_BUFFER)
 			gl.TexCoordPointer(2, gl.FLOAT, int(unsafe.Sizeof(vert)), unsafe.Offsetof(vert.los_u))
 			// Now draw the plane
-			gl.LoadMatrixf((*[16]float32)(&floor))
 			plane.texture.Data().Bind()
 			plane.iBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
 			if (plane.mat == &left || plane.mat == &right) && strings.Contains(string(room.Wall.Path), "gradient.png") {

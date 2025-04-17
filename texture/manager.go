@@ -104,7 +104,7 @@ func Render(x, y, dx, dy float64) {
 	op.Scaling(float32(dx), float32(dy), 1)
 	run.Multiply(&op)
 
-	render.WithMultMatrixInMode(&run, render.MatrixModeProjection, func() {
+	render.WithMultMatrixInMode(&run, render.MatrixModeModelView, func() {
 		gl.Enable(gl.TEXTURE_2D)
 		gl.CallList(textureList)
 	})
@@ -149,7 +149,7 @@ func RenderAdvanced(x, y, dx, dy, rot float64, flip bool) {
 		run.Multiply(&op)
 	}
 
-	render.WithMultMatrixInMode(&run, render.MatrixModeProjection, func() {
+	render.WithMultMatrixInMode(&run, render.MatrixModeModelView, func() {
 		gl.Enable(gl.TEXTURE_2D)
 		gl.CallList(textureList)
 	})
