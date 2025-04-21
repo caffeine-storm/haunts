@@ -1,6 +1,3 @@
-- clicking on 'versus mode' panics
-	- dig in
-
 - bug#22: editing key_binds.json can cause panics; e.g. remove 'screenshot'
   from the mapping in the .json file and main.go will panic
 
@@ -43,10 +40,6 @@
 - bug#10: tests that need to be skipped for now can be tagged with this bug.
 	That way, we can easily find them and disable higher-level tests when we need
 	to re-focus.
-
-- bug#9: house/room.go is calling gl.DrawElements in room.Render but it doesn't
-	look to be using the correct count of elements; it's counting vertices _and_
-	vertices that aren't part of the ARRAY_BUFFER being rendered!!!
 
 - console is getting input even when it's not open
 
