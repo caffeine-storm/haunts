@@ -537,6 +537,7 @@ func doGameOnRound(gp *GamePanel) lua.LuaGoFunction {
 	}
 }
 
+// TODO(tmckee:#24): writing to 'gp' is code smelly
 func loadGameStateRaw(gp *GamePanel, L *lua.State, state string) {
 	var viewer gui.Widget
 	var hv_state house.HouseViewerState
