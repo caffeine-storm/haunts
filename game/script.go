@@ -13,6 +13,7 @@ import (
 	"github.com/MobRulesGames/haunts/game/hui"
 	"github.com/MobRulesGames/haunts/game/status"
 	"github.com/MobRulesGames/haunts/house"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/mrgnet"
 	"github.com/MobRulesGames/haunts/sound"
 	"github.com/MobRulesGames/haunts/texture"
@@ -39,8 +40,8 @@ func (gs *gameScript) syncEnd() {
 func startGameScript(gp *GamePanel, path string, player *Player, data map[string]string, game_key mrgnet.GameKey) {
 	// Clear out the panel, now the script can do whatever it wants
 	player.Script_path = path
-	gp.AnchorBox = gui.MakeAnchorBox(gui.Dims{1024, 768})
-	base.DeprecatedLog().Printf("startGameScript")
+	gp.AnchorBox = gui.MakeAnchorBox(gui.Dims{Dx: 1024, Dy: 768})
+	logging.Info("startGameScript")
 	if path != "" && !filepath.IsAbs(path) {
 		path = filepath.Join(base.GetDataDir(), "scripts", filepath.FromSlash(path))
 	}
@@ -53,12 +54,11 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 	if path != "" {
 		prog, err = os.ReadFile(path)
 		if err != nil {
-			base.DeprecatedError().Printf("Unable to load game script file %s: %v", path, err)
+			logging.Error("Unable to load game script", "path", path, "err", err)
 			return
 		}
 	}
 	gp.script = &gameScript{}
-	base.DeprecatedLog().Printf("script = %p", gp.script)
 
 	gp.script.L = lua.NewState()
 	gp.script.L.OpenLibs()
@@ -136,7 +136,7 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 		loadGameStateRaw(gp, gp.script.L, player.Game_state)
 		err := LuaDecodeTable(bytes.NewBuffer(player.Lua_store), gp.script.L, gp.game)
 		if err != nil {
-			base.DeprecatedWarn().Printf("Error decoding lua state: %v", err)
+			logging.Warn("Error decoding lua state", "err", err)
 		}
 		gp.script.L.SetGlobal("store")
 	} else {
@@ -147,12 +147,13 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 	if game_key == "" {
 		res := gp.script.L.DoString(string(prog))
 		if res != nil {
-			base.DeprecatedError().Printf("There was an error running script %s:\n%s\n%s", path, prog, res)
+			logging.Error("DoString failed", "script", path, "prog", prog, "res", res)
+			panic(fmt.Errorf("DoString failed"))
 		}
 	}
 
 	gp.script.sync = make(chan struct{})
-	base.DeprecatedLog().Printf("Sync: %p", gp.script.sync)
+	logging.Info("Sync", "gp.script.sync", gp.script.sync)
 
 	// if resp.Game.Denizens_id ==
 	go func() {
