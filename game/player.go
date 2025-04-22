@@ -16,7 +16,7 @@ import (
 )
 
 type Player struct {
-	// Name of the player, as specified by the player himself, this is what is
+	// Name of the player, as specified by the player themself. This is what is
 	// shown in the menu when they are selecting what player to switch to.
 	Name string
 
