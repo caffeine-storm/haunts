@@ -82,7 +82,7 @@ func loadFont() (*truetype.Font, error) {
 }
 
 func loadDictionaryFromFile(input io.Reader, renderQueue render.RenderQueueInterface, logger logging.Logger) (*gui.Dictionary, error) {
-	d, err := gui.LoadDictionary(input, renderQueue, logger)
+	d, err := gui.LoadAndInitializeDictionary(input, renderQueue, logger)
 	if err != nil {
 		return nil, fmt.Errorf("gui.LoadDictionary failed: %w", err)
 	}
@@ -120,6 +120,7 @@ func (q *immediateQueue) IsPurging() bool {
 func GetDictionary(size int) *gui.Dictionary {
 	dictionary_mutex.Lock()
 	defer dictionary_mutex.Unlock()
+	// TODO: assert that we're on the render thread
 	if drawing_context == nil {
 		panic("need to call base.InitDictionaries first")
 	}
@@ -138,6 +139,7 @@ func fontCachePath(fontName string, size int) string {
 func getDictionaryByProperties(fontName string, size int) *gui.Dictionary {
 	var ret *gui.Dictionary
 	fontId := fontIdFromProperties(fontName, size)
+	logging.Trace("getDictionaryByProperties", "fontName", fontName, "size", size, "fontId", fontId)
 	func() {
 		// TODO(tmckee): catching a panic is not as nice as supporting lookup-miss
 		// in the API.
@@ -170,7 +172,7 @@ func loadDictionaryByProperties(fontName string, size int) *gui.Dictionary {
 	f, err := os.Open(filename)
 	if err == nil {
 		defer f.Close()
-		logging.Info("font-cache-hit", "fontName", fontName, "size", size, "err", err)
+		logging.Info("font-cache-hit", "fontName", fontName, "size", size)
 		d, err := loadDictionaryFromFile(f, &immediateQueue{}, logging.DebugLogger())
 		if err != nil {
 			panic(fmt.Errorf("couldn't loadDictionaryFromFile for %q @%d: %w", fontName, size, err))
@@ -192,7 +194,7 @@ func loadDictionaryByProperties(fontName string, size int) *gui.Dictionary {
 		panic(fmt.Errorf("unable to load font: size %d: err: %w", size, err))
 	}
 
-	d := gui.MakeDictionary(font, size, &immediateQueue{}, logger)
+	d := gui.MakeAndInitializeDictionary(font, size, &immediateQueue{}, logger)
 	err = saveDictionaryToFile(d, fontName, size)
 	if err != nil {
 		logging.Error("Unable to save dictionary", "size", size, "err", err)

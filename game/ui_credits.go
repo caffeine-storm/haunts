@@ -55,6 +55,11 @@ func InsertCreditsMenu(ui gui.WidgetParent) error {
 		ui.RemoveChild(&cm)
 		InsertStartMenu(ui, *layout)
 	}
+
+	// TODO(tmckee:#23): XXX: we must not do this here!! base.GetDictionary must
+	// only be called on the render thread. If we don't, we end up poisoning the
+	// dictionary cache with a Dictionary that doesn't have a grid-of-glyphs
+	// texture uploaded.
 	d := base.GetDictionary(cm.layout.Credits.Size)
 	cm.layout.Credits.Scroll.Height = len(cm.layout.Credits.Lines) * int(d.MaxHeight())
 	cm.layout.Down.valid_func = func() bool {
@@ -92,11 +97,6 @@ func (cm *CreditsMenu) Think(g *gui.Gui, t int64) {
 	}
 	dt := t - cm.last_t
 	cm.last_t = t
-	if cm.mx == 0 && cm.my == 0 {
-		// TODO(tmckee): need to ask the gui for a cursor pos
-		// cm.mx, cm.my = gin.In().GetCursor("Mouse").Point()
-		cm.mx, cm.my = 0, 0
-	}
 	cm.layout.Credits.Scroll.Think(dt)
 	for _, button := range cm.buttons {
 		button.Think(cm.region.X, cm.region.Y, cm.mx, cm.my, dt)
@@ -140,7 +140,6 @@ func (cm *CreditsMenu) Draw(region gui.Region, ctx gui.DrawingContext) {
 	sx := cm.layout.Credits.Scroll.X
 	sy := cm.layout.Credits.Scroll.Top()
 	cm.layout.Credits.Scroll.Region().PushClipPlanes()
-	gl.Disable(gl.TEXTURE_2D)
 	gl.Color4ub(255, 255, 255, 255)
 	for _, line := range cm.layout.Credits.Lines {
 		sy -= int(d.MaxHeight())

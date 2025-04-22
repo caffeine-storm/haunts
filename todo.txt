@@ -1,3 +1,6 @@
+- bug#23: the credits screen was rendering white rects instead of letters
+	- now it panics instead; need to fix the panic
+
 - bug#22: editing key_binds.json can cause panics; e.g. remove 'screenshot'
   from the mapping in the .json file and main.go will panic
 
@@ -88,4 +91,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#23: <next>
+- bug#24: <next>
