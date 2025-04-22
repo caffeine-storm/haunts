@@ -1,13 +1,14 @@
 package game
 
 import (
-	"github.com/MobRulesGames/haunts/base"
+	"math/rand"
+	"sort"
+
 	"github.com/MobRulesGames/haunts/house"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/mrgnet"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
-	"math/rand"
-	"sort"
 )
 
 type GamePanel struct {
@@ -27,11 +28,11 @@ type GamePanel struct {
 
 func MakeGamePanel(script string, p *Player, data map[string]string, game_key mrgnet.GameKey) *GamePanel {
 	var gp GamePanel
-	gp.AnchorBox = gui.MakeAnchorBox(gui.Dims{1024, 768})
+	gp.AnchorBox = gui.MakeAnchorBox(gui.Dims{Dx: 1024, Dy: 768})
 	if p == nil {
 		p = &Player{}
 	}
-	base.DeprecatedLog().Printf("Script path: %s / %s", script, p.Script_path)
+	logging.Info("MakeGamePanel", "script", script, "p", p)
 	if script == "" {
 		script = p.Script_path
 	}
@@ -81,7 +82,7 @@ func (g *Game) SpawnEntity(spawn *Entity, x, y int) bool {
 	for i := range g.Ents {
 		cx, cy := g.Ents[i].Pos()
 		if cx == x && cy == y {
-			base.DeprecatedWarn().Printf("Can't spawn entity at (%d, %d) - already occupied by '%s'.", x, y, g.Ents[i].Name)
+			logging.Warn("Can't spawn entity", "pos", []any{x, y}, "blockedby", g.Ents[i].Name)
 			return false
 		}
 	}
@@ -103,7 +104,7 @@ func (g *Game) SetCurrentAction(action Action) bool {
 	// the action should be one that belongs to the current entity, if not then
 	// we need to bail out immediately
 	if g.selected_ent == nil {
-		base.DeprecatedWarn().Printf("Tried to SetCurrentAction() without a selected entity.")
+		logging.Warn("Tried to SetCurrentAction() without a selected entity.")
 		return action == nil
 	}
 	if action != nil {
@@ -115,7 +116,7 @@ func (g *Game) SetCurrentAction(action Action) bool {
 			}
 		}
 		if !valid {
-			base.DeprecatedWarn().Printf("Tried to SetCurrentAction() with an action that did not belong to the selected entity.")
+			logging.Warn("Tried to SetCurrentAction() with an action that did not belong to the selected entity.")
 			return action == nil
 		}
 	}
@@ -303,16 +304,16 @@ func spawnEnts(g *Game, ents []*Entity, spawns []*house.SpawnPoint) {
 		}
 	}
 	if sanity > 0 {
-		base.DeprecatedLog().Printf("Placed all objects with %d sanity remaining", sanity)
+		logging.Info("Placed all objects", "remaning sanity", sanity)
 	} else {
-		base.DeprecatedWarn().Printf("Only able to place %d out of %d objects", len(places), len(spawns))
+		logging.Warn("Out of sanity while placing objects", "placed", len(places), "requested", len(spawns))
 	}
 	for _, place := range places {
 		place.ent.X = float64(place.spawn.X + rand.Intn(place.spawn.Dx-place.ent.Dx+1))
 		place.ent.Y = float64(place.spawn.Y + rand.Intn(place.spawn.Dy-place.ent.Dy+1))
 		g.viewer.AddDrawable(place.ent)
 		g.Ents = append(g.Ents, place.ent)
-		base.DeprecatedLog().Printf("Using object '%s' at (%.0f, %.0f)", place.ent.Name, place.ent.X, place.ent.Y)
+		logging.Info("placing", "object", place.ent.Name, "pos", []any{place.ent.X, place.ent.Y})
 	}
 }
 
