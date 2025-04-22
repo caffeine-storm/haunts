@@ -60,8 +60,8 @@ func InsertCreditsMenu(ui gui.WidgetParent) error {
 	// only be called on the render thread. If we don't, we end up poisoning the
 	// dictionary cache with a Dictionary that doesn't have a grid-of-glyphs
 	// texture uploaded.
-	d := base.GetDictionary(cm.layout.Credits.Size)
-	cm.layout.Credits.Scroll.Height = len(cm.layout.Credits.Lines) * int(d.MaxHeight())
+	maxHeight := base.GetRasteredFontHeight(cm.layout.Credits.Size)
+	cm.layout.Credits.Scroll.Height = len(cm.layout.Credits.Lines) * maxHeight
 	cm.layout.Down.valid_func = func() bool {
 		return cm.layout.Credits.Scroll.Height > cm.layout.Credits.Scroll.Dy
 	}

@@ -117,6 +117,29 @@ func (q *immediateQueue) IsPurging() bool {
 	return true
 }
 
+func GetRasteredFontHeight(size int) int {
+	// TODO(tmckee): re-use objects loaded through 'GetDictionary' if they exist
+	cachePath := fontCachePath("standard", size)
+	filename := filepath.Join(datadir, "fonts", cachePath)
+
+	f, err := os.Open(filename)
+	if err == nil {
+		defer f.Close()
+		logging.Info("font-cache-hit", "fontName", "standard", "size", size)
+		var d gui.Dictionary
+		d.Load(f)
+		return d.MaxHeight()
+	}
+
+	font, err := loadFont()
+	if err != nil {
+		panic(fmt.Errorf("couldn't loadFont(): %w", err))
+	}
+
+	rastered := gui.RasterizeFont(font, size)
+	return rastered.MaxHeight()
+}
+
 func GetDictionary(size int) *gui.Dictionary {
 	dictionary_mutex.Lock()
 	defer dictionary_mutex.Unlock()

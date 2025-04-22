@@ -1,5 +1,7 @@
 - bug#23: the credits screen was rendering white rects instead of letters
-	- now it panics instead; need to fix the panic
+	- fixed by querying the 'rasteredFont' instead of initializing a Dictionary
+	- need to look for other base.GetDictionary calls that aren't on the render thread
+		- would be better if those calls asserted that they were on the render thread
 
 - bug#22: editing key_binds.json can cause panics; e.g. remove 'screenshot'
   from the mapping in the .json file and main.go will panic
