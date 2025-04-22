@@ -296,8 +296,8 @@ func (m *MainBar) Think(g *gui.Gui, t int64) {
 
 		// We similarly need to scroll through conditions
 		c := m.layout.Conditions
-		d := base.GetDictionary(int(c.Size))
-		max_scroll := float64(d.MaxHeight()) * float64(len(m.ent.Stats.ConditionNames()))
+		font := base.GetRasteredFont(int(c.Size))
+		max_scroll := float64(font.MaxHeight()) * float64(len(m.ent.Stats.ConditionNames()))
 		max_scroll -= m.layout.Conditions.Height
 		// This might end up with a max that is negative, but we'll cap it at zero
 		if m.state.Conditions.scroll_pos > max_scroll {
@@ -324,7 +324,7 @@ func (m *MainBar) Think(g *gui.Gui, t int64) {
 		c := m.layout.Conditions
 		if pointInsideRect(m.mx, m.my, int(c.X), int(c.Y), int(c.Width), int(c.Height)) {
 			pos := c.Y + c.Height + m.state.Conditions.scroll_pos - float64(m.my)
-			index := int(pos / float64(base.GetDictionary(int(c.Size)).MaxHeight()))
+			index := int(pos / float64(base.GetRasteredFont(int(c.Size)).MaxHeight()))
 			if index >= 0 && index < len(m.ent.Stats.ConditionNames()) {
 				m.state.MouseOver.active = true
 				m.state.MouseOver.text = m.ent.Stats.ConditionNames()[index]

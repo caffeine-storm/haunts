@@ -117,7 +117,7 @@ func (q *immediateQueue) IsPurging() bool {
 	return true
 }
 
-func GetRasteredFontHeight(size int) int {
+func GetRasteredFont(size int) *gui.RasteredFont {
 	// TODO(tmckee): re-use objects loaded through 'GetDictionary' if they exist
 	cachePath := fontCachePath("standard", size)
 	filename := filepath.Join(datadir, "fonts", cachePath)
@@ -128,7 +128,7 @@ func GetRasteredFontHeight(size int) int {
 		logging.Info("font-cache-hit", "fontName", "standard", "size", size)
 		var d gui.Dictionary
 		d.Load(f)
-		return d.MaxHeight()
+		return &d.Data
 	}
 
 	font, err := loadFont()
@@ -136,14 +136,20 @@ func GetRasteredFontHeight(size int) int {
 		panic(fmt.Errorf("couldn't loadFont(): %w", err))
 	}
 
-	rastered := gui.RasterizeFont(font, size)
-	return rastered.MaxHeight()
+	ret := gui.RasterizeFont(font, size)
+	return &ret
+}
+
+func GetRasteredFontHeight(size int) int {
+	font := GetRasteredFont(size)
+	return font.MaxHeight()
 }
 
 func GetDictionary(size int) *gui.Dictionary {
 	dictionary_mutex.Lock()
 	defer dictionary_mutex.Unlock()
-	// TODO: assert that we're on the render thread
+
+	render.MustBeOnRenderThread()
 	if drawing_context == nil {
 		panic("need to call base.InitDictionaries first")
 	}

@@ -56,10 +56,6 @@ func InsertCreditsMenu(ui gui.WidgetParent) error {
 		InsertStartMenu(ui, *layout)
 	}
 
-	// TODO(tmckee:#23): XXX: we must not do this here!! base.GetDictionary must
-	// only be called on the render thread. If we don't, we end up poisoning the
-	// dictionary cache with a Dictionary that doesn't have a grid-of-glyphs
-	// texture uploaded.
 	maxHeight := base.GetRasteredFontHeight(cm.layout.Credits.Size)
 	cm.layout.Credits.Scroll.Height = len(cm.layout.Credits.Lines) * maxHeight
 	cm.layout.Down.valid_func = func() bool {

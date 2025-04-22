@@ -392,7 +392,7 @@ func (sm *OnlineMenu) Think(g *gui.Gui, t int64) {
 					glb.games = append(glb.games, gameField{&b, nil, name, list.Game_keys[j], list.Games[j]})
 				}
 			}
-			glb.Scroll.Height = base.GetDictionary(sm.layout.Text.Size).MaxHeight() * len(list.Games)
+			glb.Scroll.Height = base.GetRasteredFontHeight(sm.layout.Text.Size) * len(list.Games)
 
 		default:
 		}
@@ -405,7 +405,7 @@ func (sm *OnlineMenu) Think(g *gui.Gui, t int64) {
 				region.X = game.join.(*Button).bounds.x
 				region.Y = game.join.(*Button).bounds.y
 				region.Dx = glb.Scroll.Dx
-				region.Dy = int(base.GetDictionary(sm.layout.Text.Size).MaxHeight())
+				region.Dy = int(base.GetRasteredFont(sm.layout.Text.Size).MaxHeight())
 				if (gui.Point{sm.mx, sm.my}.Inside(region)) {
 					sm.hover_game = game
 				}

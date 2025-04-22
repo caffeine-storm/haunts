@@ -8,8 +8,8 @@ github.com/MobRulesGames/memory v0.0.0-20120626004817-db5bb35fd894 h1:26ZCnKDg9v
 github.com/MobRulesGames/memory v0.0.0-20120626004817-db5bb35fd894/go.mod h1:w5jrl1aXV+AZaP1ye7wO8xB3ne7U2CkweE0atB7FPwk=
 github.com/caffeine-storm/gl v0.0.0-20240909160157-d1b38f2deb16 h1:lHq5YECDcjZKieQW2YWLh8AjJ9Gs/2jIiXcJjbsJGqU=
 github.com/caffeine-storm/gl v0.0.0-20240909160157-d1b38f2deb16/go.mod h1:5WNXbhdBMLerIscVkSVTRwGcsRywYKYHRKFEBZOUBEA=
-github.com/caffeine-storm/glop v0.0.0-20250422152632-764a3d1759ad h1:TEEtQkYO2eKC5Un70O+shdKwg8OgmL/C4TUwI6B0pNo=
-github.com/caffeine-storm/glop v0.0.0-20250422152632-764a3d1759ad/go.mod h1:m1VWgt/YhXlE/IkeapP2qyWwAvDLx+opCAHEBIUJ838=
+github.com/caffeine-storm/glop v0.0.0-20250422182037-10ef83c0f74c h1:LtMAzdLSJNzAxmEagytbkd6hW4M9mirJzGCGOnuNvqA=
+github.com/caffeine-storm/glop v0.0.0-20250422182037-10ef83c0f74c/go.mod h1:m1VWgt/YhXlE/IkeapP2qyWwAvDLx+opCAHEBIUJ838=
 github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c h1:KqJxBrec/mnKQ+QgBu3/iJvaiurKpNDsXLrrXSau73U=
 github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c/go.mod h1:ntYmIr0ULu7QxKlmOE6cC87X4pWDG8jO/wSUBn2ZzJY=
 github.com/caffeine-storm/golua v0.0.0-20240910150920-bb0104c032e4 h1:zTOKTYGNmZCZVDgvjsTEXhaFIcTWiccPHKBFaWQzo80=
