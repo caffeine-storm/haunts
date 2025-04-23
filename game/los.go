@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/gob"
 	"errors"
+	"fmt"
 	"math/rand"
 	"reflect"
 	"regexp"
@@ -520,6 +521,23 @@ const (
 	// An action is currently running, everything should pause while this runs.
 	doingAction
 )
+
+func (as actionState) String() string {
+	switch as {
+	case noAction:
+		return "noAction"
+	case waitingAction:
+		return "waitingAction"
+	case preppingAction:
+		return "preppingAction"
+	case verifyingAction:
+		return "verifyingAction"
+	case doingAction:
+		return "doingAction"
+	}
+
+	panic(fmt.Errorf("bad actionState number: %d", int(as)))
+}
 
 func (g *Game) GetViewer() *house.HouseViewer {
 	return g.viewer
