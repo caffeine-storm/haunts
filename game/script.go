@@ -37,6 +37,95 @@ func (gs *gameScript) syncEnd() {
 	gs.sync <- struct{}{}
 }
 
+func initLuaState(ret *lua.State, gp *GamePanel, player *Player, isOnline bool) {
+	ret.OpenLibs()
+	ret.SetExecutionLimit(25000)
+	ret.NewTable()
+
+	LuaPushSmartFunctionTable(ret, FunctionTable{
+		"ChooserFromFile": func() { ret.PushGoFunction(chooserFromFile(gp)) },
+		"StartScript":     func() { ret.PushGoFunction(startScript(gp, player)) },
+		"GameOnRound":     func() { ret.PushGoFunction(doGameOnRound(gp)) },
+		"SaveGameState":   func() { ret.PushGoFunction(saveGameState(gp)) },
+		"LoadGameState":   func() { ret.PushGoFunction(loadGameState(gp)) },
+		"DoExec":          func() { ret.PushGoFunction(doExec(gp)) },
+		"SelectEnt":       func() { ret.PushGoFunction(selectEnt(gp)) },
+		"FocusPos":        func() { ret.PushGoFunction(focusPos(gp)) },
+		"FocusZoom":       func() { ret.PushGoFunction(focusZoom(gp)) },
+		"SelectHouse":     func() { ret.PushGoFunction(selectHouse(gp)) },
+		"LoadHouse": func() {
+			panic("here for testing: see #25")
+			ret.PushGoFunction(loadHouse(gp))
+		},
+		"SaveStore":                         func() { ret.PushGoFunction(saveStore(gp, player)) },
+		"ShowMainBar":                       func() { ret.PushGoFunction(showMainBar(gp, player)) },
+		"SpawnEntityAtPosition":             func() { ret.PushGoFunction(spawnEntityAtPosition(gp)) },
+		"GetSpawnPointsMatching":            func() { ret.PushGoFunction(getSpawnPointsMatching(gp)) },
+		"SpawnEntitySomewhereInSpawnPoints": func() { ret.PushGoFunction(spawnEntitySomewhereInSpawnPoints(gp)) },
+		"IsSpawnPointInLos":                 func() { ret.PushGoFunction(isSpawnPointInLos(gp)) },
+		"PlaceEntities":                     func() { ret.PushGoFunction(placeEntities(gp)) },
+		"RoomAtPos":                         func() { ret.PushGoFunction(roomAtPos(gp)) },
+		"SetLosMode":                        func() { ret.PushGoFunction(setLosMode(gp)) },
+		"GetAllEnts":                        func() { ret.PushGoFunction(getAllEnts(gp)) },
+		"DialogBox":                         func() { ret.PushGoFunction(dialogBox(gp)) },
+		"PickFromN":                         func() { ret.PushGoFunction(pickFromN(gp)) },
+		"SetGear":                           func() { ret.PushGoFunction(setGear(gp)) },
+		"BindAi":                            func() { ret.PushGoFunction(bindAi(gp)) },
+		"SetVisibility":                     func() { ret.PushGoFunction(setVisibility(gp)) },
+		"EndPlayerInteraction":              func() { ret.PushGoFunction(endPlayerInteraction(gp)) },
+		"GetLos":                            func() { ret.PushGoFunction(getLos(gp)) },
+		"SetVisibleSpawnPoints":             func() { ret.PushGoFunction(setVisibleSpawnPoints(gp)) },
+		"SetCondition":                      func() { ret.PushGoFunction(setCondition(gp)) },
+		"SetPosition":                       func() { ret.PushGoFunction(setPosition(gp)) },
+		"SetHp":                             func() { ret.PushGoFunction(setHp(gp)) },
+		"SetAp":                             func() { ret.PushGoFunction(setAp(gp)) },
+		"RemoveEnt":                         func() { ret.PushGoFunction(removeEnt(gp)) },
+		"PlayAnimations":                    func() { ret.PushGoFunction(playAnimations(gp)) },
+		"PlayMusic":                         func() { ret.PushGoFunction(playMusic(gp)) },
+		"StopMusic":                         func() { ret.PushGoFunction(stopMusic(gp)) },
+		"SetMusicParam":                     func() { ret.PushGoFunction(setMusicParam(gp)) },
+		"PlaySound":                         func() { ret.PushGoFunction(playSound(gp)) },
+		"SetWaypoint":                       func() { ret.PushGoFunction(setWaypoint(gp)) },
+		"RemoveWaypoint":                    func() { ret.PushGoFunction(removeWaypoint(gp)) },
+		"Rand":                              func() { ret.PushGoFunction(randFunc(gp)) },
+		"Sleep":                             func() { ret.PushGoFunction(sleepFunc(gp)) },
+		"EndGame":                           func() { ret.PushGoFunction(endGameFunc(gp)) },
+	})
+
+	ret.SetMetaTable(-2)
+	ret.SetGlobal("Script")
+
+	ret.NewTable()
+	LuaPushSmartFunctionTable(ret, FunctionTable{
+		"Active": func() {
+			ret.PushGoFunction(
+				func(L *lua.State) int {
+					L.PushBoolean(isOnline)
+					return 1
+				})
+		},
+		"Side":                func() { ret.PushGoFunction(netSideFunc(gp)) },
+		"UpdateState":         func() { ret.PushGoFunction(updateStateFunc(gp)) },
+		"UpdateExecs":         func() { ret.PushGoFunction(updateExecsFunc(gp)) },
+		"Wait":                func() { ret.PushGoFunction(netWaitFunc(gp)) },
+		"LatestStateAndExecs": func() { ret.PushGoFunction(netLatestStateAndExecsFunc(gp)) },
+	})
+	ret.SetMetaTable(-2)
+	ret.SetGlobal("Net")
+
+	registerUtilityFunctions(ret)
+}
+
+func makeNewGameScript() *gameScript {
+	// TODO(tmckee:#25): it kinda sucks that we build gameScript instances that need
+	// an 'initLuaState' called on their '.L' field, but it is what it is right
+	// now.
+	return &gameScript{
+		L:    lua.NewState(),
+		sync: make(chan struct{}),
+	}
+}
+
 func startGameScript(gp *GamePanel, path string, player *Player, data map[string]string, game_key mrgnet.GameKey) {
 	// Clear out the panel, now the script can do whatever it wants
 	player.Script_path = path
@@ -49,89 +138,15 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 	// The game script runs in a separate go routine and functions that need to
 	// communicate with the game will do so via channels - DUH why did i even
 	// write this comment?
-	var prog []byte
-	var err error
-	if path != "" {
-		prog, err = os.ReadFile(path)
-		if err != nil {
-			logging.Error("Unable to load game script", "path", path, "err", err)
-			return
-		}
+	prog, err := os.ReadFile(path)
+	if err != nil {
+		logging.Error("Unable to load game script", "path", path, "err", err)
+		return
 	}
-	gp.script = &gameScript{}
 
-	gp.script.L = lua.NewState()
-	gp.script.L.OpenLibs()
-	gp.script.L.SetExecutionLimit(25000)
-	gp.script.L.NewTable()
-	LuaPushSmartFunctionTable(gp.script.L, FunctionTable{
-		"ChooserFromFile":                   func() { gp.script.L.PushGoFunction(chooserFromFile(gp)) },
-		"StartScript":                       func() { gp.script.L.PushGoFunction(startScript(gp, player)) },
-		"GameOnRound":                       func() { gp.script.L.PushGoFunction(doGameOnRound(gp)) },
-		"SaveGameState":                     func() { gp.script.L.PushGoFunction(saveGameState(gp)) },
-		"LoadGameState":                     func() { gp.script.L.PushGoFunction(loadGameState(gp)) },
-		"DoExec":                            func() { gp.script.L.PushGoFunction(doExec(gp)) },
-		"SelectEnt":                         func() { gp.script.L.PushGoFunction(selectEnt(gp)) },
-		"FocusPos":                          func() { gp.script.L.PushGoFunction(focusPos(gp)) },
-		"FocusZoom":                         func() { gp.script.L.PushGoFunction(focusZoom(gp)) },
-		"SelectHouse":                       func() { gp.script.L.PushGoFunction(selectHouse(gp)) },
-		"LoadHouse":                         func() { gp.script.L.PushGoFunction(loadHouse(gp)) },
-		"SaveStore":                         func() { gp.script.L.PushGoFunction(saveStore(gp, player)) },
-		"ShowMainBar":                       func() { gp.script.L.PushGoFunction(showMainBar(gp, player)) },
-		"SpawnEntityAtPosition":             func() { gp.script.L.PushGoFunction(spawnEntityAtPosition(gp)) },
-		"GetSpawnPointsMatching":            func() { gp.script.L.PushGoFunction(getSpawnPointsMatching(gp)) },
-		"SpawnEntitySomewhereInSpawnPoints": func() { gp.script.L.PushGoFunction(spawnEntitySomewhereInSpawnPoints(gp)) },
-		"IsSpawnPointInLos":                 func() { gp.script.L.PushGoFunction(isSpawnPointInLos(gp)) },
-		"PlaceEntities":                     func() { gp.script.L.PushGoFunction(placeEntities(gp)) },
-		"RoomAtPos":                         func() { gp.script.L.PushGoFunction(roomAtPos(gp)) },
-		"SetLosMode":                        func() { gp.script.L.PushGoFunction(setLosMode(gp)) },
-		"GetAllEnts":                        func() { gp.script.L.PushGoFunction(getAllEnts(gp)) },
-		"DialogBox":                         func() { gp.script.L.PushGoFunction(dialogBox(gp)) },
-		"PickFromN":                         func() { gp.script.L.PushGoFunction(pickFromN(gp)) },
-		"SetGear":                           func() { gp.script.L.PushGoFunction(setGear(gp)) },
-		"BindAi":                            func() { gp.script.L.PushGoFunction(bindAi(gp)) },
-		"SetVisibility":                     func() { gp.script.L.PushGoFunction(setVisibility(gp)) },
-		"EndPlayerInteraction":              func() { gp.script.L.PushGoFunction(endPlayerInteraction(gp)) },
-		"GetLos":                            func() { gp.script.L.PushGoFunction(getLos(gp)) },
-		"SetVisibleSpawnPoints":             func() { gp.script.L.PushGoFunction(setVisibleSpawnPoints(gp)) },
-		"SetCondition":                      func() { gp.script.L.PushGoFunction(setCondition(gp)) },
-		"SetPosition":                       func() { gp.script.L.PushGoFunction(setPosition(gp)) },
-		"SetHp":                             func() { gp.script.L.PushGoFunction(setHp(gp)) },
-		"SetAp":                             func() { gp.script.L.PushGoFunction(setAp(gp)) },
-		"RemoveEnt":                         func() { gp.script.L.PushGoFunction(removeEnt(gp)) },
-		"PlayAnimations":                    func() { gp.script.L.PushGoFunction(playAnimations(gp)) },
-		"PlayMusic":                         func() { gp.script.L.PushGoFunction(playMusic(gp)) },
-		"StopMusic":                         func() { gp.script.L.PushGoFunction(stopMusic(gp)) },
-		"SetMusicParam":                     func() { gp.script.L.PushGoFunction(setMusicParam(gp)) },
-		"PlaySound":                         func() { gp.script.L.PushGoFunction(playSound(gp)) },
-		"SetWaypoint":                       func() { gp.script.L.PushGoFunction(setWaypoint(gp)) },
-		"RemoveWaypoint":                    func() { gp.script.L.PushGoFunction(removeWaypoint(gp)) },
-		"Rand":                              func() { gp.script.L.PushGoFunction(randFunc(gp)) },
-		"Sleep":                             func() { gp.script.L.PushGoFunction(sleepFunc(gp)) },
-		"EndGame":                           func() { gp.script.L.PushGoFunction(endGameFunc(gp)) },
-	})
-	gp.script.L.SetMetaTable(-2)
-	gp.script.L.SetGlobal("Script")
+	gp.script = makeNewGameScript()
+	initLuaState(gp.script.L, gp, player, string(game_key) != "")
 
-	gp.script.L.NewTable()
-	LuaPushSmartFunctionTable(gp.script.L, FunctionTable{
-		"Active": func() {
-			gp.script.L.PushGoFunction(
-				func(L *lua.State) int {
-					L.PushBoolean(game_key != "")
-					return 1
-				})
-		},
-		"Side":                func() { gp.script.L.PushGoFunction(netSideFunc(gp)) },
-		"UpdateState":         func() { gp.script.L.PushGoFunction(updateStateFunc(gp)) },
-		"UpdateExecs":         func() { gp.script.L.PushGoFunction(updateExecsFunc(gp)) },
-		"Wait":                func() { gp.script.L.PushGoFunction(netWaitFunc(gp)) },
-		"LatestStateAndExecs": func() { gp.script.L.PushGoFunction(netLatestStateAndExecsFunc(gp)) },
-	})
-	gp.script.L.SetMetaTable(-2)
-	gp.script.L.SetGlobal("Net")
-
-	registerUtilityFunctions(gp.script.L)
 	if player.Lua_store != nil {
 		loadGameStateRaw(gp, gp.script.L, player.Game_state)
 		err := LuaDecodeTable(bytes.NewBuffer(player.Lua_store), gp.script.L, gp.game)
@@ -145,6 +160,7 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 	}
 
 	if game_key == "" {
+		logging.Warn("!~! DOSTRING !~!", "progpath", path)
 		res := gp.script.L.DoString(string(prog))
 		if res != nil {
 			logging.Error("DoString failed", "script", path, "prog", prog, "res", res)
@@ -152,7 +168,6 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 		}
 	}
 
-	gp.script.sync = make(chan struct{})
 	logging.Info("Sync", "gp.script.sync", gp.script.sync)
 
 	// if resp.Game.Denizens_id ==
@@ -240,6 +255,8 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 			}
 			gp.script.L.SetGlobal("__data")
 			gp.script.L.SetExecutionLimit(250000)
+
+			gp.game = makeGameTheWrongWay()
 			if player.No_init {
 				gp.script.syncStart()
 				loadGameStateRaw(gp, gp.script.L, player.Game_state)
@@ -322,6 +339,11 @@ func (gs *gameScript) OnRound(g *Game) {
 		gs.OnRoundWaiting(g)
 		return
 	}
+
+	if gs == nil || gs.L == nil {
+		panic(fmt.Errorf("gameScript.OnRound called on invalid gameScript: %v", *gs))
+	}
+
 	go func() {
 		// // round begins automatically
 		// <-round_middle
@@ -329,11 +351,9 @@ func (gs *gameScript) OnRound(g *Game) {
 		//   <-action stuff
 		// <- round end
 		// <- round end done
-		base.DeprecatedLog().Printf("Game script: %p", gs)
-		base.DeprecatedLog().Printf("Lua state: %p", gs.L)
-		gs.L.SetExecutionLimit(250000)
 		cmd := fmt.Sprintf("RoundStart(%t, %d)", g.Side == SideExplorers, (g.Turn+1)/2)
-		base.DeprecatedLog().Printf("cmd: '%s'", cmd)
+		logging.Info("gameScript.OnRound", "script", gs, "state", gs.L, "cmd", cmd)
+		gs.L.SetExecutionLimit(250000)
 		gs.L.DoString(cmd)
 
 		// signals to the game that we're done with the startup stuff
@@ -734,16 +754,19 @@ func chooserFromFile(gp *GamePanel) lua.LuaGoFunction {
 
 func loadHouse(gp *GamePanel) lua.LuaGoFunction {
 	return func(L *lua.State) int {
+		logging.Info("in ur loadHouse")
 		if !LuaCheckParamsOk(L, "LoadHouse", LuaString) {
+			logging.Error("LuaCheckParamsOk rejection: LoadHouse(LuaString)")
 			return 0
 		}
 		gp.script.syncStart()
 		defer gp.script.syncEnd()
 
 		name := L.ToString(-1)
+		logging.Info("in ur loadHouse", "loadin ur house", name)
 		def := house.MakeHouseFromName(name)
 		if def == nil || len(def.Floors) == 0 {
-			base.DeprecatedError().Printf("No house exists with the name '%s'.", name)
+			logging.Error("no house with given name", "name", name)
 			return 0
 		}
 		// TODO(tmckee): this is a bug; we will get a nil sprite manager from
@@ -751,13 +774,12 @@ func loadHouse(gp *GamePanel) lua.LuaGoFunction {
 		gp.game = makeGame(def, gp.game.GetSpriteManager())
 		gp.game.viewer.Edit_mode = true
 		gp.game.script = gp.script
-		base.DeprecatedLog().Printf("script = %p", gp.game.script)
 
-		gp.AnchorBox = gui.MakeAnchorBox(gui.Dims{1024, 768})
-		gp.AnchorBox.AddChild(gp.game.viewer, gui.Anchor{0.5, 0.5, 0.5, 0.5})
-		gp.AnchorBox.AddChild(MakeOverlay(gp.game), gui.Anchor{0.5, 0.5, 0.5, 0.5})
+		gp.AnchorBox = gui.MakeAnchorBox(gui.Dims{Dx: 1024, Dy: 768})
+		gp.AnchorBox.AddChild(gp.game.viewer, gui.Anchor{Wx: 0.5, Wy: 0.5, Bx: 0.5, By: 0.5})
+		gp.AnchorBox.AddChild(MakeOverlay(gp.game), gui.Anchor{Wx: 0.5, Wy: 0.5, Bx: 0.5, By: 0.5})
 
-		base.DeprecatedLog().Printf("Done making stuff")
+		logging.Debug("done 'LouseHouse'")
 		return 0
 	}
 }
@@ -1157,6 +1179,7 @@ func pickFromN(gp *GamePanel) lua.LuaGoFunction {
 			}
 			done <- struct{}{}
 		}
+		logging.Info("HHHHUUUUUUUUUUUUUUUUIIIIIIIIIIIIII!")
 		chooser = hui.MakeRosterChooser(options, selector, on_complete, nil)
 		gp.script.syncStart()
 		gp.AddChild(chooser, gui.Anchor{0.5, 0.5, 0.5, 0.5})

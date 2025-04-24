@@ -189,9 +189,11 @@ func LuaPushSmartFunctionTable(L *lua.State, ft FunctionTable) {
 	for n, f := range ft {
 		myft[n] = f
 	}
-	names := make([]string, len(myft))[0:0]
+	names := make([]string, len(myft))
+	i := 0
 	for name := range myft {
-		names = append(names, name)
+		names[i] = name
+		i++
 	}
 	sort.Strings(names)
 	valid_selectors := "["

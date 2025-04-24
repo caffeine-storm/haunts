@@ -12,8 +12,11 @@ import (
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/house"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/mrgnet"
 	"github.com/go-gl-legacy/gl"
+	"github.com/runningwild/glop/cache"
+	"github.com/runningwild/glop/render/rendertest"
 	"github.com/runningwild/glop/sprite"
 	"github.com/runningwild/glop/util/algorithm"
 )
@@ -154,8 +157,8 @@ func (gdt *gameDataTransient) alloc() {
 	gdt.comm.script_to_game = make(chan interface{}, 1)
 	gdt.comm.game_to_script = make(chan interface{}, 1)
 
-	gdt.script = &gameScript{}
-	base.DeprecatedLog().Printf("script = %p", gdt.script)
+	gdt.script = makeNewGameScript()
+	logging.Info("initing gdt.script to half-initialized gameScript (see #25)")
 }
 
 type gameDataPrivate struct {
@@ -838,6 +841,15 @@ func (g *Game) setup() {
 	g.Ai.intruders = inactiveAi{}
 }
 
+func makeGameTheWrongWay() *Game {
+	hdef := house.MakeHouseDef()
+	hdef.Name = "Lvl_01_Haunted_House"
+	mgr := sprite.MakeManager(rendertest.MakeDiscardingRenderQueue(), func(s string) cache.ByteBank {
+		return cache.MakeLockingByteBank(cache.MakeRamByteBank())
+	})
+	return makeGame(hdef, mgr)
+}
+
 func makeGame(h *house.HouseDef, spriteManager *sprite.Manager) *Game {
 	var g Game
 	g.Side = SideExplorers
@@ -1061,16 +1073,18 @@ func (g *Game) Think(dt int64) {
 	}
 
 	if g.current_exec != nil && g.Action_state != verifyingAction && g.Turn_state != turnStateMainPhaseOver {
+		logging.Trace("we've got an action to execute!")
 		ent := g.EntityById(g.current_exec.EntityId())
 		g.viewer.RemoveFloorDrawable(g.current_action)
 		g.current_action = ent.Actions[g.current_exec.ActionIndex()]
 		g.viewer.AddFloorDrawable(g.current_action)
 		ent.current_action = g.current_action
 		g.Action_state = verifyingAction
-		base.DeprecatedLog().Printf("ScriptComm: request exec verification")
+		logging.Info("ScriptComm: request exec verification")
 		g.comm.game_to_script <- g.current_exec
 	}
 
+	logging.Trace("check action_state", "val", g.Action_state)
 	if g.Action_state == verifyingAction {
 		select {
 		case <-g.comm.script_to_game:
@@ -1143,6 +1157,7 @@ func (g *Game) Think(dt int64) {
 			}
 		}
 	}
+	logging.Trace("about to two loop")
 	for i := 0; i < 2; i++ {
 		var los *spawnLos
 		var pix [][]byte
@@ -1208,6 +1223,7 @@ func (g *Game) Think(dt int64) {
 		}
 	}
 
+	logging.Trace("after-los", "current_action", g.current_action, "turn_state", g.Turn_state, "ents", g.Ents)
 	// Don't do any ai stuff if there is a pending action
 	if g.current_action != nil {
 		return
@@ -1234,6 +1250,8 @@ func (g *Game) Think(dt int64) {
 			return
 		}
 	}
+
+	logging.Trace("oh no, the AI is taking over!")
 	// Do Ai - if there is any to do
 	if g.Side == SideHaunt {
 		if g.Ai.minions.Active() {
@@ -1264,6 +1282,7 @@ func (g *Game) Think(dt int64) {
 		default:
 		}
 	}
+	logging.Trace("players?", "inact", g.player_inactive, "action_state", g.Action_state, "ai active?", []bool{g.Ai.intruders.Active(), g.Ai.denizens.Active(), g.Ai.minions.Active()})
 	if g.player_inactive && g.Action_state == noAction && !g.Ai.intruders.Active() && !g.Ai.denizens.Active() && !g.Ai.minions.Active() {
 		g.Turn_state = turnStateMainPhaseOver
 		base.DeprecatedLog().Printf("ScriptComm: change to turnStateMainPhaseOver")

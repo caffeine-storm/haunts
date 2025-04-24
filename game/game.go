@@ -28,11 +28,9 @@ type GamePanel struct {
 
 func MakeGamePanel(script string, p *Player, data map[string]string, game_key mrgnet.GameKey) *GamePanel {
 	var gp GamePanel
-	gp.AnchorBox = gui.MakeAnchorBox(gui.Dims{Dx: 1024, Dy: 768})
 	if p == nil {
 		p = &Player{}
 	}
-	logging.Info("MakeGamePanel", "script", script, "p", p)
 	if script == "" {
 		script = p.Script_path
 	}
@@ -61,7 +59,9 @@ func (gp *GamePanel) Think(ui *gui.Gui, t int64) {
 	}
 	dt := t - gp.last_think
 	gp.last_think = t
-	gp.game.Think(dt)
+	logging.TraceBracket(func() {
+		gp.game.Think(dt)
+	})
 
 	if gp.main_bar != nil {
 		if gp.game.selected_ent != nil {
@@ -73,9 +73,10 @@ func (gp *GamePanel) Think(ui *gui.Gui, t int64) {
 }
 
 func (gp *GamePanel) Draw(region gui.Region, ctx gui.DrawingContext) {
-	gp.AnchorBox.Draw(region, ctx)
 	region.PushClipPlanes()
 	defer region.PopClipPlanes()
+	logging.Info("GamePanel.Draw", "anchorbox", gp.AnchorBox)
+	gp.AnchorBox.Draw(region, ctx)
 }
 
 func (g *Game) SpawnEntity(spawn *Entity, x, y int) bool {

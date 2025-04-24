@@ -1,3 +1,6 @@
+- bug#25: make a game start!
+	- tag things that need cleanup with #25
+
 - bug#24: game/script.go:loadgameStateRaw reaches into the GamePanel to set a
   'Game' pointer; it should just load the state and let calling code make Game
 	objects if needed, I'd think
@@ -92,4 +95,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#25: <next>
+- bug#26: <next>
