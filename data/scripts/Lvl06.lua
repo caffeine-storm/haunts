@@ -62,6 +62,10 @@ function Init(data)
   store.ScoreCounter = 10
 end
 
+function OnStartup()
+	-- nothing to do
+end
+
 function intrudersSetup()
   if IsStoryMode() then
     intruder_names = {"Prof. Keith Evans"}

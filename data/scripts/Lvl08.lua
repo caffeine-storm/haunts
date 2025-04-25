@@ -69,6 +69,10 @@ function Init(data)
   store.execs = {} 
 end
 
+function OnStartup()
+	-- nothing to do
+end
+
 function RoundStart(intruders, round)
   if store.execs == nil then
     store.execs = {}

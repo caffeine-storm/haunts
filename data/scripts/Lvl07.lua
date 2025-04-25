@@ -62,6 +62,10 @@ function Init(data)
   store.MaxWaxIntruders = WaxIntruderCount()
 end
 
+function OnStartup()
+	-- nothing to do
+end
+
 function intrudersSetup()
 
   intruder_names = {"Reporter", "Teen"}

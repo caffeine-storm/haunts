@@ -80,6 +80,10 @@ print("poo4")
   store.OpCurrent = 0
 end
 
+function OnStartup()
+	-- nothing to do
+end
+
 function RoundStart(intruders, round)
   if store.execs == nil then
     store.execs = {}

@@ -28,6 +28,9 @@ function Init()
   Script.BindAi(teen, "smrt/teen.lua")
 end
  
+function OnStartup()
+	-- nothing to do
+end
 
 function RoundStart(intruders, round)
   if intruders then

@@ -16,6 +16,10 @@ function Init(data)
   Script.SetWaypoint("Waypoint1", "intruders", swaypoint_spawn[1].Pos, 1)
 end
 
+function OnStartup()
+	-- nothing to do
+end
+
 function intrudersSetup()
   intruder_names = {"Teen", "Occultist", "Ghost Hunter"}
   intruder_spawn = Script.GetSpawnPointsMatching("intruders_start")

@@ -1,4 +1,4 @@
- function Init(data)
+function Init(data)
   -- check data.map == "random" or something else
   Script.LoadHouse("tutorial_denizens")
   Script.DialogBox("ui/dialog/tutorial/denizens_tutorial_1_unit_selection.json")  
@@ -14,6 +14,10 @@
 
   swaypoint_spawn = Script.GetSpawnPointsMatching("Waypoint1")
   Script.SetWaypoint("Waypoint1", "denizens", swaypoint_spawn[1].Pos, 1)
+end
+
+function OnStartup()
+	-- nothing to do
 end
 
 function intrudersSetup()

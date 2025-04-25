@@ -60,6 +60,10 @@ function Init(data)
   store.TurnsRemaining = 30
 end
 
+function OnStartup()
+	-- nothing to do
+end
+
 function RoundStart(intruders, round)
   if store.execs == nil then
     store.execs = {}

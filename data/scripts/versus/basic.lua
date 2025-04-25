@@ -3,6 +3,10 @@ function Init(data)
   Script.LoadHouse("Lvl_01_Haunted_House") 
 end
 
+function OnStartup()
+	-- nothing to do
+end
+
 function RoundStart(intruders, round)
   Script.StartScript("Lvl01.lua")
   -- Script.StartScript(level_choices[1])

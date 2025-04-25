@@ -56,6 +56,10 @@ function Init(data)
     Script.SpawnEntitySomewhereInSpawnPoints("Teen", intruder_spawn, false)
 end
 
+function OnStartup()
+	-- nothing to do
+end
+
 function RoundStart(intruders, round)
   if round == 1 then
     Script.EndPlayerInteraction()

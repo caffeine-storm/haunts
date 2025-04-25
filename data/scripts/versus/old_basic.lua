@@ -53,6 +53,10 @@ function Init(data)
 
 end
 
+function OnStartup()
+	-- nothing to do
+end
+
 function intrudersSetup()
 
   if IsStoryMode() then

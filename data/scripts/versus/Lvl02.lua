@@ -51,6 +51,10 @@ function Init(data)
   store.nCountdown = 5
 end
 
+function OnStartup()
+	-- nothing to do
+end
+
 function intrudersSetup()
 
   if IsStoryMode() then
