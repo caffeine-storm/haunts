@@ -21,14 +21,25 @@ func givenAPlayer() *game.Player {
 	return &game.Player{}
 }
 
+func givenAHouseName() string {
+	return "tutorial"
+}
+
+func givenAScenario() game.Scenario {
+	return game.Scenario{
+		Script:    givenAScript(),
+		HouseName: givenAHouseName(),
+	}
+}
+
 var _ gametest.Drawer = (*game.GamePanel)(nil)
 
 func givenAGamePanel(render.RenderQueueInterface) gametest.Drawer {
-	scriptString := givenAScript()
+	scenario := givenAScenario()
 	player := givenAPlayer()
 	noSpecialData := map[string]string{}
 	noGameKey := mrgnet.GameKey("")
-	return game.MakeGamePanel(scriptString, player, noSpecialData, noGameKey)
+	return game.MakeGamePanel(scenario, player, noSpecialData, noGameKey)
 }
 
 func TestGamePanel(t *testing.T) {

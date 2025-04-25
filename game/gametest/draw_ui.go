@@ -6,6 +6,7 @@ import (
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/globals"
+	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/gui/guitest"
@@ -102,6 +103,7 @@ func RunOtherDrawingTest(objectCreator func(render.RenderQueueInterface) Drawer,
 		queue.Purge()
 
 		ctx := GivenADrawingContext(windowRegion.Dims)
+		registry.LoadAllRegistries()
 		base.InitDictionaries(ctx)
 		texture.Init(queue)
 
