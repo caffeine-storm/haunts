@@ -157,8 +157,8 @@ func InsertOnlineMenu(ui gui.WidgetParent) error {
 			ui.RemoveChild(&sm)
 			err := InsertMapChooser(
 				ui,
-				func(name string) {
-					ui.AddChild(MakeGamePanel(name, nil, nil, resp.Game_key))
+				func(scenario Scenario) {
+					ui.AddChild(MakeGamePanel(scenario, nil, nil, resp.Game_key))
 				},
 				InsertOnlineMenu,
 			)
@@ -321,7 +321,9 @@ func (sm *OnlineMenu) Think(g *gui.Gui, t int64) {
 								return
 							}
 							sm.ui.RemoveChild(sm)
-							sm.ui.AddChild(MakeGamePanel("", nil, nil, game_key))
+							// TODO(tmckee:#25): we need a real scenario here
+							panic(fmt.Errorf("#25: we need to figure out which scenario"))
+							sm.ui.AddChild(MakeGamePanel(Scenario{}, nil, nil, game_key))
 						}()
 					} else {
 						go func() {
@@ -350,7 +352,8 @@ func (sm *OnlineMenu) Think(g *gui.Gui, t int64) {
 								return
 							}
 							sm.ui.RemoveChild(sm)
-							sm.ui.AddChild(MakeGamePanel("", nil, nil, game_key))
+							panic(fmt.Errorf("#25: we need to figure out which scenario"))
+							sm.ui.AddChild(MakeGamePanel(Scenario{}, nil, nil, game_key))
 						}()
 					}
 				}

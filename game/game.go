@@ -26,15 +26,20 @@ type GamePanel struct {
 	game   *Game
 }
 
-func MakeGamePanel(script string, p *Player, data map[string]string, game_key mrgnet.GameKey) *GamePanel {
+type Scenario struct {
+	Script    string
+	HouseName string
+}
+
+func MakeGamePanel(scenario Scenario, p *Player, data map[string]string, game_key mrgnet.GameKey) *GamePanel {
 	var gp GamePanel
 	if p == nil {
 		p = &Player{}
 	}
-	if script == "" {
-		script = p.Script_path
+	if scenario.Script == "" {
+		scenario.Script = p.Script_path
 	}
-	startGameScript(&gp, script, p, data, game_key)
+	startGameScript(&gp, scenario, p, data, game_key)
 	return &gp
 }
 

@@ -157,8 +157,9 @@ func (gdt *gameDataTransient) alloc() {
 	gdt.comm.script_to_game = make(chan interface{}, 1)
 	gdt.comm.game_to_script = make(chan interface{}, 1)
 
-	gdt.script = makeNewGameScript()
-	logging.Info("initing gdt.script to half-initialized gameScript (see #25)")
+	// XXX: #25: perhaps a nil .script is something we should live with?
+	// gdt.script = makeNewGameScript()
+	logging.Info("gdt.alloc leaving gdt.script as nil")
 }
 
 type gameDataPrivate struct {
@@ -841,9 +842,9 @@ func (g *Game) setup() {
 	g.Ai.intruders = inactiveAi{}
 }
 
-func makeGameTheWrongWay() *Game {
-	hdef := house.MakeHouseDef()
-	hdef.Name = "Lvl_01_Haunted_House"
+func makeGameTheWrongWay(scenario Scenario) *Game {
+	logging.Debug("and now for the wrong (but maybe less-wrong?) way")
+	hdef := house.MakeHouseFromName(scenario.HouseName)
 	mgr := sprite.MakeManager(rendertest.MakeDiscardingRenderQueue(), func(s string) cache.ByteBank {
 		return cache.MakeLockingByteBank(cache.MakeRamByteBank())
 	})
@@ -1084,7 +1085,6 @@ func (g *Game) Think(dt int64) {
 		g.comm.game_to_script <- g.current_exec
 	}
 
-	logging.Trace("check action_state", "val", g.Action_state)
 	if g.Action_state == verifyingAction {
 		select {
 		case <-g.comm.script_to_game:
@@ -1157,7 +1157,6 @@ func (g *Game) Think(dt int64) {
 			}
 		}
 	}
-	logging.Trace("about to two loop")
 	for i := 0; i < 2; i++ {
 		var los *spawnLos
 		var pix [][]byte
@@ -1223,7 +1222,6 @@ func (g *Game) Think(dt int64) {
 		}
 	}
 
-	logging.Trace("after-los", "current_action", g.current_action, "turn_state", g.Turn_state, "ents", g.Ents)
 	// Don't do any ai stuff if there is a pending action
 	if g.current_action != nil {
 		return
@@ -1251,7 +1249,6 @@ func (g *Game) Think(dt int64) {
 		}
 	}
 
-	logging.Trace("oh no, the AI is taking over!")
 	// Do Ai - if there is any to do
 	if g.Side == SideHaunt {
 		if g.Ai.minions.Active() {
@@ -1282,7 +1279,6 @@ func (g *Game) Think(dt int64) {
 		default:
 		}
 	}
-	logging.Trace("players?", "inact", g.player_inactive, "action_state", g.Action_state, "ai active?", []bool{g.Ai.intruders.Active(), g.Ai.denizens.Active(), g.Ai.minions.Active()})
 	if g.player_inactive && g.Action_state == noAction && !g.Ai.intruders.Active() && !g.Ai.denizens.Active() && !g.Ai.minions.Active() {
 		g.Turn_state = turnStateMainPhaseOver
 		base.DeprecatedLog().Printf("ScriptComm: change to turnStateMainPhaseOver")

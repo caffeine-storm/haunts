@@ -21,7 +21,7 @@ type Option interface {
 	// and is also the index into the map selected.  hovered indicates whether
 	// or not the mouse is over this particular option.  selected is a map from
 	// index to hether or not that option is selected right now.
-	String() string
+	Scenario() Scenario
 	Draw(x, y, dx int)
 	DrawInfo(x, y, dx, dy int)
 	Height() int
@@ -145,7 +145,9 @@ type chooseLayout struct {
 }
 
 type OptionBasic struct {
+	// TODO(tmckee:25): rename 'Id' to ScriptPath or smth
 	Id           string
+	HouseName    string
 	Small        texture.Object
 	Large        texture.Object
 	Text         string
@@ -155,8 +157,11 @@ type OptionBasic struct {
 	was_selected bool
 }
 
-func (ob *OptionBasic) String() string {
-	return ob.Id
+func (ob *OptionBasic) Scenario() Scenario {
+	return Scenario{
+		ob.Id,
+		ob.HouseName,
+	}
 }
 func (ob *OptionBasic) Draw(x, y, dx int) {
 	gl.Color4ub(255, 255, 255, ob.alpha)
@@ -210,7 +215,7 @@ type Chooser struct {
 	last_t int64
 }
 
-func InsertMapChooser(ui gui.WidgetParent, chosen func(string), resert func(ui gui.WidgetParent) error) error {
+func InsertMapChooser(ui gui.WidgetParent, chosen func(Scenario), resert func(ui gui.WidgetParent) error) error {
 	var bops []OptionBasic
 	datadir := base.GetDataDir()
 	err := base.LoadAndProcessObject(filepath.Join(datadir, "ui", "start", "versus", "map_select.json"), "json", &bops)
@@ -258,7 +263,7 @@ func InsertMapChooser(ui gui.WidgetParent, chosen func(string), resert func(ui g
 		for i := range ch.options {
 			if ch.selected[i] {
 				ui.RemoveChild(&ch)
-				chosen(ch.options[i].String())
+				chosen(ch.options[i].Scenario())
 			}
 		}
 	}
@@ -285,7 +290,7 @@ func InsertMapChooser(ui gui.WidgetParent, chosen func(string), resert func(ui g
 	return nil
 }
 
-func MakeChooser(opts []Option) (*Chooser, <-chan []string, error) {
+func MakeChooser(opts []Option) (*Chooser, <-chan []Scenario, error) {
 	var ch Chooser
 	datadir := base.GetDataDir()
 	err := base.LoadAndProcessObject(filepath.Join(datadir, "ui", "chooser", "layout.json"), "json", &ch.layout)
@@ -309,17 +314,17 @@ func MakeChooser(opts []Option) (*Chooser, <-chan []string, error) {
 	ch.layout.Down.f = func(interface{}) {
 		ch.layout.Options.Down()
 	}
-	done := make(chan []string, 1)
+	done := make(chan []Scenario, 1)
 	ch.selected = make(map[int]bool)
 	ch.layout.Back.f = func(interface{}) {
 		done <- nil
 		close(done)
 	}
 	ch.layout.Next.f = func(interface{}) {
-		var res []string
+		var res []Scenario
 		for i := range ch.options {
 			if ch.selected[i] {
-				res = append(res, ch.options[i].String())
+				res = append(res, ch.options[i].Scenario())
 			}
 		}
 		done <- res

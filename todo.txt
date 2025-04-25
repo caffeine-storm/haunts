@@ -1,5 +1,8 @@
 - bug#25: make a game start!
 	- tag things that need cleanup with #25
+	- ... right now, we call makeGamePanel which inits a LuaState
+		- but then we makeGameTheWrongWay which makes a new GameScript instance
+		  that does not have its LuaState initialized...
 
 - bug#24: game/script.go:loadgameStateRaw reaches into the GamePanel to set a
   'Game' pointer; it should just load the state and let calling code make Game

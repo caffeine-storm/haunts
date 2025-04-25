@@ -1,134 +1,146 @@
 [
-  {
-    "Id": "Tutorial01.lua",
-    "Small": {
-      "Path": "ui/start/versus/intruders.png"
+    {
+        "Id": "Tutorial01.lua",
+        "HouseName": "tutorial_intruders",
+        "Small": {
+            "Path": "ui/start/versus/intruders.png"
+        },
+        "Large": {
+            "Path": "ui/start/versus/lvl_01.png"
+        },
+        "Text": "Intruders Tutorial - Learn how to play The Intruders.",
+        "Size": 20
     },
-    "Large": {
-      "Path": "ui/start/versus/lvl_01.png"
+    {
+        "Id": "Tutorial02.lua",
+        "HouseName": "tutorial_denizens",
+        "Small": {
+            "Path": "ui/start/versus/denizens.png"
+        },
+        "Large": {
+            "Path": "ui/start/versus/lvl_01.png"
+        },
+        "Text": "Denizens Tutorial - Learn how to play The Denizens.",
+        "Size": 20
     },
-    "Text": "Intruders Tutorial - Learn how to play The Intruders.",
-    "Size": 20
-  },
-  {
-    "Id": "Tutorial02.lua",
-    "Small": {
-      "Path": "ui/start/versus/denizens.png"
+    {
+        "Id": "Lvl01.lua",
+        "HouseName": "Lvl_01_Haunted_House",
+        "Small": {
+            "Path": "ui/start/versus/master.png"
+        },
+        "Large": {
+            "Path": "ui/start/versus/lvl_01.png"
+        },
+        "Text": "1892 -- Cornelius Bosch seeks to conquer death by enslaving the spirits of the dead, but Elias Tyree has come to the door, pledging to end his dark experiments.",
+        "Size": 20
     },
-    "Large": {
-      "Path": "ui/start/versus/lvl_01.png"
+    {
+        "Id": "Lvl02.lua",
+        "HouseName": "Lvl_02_Basement_Lab",
+        "Small": {
+            "Path": "ui/start/versus/golem.png"
+        },
+        "Large": {
+            "Path": "ui/start/versus/lvl_02.png"
+        },
+        "Text": "1905 -- Bosch's final experiment, The Golem, lurks in the basement, but trying to steal its secrets might only make it a greater menace.",
+        "Size": 20
     },
-    "Text": "Denizens Tutorial - Learn how to play The Denizens.",
-    "Size": 20
-  },
-  {
-    "Id": "Lvl01.lua",
-    "Small": {
-      "Path": "ui/start/versus/master.png"
+    {
+        "Id": "Lvl03.lua",
+        "HouseName": "Lvl_03_Sanitorium",
+        "Small": {
+            "Path": "ui/start/versus/scientist.png"
+        },
+        "Large": {
+            "Path": "ui/start/versus/lvl_03.png"
+        },
+        "Text": "1918 -- Dr. Tyree has turned the house of his family's enemies into a sanitorium for shell-shocked soldiers, and a laboratory for his own evil experiments.",
+        "Size": 20
     },
-    "Large": {
-      "Path": "ui/start/versus/lvl_01.png"
+    {
+        "Id": "Lvl04.lua",
+        "HouseName": "Lvl_04_Catacombs",
+        "Small": {
+            "Path": "ui/start/versus/vampire.png"
+        },
+        "Large": {
+            "Path": "ui/start/versus/lvl_04.png"
+        },
+        "Text": "1926 -- The Duchess Orlac flourishes in the preternatural darkness of the catacombs beneath the shuttered Tyree Sanitorium.",
+        "Size": 20
     },
-    "Text": "1892 -- Cornelius Bosch seeks to conquer death by enslaving the spirits of the dead, but Elias Tyree has come to the door, pledging to end his dark experiments.",
-    "Size": 20
-  },
-  {
-    "Id": "Lvl02.lua",
-    "Small": {
-      "Path": "ui/start/versus/golem.png"
+    {
+        "Id": "Lvl05.lua",
+        "HouseName": "lvl_05_museum",
+        "Small": {
+            "Path": "ui/start/versus/ancient-one.png"
+        },
+        "Large": {
+            "Path": "ui/start/versus/lvl_04.png"
+        },
+        "Text": "1935 -- Museum and stuff.",
+        "Size": 20
     },
-    "Large": {
-      "Path": "ui/start/versus/lvl_02.png"
+    {
+        "Id": "Lvl06.lua",
+        "HouseName": "Lvl_06_creature_feature",
+        "Small": {
+            "Path": "ui/start/versus/cult-leader.png"
+        },
+        "Large": {
+            "Path": "ui/start/versus/lvl_04.png"
+        },
+        "Text": "1942 -- Creature Feature.",
+        "Size": 20
     },
-    "Text": "1905 -- Bosch's final experiment, The Golem, lurks in the basement, but trying to steal its secrets might only make it a greater menace.",
-    "Size": 20
-  },
-  {
-    "Id": "Lvl03.lua",
-    "Small": {
-      "Path": "ui/start/versus/scientist.png"
+    {
+        "Id": "Lvl07.lua",
+        "HouseName": "Lvl_07_Waxworks",
+        "Small": {
+            "Path": "ui/start/versus/psychopath.png"
+        },
+        "Large": {
+            "Path": "ui/start/versus/lvl_01.png"
+        },
+        "Text": "1958 - Waxworks",
+        "Size": 20
     },
-    "Large": {
-      "Path": "ui/start/versus/lvl_03.png"
+    {
+        "Id": "Lvl08.lua",
+        "HouseName": "Lvl_08_Nursery",
+        "Small": {
+            "Path": "ui/start/versus/child.png"
+        },
+        "Large": {
+            "Path": "ui/start/versus/lvl_01.png"
+        },
+        "Text": "1967 - Nursery",
+        "Size": 20
     },
-    "Text": "1918 -- Dr. Tyree has turned the house of his family's enemies into a sanitorium for shell-shocked soldiers, and a laboratory for his own evil experiments.",
-    "Size": 20
-  },
-  {
-    "Id": "Lvl04.lua",
-    "Small": {
-      "Path": "ui/start/versus/vampire.png"
+    {
+        "Id": "Lvl09.lua",
+        "HouseName": "Lvl_09_Gantlet",
+        "Small": {
+            "Path": "ui/start/versus/scientist2.png"
+        },
+        "Large": {
+            "Path": "ui/start/versus/lvl_01.png"
+        },
+        "Text": "1972 - Pandaemonium",
+        "Size": 20
     },
-    "Large": {
-      "Path": "ui/start/versus/lvl_04.png"
-    },
-    "Text": "1926 -- The Duchess Orlac flourishes in the preternatural darkness of the catacombs beneath the shuttered Tyree Sanitorium.",
-    "Size": 20
-  },
-   {
-    "Id": "Lvl05.lua",
-    "Small": {
-      "Path": "ui/start/versus/ancient-one.png"
-    },
-    "Large": {
-      "Path": "ui/start/versus/lvl_04.png"
-    },
-    "Text": "1935 -- Museum and stuff.",
-    "Size": 20
-  },
-   {
-    "Id": "Lvl06.lua",
-    "Small": {
-      "Path": "ui/start/versus/cult-leader.png"
-    },
-    "Large": {
-      "Path": "ui/start/versus/lvl_04.png"
-    },
-    "Text": "1942 -- Creature Feature.",
-    "Size": 20
-  },
-  {
-    "Id": "Lvl07.lua",
-    "Small": {
-      "Path": "ui/start/versus/psychopath.png"
-    },
-    "Large": {
-      "Path": "ui/start/versus/lvl_01.png"
-    },
-    "Text": "1958 - Waxworks",
-    "Size": 20
-  },
-  {
-    "Id": "Lvl08.lua",
-    "Small": {
-      "Path": "ui/start/versus/child.png"
-    },
-    "Large": {
-      "Path": "ui/start/versus/lvl_01.png"
-    },
-    "Text": "1967 - Nursery",
-    "Size": 20
-  },
-  {
-    "Id": "Lvl09.lua",
-    "Small": {
-      "Path": "ui/start/versus/scientist2.png"
-    },
-    "Large": {
-      "Path": "ui/start/versus/lvl_01.png"
-    },
-    "Text": "1972 - Pandaemonium",
-    "Size": 20
-  },
-  {
-    "Id": "Lvl10.lua",
-    "Small": {
-      "Path": "ui/start/versus/eidolon.png"
-    },
-    "Large": {
-      "Path": "ui/start/versus/lvl_01.png"
-    },
-    "Text": "1982 - Welcome to your nightmare",
-    "Size": 20
-  }
+    {
+        "Id": "Lvl10.lua",
+        "HouseName": "Lvl_10_Manse_Macabre",
+        "Small": {
+            "Path": "ui/start/versus/eidolon.png"
+        },
+        "Large": {
+            "Path": "ui/start/versus/lvl_01.png"
+        },
+        "Text": "1982 - Welcome to your nightmare",
+        "Size": 20
+    }
 ]

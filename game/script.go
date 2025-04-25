@@ -37,6 +37,10 @@ func (gs *gameScript) syncEnd() {
 	gs.sync <- struct{}{}
 }
 
+func (gs *gameScript) mustRunString(cmd string) {
+	gs.L.MustDoString(cmd)
+}
+
 func initLuaState(ret *lua.State, gp *GamePanel, player *Player, isOnline bool) {
 	ret.OpenLibs()
 	ret.SetExecutionLimit(25000)
@@ -126,21 +130,21 @@ func makeNewGameScript() *gameScript {
 	}
 }
 
-func startGameScript(gp *GamePanel, path string, player *Player, data map[string]string, game_key mrgnet.GameKey) {
+func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[string]string, game_key mrgnet.GameKey) {
 	// Clear out the panel, now the script can do whatever it wants
-	player.Script_path = path
+	player.Script_path = scenario.Script
 	gp.AnchorBox = gui.MakeAnchorBox(gui.Dims{Dx: 1024, Dy: 768})
-	logging.Info("startGameScript")
-	if path != "" && !filepath.IsAbs(path) {
-		path = filepath.Join(base.GetDataDir(), "scripts", filepath.FromSlash(path))
+	logging.Info("startGameScript", "scenario", scenario)
+	if scenario.Script != "" && !filepath.IsAbs(scenario.Script) {
+		scenario.Script = filepath.Join(base.GetDataDir(), "scripts", filepath.FromSlash(scenario.Script))
 	}
 
 	// The game script runs in a separate go routine and functions that need to
 	// communicate with the game will do so via channels - DUH why did i even
 	// write this comment?
-	prog, err := os.ReadFile(path)
+	prog, err := os.ReadFile(scenario.Script)
 	if err != nil {
-		logging.Error("Unable to load game script", "path", path, "err", err)
+		logging.Error("Unable to load game script", "scenario", scenario, "err", err)
 		return
 	}
 
@@ -160,12 +164,8 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 	}
 
 	if game_key == "" {
-		logging.Warn("!~! DOSTRING !~!", "progpath", path)
-		res := gp.script.L.DoString(string(prog))
-		if res != nil {
-			logging.Error("DoString failed", "script", path, "prog", prog, "res", res)
-			panic(fmt.Errorf("DoString failed"))
-		}
+		logging.Warn("!~! DOSTRING !~!", "progpath", scenario.Script)
+		gp.script.mustRunString(string(prog))
 	}
 
 	logging.Info("Sync", "gp.script.sync", gp.script.sync)
@@ -203,7 +203,7 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 				}
 				res := gp.script.L.DoString(string(prog))
 				if res != nil {
-					base.DeprecatedError().Printf("There was an error running script %s:\n%s\n%s", path, prog, res)
+					logging.Error("script error", "script_path", scenario.Script, "script_contents", prog, "err", res)
 					return
 				}
 				if len(resp.Game.Execs) > 0 {
@@ -223,8 +223,9 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 						// game was after we finished our turn and then just wait.
 						states = resp.Game.After[len(resp.Game.Execs)-1]
 					}
+					logging.Trace("startGameScript>[unnamed gr]>[network game]>[run server actions]>loadGameStateRaw")
 					loadGameStateRaw(gp, gp.script.L, string(states))
-					gp.script.L.DoString("OnStartup()")
+					gp.script.mustRunString("OnStartup()")
 
 					gp.game.net.game = resp.Game
 					gp.game.net.key = game_key
@@ -256,15 +257,19 @@ func startGameScript(gp *GamePanel, path string, player *Player, data map[string
 			gp.script.L.SetGlobal("__data")
 			gp.script.L.SetExecutionLimit(250000)
 
-			gp.game = makeGameTheWrongWay()
+			gp.game = makeGameTheWrongWay(scenario)
+			gp.game.script = gp.script
 			if player.No_init {
 				gp.script.syncStart()
+				logging.Trace("startGameScript>[unnamed gr]>gp.game-is-nil>loadGameStateRaw")
 				loadGameStateRaw(gp, gp.script.L, player.Game_state)
 				gp.game.script = gp.script
 				gp.script.syncEnd()
 			} else {
-				gp.script.L.DoString("Init(__data)")
-				gp.script.L.DoString("OnStartup()")
+				gp.script.mustRunString("print(tostring(Init))")
+				gp.script.mustRunString("print(tostring(__data))")
+				gp.script.mustRunString("Init(__data)")
+				gp.script.mustRunString("OnStartup()")
 				for i := range gp.game.Ents {
 					gp.game.Ents[i].Ai.Activate()
 				}
@@ -316,7 +321,7 @@ func (gs *gameScript) OnRoundWaiting(g *Game) {
 
 		gs.L.SetExecutionLimit(250000)
 		base.DeprecatedLog().Printf("Doing RoundEnd(%t, %d)", g.Side == SideExplorers, (g.Turn+1)/2)
-		gs.L.DoString(fmt.Sprintf("RoundEnd(%t, %d)", g.Side == SideExplorers, (g.Turn+1)/2))
+		gs.mustRunString(fmt.Sprintf("RoundEnd(%t, %d)", g.Side == SideExplorers, (g.Turn+1)/2))
 
 		base.DeprecatedLog().Printf("ScriptComm: Starting the RoundEnd phase out")
 		g.comm.script_to_game <- nil
@@ -333,14 +338,17 @@ func (gs *gameScript) OnRoundWaiting(g *Game) {
 // Lets the game know that the round middle can begin
 // Runs RoundEnd
 func (gs *gameScript) OnRound(g *Game) {
-	base.DeprecatedLog().Printf("Launching script.RoundStart")
+	logging.Debug("Launching script.RoundStart")
 	if (g.Turn%2 == 1) != (g.Side == SideHaunt) {
-		base.DeprecatedLog().Printf("SCRIPT: OnRoundWaiting")
+		logging.Debug("SCRIPT: OnRoundWaiting")
 		gs.OnRoundWaiting(g)
 		return
 	}
 
-	if gs == nil || gs.L == nil {
+	if gs == nil {
+		panic(fmt.Errorf("gameScript.OnRound called on nil gameScript!"))
+	}
+	if gs.L == nil {
 		panic(fmt.Errorf("gameScript.OnRound called on invalid gameScript: %v", *gs))
 	}
 
@@ -352,9 +360,9 @@ func (gs *gameScript) OnRound(g *Game) {
 		// <- round end
 		// <- round end done
 		cmd := fmt.Sprintf("RoundStart(%t, %d)", g.Side == SideExplorers, (g.Turn+1)/2)
-		logging.Info("gameScript.OnRound", "script", gs, "state", gs.L, "cmd", cmd)
+		logging.Debug("gameScript.OnRound", "script", gs, "state", gs.L, "cmd", cmd)
 		gs.L.SetExecutionLimit(250000)
-		gs.L.DoString(cmd)
+		gs.mustRunString(cmd)
 
 		// signals to the game that we're done with the startup stuff
 		g.comm.script_to_game <- nil
@@ -481,7 +489,11 @@ func startScript(gp *GamePanel, player *Player) lua.LuaGoFunction {
 		if res != nil {
 			base.DeprecatedError().Printf("Unable to properly autosave.")
 		}
-		startGameScript(gp, script, player, nil, gp.game.net.key)
+		scenario := Scenario{
+			Script:    script,
+			HouseName: gp.game.House.Name,
+		}
+		startGameScript(gp, scenario, player, nil, gp.game.net.key)
 		return 0
 	}
 }
@@ -498,6 +510,7 @@ func selectHouse(gp *GamePanel) lua.LuaGoFunction {
 			base.DeprecatedError().Printf("Error selecting map: %v", err)
 			return 0
 		}
+		logging.Trace("selectHouse>abox-addchild>UiSelectMap")
 		gp.AnchorBox.AddChild(selector, gui.Anchor{0.5, 0.5, 0.5, 0.5})
 		gp.script.syncEnd()
 
@@ -613,6 +626,7 @@ func loadGameStateRaw(gp *GamePanel, L *lua.State, state string) {
 	if viewer != nil {
 		gp.game.viewer.SetState(hv_state)
 	}
+	logging.Trace("loadGameStateRaw>abox-addchild>gameviewer+makeoverlay(game)")
 	gp.AnchorBox.AddChild(gp.game.viewer, gui.Anchor{0.5, 0.5, 0.5, 0.5})
 	gp.AnchorBox.AddChild(MakeOverlay(gp.game), gui.Anchor{0.5, 0.5, 0.5, 0.5})
 }
@@ -624,6 +638,7 @@ func loadGameState(gp *GamePanel) lua.LuaGoFunction {
 		}
 		gp.script.syncStart()
 		defer gp.script.syncEnd()
+		logging.Trace("loadGameState>loadGameStateRaw")
 		loadGameStateRaw(gp, L, L.ToString(-1))
 		return 0
 	}
@@ -730,20 +745,24 @@ func chooserFromFile(gp *GamePanel) lua.LuaGoFunction {
 		}
 		gp.script.syncStart()
 		defer gp.script.syncEnd()
+		// TODO(tmckee:#25): ummm... map_select.json doesn't seem to be something
+		// we should expect+need the user to point us at ... but it is what it is.
 		path := filepath.Join(base.GetDataDir(), L.ToString(-1))
 		chooser, done, err := makeChooserFromOptionBasicsFile(path)
 		if err != nil {
 			base.DeprecatedError().Printf("Error making chooser: %v", err)
 			return 0
 		}
+		logging.Trace("chooserFromFile>abox-addchild>chooser")
 		gp.AnchorBox.AddChild(chooser, gui.Anchor{0.5, 0.5, 0.5, 0.5})
 		gp.script.syncEnd()
 
+		// TODO(tmckee:#25): might want more info than just scenario.Script?
 		res := <-done
 		L.NewTable()
-		for i, s := range res {
+		for i, scenario := range res {
 			L.PushInteger(int64(i) + 1)
-			L.PushString(s)
+			L.PushString(scenario.Script)
 			L.SetTable(-3)
 		}
 		gp.script.syncStart()
@@ -775,6 +794,7 @@ func loadHouse(gp *GamePanel) lua.LuaGoFunction {
 		gp.game.viewer.Edit_mode = true
 		gp.game.script = gp.script
 
+		logging.Trace("loadHouse>abox-addchild>gameviewer+makeoverlay(game)")
 		gp.AnchorBox = gui.MakeAnchorBox(gui.Dims{Dx: 1024, Dy: 768})
 		gp.AnchorBox.AddChild(gp.game.viewer, gui.Anchor{Wx: 0.5, Wy: 0.5, Bx: 0.5, By: 0.5})
 		gp.AnchorBox.AddChild(MakeOverlay(gp.game), gui.Anchor{Wx: 0.5, Wy: 0.5, Bx: 0.5, By: 0.5})
@@ -808,6 +828,7 @@ func showMainBar(gp *GamePanel, player *Player) lua.LuaGoFunction {
 				LuaDoError(L, err.Error())
 				return 0
 			}
+			logging.Trace("showMainBar>abox-addchild>mainbar")
 			gp.AnchorBox.AddChild(gp.main_bar, gui.Anchor{0.5, 0, 0.5, 0})
 			system, err := MakeSystemMenu(gp, player)
 			if err != nil {
@@ -979,6 +1000,7 @@ func placeEntities(gp *GamePanel) lua.LuaGoFunction {
 			base.DeprecatedError().Printf("Unable to make entity placer: %v", err)
 			return 0
 		}
+		logging.Trace("placeEntities>abox-addchild>entityPlacer")
 		gp.AnchorBox.AddChild(ep, gui.Anchor{0, 0, 0, 0})
 		for i, kid := range gp.AnchorBox.GetChildren() {
 			base.DeprecatedLog().Printf("Kid[%d] = %s", i, kid.String())
@@ -1024,6 +1046,7 @@ func getAllEnts(gp *GamePanel) lua.LuaGoFunction {
 		}
 		gp.script.syncStart()
 		defer gp.script.syncEnd()
+		logging.Debug("LUA>Script.GetAllEnts", "numents", len(gp.game.Ents))
 		L.NewTable()
 		for i := range gp.game.Ents {
 			L.PushInteger(int64(i) + 1)
@@ -1064,6 +1087,7 @@ func dialogBox(gp *GamePanel) lua.LuaGoFunction {
 			base.DeprecatedError().Printf("Error making dialog: %v", err)
 			return 0
 		}
+		logging.Trace("dialogBox>abox-addchild>dialogBox")
 		gp.AnchorBox.AddChild(box, gui.Anchor{0.5, 0.5, 0.5, 0.5})
 		gp.script.syncEnd()
 
@@ -1901,7 +1925,7 @@ func registerUtilityFunctions(L *lua.State) {
 		for i := -n; i < 0; i++ {
 			res += LuaStringifyParam(L, i) + " "
 		}
-		base.DeprecatedLog().Printf("GameScript(%p): %s", L, res)
+		logging.Debug("GameScript::print", "L", L, "msg", res)
 		return 0
 	})
 }

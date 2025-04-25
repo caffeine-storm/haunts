@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"io"
-	"log/slog"
 	"math/rand"
 	"os"
 	"path/filepath"
@@ -25,6 +24,7 @@ import (
 	"github.com/go-gl-legacy/gl"
 	glopdebug "github.com/runningwild/glop/debug"
 	"github.com/runningwild/glop/gin"
+	"github.com/runningwild/glop/glog"
 	"github.com/runningwild/glop/gos"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
@@ -98,7 +98,7 @@ func init() {
 	runtime.LockOSThread()
 	gin.In().SetLogger(logging.InfoLogger())
 
-	logging.SetLoggingLevel(slog.LevelDebug)
+	logging.SetLoggingLevel(glog.LevelTrace)
 	sys = system.Make(gos.NewSystemInterface(), gin.In())
 
 	rand.Seed(100)

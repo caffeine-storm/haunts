@@ -92,9 +92,9 @@ func InsertStartMenu(ui gui.WidgetParent, layout StartLayout) error {
 		ui.RemoveChild(&sm)
 		err := InsertMapChooser(
 			ui,
-			func(name string) {
-				logging.Info("MenuVersus buttonf", "'name'", name)
-				ui.AddChild(MakeGamePanel(name, nil, nil, ""))
+			func(scenario Scenario) {
+				logging.Info("MenuVersus buttonf", "scenario", scenario)
+				ui.AddChild(MakeGamePanel(scenario, nil, nil, ""))
 			},
 			func(parent gui.WidgetParent) error {
 				return InsertStartMenu(parent, sm.Layout)

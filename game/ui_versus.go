@@ -19,7 +19,7 @@ import (
 //   Choose whatever
 // Place stuff down, blizitch
 
-func makeChooserFromOptionBasicsFile(path string) (*Chooser, <-chan []string, error) {
+func makeChooserFromOptionBasicsFile(path string) (*Chooser, <-chan []Scenario, error) {
 	var bops []OptionBasic
 	err := base.LoadAndProcessObject(path, "json", &bops)
 	if err != nil {
@@ -30,17 +30,17 @@ func makeChooserFromOptionBasicsFile(path string) (*Chooser, <-chan []string, er
 	return MakeChooser(opts)
 }
 
-func makeChooseGoalMenu() (*Chooser, <-chan []string, error) {
+func makeChooseGoalMenu() (*Chooser, <-chan []Scenario, error) {
 	path := filepath.Join(base.GetDataDir(), "ui", "start", "versus", "goals.json")
 	return makeChooserFromOptionBasicsFile(path)
 }
 
-func makeChooseSideMenu() (*Chooser, <-chan []string, error) {
+func makeChooseSideMenu() (*Chooser, <-chan []Scenario, error) {
 	path := filepath.Join(base.GetDataDir(), "ui", "start", "versus", "side.json")
 	return makeChooserFromOptionBasicsFile(path)
 }
 
-func makeChooseVersusMetaMenu() (*Chooser, <-chan []string, error) {
+func makeChooseVersusMetaMenu() (*Chooser, <-chan []Scenario, error) {
 	path := filepath.Join(base.GetDataDir(), "ui", "start", "versus", "meta.json")
 	return makeChooserFromOptionBasicsFile(path)
 }
@@ -111,17 +111,29 @@ func InsertVersusMenu(ui gui.WidgetParent, replace func(gui.WidgetParent) error)
 		ui.RemoveChild(chooser)
 		if m != nil && len(m) == 1 {
 			logging.Info("Versus Menu", "chose", m)
-			switch m[0] {
-			case "Select House":
-				ui.AddChild(MakeGamePanel("versus/basic.lua", nil, map[string]string{"map": "select"}, ""))
-			case "Random House":
-				ui.AddChild(MakeGamePanel("versus/basic.lua", nil, map[string]string{"map": "random"}, ""))
-			case "Continue":
-				ui.AddChild(MakeGamePanel("versus/basic.lua", nil, map[string]string{"map": "continue"}, ""))
-			default:
-				logging.Warn("unknown meta choice", "choice", m[0])
-				return
+			// TODO(tmckee:#25): we ought not use the GamePanel this way; we should
+			// AddChild some UI for selecting a map or roll the random choice now and
+			// build the GamePanel over the selected map. For now, everyone gets the
+			// tutorial house :p
+			scenario := Scenario{
+				Script:    "versus/basic.lua",
+				HouseName: "tutorial",
 			}
+			ui.AddChild(MakeGamePanel(scenario, nil, nil, ""))
+
+			/*
+				switch m[0] {
+				case "Select House":
+					ui.AddChild(MakeGamePanel("versus/basic.lua", nil, map[string]string{"map": "select"}, ""))
+				case "Random House":
+					ui.AddChild(MakeGamePanel("versus/basic.lua", nil, map[string]string{"map": "random"}, ""))
+				case "Continue":
+					ui.AddChild(MakeGamePanel("versus/basic.lua", nil, map[string]string{"map": "continue"}, ""))
+				default:
+					panic(fmt.Errorf("unknown meta choice: %v", m[0]))
+				}
+			*/
+
 		} else {
 			err := replace(ui)
 			if err != nil {

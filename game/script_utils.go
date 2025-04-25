@@ -4,11 +4,13 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
+	"io"
+	"sort"
+
 	"github.com/MobRulesGames/golua/lua"
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/house"
-	"io"
-	"sort"
+	"github.com/MobRulesGames/haunts/logging"
 )
 
 type luaEncodable int32
@@ -207,8 +209,9 @@ func LuaPushSmartFunctionTable(L *lua.State, ft FunctionTable) {
 
 	L.NewTable()
 	L.PushString("__index")
-	L.PushGoFunction(func(L *lua.State) int {
+	L.PushGoClosure(func(L *lua.State) int {
 		name := L.ToString(-1)
+		logging.Error("handling __index", "name", name)
 		if f, ok := myft[name]; ok {
 			f()
 		} else {
@@ -718,7 +721,7 @@ func LuaCheckParamsOk(L *lua.State, name string, params ...LuaType) bool {
 }
 
 func LuaDoError(L *lua.State, err_str string) {
-	base.DeprecatedError().Printf(err_str)
+	logging.Error("LuaDoError", "err_str", err_str)
 	L.PushString(err_str)
 	L.SetExecutionLimit(1)
 }
