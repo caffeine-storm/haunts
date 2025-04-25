@@ -211,7 +211,7 @@ func LuaPushSmartFunctionTable(L *lua.State, ft FunctionTable) {
 	L.PushString("__index")
 	L.PushGoClosure(func(L *lua.State) int {
 		name := L.ToString(-1)
-		logging.Error("handling __index", "name", name)
+		logging.Trace("handling __index", "name", name)
 		if f, ok := myft[name]; ok {
 			f()
 		} else {
@@ -738,6 +738,7 @@ func LuaNumParamsOk(L *lua.State, num_params int, name string) bool {
 
 func LuaStringifyParam(L *lua.State, index int) string {
 	if L.IsTable(index) {
+		// TODO(tmckee:#26): we should implement this
 		str := "table <not implemented> {"
 		return str
 		first := true

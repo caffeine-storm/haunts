@@ -1,3 +1,5 @@
+- bug#26: LuaStringifyParam is stubbed and leading to useless debug output
+
 - bug#25: make a game start!
 	- tag things that need cleanup with #25
 	- ... right now, we call makeGamePanel which inits a LuaState
@@ -98,4 +100,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#26: <next>
+- bug#27: <next>
