@@ -2,15 +2,15 @@
   "Name": "restest",
   "Size": {
     "Name": "Small",
-    "Dx": 640,
-    "Dy": 640
+    "Dx": 512,
+    "Dy": 512
   },
   "Furniture": [],
   "WallTextures": [
     {
       "Defname": "Cobweb",
-      "X": 15.754118,
-      "Y": 1.2256411,
+      "X": 600.0,
+      "Y": 300.0,
       "Rot": 0,
       "Flip": false
     }

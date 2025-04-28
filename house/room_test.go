@@ -50,10 +50,34 @@ func loadRoom(roomName string) *house.Room {
 	return output
 }
 
+type CameraConfig struct {
+	focusx, focusy float32
+	angle          float32
+	zoom           float32
+	region         gui.Region
+}
+
 func RoomSpecs() {
 	base.SetDatadir("../data")
 
-	rendertest.WithGlForTest(1024, 768, func(sys system.System, queue render.RenderQueueInterface) {
+	testDimensions := gui.Dims{
+		Dx: 1024,
+		Dy: 768,
+	}
+	opaquealpha := byte(255)
+
+	camera := CameraConfig{
+		focusx: float32(256),
+		focusy: float32(256),
+		angle:  float32(62),
+		zoom:   float32(1.0),
+		region: gui.Region{
+			Point: gui.Point{X: 0, Y: 0},
+			Dims:  testDimensions,
+		},
+	}
+
+	rendertest.WithGlForTest(testDimensions.Dx, testDimensions.Dy, func(sys system.System, queue render.RenderQueueInterface) {
 		registry.LoadAllRegistries()
 		base.InitShaders(queue)
 		texture.Init(queue)
@@ -68,15 +92,7 @@ func RoomSpecs() {
 
 		Convey("drawing walls", func() {
 			room := loadRoom("restest.room")
-			region := gui.Region{
-				Point: gui.Point{X: 0, Y: 0},
-				Dims:  gui.Dims{Dx: 200, Dy: 200},
-			}
-			focusx := float32(0)
-			focusy := float32(0)
-			angle := float32(62)
-			zoom := float32(3.0)
-			floor, _, _, _, _, _ := house.MakeRoomMatsForTest(room, region, focusx, focusy, angle, zoom)
+			floor, _, _, _, _, _ := house.MakeRoomMatsForTest(room, camera.region, camera.focusx, camera.focusy, camera.angle, camera.zoom)
 
 			queue.Queue(func(render.RenderQueueState) {
 				// TODO(#12): having to remember to call some weird init function is
@@ -90,7 +106,7 @@ func RoomSpecs() {
 
 			queue.Queue(func(render.RenderQueueState) {
 				house.WithRoomRenderGlSettings(floor, func() {
-					room.RenderWallTextures(&floor, 255)
+					room.RenderWallTextures(&floor, opaquealpha)
 				})
 			})
 			queue.Purge()
@@ -103,15 +119,7 @@ func RoomSpecs() {
 			if restestRoom.Wall.Path == "" {
 				panic("the 'restest.room' file doesn't specify a texture for the walls")
 			}
-			region := gui.Region{
-				Point: gui.Point{X: 0, Y: 0},
-				Dims:  gui.Dims{Dx: 200, Dy: 200},
-			}
-			focusx := float32(0)
-			focusy := float32(0)
-			angle := float32(62)
-			zoom := float32(3.0)
-			floor, _, left, _, right, _ := house.MakeRoomMatsForTest(restestRoom, region, focusx, focusy, angle, zoom)
+			floor, _, left, _, right, _ := house.MakeRoomMatsForTest(restestRoom, camera.region, camera.focusx, camera.focusy, camera.angle, camera.zoom)
 
 			queue.Queue(func(render.RenderQueueState) {
 				restestRoom.SetupGlStuff(&house.RoomRealGl{})
@@ -121,12 +129,11 @@ func RoomSpecs() {
 
 			restestRoom.LoadAndWaitForTexturesForTest()
 
-			opaquealpha := byte(255)
 			noDrawables := []house.Drawable{}
 			var nilLos *house.LosTexture = nil
 			noFloorDrawers := []house.RenderOnFloorer{}
 			queue.Queue(func(render.RenderQueueState) {
-				restestRoom.Render(floor, left, right, zoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
+				restestRoom.Render(floor, left, right, camera.zoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
 			})
 			queue.Purge()
 
