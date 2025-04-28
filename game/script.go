@@ -372,14 +372,14 @@ func (gs *gameScript) OnRound(g *Game) {
 		base.DeprecatedLog().Printf("ScriptComm: Done with RoundStart")
 
 		for {
-			base.DeprecatedLog().Printf("ScriptComm: Waiting to verify action")
+			logging.Debug("ScriptComm", "state", "waiting to verify action")
 			_exec := <-g.comm.game_to_script
-			base.DeprecatedLog().Printf("ScriptComm: Got exec: %v", _exec)
+			logging.Debug("ScriptComm", "state", "got exec", "_exec", _exec)
 			if _exec == nil {
-				base.DeprecatedLog().Printf("ScriptComm: No more exec: bailing")
+				logging.Debug("ScriptComm", "state", "no more exec")
 				break
 			}
-			base.DeprecatedLog().Printf("ScriptComm: Verifying action")
+			logging.Debug("ScriptComm", "state", "verifying action")
 
 			exec := _exec.(ActionExec)
 			if vpath := exec.GetPath(); vpath != nil {
@@ -392,23 +392,18 @@ func (gs *gameScript) OnRound(g *Game) {
 					LuaPushPoint(gs.L, x, y)
 					gs.L.SetTable(-3)
 				}
-				base.DeprecatedLog().Printf("Pathlength: %d", len(vpath))
+				logging.Debug("got exec path", "pathlength", len(vpath))
 				gs.L.SetGlobal("__path")
 				LuaPushEntity(gs.L, g.EntityById(exec.EntityId()))
 				gs.L.SetGlobal("__ent")
 				cmd = fmt.Sprintf("__truncate = OnMove(__ent, __path)")
-				base.DeprecatedLog().Printf("cmd: '%s'", cmd)
+				logging.Debug("sending lua cmd", "cmd", cmd)
 				func() {
-					defer func() {
-						if r := recover(); r != nil {
-							base.DeprecatedError().Printf("OnMove(): %v", r)
-						}
-					}()
 					gs.L.DoString(cmd)
 					gs.L.GetGlobal("__truncate")
 					truncate := gs.L.ToInteger(-1)
 					gs.L.Pop(1)
-					base.DeprecatedLog().Printf("Truncating to length %d", truncate)
+					logging.Debug("exec.TruncatePath'ing", "len", truncate)
 					exec.TruncatePath(truncate)
 				}()
 			}
@@ -419,39 +414,39 @@ func (gs *gameScript) OnRound(g *Game) {
 			// being executed, we want to wait until then so that the game is in a
 			// stable state before we do anything.
 			<-g.comm.game_to_script
-			base.DeprecatedLog().Printf("ScriptComm: Got action secondary")
+			logging.Debug("ScriptComm", "state", "got action secondary")
 			// Run OnAction here
 			gs.L.SetExecutionLimit(250000)
 			exec.Push(gs.L, g)
 			str, err := base.ToGobToBase64([]ActionExec{exec})
 			if err != nil {
-				base.DeprecatedError().Printf("Unable to encode exec: %v", err)
-			} else {
-				gs.L.PushString("__encoded")
-				gs.L.PushString(str)
-				gs.L.SetTable(-3)
+				panic(fmt.Errorf("Unable to encode exec: %w", err))
 			}
+
+			gs.L.PushString("__encoded")
+			gs.L.PushString(str)
+			gs.L.SetTable(-3)
 
 			//      base.Log().Printf("exec: ", LuaStringifyParam(gs.L, -1))
 			gs.L.SetGlobal("__exec")
 			cmd = fmt.Sprintf("OnAction(%t, %d, %s)", g.Side == SideExplorers, (g.Turn+1)/2, "__exec")
-			base.DeprecatedLog().Printf("cmd: '%s'", cmd)
-			gs.L.DoString(cmd)
+			logging.Debug("sending lua cmd", "cmd", cmd)
+			gs.mustRunString(cmd)
 			g.comm.script_to_game <- nil
-			base.DeprecatedLog().Printf("ScriptComm: Done with OnAction")
+			logging.Debug("ScriptComm", "state", "done with OnAction")
 		}
 
 		gs.L.SetExecutionLimit(250000)
 		gs.L.DoString(fmt.Sprintf("RoundEnd(%t, %d)", g.Side == SideExplorers, (g.Turn+1)/2))
 
-		base.DeprecatedLog().Printf("ScriptComm: Starting the RoundEnd phase out")
+		logging.Debug("ScriptComm", "state", "starting the RoundEnd phase out")
 		g.comm.script_to_game <- nil
-		base.DeprecatedLog().Printf("ScriptComm: Starting the RoundEnd phase in")
+		logging.Debug("ScriptComm", "state", "starting the RoundEnd phase in")
 
 		// Signal that we're done with the round end
-		base.DeprecatedLog().Printf("ScriptComm: Done with the RoundEnd phase in")
+		logging.Debug("ScriptComm", "state", "finishing the RoundEnd phase in")
 		g.comm.script_to_game <- nil
-		base.DeprecatedLog().Printf("ScriptComm: Done with the RoundEnd phase out")
+		logging.Debug("ScriptComm", "state", "finishing the RoundEnd phase out")
 	}()
 }
 
