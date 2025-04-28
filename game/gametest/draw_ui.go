@@ -57,6 +57,7 @@ func RunDrawingTest(thingToDraw Drawer, testid rendertest.TestDataReference, and
 		ctx := GivenADrawingContext(windowRegion.Dims)
 		base.InitDictionaries(ctx)
 		texture.Init(queue)
+		base.InitShaders(queue)
 
 		// Draw it once to start loading textures.
 		queue.Queue(func(st render.RenderQueueState) {
@@ -106,6 +107,7 @@ func RunOtherDrawingTest(objectCreator func(render.RenderQueueInterface) Drawer,
 		registry.LoadAllRegistries()
 		base.InitDictionaries(ctx)
 		texture.Init(queue)
+		base.InitShaders(queue)
 
 		thingToDraw := objectCreator(queue)
 
