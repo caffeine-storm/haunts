@@ -1,6 +1,7 @@
 package base
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 
@@ -29,29 +30,25 @@ var vertex_shaders map[string]gl.Shader
 var fragment_shaders map[string]gl.Shader
 var shader_progs map[string]gl.Program
 
-var warned_names map[string]bool
-
 func EnableShader(name string) {
-	prog_obj, ok := shader_progs[name]
-	if ok {
-		gl.Program(gl.GLuint(prog_obj)).Use()
-	} else {
+	render.MustBeOnRenderThread()
+	if name == "" {
 		gl.Program(0).Use()
-		if name != "" && !warned_names[name] {
-			DeprecatedLog().Warn("Tried to use unknown shader", "name", name)
-			warned_names[name] = true
-		}
+		return
 	}
+
+	prog_obj, ok := shader_progs[name]
+	if !ok {
+		panic(fmt.Errorf("unknown shader %q", name))
+	}
+
+	prog_obj.Use()
 }
 
 func SetUniformI(shader, variable string, n int) {
 	prog, ok := shader_progs[shader]
 	if !ok {
-		if !warned_names[shader] {
-			DeprecatedLog().Warn("Tried to set a uniform in an unknown shader", "shader", shader)
-			warned_names[shader] = true
-		}
-		return
+		panic(fmt.Errorf("can't SetUniformI on an unknown shader %q", shader))
 	}
 	loc := gl.Program(prog).GetUniformLocation(variable)
 	gl.UniformLocation(loc).Uniform1i(n)
@@ -60,11 +57,7 @@ func SetUniformI(shader, variable string, n int) {
 func SetUniformF(shader, variable string, f float32) {
 	prog, ok := shader_progs[shader]
 	if !ok {
-		if !warned_names[shader] {
-			DeprecatedLog().Warn("Tried to set a uniform in an unknown shader", "shader", shader)
-			warned_names[shader] = true
-		}
-		return
+		panic(fmt.Errorf("can't SetUniformF on an unknown shader %q", shader))
 	}
 	loc := prog.GetUniformLocation(variable)
 	loc.Uniform1f(f)
@@ -75,7 +68,6 @@ func InitShaders(queue render.RenderQueueInterface) {
 		vertex_shaders = make(map[string]gl.Shader)
 		fragment_shaders = make(map[string]gl.Shader)
 		shader_progs = make(map[string]gl.Program)
-		warned_names = make(map[string]bool)
 		RemoveRegistry("shaders")
 		RegisterRegistry("shaders", make(map[string]*ShaderDef))
 		RegisterAllObjectsInDir("shaders", filepath.Join(GetDataDir(), "shaders"), ".json", "json")
