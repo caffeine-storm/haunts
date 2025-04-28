@@ -454,6 +454,7 @@ func doColour(room *Room, r, g, b, a, base_alpha byte) {
 }
 
 func WithRoomRenderGlSettings(modelView mathgl.Mat4, fn func()) {
+	render.MustBeOnRenderThread()
 	gl.Enable(gl.TEXTURE_2D)
 	gl.Enable(gl.BLEND)
 	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)

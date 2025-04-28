@@ -6,6 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
@@ -153,6 +154,7 @@ func (f *Floor) RoomFurnSpawnAtPos(x, y int) (room *Room, furn *Furniture, spawn
 }
 
 func (f *Floor) render(region gui.Region, focusx, focusy, angle, zoom float32, drawables []Drawable, los_tex *LosTexture, floor_drawers []RenderOnFloorer) {
+	logging.Trace("Floor.render", "rooms", f.Rooms, "region", region)
 	// TODO(tmckee): extract this "re-order rooms as RectObjects" stanza as a
 	// helper.
 	var ros []RectObject
@@ -203,7 +205,6 @@ func (f *Floor) render(region gui.Region, focusx, focusy, angle, zoom float32, d
 		bv := 255 - byte(v)
 		alpha_map[room] = byte((int(bv) * int(los_alpha)) >> 8)
 		los_map[room] = los_alpha
-		// room.render(floor, left, right, , 255)
 	}
 
 	// Second pass - this time we fill in the alpha that we should use for the
