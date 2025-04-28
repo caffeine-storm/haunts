@@ -259,6 +259,9 @@ func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[
 
 			gp.game = makeGameTheWrongWay(scenario)
 			gp.game.script = gp.script
+			gp.AnchorBox = gui.MakeAnchorBox(gui.Dims{Dx: 1024, Dy: 768})
+			gp.AnchorBox.AddChild(gp.game.viewer, gui.Anchor{Wx: 0.5, Wy: 0.5, Bx: 0.5, By: 0.5})
+			gp.AnchorBox.AddChild(MakeOverlay(gp.game), gui.Anchor{Wx: 0.5, Wy: 0.5, Bx: 0.5, By: 0.5})
 			if player.No_init {
 				gp.script.syncStart()
 				logging.Trace("startGameScript>[unnamed gr]>gp.game-is-nil>loadGameStateRaw")
