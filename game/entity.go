@@ -60,7 +60,7 @@ func SetAiMaker(f func(path string, g *Game, ent *Entity, dst *Ai, kind AiKind))
 
 func LoadAllEntities() {
 	base.RemoveRegistry("entities")
-	base.RegisterRegistry("entities", make(map[string]*entityDef))
+	base.RegisterRegistry("entities", make(map[string]*EntityDef))
 	basedir := base.GetDataDir()
 	base.RegisterAllObjectsInDir("entities", filepath.Join(basedir, "entities"), ".json", "json")
 	base.RegisterAllObjectsInDir("entities", filepath.Join(basedir, "objects"), ".json", "json")
@@ -233,7 +233,7 @@ const (
 	AiEvalPause
 )
 
-type entityDef struct {
+type EntityDef struct {
 	Name        string
 	Dx, Dy      int
 	Sprite_path base.Path
@@ -267,7 +267,7 @@ type entityDef struct {
 	ObjectEnt   *ObjectEnt
 }
 
-func (ei *entityDef) Side() Side {
+func (ei *EntityDef) Side() Side {
 	types := 0
 	if ei.ExplorerEnt != nil {
 		types++
@@ -306,7 +306,7 @@ func (ei *entityDef) Side() Side {
 
 	return SideNone
 }
-func (ei *entityDef) Dims() (int, int) {
+func (ei *EntityDef) Dims() (int, int) {
 	if ei.Dx <= 0 || ei.Dy <= 0 {
 		base.DeprecatedError().Printf("Entity '%s' didn't have its Dims set properly", ei.Name)
 		ei.Dx = 1
@@ -511,7 +511,7 @@ func (ei *EntityInst) CurrentRoom() int {
 
 type Entity struct {
 	Defname string
-	*entityDef
+	*EntityDef
 	EntityInst
 }
 
