@@ -1,1 +1,105 @@
-{"Name":"lvl9_mahogany_2","Size":{"Name":"Medium_B","Dx":15,"Dy":20},"Furniture":[{"Defname":"Armor 01 Black","X":14,"Y":17,"Rotation":0,"Flip":false},{"Defname":"Armor 01 Black","X":14,"Y":13,"Rotation":0,"Flip":false},{"Defname":"Armor 01 Black","X":14,"Y":9,"Rotation":0,"Flip":false},{"Defname":"Armor 01 Black","X":14,"Y":5,"Rotation":0,"Flip":false},{"Defname":"Armor 01 Black","X":14,"Y":1,"Rotation":0,"Flip":false},{"Defname":"Obelisk","X":6,"Y":8,"Rotation":0,"Flip":false},{"Defname":"Column 02 Black","X":13,"Y":19,"Rotation":0,"Flip":false},{"Defname":"Column 02 Black","X":1,"Y":19,"Rotation":0,"Flip":false}],"WallTextures":[{"Defname":"Window 03 - Gothic Peak","X":22.214083,"Y":3.18397,"Rot":0,"Flip":false},{"Defname":"Window 03 - Gothic Peak","X":22.0018,"Y":9.749833,"Rot":0,"Flip":false},{"Defname":"Window 03 - Gothic Peak","X":21.680199,"Y":16.060118,"Rot":0,"Flip":false},{"Defname":"Painting 02 Nude","X":7.5294414,"Y":27.414833,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_21_mahogany_medium_b.png"},"Wall":{"Path":"rooms/walls/wall_01.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_21_mahogany_medium_b.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Armor 01 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 14,
+            "Y": 17
+        },
+        {
+            "Defname": "Armor 01 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 14,
+            "Y": 13
+        },
+        {
+            "Defname": "Armor 01 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 14,
+            "Y": 9
+        },
+        {
+            "Defname": "Armor 01 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 14,
+            "Y": 5
+        },
+        {
+            "Defname": "Armor 01 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 14,
+            "Y": 1
+        },
+        {
+            "Defname": "Obelisk",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 6,
+            "Y": 8
+        },
+        {
+            "Defname": "Column 02 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 13,
+            "Y": 19
+        },
+        {
+            "Defname": "Column 02 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 1,
+            "Y": 19
+        }
+    ],
+    "Name": "lvl9_mahogany_2",
+    "Size": {
+        "Dx": 15,
+        "Dy": 20,
+        "Name": "Medium_B"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_01.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Window 03 - Gothic Peak",
+            "Flip": false,
+            "Rot": 0,
+            "X": 22.214083,
+            "Y": 3.18397
+        },
+        {
+            "Defname": "Window 03 - Gothic Peak",
+            "Flip": false,
+            "Rot": 0,
+            "X": 22.0018,
+            "Y": 9.749833
+        },
+        {
+            "Defname": "Window 03 - Gothic Peak",
+            "Flip": false,
+            "Rot": 0,
+            "X": 21.680199,
+            "Y": 16.060118
+        },
+        {
+            "Defname": "Painting 02 Nude",
+            "Flip": false,
+            "Rot": 0,
+            "X": 7.5294414,
+            "Y": 27.414833
+        }
+    ]
+}

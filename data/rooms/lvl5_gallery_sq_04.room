@@ -1,1 +1,56 @@
-{"Name":"lvl5_gallery_sq_04","Size":{"Name":"Small","Dx":10,"Dy":10},"Furniture":[{"Defname":"Armor","X":9,"Y":9,"Rotation":0,"Flip":false},{"Defname":"Armor 01 Black","X":9,"Y":0,"Rotation":0,"Flip":false},{"Defname":"Dress Form","X":5,"Y":5,"Rotation":0,"Flip":false},{"Defname":"SpawnRelic","X":0,"Y":9,"Rotation":0,"Flip":false}],"WallTextures":[{"Defname":"Plaque01","X":1.3935807,"Y":11.868576,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_02_maplewood_small.png"},"Wall":{"Path":"rooms/walls/wall_hatch_pattern.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_02_maplewood_small.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Armor",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 9,
+            "Y": 9
+        },
+        {
+            "Defname": "Armor 01 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 9,
+            "Y": 0
+        },
+        {
+            "Defname": "Dress Form",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 5,
+            "Y": 5
+        },
+        {
+            "Defname": "SpawnRelic",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 0,
+            "Y": 9
+        }
+    ],
+    "Name": "lvl5_gallery_sq_04",
+    "Size": {
+        "Dx": 10,
+        "Dy": 10,
+        "Name": "Small"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_hatch_pattern.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Plaque01",
+            "Flip": false,
+            "Rot": 0,
+            "X": 1.3935807,
+            "Y": 11.868576
+        }
+    ]
+}

@@ -1,1 +1,133 @@
-{"Name":"lvl6_central_hall","Size":{"Name":"Large","Dx":20,"Dy":20},"Furniture":[{"Defname":"Armor 01 Black","X":18,"Y":19,"Rotation":0,"Flip":false},{"Defname":"Armor 01 Black","X":19,"Y":18,"Rotation":1,"Flip":false},{"Defname":"Column 02 Black","X":19,"Y":19,"Rotation":0,"Flip":false},{"Defname":"Column 02 Black","X":0,"Y":19,"Rotation":0,"Flip":false},{"Defname":"Column 02 Black","X":19,"Y":0,"Rotation":0,"Flip":false},{"Defname":"Armor 01 Black","X":0,"Y":18,"Rotation":1,"Flip":false},{"Defname":"Armor 01 Black","X":1,"Y":19,"Rotation":1,"Flip":false},{"Defname":"Armor 01 Black","X":18,"Y":0,"Rotation":0,"Flip":false},{"Defname":"Armor 01 Black","X":19,"Y":1,"Rotation":0,"Flip":false},{"Defname":"Terminal","X":2,"Y":2,"Rotation":0,"Flip":false},{"Defname":"Terminal","X":3,"Y":16,"Rotation":0,"Flip":false},{"Defname":"Terminal","X":16,"Y":16,"Rotation":0,"Flip":false},{"Defname":"Terminal","X":16,"Y":2,"Rotation":0,"Flip":false}],"WallTextures":[{"Defname":"Tapestry 11","X":28.833675,"Y":10.145342,"Rot":0,"Flip":false},{"Defname":"Tapestry 14","X":10.022202,"Y":28.462715,"Rot":0,"Flip":false},{"Defname":"Pentagram 04 - Large Red","X":10.79396,"Y":10.500696,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_16_woodpanel_large.png"},"Wall":{"Path":"rooms/walls/wall_02.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_16_woodpanel_large.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Armor 01 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 18,
+            "Y": 19
+        },
+        {
+            "Defname": "Armor 01 Black",
+            "Flip": false,
+            "Rotation": 1,
+            "X": 19,
+            "Y": 18
+        },
+        {
+            "Defname": "Column 02 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 19
+        },
+        {
+            "Defname": "Column 02 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 0,
+            "Y": 19
+        },
+        {
+            "Defname": "Column 02 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 0
+        },
+        {
+            "Defname": "Armor 01 Black",
+            "Flip": false,
+            "Rotation": 1,
+            "X": 0,
+            "Y": 18
+        },
+        {
+            "Defname": "Armor 01 Black",
+            "Flip": false,
+            "Rotation": 1,
+            "X": 1,
+            "Y": 19
+        },
+        {
+            "Defname": "Armor 01 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 18,
+            "Y": 0
+        },
+        {
+            "Defname": "Armor 01 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 1
+        },
+        {
+            "Defname": "Terminal",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 2,
+            "Y": 2
+        },
+        {
+            "Defname": "Terminal",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 3,
+            "Y": 16
+        },
+        {
+            "Defname": "Terminal",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 16,
+            "Y": 16
+        },
+        {
+            "Defname": "Terminal",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 16,
+            "Y": 2
+        }
+    ],
+    "Name": "lvl6_central_hall",
+    "Size": {
+        "Dx": 20,
+        "Dy": 20,
+        "Name": "Large"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_02.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Tapestry 11",
+            "Flip": false,
+            "Rot": 0,
+            "X": 28.833675,
+            "Y": 10.145342
+        },
+        {
+            "Defname": "Tapestry 14",
+            "Flip": false,
+            "Rot": 0,
+            "X": 10.022202,
+            "Y": 28.462715
+        },
+        {
+            "Defname": "Pentagram 04 - Large Red",
+            "Flip": false,
+            "Rot": 0,
+            "X": 10.79396,
+            "Y": 10.500696
+        }
+    ]
+}

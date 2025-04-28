@@ -1,1 +1,69 @@
-{"Name":"lvl8_dressing","Size":{"Name":"Medium_A","Dx":20,"Dy":15},"Furniture":[{"Defname":"Bench 01 - Upholstered","X":10,"Y":5,"Rotation":1,"Flip":true},{"Defname":"Dress Form","X":14,"Y":11,"Rotation":0,"Flip":false},{"Defname":"Dressing Mirror","X":11,"Y":11,"Rotation":0,"Flip":true},{"Defname":"Nightstand","X":10,"Y":12,"Rotation":1,"Flip":false},{"Defname":"Sideboard","X":3,"Y":14,"Rotation":0,"Flip":false},{"Defname":"Chair 04 - Library Chair","X":18,"Y":0,"Rotation":1,"Flip":false},{"Defname":"Armoire","X":15,"Y":14,"Rotation":0,"Flip":false}],"WallTextures":[],"Floor":{"Path":"rooms/floors/floor_01_rug_medium_a.png"},"Wall":{"Path":"rooms/walls/wall_04.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_01_rug_medium_a.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Bench 01 - Upholstered",
+            "Flip": true,
+            "Rotation": 1,
+            "X": 10,
+            "Y": 5
+        },
+        {
+            "Defname": "Dress Form",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 14,
+            "Y": 11
+        },
+        {
+            "Defname": "Dressing Mirror",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 11,
+            "Y": 11
+        },
+        {
+            "Defname": "Nightstand",
+            "Flip": false,
+            "Rotation": 1,
+            "X": 10,
+            "Y": 12
+        },
+        {
+            "Defname": "Sideboard",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 3,
+            "Y": 14
+        },
+        {
+            "Defname": "Chair 04 - Library Chair",
+            "Flip": false,
+            "Rotation": 1,
+            "X": 18,
+            "Y": 0
+        },
+        {
+            "Defname": "Armoire",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 15,
+            "Y": 14
+        }
+    ],
+    "Name": "lvl8_dressing",
+    "Size": {
+        "Dx": 20,
+        "Dy": 15,
+        "Name": "Medium_A"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_04.png"
+    },
+    "WallTextures": []
+}

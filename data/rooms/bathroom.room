@@ -1,1 +1,98 @@
-{"Name":"bathroom","Size":{"Name":"Tiny","Dx":4,"Dy":4},"Furniture":[{"Defname":"Toilet","X":3,"Y":2,"Rotation":0,"Flip":false},{"Defname":"Plant","X":3,"Y":3,"Rotation":0,"Flip":false}],"WallTextures":[{"Defname":"Mouse Hole RF","X":10.374912,"Y":1.1896435,"Rot":0,"Flip":false},{"Defname":"Cobweb","X":15.447996,"Y":9.184554,"Rot":0,"Flip":false},{"Defname":"Cobweb","X":1.3662208,"Y":9.665201,"Rot":0,"Flip":false},{"Defname":"Cobweb","X":10.280298,"Y":1.3737284,"Rot":-3.0550017,"Flip":false},{"Defname":"Cobweb","X":3.2387364,"Y":9.834234,"Rot":-1.8200006,"Flip":false},{"Defname":"Mouse Hole RF","X":4.340757,"Y":0.6568564,"Rot":0,"Flip":true},{"Defname":"Mouse Hole LF","X":0.41559723,"Y":4.380035,"Rot":0,"Flip":true},{"Defname":"Thorns 02","X":3.4196153,"Y":8.314929,"Rot":0,"Flip":false},{"Defname":"Window 01 - Round Top","X":7.5884438,"Y":2.1314275,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_15.png"},"Wall":{"Path":"rooms/walls/wall_02.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_15.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Toilet",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 3,
+            "Y": 2
+        },
+        {
+            "Defname": "Plant",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 3,
+            "Y": 3
+        }
+    ],
+    "Name": "bathroom",
+    "Size": {
+        "Dx": 4,
+        "Dy": 4,
+        "Name": "Tiny"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_02.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Mouse Hole RF",
+            "Flip": false,
+            "Rot": 0,
+            "X": 10.374912,
+            "Y": 1.1896435
+        },
+        {
+            "Defname": "Cobweb",
+            "Flip": false,
+            "Rot": 0,
+            "X": 15.447996,
+            "Y": 9.184554
+        },
+        {
+            "Defname": "Cobweb",
+            "Flip": false,
+            "Rot": 0,
+            "X": 1.3662208,
+            "Y": 9.665201
+        },
+        {
+            "Defname": "Cobweb",
+            "Flip": false,
+            "Rot": -3.0550017,
+            "X": 10.280298,
+            "Y": 1.3737284
+        },
+        {
+            "Defname": "Cobweb",
+            "Flip": false,
+            "Rot": -1.8200006,
+            "X": 3.2387364,
+            "Y": 9.834234
+        },
+        {
+            "Defname": "Mouse Hole RF",
+            "Flip": true,
+            "Rot": 0,
+            "X": 4.340757,
+            "Y": 0.6568564
+        },
+        {
+            "Defname": "Mouse Hole LF",
+            "Flip": true,
+            "Rot": 0,
+            "X": 0.41559723,
+            "Y": 4.380035
+        },
+        {
+            "Defname": "Thorns 02",
+            "Flip": false,
+            "Rot": 0,
+            "X": 3.4196153,
+            "Y": 8.314929
+        },
+        {
+            "Defname": "Window 01 - Round Top",
+            "Flip": false,
+            "Rot": 0,
+            "X": 7.5884438,
+            "Y": 2.1314275
+        }
+    ]
+}

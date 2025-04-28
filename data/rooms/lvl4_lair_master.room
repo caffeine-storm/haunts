@@ -1,1 +1,34 @@
-{"Name":"lvl4_lair_master","Size":{"Name":"Small","Dx":10,"Dy":10},"Furniture":[{"Defname":"Bed - Master","X":6,"Y":3,"Rotation":0,"Flip":false},{"Defname":"Bookcase","X":3,"Y":9,"Rotation":0,"Flip":false}],"WallTextures":[],"Floor":{"Path":"rooms/floors/floor_07.png"},"Wall":{"Path":"rooms/walls/wall_05.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_07.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Bed - Master",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 6,
+            "Y": 3
+        },
+        {
+            "Defname": "Bookcase",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 3,
+            "Y": 9
+        }
+    ],
+    "Name": "lvl4_lair_master",
+    "Size": {
+        "Dx": 10,
+        "Dy": 10,
+        "Name": "Small"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_05.png"
+    },
+    "WallTextures": []
+}

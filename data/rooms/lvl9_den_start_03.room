@@ -1,1 +1,19 @@
-{"Name":"lvl9_den_start_03","Size":{"Name":"Small_Rect_B","Dx":15,"Dy":10},"Furniture":[],"WallTextures":[],"Floor":{"Path":"rooms/floors/floor_21_mahogany_small_rect_b.png"},"Wall":{"Path":"rooms/walls/wall_01.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_21_mahogany_small_rect_b.png"
+    },
+    "Furniture": [],
+    "Name": "lvl9_den_start_03",
+    "Size": {
+        "Dx": 15,
+        "Dy": 10,
+        "Name": "Small_Rect_B"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_01.png"
+    },
+    "WallTextures": []
+}

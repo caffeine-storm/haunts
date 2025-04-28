@@ -1,1 +1,112 @@
-{"Name":"tutorial-foyer","Size":{"Name":"Medium_A","Dx":20,"Dy":15},"Furniture":[{"Defname":"Standalabra","X":19,"Y":14,"Rotation":0,"Flip":false},{"Defname":"Standalabra","X":0,"Y":14,"Rotation":0,"Flip":false},{"Defname":"Standalabra","X":19,"Y":0,"Rotation":0,"Flip":false},{"Defname":"Fireplace","X":19,"Y":6,"Rotation":0,"Flip":false},{"Defname":"Clock_02","X":4,"Y":14,"Rotation":1,"Flip":false},{"Defname":"Armor 01 Black","X":19,"Y":11,"Rotation":0,"Flip":false},{"Defname":"Armor 01 Black","X":19,"Y":3,"Rotation":0,"Flip":false},{"Defname":"Coffin","X":10,"Y":7,"Rotation":2,"Flip":false}],"WallTextures":[{"Defname":"Founders","X":25.344484,"Y":8.194875,"Rot":0,"Flip":false},{"Defname":"Window 03 - Gothic Peak","X":4.2105794,"Y":23.220898,"Rot":0,"Flip":false},{"Defname":"Window 03 - Gothic Peak","X":10.114496,"Y":23.265774,"Rot":0,"Flip":false},{"Defname":"Window 03 - Gothic Peak","X":16.08056,"Y":23.287224,"Rot":0,"Flip":false},{"Defname":"Bloodstain - Splat","X":10.576185,"Y":8.072985,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_01_rug_medium_a.png"},"Wall":{"Path":"rooms/walls/wall_02.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_01_rug_medium_a.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Standalabra",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 14
+        },
+        {
+            "Defname": "Standalabra",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 0,
+            "Y": 14
+        },
+        {
+            "Defname": "Standalabra",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 0
+        },
+        {
+            "Defname": "Fireplace",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 6
+        },
+        {
+            "Defname": "Clock_02",
+            "Flip": false,
+            "Rotation": 1,
+            "X": 4,
+            "Y": 14
+        },
+        {
+            "Defname": "Armor 01 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 11
+        },
+        {
+            "Defname": "Armor 01 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 3
+        },
+        {
+            "Defname": "Coffin",
+            "Flip": false,
+            "Rotation": 2,
+            "X": 10,
+            "Y": 7
+        }
+    ],
+    "Name": "tutorial-foyer",
+    "Size": {
+        "Dx": 20,
+        "Dy": 15,
+        "Name": "Medium_A"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_02.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Founders",
+            "Flip": false,
+            "Rot": 0,
+            "X": 25.344484,
+            "Y": 8.194875
+        },
+        {
+            "Defname": "Window 03 - Gothic Peak",
+            "Flip": false,
+            "Rot": 0,
+            "X": 4.2105794,
+            "Y": 23.220898
+        },
+        {
+            "Defname": "Window 03 - Gothic Peak",
+            "Flip": false,
+            "Rot": 0,
+            "X": 10.114496,
+            "Y": 23.265774
+        },
+        {
+            "Defname": "Window 03 - Gothic Peak",
+            "Flip": false,
+            "Rot": 0,
+            "X": 16.08056,
+            "Y": 23.287224
+        },
+        {
+            "Defname": "Bloodstain - Splat",
+            "Flip": false,
+            "Rot": 0,
+            "X": 10.576185,
+            "Y": 8.072985
+        }
+    ]
+}

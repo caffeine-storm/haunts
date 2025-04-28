@@ -1,64 +1,64 @@
 {
-  "Name": "restest",
-  "Size": {
-    "Name": "Small",
-    "Dx": 512,
-    "Dy": 512
-  },
-  "Furniture": [],
-  "WallTextures": [
-    {
-      "Defname": "Cobweb",
-      "X": 600.0,
-      "Y": 300.0,
-      "Rot": 0,
-      "Flip": false
-    }
-  ],
-  "debug-disabled": [
-    {
-      "Defname": "Debug Texture",
-      "X": 15.754118,
-      "Y": 1.2256411,
-      "Rot": 0,
-      "Flip": false
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_19_opart.png"
     },
-    {
-      "Defname": "Cobweb",
-      "X": 15.787312,
-      "Y": 9.368074,
-      "Rot": 0,
-      "Flip": false
+    "Furniture": [],
+    "Name": "restest",
+    "Size": {
+        "Dx": 512,
+        "Dy": 512,
+        "Name": "Small"
     },
-    {
-      "Defname": "Cobweb",
-      "X": 10.1399975,
-      "Y": 9.029777,
-      "Rot": 0,
-      "Flip": false
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_02.png"
     },
-    {
-      "Defname": "Mouse Hole RF",
-      "X": 10.307363,
-      "Y": 6.4452004,
-      "Rot": 0,
-      "Flip": false
-    },
-    {
-      "Defname": "Mouse Hole LF",
-      "X": 7.6991677,
-      "Y": 10.392261,
-      "Rot": 0,
-      "Flip": false
-    }
-  ],
-  "Floor": {
-    "Path": "rooms/floors/floor_19_opart.png"
-  },
-  "Wall": {
-    "Path": "rooms/walls/wall_02.png"
-  },
-  "Themes": null,
-  "Sizes": null,
-  "Decor": null
+    "WallTextures": [
+        {
+            "Defname": "Cobweb",
+            "Flip": false,
+            "Rot": 0,
+            "X": 600,
+            "Y": 300
+        }
+    ],
+    "debug-disabled": [
+        {
+            "Defname": "Debug Texture",
+            "Flip": false,
+            "Rot": 0,
+            "X": 15.754118,
+            "Y": 1.2256411
+        },
+        {
+            "Defname": "Cobweb",
+            "Flip": false,
+            "Rot": 0,
+            "X": 15.787312,
+            "Y": 9.368074
+        },
+        {
+            "Defname": "Cobweb",
+            "Flip": false,
+            "Rot": 0,
+            "X": 10.1399975,
+            "Y": 9.029777
+        },
+        {
+            "Defname": "Mouse Hole RF",
+            "Flip": false,
+            "Rot": 0,
+            "X": 10.307363,
+            "Y": 6.4452004
+        },
+        {
+            "Defname": "Mouse Hole LF",
+            "Flip": false,
+            "Rot": 0,
+            "X": 7.6991677,
+            "Y": 10.392261
+        }
+    ]
 }

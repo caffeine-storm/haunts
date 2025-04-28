@@ -1,1 +1,91 @@
-{"Name":"lvl1_great_hall","Size":{"Name":"Large","Dx":20,"Dy":20},"Furniture":[{"Defname":"Bench 02 - Flat","X":19,"Y":0,"Rotation":0,"Flip":false},{"Defname":"Plant","X":19,"Y":19,"Rotation":0,"Flip":false},{"Defname":"Plant","X":15,"Y":19,"Rotation":0,"Flip":false},{"Defname":"Setee 02 White","X":2,"Y":19,"Rotation":0,"Flip":true},{"Defname":"Armor","X":17,"Y":19,"Rotation":0,"Flip":true}],"WallTextures":[{"Defname":"Tapestry 05","X":29.413797,"Y":8.998449,"Rot":0,"Flip":false},{"Defname":"Tapestry 08","X":9.487688,"Y":29.103392,"Rot":0,"Flip":false},{"Defname":"Rug Oval Large 03","X":10.882583,"Y":10.694068,"Rot":0,"Flip":false},{"Defname":"Scratches 02 Long Straight","X":15.7404175,"Y":3.034057,"Rot":1.6799994,"Flip":false},{"Defname":"Bloodstain - Splat","X":15.079727,"Y":4.4674606,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_02_maplewood_large.png"},"Wall":{"Path":"rooms/walls/wall_02.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_02_maplewood_large.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Bench 02 - Flat",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 0
+        },
+        {
+            "Defname": "Plant",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 19
+        },
+        {
+            "Defname": "Plant",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 15,
+            "Y": 19
+        },
+        {
+            "Defname": "Setee 02 White",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 2,
+            "Y": 19
+        },
+        {
+            "Defname": "Armor",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 17,
+            "Y": 19
+        }
+    ],
+    "Name": "lvl1_great_hall",
+    "Size": {
+        "Dx": 20,
+        "Dy": 20,
+        "Name": "Large"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_02.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Tapestry 05",
+            "Flip": false,
+            "Rot": 0,
+            "X": 29.413797,
+            "Y": 8.998449
+        },
+        {
+            "Defname": "Tapestry 08",
+            "Flip": false,
+            "Rot": 0,
+            "X": 9.487688,
+            "Y": 29.103392
+        },
+        {
+            "Defname": "Rug Oval Large 03",
+            "Flip": false,
+            "Rot": 0,
+            "X": 10.882583,
+            "Y": 10.694068
+        },
+        {
+            "Defname": "Scratches 02 Long Straight",
+            "Flip": false,
+            "Rot": 1.6799994,
+            "X": 15.7404175,
+            "Y": 3.034057
+        },
+        {
+            "Defname": "Bloodstain - Splat",
+            "Flip": false,
+            "Rot": 0,
+            "X": 15.079727,
+            "Y": 4.4674606
+        }
+    ]
+}

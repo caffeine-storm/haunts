@@ -1,1 +1,175 @@
-{"Name":"tutorial-dread-chamber","Size":{"Name":"Large","Dx":20,"Dy":20},"Furniture":[{"Defname":"Experiment Table","X":9,"Y":11,"Rotation":0,"Flip":true},{"Defname":"Table 02 Experiment","X":8,"Y":6,"Rotation":1,"Flip":true},{"Defname":"Kitchen Dresser","X":15,"Y":19,"Rotation":0,"Flip":false},{"Defname":"Barrels 01 Black","X":19,"Y":17,"Rotation":1,"Flip":false},{"Defname":"Cage","X":0,"Y":18,"Rotation":0,"Flip":true},{"Defname":"Dining Chair","X":9,"Y":5,"Rotation":1,"Flip":false}],"WallTextures":[{"Defname":"Ectostain - Smatter","X":9.766942,"Y":12.427623,"Rot":0,"Flip":false},{"Defname":"Ectostain - Drips","X":32.035187,"Y":10.804739,"Rot":0,"Flip":false},{"Defname":"Ectostain - Drips","X":31.975754,"Y":14.634355,"Rot":0,"Flip":true},{"Defname":"Ectostain - Splatter","X":18.818995,"Y":19.421347,"Rot":0,"Flip":false},{"Defname":"Footprints - Ecto","X":11.130833,"Y":11.620325,"Rot":0,"Flip":false},{"Defname":"Footprints - Ecto","X":11.966923,"Y":11.056444,"Rot":0,"Flip":false},{"Defname":"Footprints - Ecto","X":12.838774,"Y":10.620126,"Rot":0.12,"Flip":false},{"Defname":"Cult Symbol 06 - Small White","X":9.731402,"Y":9.9782295,"Rot":-1.4999996,"Flip":false},{"Defname":"Debris 01","X":1.4607247,"Y":2.451809,"Rot":0,"Flip":false},{"Defname":"Cobweb","X":17.684683,"Y":31.593111,"Rot":0,"Flip":false},{"Defname":"Crack 02 - Branching","X":18.090286,"Y":17.81453,"Rot":0,"Flip":false},{"Defname":"Shackles","X":23.403322,"Y":16.213358,"Rot":0,"Flip":false},{"Defname":"Shackles","X":23.122528,"Y":2.107628,"Rot":0,"Flip":false},{"Defname":"Tapestry 16","X":9.113058,"Y":29.021152,"Rot":0,"Flip":false},{"Defname":"Tapestry 13","X":28.838802,"Y":9.013167,"Rot":0,"Flip":false},{"Defname":"Scratches 01 Random","X":22.025293,"Y":3.7038586,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_21_mahogany_large.png"},"Wall":{"Path":"rooms/walls/wall_02.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_21_mahogany_large.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Experiment Table",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 9,
+            "Y": 11
+        },
+        {
+            "Defname": "Table 02 Experiment",
+            "Flip": true,
+            "Rotation": 1,
+            "X": 8,
+            "Y": 6
+        },
+        {
+            "Defname": "Kitchen Dresser",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 15,
+            "Y": 19
+        },
+        {
+            "Defname": "Barrels 01 Black",
+            "Flip": false,
+            "Rotation": 1,
+            "X": 19,
+            "Y": 17
+        },
+        {
+            "Defname": "Cage",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 0,
+            "Y": 18
+        },
+        {
+            "Defname": "Dining Chair",
+            "Flip": false,
+            "Rotation": 1,
+            "X": 9,
+            "Y": 5
+        }
+    ],
+    "Name": "tutorial-dread-chamber",
+    "Size": {
+        "Dx": 20,
+        "Dy": 20,
+        "Name": "Large"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_02.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Ectostain - Smatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 9.766942,
+            "Y": 12.427623
+        },
+        {
+            "Defname": "Ectostain - Drips",
+            "Flip": false,
+            "Rot": 0,
+            "X": 32.035187,
+            "Y": 10.804739
+        },
+        {
+            "Defname": "Ectostain - Drips",
+            "Flip": true,
+            "Rot": 0,
+            "X": 31.975754,
+            "Y": 14.634355
+        },
+        {
+            "Defname": "Ectostain - Splatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 18.818995,
+            "Y": 19.421347
+        },
+        {
+            "Defname": "Footprints - Ecto",
+            "Flip": false,
+            "Rot": 0,
+            "X": 11.130833,
+            "Y": 11.620325
+        },
+        {
+            "Defname": "Footprints - Ecto",
+            "Flip": false,
+            "Rot": 0,
+            "X": 11.966923,
+            "Y": 11.056444
+        },
+        {
+            "Defname": "Footprints - Ecto",
+            "Flip": false,
+            "Rot": 0.12,
+            "X": 12.838774,
+            "Y": 10.620126
+        },
+        {
+            "Defname": "Cult Symbol 06 - Small White",
+            "Flip": false,
+            "Rot": -1.4999996,
+            "X": 9.731402,
+            "Y": 9.9782295
+        },
+        {
+            "Defname": "Debris 01",
+            "Flip": false,
+            "Rot": 0,
+            "X": 1.4607247,
+            "Y": 2.451809
+        },
+        {
+            "Defname": "Cobweb",
+            "Flip": false,
+            "Rot": 0,
+            "X": 17.684683,
+            "Y": 31.593111
+        },
+        {
+            "Defname": "Crack 02 - Branching",
+            "Flip": false,
+            "Rot": 0,
+            "X": 18.090286,
+            "Y": 17.81453
+        },
+        {
+            "Defname": "Shackles",
+            "Flip": false,
+            "Rot": 0,
+            "X": 23.403322,
+            "Y": 16.213358
+        },
+        {
+            "Defname": "Shackles",
+            "Flip": false,
+            "Rot": 0,
+            "X": 23.122528,
+            "Y": 2.107628
+        },
+        {
+            "Defname": "Tapestry 16",
+            "Flip": false,
+            "Rot": 0,
+            "X": 9.113058,
+            "Y": 29.021152
+        },
+        {
+            "Defname": "Tapestry 13",
+            "Flip": false,
+            "Rot": 0,
+            "X": 28.838802,
+            "Y": 9.013167
+        },
+        {
+            "Defname": "Scratches 01 Random",
+            "Flip": false,
+            "Rot": 0,
+            "X": 22.025293,
+            "Y": 3.7038586
+        }
+    ]
+}

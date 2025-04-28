@@ -1,1 +1,146 @@
-{"Name":"lvl3_back_hall","Size":{"Name":"Hall_B","Dx":5,"Dy":20},"Furniture":[],"WallTextures":[{"Defname":"Mouse Hole LF","X":5.492005,"Y":2.2054155,"Rot":0,"Flip":false},{"Defname":"Grunge Corner 02","X":3.6908844,"Y":17.678429,"Rot":1.4999995,"Flip":false},{"Defname":"Grunge Corner 02","X":2.5364873,"Y":1.0596992,"Rot":0,"Flip":false},{"Defname":"Footprints - Ink","X":2.741568,"Y":14.930935,"Rot":-0.65999997,"Flip":false},{"Defname":"Footprints - Ink","X":2.8013225,"Y":13.482117,"Rot":-0.84,"Flip":false},{"Defname":"Footprints - Ink","X":2.6502569,"Y":12.03723,"Rot":-1.2599998,"Flip":false},{"Defname":"Footprints - Ink","X":2.2663028,"Y":10.825231,"Rot":-1.1999998,"Flip":false},{"Defname":"Footprints - Ink","X":2.0713124,"Y":9.853947,"Rot":-0.84,"Flip":false},{"Defname":"Footprints - Ink","X":3.2734523,"Y":15.894979,"Rot":-1.2599999,"Flip":false},{"Defname":"Footprints - Ink","X":3.919184,"Y":17.213497,"Rot":-1.2599998,"Flip":false},{"Defname":"Footprints - Ink","X":4.324199,"Y":18.343052,"Rot":-1.3799996,"Flip":false},{"Defname":"Inkstain - Drips","X":2.951035,"Y":27.562664,"Rot":0,"Flip":false},{"Defname":"Inkstain - Spatter","X":3.7091916,"Y":19.694653,"Rot":0,"Flip":false},{"Defname":"Crack 02 - Branching","X":6.778721,"Y":8.449252,"Rot":0,"Flip":false},{"Defname":"Crack 02 - Branching","X":9.606302,"Y":8.980793,"Rot":0,"Flip":false},{"Defname":"Crack 02 - Branching","X":11.101174,"Y":10.442905,"Rot":1.4399995,"Flip":false},{"Defname":"Cobweb","X":12.54941,"Y":10.027629,"Rot":0,"Flip":false},{"Defname":"Cobweb","X":12.590124,"Y":19.14238,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_07_stone_hall_b.png"},"Wall":{"Path":"rooms/walls/wall_06.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_07_stone_hall_b.png"
+    },
+    "Furniture": [],
+    "Name": "lvl3_back_hall",
+    "Size": {
+        "Dx": 5,
+        "Dy": 20,
+        "Name": "Hall_B"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_06.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Mouse Hole LF",
+            "Flip": false,
+            "Rot": 0,
+            "X": 5.492005,
+            "Y": 2.2054155
+        },
+        {
+            "Defname": "Grunge Corner 02",
+            "Flip": false,
+            "Rot": 1.4999995,
+            "X": 3.6908844,
+            "Y": 17.678429
+        },
+        {
+            "Defname": "Grunge Corner 02",
+            "Flip": false,
+            "Rot": 0,
+            "X": 2.5364873,
+            "Y": 1.0596992
+        },
+        {
+            "Defname": "Footprints - Ink",
+            "Flip": false,
+            "Rot": -0.65999997,
+            "X": 2.741568,
+            "Y": 14.930935
+        },
+        {
+            "Defname": "Footprints - Ink",
+            "Flip": false,
+            "Rot": -0.84,
+            "X": 2.8013225,
+            "Y": 13.482117
+        },
+        {
+            "Defname": "Footprints - Ink",
+            "Flip": false,
+            "Rot": -1.2599998,
+            "X": 2.6502569,
+            "Y": 12.03723
+        },
+        {
+            "Defname": "Footprints - Ink",
+            "Flip": false,
+            "Rot": -1.1999998,
+            "X": 2.2663028,
+            "Y": 10.825231
+        },
+        {
+            "Defname": "Footprints - Ink",
+            "Flip": false,
+            "Rot": -0.84,
+            "X": 2.0713124,
+            "Y": 9.853947
+        },
+        {
+            "Defname": "Footprints - Ink",
+            "Flip": false,
+            "Rot": -1.2599999,
+            "X": 3.2734523,
+            "Y": 15.894979
+        },
+        {
+            "Defname": "Footprints - Ink",
+            "Flip": false,
+            "Rot": -1.2599998,
+            "X": 3.919184,
+            "Y": 17.213497
+        },
+        {
+            "Defname": "Footprints - Ink",
+            "Flip": false,
+            "Rot": -1.3799996,
+            "X": 4.324199,
+            "Y": 18.343052
+        },
+        {
+            "Defname": "Inkstain - Drips",
+            "Flip": false,
+            "Rot": 0,
+            "X": 2.951035,
+            "Y": 27.562664
+        },
+        {
+            "Defname": "Inkstain - Spatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 3.7091916,
+            "Y": 19.694653
+        },
+        {
+            "Defname": "Crack 02 - Branching",
+            "Flip": false,
+            "Rot": 0,
+            "X": 6.778721,
+            "Y": 8.449252
+        },
+        {
+            "Defname": "Crack 02 - Branching",
+            "Flip": false,
+            "Rot": 0,
+            "X": 9.606302,
+            "Y": 8.980793
+        },
+        {
+            "Defname": "Crack 02 - Branching",
+            "Flip": false,
+            "Rot": 1.4399995,
+            "X": 11.101174,
+            "Y": 10.442905
+        },
+        {
+            "Defname": "Cobweb",
+            "Flip": false,
+            "Rot": 0,
+            "X": 12.54941,
+            "Y": 10.027629
+        },
+        {
+            "Defname": "Cobweb",
+            "Flip": false,
+            "Rot": 0,
+            "X": 12.590124,
+            "Y": 19.14238
+        }
+    ]
+}

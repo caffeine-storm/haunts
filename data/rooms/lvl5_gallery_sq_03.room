@@ -1,1 +1,48 @@
-{"Name":"lvl5_gallery_sq_03","Size":{"Name":"Small","Dx":10,"Dy":10},"Furniture":[{"Defname":"Japanese Screen","X":8,"Y":8,"Rotation":0,"Flip":false},{"Defname":"Clock_02","X":1,"Y":9,"Rotation":0,"Flip":true},{"Defname":"Iron Maiden","X":9,"Y":1,"Rotation":0,"Flip":true},{"Defname":"Victrola","X":4,"Y":4,"Rotation":0,"Flip":true}],"WallTextures":[],"Floor":{"Path":"rooms/floors/floor_02_maplewood_small.png"},"Wall":{"Path":"rooms/walls/wall_hatch_pattern.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_02_maplewood_small.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Japanese Screen",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 8,
+            "Y": 8
+        },
+        {
+            "Defname": "Clock_02",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 1,
+            "Y": 9
+        },
+        {
+            "Defname": "Iron Maiden",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 9,
+            "Y": 1
+        },
+        {
+            "Defname": "Victrola",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 4,
+            "Y": 4
+        }
+    ],
+    "Name": "lvl5_gallery_sq_03",
+    "Size": {
+        "Dx": 10,
+        "Dy": 10,
+        "Name": "Small"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_hatch_pattern.png"
+    },
+    "WallTextures": []
+}

@@ -1,1 +1,19 @@
-{"Name":"lvl9_maple_1","Size":{"Name":"Medium_B","Dx":15,"Dy":20},"Furniture":[],"WallTextures":[],"Floor":{"Path":"rooms/floors/floor_02_maplewood_medium_b.png"},"Wall":{"Path":"rooms/walls/wall_01.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_02_maplewood_medium_b.png"
+    },
+    "Furniture": [],
+    "Name": "lvl9_maple_1",
+    "Size": {
+        "Dx": 15,
+        "Dy": 20,
+        "Name": "Medium_B"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_01.png"
+    },
+    "WallTextures": []
+}

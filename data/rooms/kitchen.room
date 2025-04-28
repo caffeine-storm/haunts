@@ -1,1 +1,91 @@
-{"Name":"kitchen","Size":{"Name":"Medium","Dx":20,"Dy":15},"Furniture":[{"Defname":"Kitchen Dresser","X":7,"Y":14,"Rotation":0,"Flip":false},{"Defname":"Coal Fired Range","X":2,"Y":14,"Rotation":0,"Flip":false}],"WallTextures":[{"Defname":"Window 03 - Gothic Peak","X":23.446827,"Y":12.839481,"Rot":0,"Flip":false},{"Defname":"Window 03 - Gothic Peak","X":23.78159,"Y":1.8824548,"Rot":0,"Flip":false},{"Defname":"Window 04 - Half Moon Transom","X":25.11668,"Y":7.519722,"Rot":0,"Flip":false},{"Defname":"Window 04 - Half Moon Transom","X":11.110644,"Y":20.082577,"Rot":0,"Flip":false},{"Defname":"Rug Round 01","X":8.823075,"Y":-6.7484818,"Rot":0,"Flip":false},{"Defname":"Rug Round 01","X":5.8333693,"Y":10.103723,"Rot":1.93,"Flip":false},{"Defname":"Window 02 - Large Triple Set","X":16.330683,"Y":6.3764677,"Rot":0.8999996,"Flip":true},{"Defname":"Bloodstain - Drips","X":16.272305,"Y":14.064591,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/Tile_Floor_15x20.png"},"Wall":{"Path":"rooms/walls/wall_02.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/Tile_Floor_15x20.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Kitchen Dresser",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 7,
+            "Y": 14
+        },
+        {
+            "Defname": "Coal Fired Range",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 2,
+            "Y": 14
+        }
+    ],
+    "Name": "kitchen",
+    "Size": {
+        "Dx": 20,
+        "Dy": 15,
+        "Name": "Medium"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_02.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Window 03 - Gothic Peak",
+            "Flip": false,
+            "Rot": 0,
+            "X": 23.446827,
+            "Y": 12.839481
+        },
+        {
+            "Defname": "Window 03 - Gothic Peak",
+            "Flip": false,
+            "Rot": 0,
+            "X": 23.78159,
+            "Y": 1.8824548
+        },
+        {
+            "Defname": "Window 04 - Half Moon Transom",
+            "Flip": false,
+            "Rot": 0,
+            "X": 25.11668,
+            "Y": 7.519722
+        },
+        {
+            "Defname": "Window 04 - Half Moon Transom",
+            "Flip": false,
+            "Rot": 0,
+            "X": 11.110644,
+            "Y": 20.082577
+        },
+        {
+            "Defname": "Rug Round 01",
+            "Flip": false,
+            "Rot": 0,
+            "X": 8.823075,
+            "Y": -6.7484818
+        },
+        {
+            "Defname": "Rug Round 01",
+            "Flip": false,
+            "Rot": 1.93,
+            "X": 5.8333693,
+            "Y": 10.103723
+        },
+        {
+            "Defname": "Window 02 - Large Triple Set",
+            "Flip": true,
+            "Rot": 0.8999996,
+            "X": 16.330683,
+            "Y": 6.3764677
+        },
+        {
+            "Defname": "Bloodstain - Drips",
+            "Flip": false,
+            "Rot": 0,
+            "X": 16.272305,
+            "Y": 14.064591
+        }
+    ]
+}

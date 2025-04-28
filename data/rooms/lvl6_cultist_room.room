@@ -1,1 +1,182 @@
-{"Name":"lvl6_cultist_room","Size":{"Name":"Medium_B","Dx":15,"Dy":20},"Furniture":[{"Defname":"Bookcase","X":10,"Y":19,"Rotation":0,"Flip":false},{"Defname":"Bookcase","X":14,"Y":15,"Rotation":0,"Flip":true},{"Defname":"Bookcase","X":14,"Y":1,"Rotation":0,"Flip":true},{"Defname":"Bookcase","X":1,"Y":19,"Rotation":0,"Flip":false},{"Defname":"Chair 04 - Library Chair","X":7,"Y":11,"Rotation":0,"Flip":false},{"Defname":"Chair 04 - Library Chair","X":7,"Y":7,"Rotation":0,"Flip":false},{"Defname":"Coffee Table","X":8,"Y":9,"Rotation":0,"Flip":true}],"WallTextures":[{"Defname":"Rug Oval Large 03","X":8.045116,"Y":9.788975,"Rot":-1.5599995,"Flip":false},{"Defname":"Scratches 01 Random","X":1.3972465,"Y":1.2230488,"Rot":0,"Flip":false},{"Defname":"Scratches 01 Random","X":1.4829819,"Y":1.8482376,"Rot":-1.1399999,"Flip":false},{"Defname":"Wallpaper Tear 01","X":18.28366,"Y":6.315897,"Rot":0,"Flip":false},{"Defname":"Wallpaper Tear 04","X":19.402878,"Y":14.411244,"Rot":0,"Flip":false},{"Defname":"Inkstain - Drips","X":19.577393,"Y":2.9568782,"Rot":0,"Flip":false},{"Defname":"Inkstain - Spatter","X":7.854145,"Y":9.837761,"Rot":0,"Flip":false},{"Defname":"Inkstain - Drips","X":12.39051,"Y":18.330114,"Rot":0,"Flip":false},{"Defname":"Cult Symbol 03 - Large Red","X":2.8783534,"Y":3.7231233,"Rot":0.42,"Flip":false},{"Defname":"Cobweb","X":13.645355,"Y":24.5513,"Rot":0,"Flip":false},{"Defname":"Cobweb","X":1.7091569,"Y":24.745007,"Rot":2.0399992,"Flip":false},{"Defname":"Crack 02 - Branching","X":11.606517,"Y":24.288126,"Rot":0,"Flip":false},{"Defname":"Crack 02 - Branching","X":13.063246,"Y":1.5005887,"Rot":0,"Flip":false},{"Defname":"Debris 01","X":11.943216,"Y":2.4784331,"Rot":0,"Flip":false},{"Defname":"Ectostain - Splat","X":18.940138,"Y":18.369514,"Rot":0,"Flip":false},{"Defname":"Ectostain - Spatter","X":1.4137396,"Y":20.353956,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_02_maplewood_medium_b.png"},"Wall":{"Path":"rooms/walls/wall_organic_paper.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_02_maplewood_medium_b.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Bookcase",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 10,
+            "Y": 19
+        },
+        {
+            "Defname": "Bookcase",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 14,
+            "Y": 15
+        },
+        {
+            "Defname": "Bookcase",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 14,
+            "Y": 1
+        },
+        {
+            "Defname": "Bookcase",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 1,
+            "Y": 19
+        },
+        {
+            "Defname": "Chair 04 - Library Chair",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 7,
+            "Y": 11
+        },
+        {
+            "Defname": "Chair 04 - Library Chair",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 7,
+            "Y": 7
+        },
+        {
+            "Defname": "Coffee Table",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 8,
+            "Y": 9
+        }
+    ],
+    "Name": "lvl6_cultist_room",
+    "Size": {
+        "Dx": 15,
+        "Dy": 20,
+        "Name": "Medium_B"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_organic_paper.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Rug Oval Large 03",
+            "Flip": false,
+            "Rot": -1.5599995,
+            "X": 8.045116,
+            "Y": 9.788975
+        },
+        {
+            "Defname": "Scratches 01 Random",
+            "Flip": false,
+            "Rot": 0,
+            "X": 1.3972465,
+            "Y": 1.2230488
+        },
+        {
+            "Defname": "Scratches 01 Random",
+            "Flip": false,
+            "Rot": -1.1399999,
+            "X": 1.4829819,
+            "Y": 1.8482376
+        },
+        {
+            "Defname": "Wallpaper Tear 01",
+            "Flip": false,
+            "Rot": 0,
+            "X": 18.28366,
+            "Y": 6.315897
+        },
+        {
+            "Defname": "Wallpaper Tear 04",
+            "Flip": false,
+            "Rot": 0,
+            "X": 19.402878,
+            "Y": 14.411244
+        },
+        {
+            "Defname": "Inkstain - Drips",
+            "Flip": false,
+            "Rot": 0,
+            "X": 19.577393,
+            "Y": 2.9568782
+        },
+        {
+            "Defname": "Inkstain - Spatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 7.854145,
+            "Y": 9.837761
+        },
+        {
+            "Defname": "Inkstain - Drips",
+            "Flip": false,
+            "Rot": 0,
+            "X": 12.39051,
+            "Y": 18.330114
+        },
+        {
+            "Defname": "Cult Symbol 03 - Large Red",
+            "Flip": false,
+            "Rot": 0.42,
+            "X": 2.8783534,
+            "Y": 3.7231233
+        },
+        {
+            "Defname": "Cobweb",
+            "Flip": false,
+            "Rot": 0,
+            "X": 13.645355,
+            "Y": 24.5513
+        },
+        {
+            "Defname": "Cobweb",
+            "Flip": false,
+            "Rot": 2.0399992,
+            "X": 1.7091569,
+            "Y": 24.745007
+        },
+        {
+            "Defname": "Crack 02 - Branching",
+            "Flip": false,
+            "Rot": 0,
+            "X": 11.606517,
+            "Y": 24.288126
+        },
+        {
+            "Defname": "Crack 02 - Branching",
+            "Flip": false,
+            "Rot": 0,
+            "X": 13.063246,
+            "Y": 1.5005887
+        },
+        {
+            "Defname": "Debris 01",
+            "Flip": false,
+            "Rot": 0,
+            "X": 11.943216,
+            "Y": 2.4784331
+        },
+        {
+            "Defname": "Ectostain - Splat",
+            "Flip": false,
+            "Rot": 0,
+            "X": 18.940138,
+            "Y": 18.369514
+        },
+        {
+            "Defname": "Ectostain - Spatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 1.4137396,
+            "Y": 20.353956
+        }
+    ]
+}

@@ -1,1 +1,48 @@
-{"Name":"lvl5_office_2","Size":{"Name":"Small","Dx":10,"Dy":10},"Furniture":[{"Defname":"Couch","X":8,"Y":3,"Rotation":0,"Flip":true},{"Defname":"Treasure Chest","X":9,"Y":1,"Rotation":0,"Flip":true},{"Defname":"Plant","X":9,"Y":9,"Rotation":0,"Flip":false},{"Defname":"Clock_02","X":1,"Y":9,"Rotation":0,"Flip":true}],"WallTextures":[],"Floor":{"Path":"rooms/floors/floor_01_rug_small.png"},"Wall":{"Path":"rooms/walls/wall_floral_paper.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_01_rug_small.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Couch",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 8,
+            "Y": 3
+        },
+        {
+            "Defname": "Treasure Chest",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 9,
+            "Y": 1
+        },
+        {
+            "Defname": "Plant",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 9,
+            "Y": 9
+        },
+        {
+            "Defname": "Clock_02",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 1,
+            "Y": 9
+        }
+    ],
+    "Name": "lvl5_office_2",
+    "Size": {
+        "Dx": 10,
+        "Dy": 10,
+        "Name": "Small"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_floral_paper.png"
+    },
+    "WallTextures": []
+}

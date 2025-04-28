@@ -1,1 +1,161 @@
-{"Name":"lvl9_checks_1","Size":{"Name":"Medium_B","Dx":15,"Dy":20},"Furniture":[{"Defname":"Pit","X":7,"Y":9,"Rotation":0,"Flip":false},{"Defname":"Pit","X":7,"Y":4,"Rotation":0,"Flip":false},{"Defname":"Pit","X":7,"Y":14,"Rotation":0,"Flip":false},{"Defname":"Statue 03 - Pitcher Girl","X":14,"Y":19,"Rotation":0,"Flip":false},{"Defname":"Statue 03 - Pitcher Girl","X":0,"Y":19,"Rotation":0,"Flip":false}],"WallTextures":[{"Defname":"Bloodstain - Splat","X":8.967707,"Y":6.322172,"Rot":0,"Flip":false},{"Defname":"Bloodstain - Splat","X":8.257468,"Y":9.274546,"Rot":-0.84,"Flip":false},{"Defname":"Bloodstain - Splatter","X":8.883107,"Y":16.122686,"Rot":0,"Flip":false},{"Defname":"Crack 01 - Tall","X":16.766657,"Y":17.17488,"Rot":0,"Flip":true},{"Defname":"Crack 02 - Branching","X":11.899244,"Y":21.584467,"Rot":0,"Flip":false},{"Defname":"Crack 02 - Branching","X":10.716276,"Y":23.202835,"Rot":0,"Flip":false},{"Defname":"Mouse Hole LF","X":15.358446,"Y":2.662468,"Rot":0,"Flip":false},{"Defname":"Mouse Hole RF","X":1.0964998,"Y":20.287054,"Rot":0,"Flip":false},{"Defname":"Footprints - Ecto","X":19.765932,"Y":18.230251,"Rot":0,"Flip":false},{"Defname":"Tapestry 16","X":7.8686023,"Y":27.597956,"Rot":0,"Flip":false},{"Defname":"Inkstain - Drips","X":9.447684,"Y":22.716042,"Rot":0,"Flip":false},{"Defname":"Ectostain - Splatter","X":10.390161,"Y":28.640648,"Rot":0,"Flip":false},{"Defname":"Ectostain - Spatter","X":3.966456,"Y":30.480722,"Rot":0,"Flip":false},{"Defname":"Footprints - Ecto","X":4.0481806,"Y":25.078676,"Rot":0,"Flip":false},{"Defname":"Ectostain - Splatter","X":4.717771,"Y":25.5645,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_03_small_check_medium_b.png"},"Wall":{"Path":"rooms/walls/wall_01.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_03_small_check_medium_b.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Pit",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 7,
+            "Y": 9
+        },
+        {
+            "Defname": "Pit",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 7,
+            "Y": 4
+        },
+        {
+            "Defname": "Pit",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 7,
+            "Y": 14
+        },
+        {
+            "Defname": "Statue 03 - Pitcher Girl",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 14,
+            "Y": 19
+        },
+        {
+            "Defname": "Statue 03 - Pitcher Girl",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 0,
+            "Y": 19
+        }
+    ],
+    "Name": "lvl9_checks_1",
+    "Size": {
+        "Dx": 15,
+        "Dy": 20,
+        "Name": "Medium_B"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_01.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Bloodstain - Splat",
+            "Flip": false,
+            "Rot": 0,
+            "X": 8.967707,
+            "Y": 6.322172
+        },
+        {
+            "Defname": "Bloodstain - Splat",
+            "Flip": false,
+            "Rot": -0.84,
+            "X": 8.257468,
+            "Y": 9.274546
+        },
+        {
+            "Defname": "Bloodstain - Splatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 8.883107,
+            "Y": 16.122686
+        },
+        {
+            "Defname": "Crack 01 - Tall",
+            "Flip": true,
+            "Rot": 0,
+            "X": 16.766657,
+            "Y": 17.17488
+        },
+        {
+            "Defname": "Crack 02 - Branching",
+            "Flip": false,
+            "Rot": 0,
+            "X": 11.899244,
+            "Y": 21.584467
+        },
+        {
+            "Defname": "Crack 02 - Branching",
+            "Flip": false,
+            "Rot": 0,
+            "X": 10.716276,
+            "Y": 23.202835
+        },
+        {
+            "Defname": "Mouse Hole LF",
+            "Flip": false,
+            "Rot": 0,
+            "X": 15.358446,
+            "Y": 2.662468
+        },
+        {
+            "Defname": "Mouse Hole RF",
+            "Flip": false,
+            "Rot": 0,
+            "X": 1.0964998,
+            "Y": 20.287054
+        },
+        {
+            "Defname": "Footprints - Ecto",
+            "Flip": false,
+            "Rot": 0,
+            "X": 19.765932,
+            "Y": 18.230251
+        },
+        {
+            "Defname": "Tapestry 16",
+            "Flip": false,
+            "Rot": 0,
+            "X": 7.8686023,
+            "Y": 27.597956
+        },
+        {
+            "Defname": "Inkstain - Drips",
+            "Flip": false,
+            "Rot": 0,
+            "X": 9.447684,
+            "Y": 22.716042
+        },
+        {
+            "Defname": "Ectostain - Splatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 10.390161,
+            "Y": 28.640648
+        },
+        {
+            "Defname": "Ectostain - Spatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 3.966456,
+            "Y": 30.480722
+        },
+        {
+            "Defname": "Footprints - Ecto",
+            "Flip": false,
+            "Rot": 0,
+            "X": 4.0481806,
+            "Y": 25.078676
+        },
+        {
+            "Defname": "Ectostain - Splatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 4.717771,
+            "Y": 25.5645
+        }
+    ]
+}

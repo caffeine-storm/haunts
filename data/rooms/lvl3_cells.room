@@ -1,1 +1,112 @@
-{"Name":"lvl3_cells","Size":{"Name":"Medium_B","Dx":15,"Dy":20},"Furniture":[{"Defname":"Cage","X":13,"Y":15,"Rotation":0,"Flip":false},{"Defname":"Cage","X":13,"Y":12,"Rotation":0,"Flip":false},{"Defname":"Cage","X":13,"Y":7,"Rotation":0,"Flip":false},{"Defname":"Cage","X":13,"Y":4,"Rotation":0,"Flip":false},{"Defname":"Cage","X":13,"Y":1,"Rotation":0,"Flip":false},{"Defname":"Cage","X":13,"Y":18,"Rotation":0,"Flip":false},{"Defname":"Couch","X":0,"Y":8,"Rotation":2,"Flip":true},{"Defname":"Dressing Mirror","X":11,"Y":19,"Rotation":1,"Flip":true},{"Defname":"Victrola","X":1,"Y":13,"Rotation":0,"Flip":true},{"Defname":"Stool 01 - Round","X":1,"Y":7,"Rotation":0,"Flip":false},{"Defname":"Coffee Table","X":3,"Y":10,"Rotation":0,"Flip":true},{"Defname":"Clock","X":12,"Y":10,"Rotation":0,"Flip":false}],"WallTextures":[{"Defname":"Rug Round 04","X":3.3423676,"Y":10.938451,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_10_tile_medium_b.png"},"Wall":{"Path":"rooms/walls/wall_brick_medium_01.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_10_tile_medium_b.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Cage",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 13,
+            "Y": 15
+        },
+        {
+            "Defname": "Cage",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 13,
+            "Y": 12
+        },
+        {
+            "Defname": "Cage",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 13,
+            "Y": 7
+        },
+        {
+            "Defname": "Cage",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 13,
+            "Y": 4
+        },
+        {
+            "Defname": "Cage",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 13,
+            "Y": 1
+        },
+        {
+            "Defname": "Cage",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 13,
+            "Y": 18
+        },
+        {
+            "Defname": "Couch",
+            "Flip": true,
+            "Rotation": 2,
+            "X": 0,
+            "Y": 8
+        },
+        {
+            "Defname": "Dressing Mirror",
+            "Flip": true,
+            "Rotation": 1,
+            "X": 11,
+            "Y": 19
+        },
+        {
+            "Defname": "Victrola",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 1,
+            "Y": 13
+        },
+        {
+            "Defname": "Stool 01 - Round",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 1,
+            "Y": 7
+        },
+        {
+            "Defname": "Coffee Table",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 3,
+            "Y": 10
+        },
+        {
+            "Defname": "Clock",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 12,
+            "Y": 10
+        }
+    ],
+    "Name": "lvl3_cells",
+    "Size": {
+        "Dx": 15,
+        "Dy": 20,
+        "Name": "Medium_B"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_brick_medium_01.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Rug Round 04",
+            "Flip": false,
+            "Rot": 0,
+            "X": 3.3423676,
+            "Y": 10.938451
+        }
+    ]
+}

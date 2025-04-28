@@ -1,1 +1,112 @@
-{"Name":"lvl6_power","Size":{"Name":"Medium_A","Dx":20,"Dy":15},"Furniture":[{"Defname":"Computer","X":19,"Y":13,"Rotation":0,"Flip":false},{"Defname":"Console","X":9,"Y":2,"Rotation":0,"Flip":false},{"Defname":"Terminal","X":14,"Y":7,"Rotation":0,"Flip":false},{"Defname":"Tesla Coil","X":9,"Y":6,"Rotation":0,"Flip":false},{"Defname":"Terminal","X":5,"Y":7,"Rotation":0,"Flip":false},{"Defname":"Table 02 Experiment","X":19,"Y":1,"Rotation":0,"Flip":true},{"Defname":"Bench 02 - Flat","X":1,"Y":14,"Rotation":0,"Flip":true},{"Defname":"Dining Chair","X":18,"Y":1,"Rotation":3,"Flip":false}],"WallTextures":[{"Defname":"Window 03 - Gothic Peak","X":29.0421,"Y":10.686753,"Rot":0,"Flip":false},{"Defname":"Window 03 - Gothic Peak","X":29.230268,"Y":4.640451,"Rot":0,"Flip":false},{"Defname":"Window 03 - Gothic Peak","X":15.6244755,"Y":24.061977,"Rot":0,"Flip":false},{"Defname":"Window 03 - Gothic Peak","X":9.0728655,"Y":24.107506,"Rot":0,"Flip":false},{"Defname":"Window 03 - Gothic Peak","X":2.5216608,"Y":24.064732,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_13_flag_medium_a.png"},"Wall":{"Path":"rooms/walls/wall_06.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_13_flag_medium_a.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Computer",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 13
+        },
+        {
+            "Defname": "Console",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 9,
+            "Y": 2
+        },
+        {
+            "Defname": "Terminal",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 14,
+            "Y": 7
+        },
+        {
+            "Defname": "Tesla Coil",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 9,
+            "Y": 6
+        },
+        {
+            "Defname": "Terminal",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 5,
+            "Y": 7
+        },
+        {
+            "Defname": "Table 02 Experiment",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 1
+        },
+        {
+            "Defname": "Bench 02 - Flat",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 1,
+            "Y": 14
+        },
+        {
+            "Defname": "Dining Chair",
+            "Flip": false,
+            "Rotation": 3,
+            "X": 18,
+            "Y": 1
+        }
+    ],
+    "Name": "lvl6_power",
+    "Size": {
+        "Dx": 20,
+        "Dy": 15,
+        "Name": "Medium_A"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_06.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Window 03 - Gothic Peak",
+            "Flip": false,
+            "Rot": 0,
+            "X": 29.0421,
+            "Y": 10.686753
+        },
+        {
+            "Defname": "Window 03 - Gothic Peak",
+            "Flip": false,
+            "Rot": 0,
+            "X": 29.230268,
+            "Y": 4.640451
+        },
+        {
+            "Defname": "Window 03 - Gothic Peak",
+            "Flip": false,
+            "Rot": 0,
+            "X": 15.6244755,
+            "Y": 24.061977
+        },
+        {
+            "Defname": "Window 03 - Gothic Peak",
+            "Flip": false,
+            "Rot": 0,
+            "X": 9.0728655,
+            "Y": 24.107506
+        },
+        {
+            "Defname": "Window 03 - Gothic Peak",
+            "Flip": false,
+            "Rot": 0,
+            "X": 2.5216608,
+            "Y": 24.064732
+        }
+    ]
+}

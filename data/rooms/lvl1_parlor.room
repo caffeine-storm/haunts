@@ -1,1 +1,105 @@
-{"Name":"lvl1_parlor","Size":{"Name":"Medium_A","Dx":20,"Dy":15},"Furniture":[{"Defname":"Snooker Table","X":8,"Y":6,"Rotation":0,"Flip":false},{"Defname":"Chaise 01","X":18,"Y":11,"Rotation":0,"Flip":true},{"Defname":"Chair 03","X":18,"Y":2,"Rotation":0,"Flip":false},{"Defname":"Chair 03","X":16,"Y":0,"Rotation":2,"Flip":true},{"Defname":"Victrola","X":1,"Y":1,"Rotation":1,"Flip":true},{"Defname":"Sideboard","X":1,"Y":14,"Rotation":0,"Flip":false},{"Defname":"Nightstand","X":17,"Y":14,"Rotation":0,"Flip":true}],"WallTextures":[{"Defname":"Mask 09","X":17.885878,"Y":18.376375,"Rot":0,"Flip":false},{"Defname":"Mask 07","X":2.853915,"Y":18.444885,"Rot":0,"Flip":false},{"Defname":"Mask 10","X":23.573332,"Y":12.288372,"Rot":0,"Flip":false},{"Defname":"Mask 08","X":23.092655,"Y":1.9924551,"Rot":0,"Flip":false},{"Defname":"Rug Round Large 03","X":10.371638,"Y":7.614128,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_02_maplewood_medium_a.png"},"Wall":{"Path":"rooms/walls/wall_hatch_pattern.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_02_maplewood_medium_a.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Snooker Table",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 8,
+            "Y": 6
+        },
+        {
+            "Defname": "Chaise 01",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 18,
+            "Y": 11
+        },
+        {
+            "Defname": "Chair 03",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 18,
+            "Y": 2
+        },
+        {
+            "Defname": "Chair 03",
+            "Flip": true,
+            "Rotation": 2,
+            "X": 16,
+            "Y": 0
+        },
+        {
+            "Defname": "Victrola",
+            "Flip": true,
+            "Rotation": 1,
+            "X": 1,
+            "Y": 1
+        },
+        {
+            "Defname": "Sideboard",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 1,
+            "Y": 14
+        },
+        {
+            "Defname": "Nightstand",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 17,
+            "Y": 14
+        }
+    ],
+    "Name": "lvl1_parlor",
+    "Size": {
+        "Dx": 20,
+        "Dy": 15,
+        "Name": "Medium_A"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_hatch_pattern.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Mask 09",
+            "Flip": false,
+            "Rot": 0,
+            "X": 17.885878,
+            "Y": 18.376375
+        },
+        {
+            "Defname": "Mask 07",
+            "Flip": false,
+            "Rot": 0,
+            "X": 2.853915,
+            "Y": 18.444885
+        },
+        {
+            "Defname": "Mask 10",
+            "Flip": false,
+            "Rot": 0,
+            "X": 23.573332,
+            "Y": 12.288372
+        },
+        {
+            "Defname": "Mask 08",
+            "Flip": false,
+            "Rot": 0,
+            "X": 23.092655,
+            "Y": 1.9924551
+        },
+        {
+            "Defname": "Rug Round Large 03",
+            "Flip": false,
+            "Rot": 0,
+            "X": 10.371638,
+            "Y": 7.614128
+        }
+    ]
+}

@@ -1,1 +1,119 @@
-{"Name":"lvl9_core_2","Size":{"Name":"Large","Dx":20,"Dy":20},"Furniture":[{"Defname":"Computer","X":1,"Y":19,"Rotation":0,"Flip":true},{"Defname":"Computer","X":19,"Y":17,"Rotation":0,"Flip":false},{"Defname":"Tesla Coil","X":9,"Y":9,"Rotation":0,"Flip":false},{"Defname":"Console","X":6,"Y":10,"Rotation":0,"Flip":true},{"Defname":"Coffin","X":9,"Y":7,"Rotation":2,"Flip":false},{"Defname":"Coffin","X":19,"Y":19,"Rotation":0,"Flip":true},{"Defname":"Ladder","X":19,"Y":0,"Rotation":0,"Flip":true},{"Defname":"Sideboard","X":3,"Y":19,"Rotation":0,"Flip":false},{"Defname":"Nightstand","X":19,"Y":16,"Rotation":1,"Flip":false},{"Defname":"Treasure Chest","X":19,"Y":1,"Rotation":0,"Flip":true}],"WallTextures":[{"Defname":"Portrait 17","X":27.160175,"Y":2.3336132,"Rot":0,"Flip":false},{"Defname":"Portrait 16","X":26.292519,"Y":17.026737,"Rot":0,"Flip":false},{"Defname":"Plaque01","X":16.930626,"Y":25.15551,"Rot":0,"Flip":false},{"Defname":"Plaque01","X":2.8890378,"Y":25.11937,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_13_flag_large.png"},"Wall":{"Path":"rooms/walls/wall_06.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_13_flag_large.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Computer",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 1,
+            "Y": 19
+        },
+        {
+            "Defname": "Computer",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 17
+        },
+        {
+            "Defname": "Tesla Coil",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 9,
+            "Y": 9
+        },
+        {
+            "Defname": "Console",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 6,
+            "Y": 10
+        },
+        {
+            "Defname": "Coffin",
+            "Flip": false,
+            "Rotation": 2,
+            "X": 9,
+            "Y": 7
+        },
+        {
+            "Defname": "Coffin",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 19
+        },
+        {
+            "Defname": "Ladder",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 0
+        },
+        {
+            "Defname": "Sideboard",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 3,
+            "Y": 19
+        },
+        {
+            "Defname": "Nightstand",
+            "Flip": false,
+            "Rotation": 1,
+            "X": 19,
+            "Y": 16
+        },
+        {
+            "Defname": "Treasure Chest",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 1
+        }
+    ],
+    "Name": "lvl9_core_2",
+    "Size": {
+        "Dx": 20,
+        "Dy": 20,
+        "Name": "Large"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_06.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Portrait 17",
+            "Flip": false,
+            "Rot": 0,
+            "X": 27.160175,
+            "Y": 2.3336132
+        },
+        {
+            "Defname": "Portrait 16",
+            "Flip": false,
+            "Rot": 0,
+            "X": 26.292519,
+            "Y": 17.026737
+        },
+        {
+            "Defname": "Plaque01",
+            "Flip": false,
+            "Rot": 0,
+            "X": 16.930626,
+            "Y": 25.15551
+        },
+        {
+            "Defname": "Plaque01",
+            "Flip": false,
+            "Rot": 0,
+            "X": 2.8890378,
+            "Y": 25.11937
+        }
+    ]
+}

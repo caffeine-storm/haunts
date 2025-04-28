@@ -1,1 +1,41 @@
-{"Name":"lvl3_hall_b_2","Size":{"Name":"Hall_B","Dx":5,"Dy":20},"Furniture":[],"WallTextures":[{"Defname":"Rug Runner 04","X":2.586839,"Y":10.287879,"Rot":0,"Flip":false},{"Defname":"Frame01","X":7.2334957,"Y":3.5138156,"Rot":0,"Flip":false},{"Defname":"Frame02","X":7.103726,"Y":16.866495,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_16_woodpanel_hall_b.png"},"Wall":{"Path":"rooms/walls/wall_hatch_pattern.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_16_woodpanel_hall_b.png"
+    },
+    "Furniture": [],
+    "Name": "lvl3_hall_b_2",
+    "Size": {
+        "Dx": 5,
+        "Dy": 20,
+        "Name": "Hall_B"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_hatch_pattern.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Rug Runner 04",
+            "Flip": false,
+            "Rot": 0,
+            "X": 2.586839,
+            "Y": 10.287879
+        },
+        {
+            "Defname": "Frame01",
+            "Flip": false,
+            "Rot": 0,
+            "X": 7.2334957,
+            "Y": 3.5138156
+        },
+        {
+            "Defname": "Frame02",
+            "Flip": false,
+            "Rot": 0,
+            "X": 7.103726,
+            "Y": 16.866495
+        }
+    ]
+}

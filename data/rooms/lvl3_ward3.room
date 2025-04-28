@@ -1,1 +1,119 @@
-{"Name":"lvl3_ward3","Size":{"Name":"Small_Rect_A","Dx":10,"Dy":15},"Furniture":[{"Defname":"Bed - Single","X":4,"Y":5,"Rotation":0,"Flip":false},{"Defname":"Dining Chair","X":5,"Y":2,"Rotation":3,"Flip":false},{"Defname":"Nightstand","X":6,"Y":8,"Rotation":2,"Flip":false},{"Defname":"Sideboard","X":6,"Y":4,"Rotation":0,"Flip":true}],"WallTextures":[{"Defname":"Rug Round 04","X":4.8351064,"Y":6.2983356,"Rot":0,"Flip":false},{"Defname":"Painting 01 Ship","X":12.809674,"Y":6.7366705,"Rot":0.24,"Flip":false},{"Defname":"Ectostain - Spatter","X":7.5278664,"Y":14.342187,"Rot":0,"Flip":false},{"Defname":"Ectostain - Spatter","X":6.7621036,"Y":12.842901,"Rot":0.48000008,"Flip":false},{"Defname":"Ectostain - Splatter","X":9.02982,"Y":13.329214,"Rot":-0.35999998,"Flip":false},{"Defname":"Ectostain - Splat","X":9.806729,"Y":14.350632,"Rot":0,"Flip":false},{"Defname":"Grunge Corner 01","X":7.6487074,"Y":14.567819,"Rot":0,"Flip":false},{"Defname":"Inkstain - Drips","X":8.293149,"Y":17.901073,"Rot":0,"Flip":false},{"Defname":"Inkstain - Splat","X":7.944422,"Y":16.517677,"Rot":0,"Flip":false},{"Defname":"Inkstain - Smatter","X":8.573117,"Y":17.182268,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_10_tile_small_rect_a.png"},"Wall":{"Path":"rooms/walls/wall_hatch_pattern.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_10_tile_small_rect_a.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Bed - Single",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 4,
+            "Y": 5
+        },
+        {
+            "Defname": "Dining Chair",
+            "Flip": false,
+            "Rotation": 3,
+            "X": 5,
+            "Y": 2
+        },
+        {
+            "Defname": "Nightstand",
+            "Flip": false,
+            "Rotation": 2,
+            "X": 6,
+            "Y": 8
+        },
+        {
+            "Defname": "Sideboard",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 6,
+            "Y": 4
+        }
+    ],
+    "Name": "lvl3_ward3",
+    "Size": {
+        "Dx": 10,
+        "Dy": 15,
+        "Name": "Small_Rect_A"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_hatch_pattern.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Rug Round 04",
+            "Flip": false,
+            "Rot": 0,
+            "X": 4.8351064,
+            "Y": 6.2983356
+        },
+        {
+            "Defname": "Painting 01 Ship",
+            "Flip": false,
+            "Rot": 0.24,
+            "X": 12.809674,
+            "Y": 6.7366705
+        },
+        {
+            "Defname": "Ectostain - Spatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 7.5278664,
+            "Y": 14.342187
+        },
+        {
+            "Defname": "Ectostain - Spatter",
+            "Flip": false,
+            "Rot": 0.48000008,
+            "X": 6.7621036,
+            "Y": 12.842901
+        },
+        {
+            "Defname": "Ectostain - Splatter",
+            "Flip": false,
+            "Rot": -0.35999998,
+            "X": 9.02982,
+            "Y": 13.329214
+        },
+        {
+            "Defname": "Ectostain - Splat",
+            "Flip": false,
+            "Rot": 0,
+            "X": 9.806729,
+            "Y": 14.350632
+        },
+        {
+            "Defname": "Grunge Corner 01",
+            "Flip": false,
+            "Rot": 0,
+            "X": 7.6487074,
+            "Y": 14.567819
+        },
+        {
+            "Defname": "Inkstain - Drips",
+            "Flip": false,
+            "Rot": 0,
+            "X": 8.293149,
+            "Y": 17.901073
+        },
+        {
+            "Defname": "Inkstain - Splat",
+            "Flip": false,
+            "Rot": 0,
+            "X": 7.944422,
+            "Y": 16.517677
+        },
+        {
+            "Defname": "Inkstain - Smatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 8.573117,
+            "Y": 17.182268
+        }
+    ]
+}

@@ -1,1 +1,112 @@
-{"Name":"lvl5_storage_1","Size":{"Name":"Small","Dx":10,"Dy":10},"Furniture":[{"Defname":"Coffin","X":9,"Y":9,"Rotation":0,"Flip":false},{"Defname":"Coffin","X":8,"Y":9,"Rotation":0,"Flip":false},{"Defname":"Coffin","X":9,"Y":8,"Rotation":0,"Flip":true},{"Defname":"Armoire","X":9,"Y":0,"Rotation":1,"Flip":true}],"WallTextures":[{"Defname":"Pentagram 03 - Small Black","X":12.608006,"Y":2.5210636,"Rot":0,"Flip":false},{"Defname":"Scratches 02 Long Straight","X":12.09294,"Y":9.301269,"Rot":0.24,"Flip":false},{"Defname":"Inkstain - Drips","X":3.0033913,"Y":15.553377,"Rot":0,"Flip":false},{"Defname":"Inkstain - Splat","X":5.178337,"Y":4.245702,"Rot":0.6,"Flip":false},{"Defname":"Inkstain - Splatter","X":5.105923,"Y":4.600926,"Rot":0,"Flip":false},{"Defname":"Footprints - ink 02","X":5.5871406,"Y":6.1676917,"Rot":-0.96,"Flip":false},{"Defname":"Footprints - ink 02","X":6.4405975,"Y":6.955358,"Rot":-0.96,"Flip":false},{"Defname":"Footprints - ink 02","X":7.300303,"Y":7.8150635,"Rot":-1.02,"Flip":false},{"Defname":"Footprints - ink 02","X":8.068506,"Y":8.583265,"Rot":-1.1399999,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_07_stone_small.png"},"Wall":{"Path":"rooms/walls/wall_brick_small_01.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_07_stone_small.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Coffin",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 9,
+            "Y": 9
+        },
+        {
+            "Defname": "Coffin",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 8,
+            "Y": 9
+        },
+        {
+            "Defname": "Coffin",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 9,
+            "Y": 8
+        },
+        {
+            "Defname": "Armoire",
+            "Flip": true,
+            "Rotation": 1,
+            "X": 9,
+            "Y": 0
+        }
+    ],
+    "Name": "lvl5_storage_1",
+    "Size": {
+        "Dx": 10,
+        "Dy": 10,
+        "Name": "Small"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_brick_small_01.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Pentagram 03 - Small Black",
+            "Flip": false,
+            "Rot": 0,
+            "X": 12.608006,
+            "Y": 2.5210636
+        },
+        {
+            "Defname": "Scratches 02 Long Straight",
+            "Flip": false,
+            "Rot": 0.24,
+            "X": 12.09294,
+            "Y": 9.301269
+        },
+        {
+            "Defname": "Inkstain - Drips",
+            "Flip": false,
+            "Rot": 0,
+            "X": 3.0033913,
+            "Y": 15.553377
+        },
+        {
+            "Defname": "Inkstain - Splat",
+            "Flip": false,
+            "Rot": 0.6,
+            "X": 5.178337,
+            "Y": 4.245702
+        },
+        {
+            "Defname": "Inkstain - Splatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 5.105923,
+            "Y": 4.600926
+        },
+        {
+            "Defname": "Footprints - ink 02",
+            "Flip": false,
+            "Rot": -0.96,
+            "X": 5.5871406,
+            "Y": 6.1676917
+        },
+        {
+            "Defname": "Footprints - ink 02",
+            "Flip": false,
+            "Rot": -0.96,
+            "X": 6.4405975,
+            "Y": 6.955358
+        },
+        {
+            "Defname": "Footprints - ink 02",
+            "Flip": false,
+            "Rot": -1.02,
+            "X": 7.300303,
+            "Y": 7.8150635
+        },
+        {
+            "Defname": "Footprints - ink 02",
+            "Flip": false,
+            "Rot": -1.1399999,
+            "X": 8.068506,
+            "Y": 8.583265
+        }
+    ]
+}

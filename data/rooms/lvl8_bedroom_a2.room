@@ -1,1 +1,41 @@
-{"Name":"lvl8_bedroom_a2","Size":{"Name":"Small_Rect_A","Dx":10,"Dy":15},"Furniture":[{"Defname":"Sideboard","X":9,"Y":1,"Rotation":0,"Flip":true},{"Defname":"Bed - Master","X":4,"Y":11,"Rotation":0,"Flip":true},{"Defname":"Armoire","X":1,"Y":14,"Rotation":0,"Flip":false}],"WallTextures":[],"Floor":{"Path":"rooms/floors/floor_01_rug_small_rect_a.png"},"Wall":{"Path":"rooms/walls/wall_04.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_01_rug_small_rect_a.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Sideboard",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 9,
+            "Y": 1
+        },
+        {
+            "Defname": "Bed - Master",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 4,
+            "Y": 11
+        },
+        {
+            "Defname": "Armoire",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 1,
+            "Y": 14
+        }
+    ],
+    "Name": "lvl8_bedroom_a2",
+    "Size": {
+        "Dx": 10,
+        "Dy": 15,
+        "Name": "Small_Rect_A"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_04.png"
+    },
+    "WallTextures": []
+}

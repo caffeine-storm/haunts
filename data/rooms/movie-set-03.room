@@ -1,1 +1,2595 @@
-{"Name":"movie-set-03","Size":{"Name":"Large","Dx":20,"Dy":20},"Furniture":[{"Defname":"Coal Fired Range","X":19,"Y":14,"Rotation":1},{"Defname":"Dining Table without Chairs","X":10,"Y":14,"Rotation":0},{"Defname":"Kitchen Dresser","X":11,"Y":19,"Rotation":0},{"Defname":"Dining Chair","X":9,"Y":15,"Rotation":0},{"Defname":"Dining Chair","X":12,"Y":11,"Rotation":2},{"Defname":"Barrels 01 Black","X":19,"Y":10,"Rotation":1},{"Defname":"Barrels 01 Black","X":19,"Y":7,"Rotation":1},{"Defname":"Table 02 Experiment","X":1,"Y":5,"Rotation":1}],"WallTextures":[{"Defname":"Bloodstain - Drips","X":16.049864,"Y":12.385188,"Rot":2.4599988,"Flip":false},{"Defname":"Bloodstain - Splatter","X":6.5372624,"Y":6.747645,"Rot":-3.7799976,"Flip":false},{"Defname":"Mouse Hole LF","X":3.1426544,"Y":20.327837,"Rot":0,"Flip":false},{"Defname":"Window 01 - Round Top","X":10.941077,"Y":-19.27492,"Rot":0,"Flip":false},{"Defname":"Window 02 - Large Triple Set","X":7.8853602,"Y":-21.325993,"Rot":0,"Flip":false},{"Defname":"Window 03 - Gothic Peak","X":4.5727844,"Y":26.349564,"Rot":0,"Flip":false},{"Defname":"Window 03 - Gothic Peak","X":10.752415,"Y":26.21468,"Rot":0,"Flip":false},{"Defname":"Window 03 - Gothic Peak","X":16.852818,"Y":26.052387,"Rot":0,"Flip":false},{"Defname":"Window 03 - Gothic Peak","X":4.2150645,"Y":26.46699,"Rot":0,"Flip":false},{"Defname":"Cobweb","X":16.924625,"Y":26.028727,"Rot":0.9,"Flip":false},{"Defname":"Cobweb","X":10.678191,"Y":26.183975,"Rot":-2.3999994,"Flip":false},{"Defname":"Cobweb","X":4.6476398,"Y":25.428596,"Rot":-5.4599967,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_09.png"},"Wall":{"Path":"rooms/walls/wall_hatch_pattern.png"},"Cell_data":[[{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false}],[{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false}],[{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false}],[{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false}],[{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false}],[{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false}],[{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false}],[{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false}],[{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false}],[{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":true,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false}],[{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false}],[{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false}],[{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false}],[{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false}],[{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false}],[{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false}],[{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false}],[{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false}],[{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false}],[{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false},{"CanHaveDoor":false,"CanSpawnExplorers":false,"CanSpawnOthers":false,"CanBeGoal":false}]],"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Cell_data": [
+        [
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            }
+        ],
+        [
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            }
+        ],
+        [
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            }
+        ],
+        [
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            }
+        ],
+        [
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            }
+        ],
+        [
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            }
+        ],
+        [
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            }
+        ],
+        [
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            }
+        ],
+        [
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            }
+        ],
+        [
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": true,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            }
+        ],
+        [
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            }
+        ],
+        [
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            }
+        ],
+        [
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            }
+        ],
+        [
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            }
+        ],
+        [
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            }
+        ],
+        [
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            }
+        ],
+        [
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            }
+        ],
+        [
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            }
+        ],
+        [
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            }
+        ],
+        [
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            },
+            {
+                "CanBeGoal": false,
+                "CanHaveDoor": false,
+                "CanSpawnExplorers": false,
+                "CanSpawnOthers": false
+            }
+        ]
+    ],
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_09.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Coal Fired Range",
+            "Rotation": 1,
+            "X": 19,
+            "Y": 14
+        },
+        {
+            "Defname": "Dining Table without Chairs",
+            "Rotation": 0,
+            "X": 10,
+            "Y": 14
+        },
+        {
+            "Defname": "Kitchen Dresser",
+            "Rotation": 0,
+            "X": 11,
+            "Y": 19
+        },
+        {
+            "Defname": "Dining Chair",
+            "Rotation": 0,
+            "X": 9,
+            "Y": 15
+        },
+        {
+            "Defname": "Dining Chair",
+            "Rotation": 2,
+            "X": 12,
+            "Y": 11
+        },
+        {
+            "Defname": "Barrels 01 Black",
+            "Rotation": 1,
+            "X": 19,
+            "Y": 10
+        },
+        {
+            "Defname": "Barrels 01 Black",
+            "Rotation": 1,
+            "X": 19,
+            "Y": 7
+        },
+        {
+            "Defname": "Table 02 Experiment",
+            "Rotation": 1,
+            "X": 1,
+            "Y": 5
+        }
+    ],
+    "Name": "movie-set-03",
+    "Size": {
+        "Dx": 20,
+        "Dy": 20,
+        "Name": "Large"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_hatch_pattern.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Bloodstain - Drips",
+            "Flip": false,
+            "Rot": 2.4599988,
+            "X": 16.049864,
+            "Y": 12.385188
+        },
+        {
+            "Defname": "Bloodstain - Splatter",
+            "Flip": false,
+            "Rot": -3.7799976,
+            "X": 6.5372624,
+            "Y": 6.747645
+        },
+        {
+            "Defname": "Mouse Hole LF",
+            "Flip": false,
+            "Rot": 0,
+            "X": 3.1426544,
+            "Y": 20.327837
+        },
+        {
+            "Defname": "Window 01 - Round Top",
+            "Flip": false,
+            "Rot": 0,
+            "X": 10.941077,
+            "Y": -19.27492
+        },
+        {
+            "Defname": "Window 02 - Large Triple Set",
+            "Flip": false,
+            "Rot": 0,
+            "X": 7.8853602,
+            "Y": -21.325993
+        },
+        {
+            "Defname": "Window 03 - Gothic Peak",
+            "Flip": false,
+            "Rot": 0,
+            "X": 4.5727844,
+            "Y": 26.349564
+        },
+        {
+            "Defname": "Window 03 - Gothic Peak",
+            "Flip": false,
+            "Rot": 0,
+            "X": 10.752415,
+            "Y": 26.21468
+        },
+        {
+            "Defname": "Window 03 - Gothic Peak",
+            "Flip": false,
+            "Rot": 0,
+            "X": 16.852818,
+            "Y": 26.052387
+        },
+        {
+            "Defname": "Window 03 - Gothic Peak",
+            "Flip": false,
+            "Rot": 0,
+            "X": 4.2150645,
+            "Y": 26.46699
+        },
+        {
+            "Defname": "Cobweb",
+            "Flip": false,
+            "Rot": 0.9,
+            "X": 16.924625,
+            "Y": 26.028727
+        },
+        {
+            "Defname": "Cobweb",
+            "Flip": false,
+            "Rot": -2.3999994,
+            "X": 10.678191,
+            "Y": 26.183975
+        },
+        {
+            "Defname": "Cobweb",
+            "Flip": false,
+            "Rot": -5.4599967,
+            "X": 4.6476398,
+            "Y": 25.428596
+        }
+    ]
+}

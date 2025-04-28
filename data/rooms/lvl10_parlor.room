@@ -1,1 +1,175 @@
-{"Name":"lvl10_parlor","Size":{"Name":"Medium_A","Dx":20,"Dy":15},"Furniture":[{"Defname":"Snooker Table","X":7,"Y":6,"Rotation":0,"Flip":false},{"Defname":"Victrola","X":19,"Y":14,"Rotation":0,"Flip":false},{"Defname":"Writing Desk","X":1,"Y":14,"Rotation":0,"Flip":false},{"Defname":"Dining Chair","X":1,"Y":13,"Rotation":3,"Flip":true},{"Defname":"Chair 04 - Library Chair","X":18,"Y":2,"Rotation":0,"Flip":false},{"Defname":"Chair 04 - Library Chair","X":15,"Y":0,"Rotation":2,"Flip":true},{"Defname":"Coffee Table","X":16,"Y":2,"Rotation":0,"Flip":false},{"Defname":"Clock_02","X":19,"Y":0,"Rotation":0,"Flip":false}],"WallTextures":[{"Defname":"Portrait 05","X":23.488941,"Y":2.691434,"Rot":0,"Flip":false},{"Defname":"Portrait 07","X":16.644289,"Y":18.349613,"Rot":0,"Flip":false},{"Defname":"Portrait 09","X":2.217801,"Y":18.768764,"Rot":0,"Flip":false},{"Defname":"Wallpaper Tear 01","X":23.655767,"Y":13.662013,"Rot":0,"Flip":false},{"Defname":"Wallpaper Tear 04","X":0.6592364,"Y":19.205015,"Rot":0,"Flip":false},{"Defname":"Pentagram 03 - Small Black","X":12.136903,"Y":6.5997314,"Rot":0,"Flip":false},{"Defname":"Inkstain - Splatter","X":1.348327,"Y":14.890196,"Rot":0,"Flip":false},{"Defname":"Ectostain - Splatter","X":25.208282,"Y":14.066707,"Rot":0,"Flip":false},{"Defname":"Ectostain - Spatter","X":20.269064,"Y":2.0866818,"Rot":0,"Flip":false},{"Defname":"Ectostain - Drips","X":17.400377,"Y":19.601204,"Rot":0,"Flip":false},{"Defname":"Ectostain - Splat","X":3.118721,"Y":16.952406,"Rot":0,"Flip":false},{"Defname":"Footprints - Blood","X":5.9529605,"Y":7.5640144,"Rot":0,"Flip":false},{"Defname":"Footprints - Blood","X":10.726879,"Y":5.097303,"Rot":2.5799987,"Flip":false},{"Defname":"Bloodstain - Splatter","X":8.605223,"Y":8.552012,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_01_rug_medium_a.png"},"Wall":{"Path":"rooms/walls/wall_floral_paper.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_01_rug_medium_a.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Snooker Table",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 7,
+            "Y": 6
+        },
+        {
+            "Defname": "Victrola",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 14
+        },
+        {
+            "Defname": "Writing Desk",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 1,
+            "Y": 14
+        },
+        {
+            "Defname": "Dining Chair",
+            "Flip": true,
+            "Rotation": 3,
+            "X": 1,
+            "Y": 13
+        },
+        {
+            "Defname": "Chair 04 - Library Chair",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 18,
+            "Y": 2
+        },
+        {
+            "Defname": "Chair 04 - Library Chair",
+            "Flip": true,
+            "Rotation": 2,
+            "X": 15,
+            "Y": 0
+        },
+        {
+            "Defname": "Coffee Table",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 16,
+            "Y": 2
+        },
+        {
+            "Defname": "Clock_02",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 0
+        }
+    ],
+    "Name": "lvl10_parlor",
+    "Size": {
+        "Dx": 20,
+        "Dy": 15,
+        "Name": "Medium_A"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_floral_paper.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Portrait 05",
+            "Flip": false,
+            "Rot": 0,
+            "X": 23.488941,
+            "Y": 2.691434
+        },
+        {
+            "Defname": "Portrait 07",
+            "Flip": false,
+            "Rot": 0,
+            "X": 16.644289,
+            "Y": 18.349613
+        },
+        {
+            "Defname": "Portrait 09",
+            "Flip": false,
+            "Rot": 0,
+            "X": 2.217801,
+            "Y": 18.768764
+        },
+        {
+            "Defname": "Wallpaper Tear 01",
+            "Flip": false,
+            "Rot": 0,
+            "X": 23.655767,
+            "Y": 13.662013
+        },
+        {
+            "Defname": "Wallpaper Tear 04",
+            "Flip": false,
+            "Rot": 0,
+            "X": 0.6592364,
+            "Y": 19.205015
+        },
+        {
+            "Defname": "Pentagram 03 - Small Black",
+            "Flip": false,
+            "Rot": 0,
+            "X": 12.136903,
+            "Y": 6.5997314
+        },
+        {
+            "Defname": "Inkstain - Splatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 1.348327,
+            "Y": 14.890196
+        },
+        {
+            "Defname": "Ectostain - Splatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 25.208282,
+            "Y": 14.066707
+        },
+        {
+            "Defname": "Ectostain - Spatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 20.269064,
+            "Y": 2.0866818
+        },
+        {
+            "Defname": "Ectostain - Drips",
+            "Flip": false,
+            "Rot": 0,
+            "X": 17.400377,
+            "Y": 19.601204
+        },
+        {
+            "Defname": "Ectostain - Splat",
+            "Flip": false,
+            "Rot": 0,
+            "X": 3.118721,
+            "Y": 16.952406
+        },
+        {
+            "Defname": "Footprints - Blood",
+            "Flip": false,
+            "Rot": 0,
+            "X": 5.9529605,
+            "Y": 7.5640144
+        },
+        {
+            "Defname": "Footprints - Blood",
+            "Flip": false,
+            "Rot": 2.5799987,
+            "X": 10.726879,
+            "Y": 5.097303
+        },
+        {
+            "Defname": "Bloodstain - Splatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 8.605223,
+            "Y": 8.552012
+        }
+    ]
+}

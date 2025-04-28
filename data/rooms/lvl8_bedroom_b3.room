@@ -1,1 +1,91 @@
-{"Name":"lvl8_bedroom_b3","Size":{"Name":"Small_Rect_B","Dx":15,"Dy":10},"Furniture":[{"Defname":"Bed - Single","X":11,"Y":6,"Rotation":0,"Flip":true},{"Defname":"Treasure Chest","X":14,"Y":0,"Rotation":0,"Flip":true},{"Defname":"Dress Form","X":6,"Y":9,"Rotation":0,"Flip":false},{"Defname":"Bed - Single","X":11,"Y":2,"Rotation":0,"Flip":true},{"Defname":"Nightstand","X":14,"Y":5,"Rotation":0,"Flip":false},{"Defname":"Sideboard","X":1,"Y":9,"Rotation":0,"Flip":false},{"Defname":"Treasure Chest","X":14,"Y":8,"Rotation":0,"Flip":true}],"WallTextures":[{"Defname":"Frame01","X":12.582124,"Y":15.574157,"Rot":0,"Flip":false},{"Defname":"Frame01","X":3.048027,"Y":15.769694,"Rot":0,"Flip":false},{"Defname":"Window 04 - Half Moon Transom","X":21.426218,"Y":5.202923,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_01_rug_small_rect_b.png"},"Wall":{"Path":"rooms/walls/wall_04.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_01_rug_small_rect_b.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Bed - Single",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 11,
+            "Y": 6
+        },
+        {
+            "Defname": "Treasure Chest",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 14,
+            "Y": 0
+        },
+        {
+            "Defname": "Dress Form",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 6,
+            "Y": 9
+        },
+        {
+            "Defname": "Bed - Single",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 11,
+            "Y": 2
+        },
+        {
+            "Defname": "Nightstand",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 14,
+            "Y": 5
+        },
+        {
+            "Defname": "Sideboard",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 1,
+            "Y": 9
+        },
+        {
+            "Defname": "Treasure Chest",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 14,
+            "Y": 8
+        }
+    ],
+    "Name": "lvl8_bedroom_b3",
+    "Size": {
+        "Dx": 15,
+        "Dy": 10,
+        "Name": "Small_Rect_B"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_04.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Frame01",
+            "Flip": false,
+            "Rot": 0,
+            "X": 12.582124,
+            "Y": 15.574157
+        },
+        {
+            "Defname": "Frame01",
+            "Flip": false,
+            "Rot": 0,
+            "X": 3.048027,
+            "Y": 15.769694
+        },
+        {
+            "Defname": "Window 04 - Half Moon Transom",
+            "Flip": false,
+            "Rot": 0,
+            "X": 21.426218,
+            "Y": 5.202923
+        }
+    ]
+}

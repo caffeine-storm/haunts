@@ -1,1 +1,55 @@
-{"Name":"lvl10_small_bedroom_b_s01","Size":{"Name":"Small_Rect_B","Dx":15,"Dy":10},"Furniture":[{"Defname":"Bed - Single","X":11,"Y":1,"Rotation":0,"Flip":true},{"Defname":"Chair 04 - Library Chair","X":12,"Y":8,"Rotation":0,"Flip":true},{"Defname":"Sideboard","X":0,"Y":9,"Rotation":0,"Flip":false},{"Defname":"Stool 01 - Round","X":14,"Y":9,"Rotation":0,"Flip":false},{"Defname":"Treasure Chest","X":13,"Y":0,"Rotation":0,"Flip":false}],"WallTextures":[],"Floor":{"Path":"rooms/floors/floor_16_woodpanel_small_rect_b.png"},"Wall":{"Path":"rooms/walls/wall_hatch_pattern.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_16_woodpanel_small_rect_b.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Bed - Single",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 11,
+            "Y": 1
+        },
+        {
+            "Defname": "Chair 04 - Library Chair",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 12,
+            "Y": 8
+        },
+        {
+            "Defname": "Sideboard",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 0,
+            "Y": 9
+        },
+        {
+            "Defname": "Stool 01 - Round",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 14,
+            "Y": 9
+        },
+        {
+            "Defname": "Treasure Chest",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 13,
+            "Y": 0
+        }
+    ],
+    "Name": "lvl10_small_bedroom_b_s01",
+    "Size": {
+        "Dx": 15,
+        "Dy": 10,
+        "Name": "Small_Rect_B"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_hatch_pattern.png"
+    },
+    "WallTextures": []
+}

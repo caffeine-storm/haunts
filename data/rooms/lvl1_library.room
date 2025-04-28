@@ -1,1 +1,132 @@
-{"Name":"lvl1_library","Size":{"Name":"Medium_A","Dx":20,"Dy":15},"Furniture":[{"Defname":"Bookcase","X":15,"Y":14,"Rotation":0,"Flip":false},{"Defname":"Bookcase","X":19,"Y":10,"Rotation":0,"Flip":true},{"Defname":"Bookcase","X":19,"Y":1,"Rotation":0,"Flip":true},{"Defname":"Bookcase","X":1,"Y":14,"Rotation":0,"Flip":false},{"Defname":"Bookcase","X":5,"Y":14,"Rotation":0,"Flip":false},{"Defname":"Column 02 Black","X":0,"Y":14,"Rotation":0,"Flip":false},{"Defname":"Chair 04 - Library Chair","X":11,"Y":5,"Rotation":0,"Flip":false},{"Defname":"Chair 04 - Library Chair","X":7,"Y":5,"Rotation":2,"Flip":false},{"Defname":"Column 02 Black","X":19,"Y":14,"Rotation":0,"Flip":false},{"Defname":"Column 02 Black","X":9,"Y":14,"Rotation":0,"Flip":false},{"Defname":"Column 02 Black","X":19,"Y":5,"Rotation":0,"Flip":false},{"Defname":"Column 02 Black","X":14,"Y":14,"Rotation":0,"Flip":false},{"Defname":"Column 02 Black","X":19,"Y":9,"Rotation":0,"Flip":false},{"Defname":"Column 02 Black","X":19,"Y":0,"Rotation":0,"Flip":false},{"Defname":"Setee 01 Black","X":9,"Y":8,"Rotation":0,"Flip":true},{"Defname":"Coffee Table","X":9,"Y":6,"Rotation":0,"Flip":false}],"WallTextures":[],"Floor":{"Path":"rooms/floors/floor_01_rug_small_rect_a.png"},"Wall":{"Path":"rooms/walls/wall_organic_paper.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_01_rug_small_rect_a.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Bookcase",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 15,
+            "Y": 14
+        },
+        {
+            "Defname": "Bookcase",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 10
+        },
+        {
+            "Defname": "Bookcase",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 1
+        },
+        {
+            "Defname": "Bookcase",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 1,
+            "Y": 14
+        },
+        {
+            "Defname": "Bookcase",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 5,
+            "Y": 14
+        },
+        {
+            "Defname": "Column 02 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 0,
+            "Y": 14
+        },
+        {
+            "Defname": "Chair 04 - Library Chair",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 11,
+            "Y": 5
+        },
+        {
+            "Defname": "Chair 04 - Library Chair",
+            "Flip": false,
+            "Rotation": 2,
+            "X": 7,
+            "Y": 5
+        },
+        {
+            "Defname": "Column 02 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 14
+        },
+        {
+            "Defname": "Column 02 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 9,
+            "Y": 14
+        },
+        {
+            "Defname": "Column 02 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 5
+        },
+        {
+            "Defname": "Column 02 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 14,
+            "Y": 14
+        },
+        {
+            "Defname": "Column 02 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 9
+        },
+        {
+            "Defname": "Column 02 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 0
+        },
+        {
+            "Defname": "Setee 01 Black",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 9,
+            "Y": 8
+        },
+        {
+            "Defname": "Coffee Table",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 9,
+            "Y": 6
+        }
+    ],
+    "Name": "lvl1_library",
+    "Size": {
+        "Dx": 20,
+        "Dy": 15,
+        "Name": "Medium_A"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_organic_paper.png"
+    },
+    "WallTextures": []
+}

@@ -1,1 +1,98 @@
-{"Name":"lvl4_lair_temple","Size":{"Name":"Medium_A","Dx":20,"Dy":15},"Furniture":[{"Defname":"Obelisk","X":10,"Y":7,"Rotation":0,"Flip":false},{"Defname":"Standalabra","X":19,"Y":14,"Rotation":0,"Flip":false},{"Defname":"Standalabra","X":19,"Y":0,"Rotation":0,"Flip":false},{"Defname":"Standalabra","X":0,"Y":14,"Rotation":0,"Flip":false},{"Defname":"Spikes","X":8,"Y":6,"Rotation":0,"Flip":false}],"WallTextures":[{"Defname":"Bloodstain - Spatter","X":9.45644,"Y":7.4382067,"Rot":0.42,"Flip":false},{"Defname":"Bloodstain - Splatter","X":9.031625,"Y":6.5042257,"Rot":-0.35999995,"Flip":false},{"Defname":"Cult Symbol 05 - Large White","X":29.20248,"Y":3.412382,"Rot":0.53999996,"Flip":false},{"Defname":"Debris 01","X":14.635407,"Y":7.0973606,"Rot":0,"Flip":false},{"Defname":"Mirrors - Wall","X":10.364095,"Y":19.48875,"Rot":0,"Flip":false},{"Defname":"Inkstain - Splat","X":10.944394,"Y":19.207106,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_17_grass.png"},"Wall":{"Path":"rooms/walls/wall_01.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_17_grass.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Obelisk",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 10,
+            "Y": 7
+        },
+        {
+            "Defname": "Standalabra",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 14
+        },
+        {
+            "Defname": "Standalabra",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 0
+        },
+        {
+            "Defname": "Standalabra",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 0,
+            "Y": 14
+        },
+        {
+            "Defname": "Spikes",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 8,
+            "Y": 6
+        }
+    ],
+    "Name": "lvl4_lair_temple",
+    "Size": {
+        "Dx": 20,
+        "Dy": 15,
+        "Name": "Medium_A"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_01.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Bloodstain - Spatter",
+            "Flip": false,
+            "Rot": 0.42,
+            "X": 9.45644,
+            "Y": 7.4382067
+        },
+        {
+            "Defname": "Bloodstain - Splatter",
+            "Flip": false,
+            "Rot": -0.35999995,
+            "X": 9.031625,
+            "Y": 6.5042257
+        },
+        {
+            "Defname": "Cult Symbol 05 - Large White",
+            "Flip": false,
+            "Rot": 0.53999996,
+            "X": 29.20248,
+            "Y": 3.412382
+        },
+        {
+            "Defname": "Debris 01",
+            "Flip": false,
+            "Rot": 0,
+            "X": 14.635407,
+            "Y": 7.0973606
+        },
+        {
+            "Defname": "Mirrors - Wall",
+            "Flip": false,
+            "Rot": 0,
+            "X": 10.364095,
+            "Y": 19.48875
+        },
+        {
+            "Defname": "Inkstain - Splat",
+            "Flip": false,
+            "Rot": 0,
+            "X": 10.944394,
+            "Y": 19.207106
+        }
+    ]
+}

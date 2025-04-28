@@ -1,1 +1,49 @@
-{"Name":"lvl4_center_vault","Size":{"Name":"Large","Dx":20,"Dy":20},"Furniture":[{"Defname":"Column 2x2","X":18,"Y":18,"Rotation":0,"Flip":false},{"Defname":"Column 2x2","X":18,"Y":0,"Rotation":0,"Flip":false},{"Defname":"Column 2x2","X":0,"Y":18,"Rotation":0,"Flip":false}],"WallTextures":[{"Defname":"Bloodstain - Splatter","X":18.132418,"Y":17.564135,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_17_grass_large.png"},"Wall":{"Path":"rooms/walls/wall_05.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_17_grass_large.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Column 2x2",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 18,
+            "Y": 18
+        },
+        {
+            "Defname": "Column 2x2",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 18,
+            "Y": 0
+        },
+        {
+            "Defname": "Column 2x2",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 0,
+            "Y": 18
+        }
+    ],
+    "Name": "lvl4_center_vault",
+    "Size": {
+        "Dx": 20,
+        "Dy": 20,
+        "Name": "Large"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_05.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Bloodstain - Splatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 18.132418,
+            "Y": 17.564135
+        }
+    ]
+}

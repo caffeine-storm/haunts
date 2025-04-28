@@ -1,1 +1,19 @@
-{"Name":"lvl8_corner","Size":{"Name":"Tiny","Dx":4,"Dy":4},"Furniture":[],"WallTextures":[],"Floor":{"Path":"rooms/floors/floor_02_maplewood_small.png"},"Wall":{"Path":"rooms/walls/wall_floral_paper.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_02_maplewood_small.png"
+    },
+    "Furniture": [],
+    "Name": "lvl8_corner",
+    "Size": {
+        "Dx": 4,
+        "Dy": 4,
+        "Name": "Tiny"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_floral_paper.png"
+    },
+    "WallTextures": []
+}

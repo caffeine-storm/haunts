@@ -1,1 +1,168 @@
-{"Name":"lvl10_dressing-room","Size":{"Name":"Medium_B","Dx":15,"Dy":20},"Furniture":[{"Defname":"Bookcase","X":11,"Y":19,"Rotation":0,"Flip":false},{"Defname":"Armoire","X":14,"Y":2,"Rotation":1,"Flip":true},{"Defname":"Armoire","X":2,"Y":19,"Rotation":1,"Flip":false},{"Defname":"Dressing Mirror","X":8,"Y":11,"Rotation":1,"Flip":true},{"Defname":"Dress Form","X":14,"Y":1,"Rotation":0,"Flip":false},{"Defname":"Coffin","X":7,"Y":7,"Rotation":2,"Flip":true}],"WallTextures":[{"Defname":"Mask 06","X":18.233604,"Y":5.5418315,"Rot":0,"Flip":false},{"Defname":"Mask 07","X":17.89235,"Y":1.0442642,"Rot":0,"Flip":false},{"Defname":"Inkstain - Splatter","X":13.400047,"Y":24.373775,"Rot":0,"Flip":false},{"Defname":"Grunge Corner 01","X":20.435452,"Y":2.1223507,"Rot":0,"Flip":false},{"Defname":"Ectostain - Splatter","X":13.685189,"Y":2.3678071,"Rot":0,"Flip":false},{"Defname":"Ectostain - Smatter","X":2.3163009,"Y":18.570986,"Rot":0,"Flip":false},{"Defname":"Debris 01","X":2.3419247,"Y":1.9334918,"Rot":0,"Flip":false},{"Defname":"Debris 01","X":7.2021832,"Y":18.841541,"Rot":0,"Flip":false},{"Defname":"Debris 01","X":10.377487,"Y":1.577555,"Rot":-0.35999998,"Flip":false},{"Defname":"Rug Oval Large 03","X":7.724038,"Y":9.892993,"Rot":-1.5599996,"Flip":false},{"Defname":"Crack 01 - Tall","X":16.653055,"Y":17.7166,"Rot":0,"Flip":false},{"Defname":"Crack 02 - Branching","X":10.341587,"Y":24.353056,"Rot":0,"Flip":false},{"Defname":"Crack 02 - Branching","X":1.1673938,"Y":22.093397,"Rot":-0.96,"Flip":false},{"Defname":"Ectostain - Drips","X":2.6652448,"Y":24.68518,"Rot":0,"Flip":false},{"Defname":"Ectostain - Drips","X":1.9886082,"Y":9.372281,"Rot":-1.5599996,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_21_mahogany_medium_b.png"},"Wall":{"Path":"rooms/walls/wall_floral_paper.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_21_mahogany_medium_b.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Bookcase",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 11,
+            "Y": 19
+        },
+        {
+            "Defname": "Armoire",
+            "Flip": true,
+            "Rotation": 1,
+            "X": 14,
+            "Y": 2
+        },
+        {
+            "Defname": "Armoire",
+            "Flip": false,
+            "Rotation": 1,
+            "X": 2,
+            "Y": 19
+        },
+        {
+            "Defname": "Dressing Mirror",
+            "Flip": true,
+            "Rotation": 1,
+            "X": 8,
+            "Y": 11
+        },
+        {
+            "Defname": "Dress Form",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 14,
+            "Y": 1
+        },
+        {
+            "Defname": "Coffin",
+            "Flip": true,
+            "Rotation": 2,
+            "X": 7,
+            "Y": 7
+        }
+    ],
+    "Name": "lvl10_dressing-room",
+    "Size": {
+        "Dx": 15,
+        "Dy": 20,
+        "Name": "Medium_B"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_floral_paper.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Mask 06",
+            "Flip": false,
+            "Rot": 0,
+            "X": 18.233604,
+            "Y": 5.5418315
+        },
+        {
+            "Defname": "Mask 07",
+            "Flip": false,
+            "Rot": 0,
+            "X": 17.89235,
+            "Y": 1.0442642
+        },
+        {
+            "Defname": "Inkstain - Splatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 13.400047,
+            "Y": 24.373775
+        },
+        {
+            "Defname": "Grunge Corner 01",
+            "Flip": false,
+            "Rot": 0,
+            "X": 20.435452,
+            "Y": 2.1223507
+        },
+        {
+            "Defname": "Ectostain - Splatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 13.685189,
+            "Y": 2.3678071
+        },
+        {
+            "Defname": "Ectostain - Smatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 2.3163009,
+            "Y": 18.570986
+        },
+        {
+            "Defname": "Debris 01",
+            "Flip": false,
+            "Rot": 0,
+            "X": 2.3419247,
+            "Y": 1.9334918
+        },
+        {
+            "Defname": "Debris 01",
+            "Flip": false,
+            "Rot": 0,
+            "X": 7.2021832,
+            "Y": 18.841541
+        },
+        {
+            "Defname": "Debris 01",
+            "Flip": false,
+            "Rot": -0.35999998,
+            "X": 10.377487,
+            "Y": 1.577555
+        },
+        {
+            "Defname": "Rug Oval Large 03",
+            "Flip": false,
+            "Rot": -1.5599996,
+            "X": 7.724038,
+            "Y": 9.892993
+        },
+        {
+            "Defname": "Crack 01 - Tall",
+            "Flip": false,
+            "Rot": 0,
+            "X": 16.653055,
+            "Y": 17.7166
+        },
+        {
+            "Defname": "Crack 02 - Branching",
+            "Flip": false,
+            "Rot": 0,
+            "X": 10.341587,
+            "Y": 24.353056
+        },
+        {
+            "Defname": "Crack 02 - Branching",
+            "Flip": false,
+            "Rot": -0.96,
+            "X": 1.1673938,
+            "Y": 22.093397
+        },
+        {
+            "Defname": "Ectostain - Drips",
+            "Flip": false,
+            "Rot": 0,
+            "X": 2.6652448,
+            "Y": 24.68518
+        },
+        {
+            "Defname": "Ectostain - Drips",
+            "Flip": false,
+            "Rot": -1.5599996,
+            "X": 1.9886082,
+            "Y": 9.372281
+        }
+    ]
+}

@@ -1,1 +1,91 @@
-{"Name":"lvl3_ward1","Size":{"Name":"Small_Rect_A","Dx":10,"Dy":15},"Furniture":[{"Defname":"Bed - Single","X":4,"Y":11,"Rotation":0,"Flip":false},{"Defname":"Dining Chair","X":7,"Y":3,"Rotation":3,"Flip":true},{"Defname":"Sink","X":8,"Y":14,"Rotation":0,"Flip":false},{"Defname":"Nightstand","X":1,"Y":14,"Rotation":2,"Flip":true},{"Defname":"Sideboard","X":9,"Y":5,"Rotation":0,"Flip":true}],"WallTextures":[{"Defname":"Cult Symbol 01 - Large Black","X":4.174322,"Y":5.913231,"Rot":0.35999998,"Flip":false},{"Defname":"Grunge Corner 01","X":7.600785,"Y":14.5382395,"Rot":0,"Flip":false},{"Defname":"Inkstain - Smatter","X":8.865176,"Y":14.58176,"Rot":0.65999997,"Flip":false},{"Defname":"Scratches 01 Random","X":12.215971,"Y":1.7353371,"Rot":0,"Flip":false},{"Defname":"Scratches 01 Random","X":11.877094,"Y":2.4841797,"Rot":1.1399999,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_10_tile_small_rect_a.png"},"Wall":{"Path":"rooms/walls/wall_hatch_pattern.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_10_tile_small_rect_a.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Bed - Single",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 4,
+            "Y": 11
+        },
+        {
+            "Defname": "Dining Chair",
+            "Flip": true,
+            "Rotation": 3,
+            "X": 7,
+            "Y": 3
+        },
+        {
+            "Defname": "Sink",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 8,
+            "Y": 14
+        },
+        {
+            "Defname": "Nightstand",
+            "Flip": true,
+            "Rotation": 2,
+            "X": 1,
+            "Y": 14
+        },
+        {
+            "Defname": "Sideboard",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 9,
+            "Y": 5
+        }
+    ],
+    "Name": "lvl3_ward1",
+    "Size": {
+        "Dx": 10,
+        "Dy": 15,
+        "Name": "Small_Rect_A"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_hatch_pattern.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Cult Symbol 01 - Large Black",
+            "Flip": false,
+            "Rot": 0.35999998,
+            "X": 4.174322,
+            "Y": 5.913231
+        },
+        {
+            "Defname": "Grunge Corner 01",
+            "Flip": false,
+            "Rot": 0,
+            "X": 7.600785,
+            "Y": 14.5382395
+        },
+        {
+            "Defname": "Inkstain - Smatter",
+            "Flip": false,
+            "Rot": 0.65999997,
+            "X": 8.865176,
+            "Y": 14.58176
+        },
+        {
+            "Defname": "Scratches 01 Random",
+            "Flip": false,
+            "Rot": 0,
+            "X": 12.215971,
+            "Y": 1.7353371
+        },
+        {
+            "Defname": "Scratches 01 Random",
+            "Flip": false,
+            "Rot": 1.1399999,
+            "X": 11.877094,
+            "Y": 2.4841797
+        }
+    ]
+}

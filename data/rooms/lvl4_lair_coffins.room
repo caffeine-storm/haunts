@@ -1,1 +1,69 @@
-{"Name":"lvl4_lair_coffins","Size":{"Name":"Medium_A","Dx":20,"Dy":15},"Furniture":[{"Defname":"Coffin","X":17,"Y":0,"Rotation":3,"Flip":true},{"Defname":"Coffin","X":19,"Y":14,"Rotation":0,"Flip":true},{"Defname":"Coffin","X":17,"Y":12,"Rotation":3,"Flip":false},{"Defname":"Coffin","X":0,"Y":0,"Rotation":2,"Flip":true},{"Defname":"Coffin","X":19,"Y":0,"Rotation":0,"Flip":true},{"Defname":"Coffin","X":19,"Y":1,"Rotation":0,"Flip":true},{"Defname":"Coffin","X":0,"Y":13,"Rotation":3,"Flip":false}],"WallTextures":[],"Floor":{"Path":"rooms/floors/floor_17_grass.png"},"Wall":{"Path":"rooms/walls/wall_01.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_17_grass.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Coffin",
+            "Flip": true,
+            "Rotation": 3,
+            "X": 17,
+            "Y": 0
+        },
+        {
+            "Defname": "Coffin",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 14
+        },
+        {
+            "Defname": "Coffin",
+            "Flip": false,
+            "Rotation": 3,
+            "X": 17,
+            "Y": 12
+        },
+        {
+            "Defname": "Coffin",
+            "Flip": true,
+            "Rotation": 2,
+            "X": 0,
+            "Y": 0
+        },
+        {
+            "Defname": "Coffin",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 0
+        },
+        {
+            "Defname": "Coffin",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 19,
+            "Y": 1
+        },
+        {
+            "Defname": "Coffin",
+            "Flip": false,
+            "Rotation": 3,
+            "X": 0,
+            "Y": 13
+        }
+    ],
+    "Name": "lvl4_lair_coffins",
+    "Size": {
+        "Dx": 20,
+        "Dy": 15,
+        "Name": "Medium_A"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_01.png"
+    },
+    "WallTextures": []
+}

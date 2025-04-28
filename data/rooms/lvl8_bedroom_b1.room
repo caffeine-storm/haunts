@@ -1,1 +1,70 @@
-{"Name":"lvl8_bedroom_b1","Size":{"Name":"Small_Rect_B","Dx":15,"Dy":10},"Furniture":[{"Defname":"Bed - Single","X":11,"Y":3,"Rotation":0,"Flip":true},{"Defname":"Armoire","X":12,"Y":9,"Rotation":0,"Flip":false},{"Defname":"Coffee Table","X":3,"Y":9,"Rotation":0,"Flip":false},{"Defname":"Chair 04 - Library Chair","X":1,"Y":8,"Rotation":0,"Flip":true},{"Defname":"Dressing Mirror","X":14,"Y":8,"Rotation":0,"Flip":false}],"WallTextures":[{"Defname":"Frame01","X":20.848919,"Y":6.751076,"Rot":0,"Flip":false},{"Defname":"Frame01","X":20.959444,"Y":2.963711,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_01_rug_small_rect_b.png"},"Wall":{"Path":"rooms/walls/wall_04.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_01_rug_small_rect_b.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Bed - Single",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 11,
+            "Y": 3
+        },
+        {
+            "Defname": "Armoire",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 12,
+            "Y": 9
+        },
+        {
+            "Defname": "Coffee Table",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 3,
+            "Y": 9
+        },
+        {
+            "Defname": "Chair 04 - Library Chair",
+            "Flip": true,
+            "Rotation": 0,
+            "X": 1,
+            "Y": 8
+        },
+        {
+            "Defname": "Dressing Mirror",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 14,
+            "Y": 8
+        }
+    ],
+    "Name": "lvl8_bedroom_b1",
+    "Size": {
+        "Dx": 15,
+        "Dy": 10,
+        "Name": "Small_Rect_B"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_04.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Frame01",
+            "Flip": false,
+            "Rot": 0,
+            "X": 20.848919,
+            "Y": 6.751076
+        },
+        {
+            "Defname": "Frame01",
+            "Flip": false,
+            "Rot": 0,
+            "X": 20.959444,
+            "Y": 2.963711
+        }
+    ]
+}

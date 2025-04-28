@@ -1,1 +1,112 @@
-{"Name":"chapel","Size":{"Name":"Small","Dx":10,"Dy":10},"Furniture":[{"Defname":"Armor 01 Black","X":5,"Y":9,"Rotation":1,"Flip":false},{"Defname":"Column 02 Black","X":9,"Y":0,"Rotation":0,"Flip":false},{"Defname":"Column 02 Black","X":9,"Y":9,"Rotation":0,"Flip":false},{"Defname":"Column 02 Black","X":0,"Y":9,"Rotation":0,"Flip":false}],"WallTextures":[{"Defname":"Window 03 - Gothic Peak","X":3.0036843,"Y":13.459347,"Rot":0,"Flip":false},{"Defname":"Window 03 - Gothic Peak","X":7.253855,"Y":13.369617,"Rot":0,"Flip":false},{"Defname":"Mouse Hole LF","X":2.8564556,"Y":10.385375,"Rot":0,"Flip":false},{"Defname":"Cobweb","X":1.3418361,"Y":15.825943,"Rot":0,"Flip":false},{"Defname":"Cobweb","X":8.657257,"Y":16.310755,"Rot":-2.4050012,"Flip":false},{"Defname":"Bloodstain - Splatter","X":4.964529,"Y":5.12978,"Rot":-2.7950015,"Flip":false},{"Defname":"Thorns 02","X":4.639427,"Y":14.350904,"Rot":0,"Flip":false},{"Defname":"Bloodstain - Drips","X":7.0412483,"Y":11.198638,"Rot":-3.1850019,"Flip":false},{"Defname":"Bloodstain - Drips","X":4.898478,"Y":15.823436,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_04.png"},"Wall":{"Path":"rooms/walls/wall_01.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_04.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Armor 01 Black",
+            "Flip": false,
+            "Rotation": 1,
+            "X": 5,
+            "Y": 9
+        },
+        {
+            "Defname": "Column 02 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 9,
+            "Y": 0
+        },
+        {
+            "Defname": "Column 02 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 9,
+            "Y": 9
+        },
+        {
+            "Defname": "Column 02 Black",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 0,
+            "Y": 9
+        }
+    ],
+    "Name": "chapel",
+    "Size": {
+        "Dx": 10,
+        "Dy": 10,
+        "Name": "Small"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_01.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Window 03 - Gothic Peak",
+            "Flip": false,
+            "Rot": 0,
+            "X": 3.0036843,
+            "Y": 13.459347
+        },
+        {
+            "Defname": "Window 03 - Gothic Peak",
+            "Flip": false,
+            "Rot": 0,
+            "X": 7.253855,
+            "Y": 13.369617
+        },
+        {
+            "Defname": "Mouse Hole LF",
+            "Flip": false,
+            "Rot": 0,
+            "X": 2.8564556,
+            "Y": 10.385375
+        },
+        {
+            "Defname": "Cobweb",
+            "Flip": false,
+            "Rot": 0,
+            "X": 1.3418361,
+            "Y": 15.825943
+        },
+        {
+            "Defname": "Cobweb",
+            "Flip": false,
+            "Rot": -2.4050012,
+            "X": 8.657257,
+            "Y": 16.310755
+        },
+        {
+            "Defname": "Bloodstain - Splatter",
+            "Flip": false,
+            "Rot": -2.7950015,
+            "X": 4.964529,
+            "Y": 5.12978
+        },
+        {
+            "Defname": "Thorns 02",
+            "Flip": false,
+            "Rot": 0,
+            "X": 4.639427,
+            "Y": 14.350904
+        },
+        {
+            "Defname": "Bloodstain - Drips",
+            "Flip": false,
+            "Rot": -3.1850019,
+            "X": 7.0412483,
+            "Y": 11.198638
+        },
+        {
+            "Defname": "Bloodstain - Drips",
+            "Flip": false,
+            "Rot": 0,
+            "X": 4.898478,
+            "Y": 15.823436
+        }
+    ]
+}

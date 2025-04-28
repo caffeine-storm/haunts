@@ -1,1 +1,19 @@
-{"Name":"lvl5_hall_a2","Size":{"Name":"Hall_A","Dx":20,"Dy":5},"Furniture":[],"WallTextures":[],"Floor":{"Path":"rooms/floors/floor_02_maplewood_hall_a.png"},"Wall":{"Path":"rooms/walls/wall_hatch_pattern.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_02_maplewood_hall_a.png"
+    },
+    "Furniture": [],
+    "Name": "lvl5_hall_a2",
+    "Size": {
+        "Dx": 20,
+        "Dy": 5,
+        "Name": "Hall_A"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_hatch_pattern.png"
+    },
+    "WallTextures": []
+}

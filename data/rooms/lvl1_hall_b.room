@@ -1,1 +1,56 @@
-{"Name":"lvl1_hall_b","Size":{"Name":"Hall_B","Dx":5,"Dy":20},"Furniture":[{"Defname":"Bench 01 - Upholstered","X":4,"Y":17,"Rotation":0,"Flip":false},{"Defname":"Plant","X":4,"Y":19,"Rotation":0,"Flip":false},{"Defname":"Stool 01 - Round","X":4,"Y":16,"Rotation":0,"Flip":false},{"Defname":"Plant","X":4,"Y":0,"Rotation":0,"Flip":false}],"WallTextures":[{"Defname":"Rug Runner 01","X":2.7521522,"Y":10.410756,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_10_tile_hall_b.png"},"Wall":{"Path":"rooms/walls/wall_02.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_10_tile_hall_b.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Bench 01 - Upholstered",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 4,
+            "Y": 17
+        },
+        {
+            "Defname": "Plant",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 4,
+            "Y": 19
+        },
+        {
+            "Defname": "Stool 01 - Round",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 4,
+            "Y": 16
+        },
+        {
+            "Defname": "Plant",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 4,
+            "Y": 0
+        }
+    ],
+    "Name": "lvl1_hall_b",
+    "Size": {
+        "Dx": 5,
+        "Dy": 20,
+        "Name": "Hall_B"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_02.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Rug Runner 01",
+            "Flip": false,
+            "Rot": 0,
+            "X": 2.7521522,
+            "Y": 10.410756
+        }
+    ]
+}

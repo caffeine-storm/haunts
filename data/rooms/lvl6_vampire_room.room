@@ -1,1 +1,70 @@
-{"Name":"lvl6_vampire_room","Size":{"Name":"Medium_B","Dx":15,"Dy":20},"Furniture":[{"Defname":"Coffin","X":7,"Y":9,"Rotation":2,"Flip":true},{"Defname":"Column 2x2","X":13,"Y":18,"Rotation":0,"Flip":false},{"Defname":"Column 2x2","X":13,"Y":0,"Rotation":0,"Flip":false},{"Defname":"Standalabra","X":8,"Y":13,"Rotation":0,"Flip":false},{"Defname":"Standalabra","X":7,"Y":7,"Rotation":0,"Flip":false}],"WallTextures":[{"Defname":"Bloodstain - Splat","X":7.877807,"Y":9.5562315,"Rot":0,"Flip":false},{"Defname":"Bloodstain - Splatter","X":19.089523,"Y":2.0520856,"Rot":0,"Flip":false}],"Floor":{"Path":"rooms/floors/floor_18_pit.png"},"Wall":{"Path":"rooms/walls/wall_05.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_18_pit.png"
+    },
+    "Furniture": [
+        {
+            "Defname": "Coffin",
+            "Flip": true,
+            "Rotation": 2,
+            "X": 7,
+            "Y": 9
+        },
+        {
+            "Defname": "Column 2x2",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 13,
+            "Y": 18
+        },
+        {
+            "Defname": "Column 2x2",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 13,
+            "Y": 0
+        },
+        {
+            "Defname": "Standalabra",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 8,
+            "Y": 13
+        },
+        {
+            "Defname": "Standalabra",
+            "Flip": false,
+            "Rotation": 0,
+            "X": 7,
+            "Y": 7
+        }
+    ],
+    "Name": "lvl6_vampire_room",
+    "Size": {
+        "Dx": 15,
+        "Dy": 20,
+        "Name": "Medium_B"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_05.png"
+    },
+    "WallTextures": [
+        {
+            "Defname": "Bloodstain - Splat",
+            "Flip": false,
+            "Rot": 0,
+            "X": 7.877807,
+            "Y": 9.5562315
+        },
+        {
+            "Defname": "Bloodstain - Splatter",
+            "Flip": false,
+            "Rot": 0,
+            "X": 19.089523,
+            "Y": 2.0520856
+        }
+    ]
+}

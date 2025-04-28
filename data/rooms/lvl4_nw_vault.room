@@ -1,1 +1,19 @@
-{"Name":"lvl4_nw_vault","Size":{"Name":"Large","Dx":20,"Dy":20},"Furniture":[],"WallTextures":[],"Floor":{"Path":"rooms/floors/floor_17_grass.png"},"Wall":{"Path":"rooms/walls/wall_05.png"},"Themes":null,"Sizes":null,"Decor":null}
+{
+    "Decor": null,
+    "Floor": {
+        "Path": "rooms/floors/floor_17_grass.png"
+    },
+    "Furniture": [],
+    "Name": "lvl4_nw_vault",
+    "Size": {
+        "Dx": 20,
+        "Dy": 20,
+        "Name": "Large"
+    },
+    "Sizes": null,
+    "Themes": null,
+    "Wall": {
+        "Path": "rooms/walls/wall_05.png"
+    },
+    "WallTextures": []
+}
