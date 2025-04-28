@@ -1,10 +1,11 @@
-- bug#26: LuaStringifyParam is stubbed and leading to useless debug output
-
 - bug#25: make a game start!
 	- tag things that need cleanup with #25
-	- ... right now, we call makeGamePanel which inits a LuaState
-		- but then we makeGameTheWrongWay which makes a new GameScript instance
-		  that does not have its LuaState initialized...
+	- running manually -> RoundStart in Tutorial01.lua errors: 'can't set value through field named "entityDef"'
+		- no line number info T_T
+	- running test -> TestGamePanel -> draws blank screen ! even though
+	  game.go:83 says there's a house-viewer and an overlay in the anchorbox
+
+- bug#26: LuaStringifyParam is stubbed and leading to useless debug output
 
 - bug#24: game/script.go:loadgameStateRaw reaches into the GamePanel to set a
   'Game' pointer; it should just load the state and let calling code make Game
