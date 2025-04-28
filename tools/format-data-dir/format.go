@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
-	"io/fs"
+	"io"
 	"os"
 	"path/filepath"
 )
@@ -37,9 +39,12 @@ var extensionToFmter = map[string]FmterType{
 	".xgml":  XmlFmter,
 }
 
-func haveFlag(flagname string) bool {
-	for _, arg := range os.Args {
+func getCheckFlag(flagname string) bool {
+	for idx, arg := range os.Args[1:] {
 		if arg == flagname {
+			copy(os.Args[idx:], os.Args[idx+1:])
+			newlen := len(os.Args) - 1
+			os.Args = os.Args[:newlen]
 			return true
 		}
 	}
@@ -65,11 +70,57 @@ func glslfmt(readOnly bool) Fmter {
 }
 
 func jsonfmt(readOnly bool) Fmter {
-	return notimplemented("jsonfmt")
+	return func(path string) (bool, error) {
+		f, err := os.Open(path)
+		if err != nil {
+			return false, fmt.Errorf("couldn't os.Open %q: %w", path, err)
+		}
+		defer f.Close()
+
+		contents, err := io.ReadAll(f)
+		if err != nil {
+			return false, fmt.Errorf("couldn't io.ReadAll %q: %w", path, err)
+		}
+
+		var v any
+		json.Unmarshal(contents, &v)
+		formatted, err := json.MarshalIndent(v, "", "    ")
+		if err != nil {
+			return false, fmt.Errorf("couldn't json.Indent %q: %w", path, err)
+		}
+		if len(formatted) > 0 {
+			// make sure there's a trailing newline
+			if formatted[len(formatted)-1] != '\n' {
+				formatted = append(formatted, '\n')
+			}
+		}
+
+		diff := !bytes.Equal(contents, formatted)
+		if readOnly || !diff {
+			// If we shouldn't change anything or if there's nothing to change, we're
+			// done.
+			return diff, nil
+		}
+
+		// Otherwise, rewrite the input file with the indented version.
+		replacement, err := os.Create(path)
+		if err != nil {
+			return diff, fmt.Errorf("couldn't os.Create %q: %w", path, err)
+		}
+		n, err := io.Copy(replacement, bytes.NewReader(formatted))
+		if err != nil {
+			return diff, fmt.Errorf("couldn't io.Copy to %q: %w", path, err)
+		}
+		if int(n) != len(formatted) {
+			return diff, fmt.Errorf("incomplete write(%d): %q", n, path)
+		}
+
+		return diff, err
+	}
 }
 
 func luafmt(readOnly bool) Fmter {
-	return notimplemented("luafmt")
+	return notimplemented("lua")
 }
 
 func xmlfmt(readOnly bool) Fmter {
@@ -95,68 +146,44 @@ func getfmter(tp FmterType, readOnly bool) Fmter {
 
 // like 'go fmt' but for things under 'data/'
 func main() {
-	readOnly := true
-	changeSet := []string{}
+	readOnly := getCheckFlag("--check")
 
-	if !haveFlag("--check") {
-		readOnly = false
+	ok := true
+	for _, arg := range os.Args[1:] {
+		ok = processFile(arg, readOnly) && ok
 	}
 
-	datadir := "data/"
-	dirfile, err := os.Stat(datadir)
-	if err != nil {
-		panic(fmt.Errorf("os.Stat(%q) failed: %w", datadir, err))
-	}
-	if !dirfile.IsDir() {
-		panic(fmt.Errorf("data directory (%q) isn't a directory", datadir))
-	}
-
-	// foreach file in data/
-	fs.WalkDir(os.DirFS(datadir), ".", func(path string, d fs.DirEntry, err error) error {
-		if err != nil {
-			// If we couldn't read something under 'data/' fail hard
-			return err
-		}
-
-		// Skip directories that we can't read
-		info, err := d.Info()
-		if err != nil {
-			return err
-		}
-
-		// Recurse into directories we can read
-		if info.IsDir() {
-			return nil
-		}
-
-		// We're dealing with a regular file. Grab its extension.
-		ext := filepath.Ext(path)
-
-		// if its extension is 'targeted'
-		fmtertype, found := extensionToFmter[ext]
-		if !found {
-			// there's a file extension that we don't know about
-			panic(fmt.Errorf("unknown extension %q for file %q", ext, path))
-		}
-
-		// run a formatter for that extension
-		fmter := getfmter(fmtertype, readOnly)
-		changeWanted, err := fmter(path)
-		if err != nil {
-			return err
-		}
-		if changeWanted {
-			changeSet = append(changeSet, path)
-		}
-
-		return nil
-	})
-
-	for _, change := range changeSet {
-		fmt.Printf("%s\n", change)
-	}
-
-	if readOnly && len(changeSet) > 0 {
+	if !ok {
 		os.Exit(1)
 	}
+}
+
+func processFile(targetPath string, readOnly bool) bool {
+	ext := filepath.Ext(targetPath)
+	fmterType, found := extensionToFmter[ext]
+	if !found {
+		panic(fmt.Errorf("uknown extension(%s) for file %q", ext, targetPath))
+	}
+
+	if fmterType == IgnoreFmter {
+		return true
+	}
+
+	// get and run a formatter for that extension
+	fmter := getfmter(fmterType, readOnly)
+
+	changeWanted, err := fmter(targetPath)
+	if err != nil {
+		panic(fmt.Errorf("formatting %q failed: %w", targetPath, err))
+	}
+
+	if changeWanted {
+		fmt.Printf("%s\n", targetPath)
+
+		if readOnly {
+			return false
+		}
+	}
+
+	return true
 }

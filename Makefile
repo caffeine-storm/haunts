@@ -65,10 +65,14 @@ clean:
 
 fmt:
 	go fmt ./...
+	git diff --no-color --name-status -- data/ | grep '^[MA]' | sed 's,^.\s\+,,' \
+		| xargs go run ./tools/format-data-dir/
 
 # -l for 'list files'
 checkfmt:
 	@gofmt -l ./
+	@git diff --no-color --name-status -- data/ | grep '^[MA]' | sed 's,^.\s\+,,' \
+		| xargs go run ./tools/format-data-dir/ --check
 
 lint:
 	go run github.com/mgechev/revive@v1.5.1 --config revive.toml ./...
