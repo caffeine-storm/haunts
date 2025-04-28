@@ -275,7 +275,7 @@ func (room *Room) renderFurniture(floor mathgl.Mat4, base_alpha byte, drawables 
 		a = alphaMult(a, vis)
 		a = alphaMult(a, base_alpha)
 		gl.Color4ub(r, g, b, a)
-		d.Render(mathgl.Vec2{leftx, boty}, rightx-leftx)
+		d.Render(mathgl.Vec2{X: leftx, Y: boty}, rightx-leftx)
 	}
 }
 
