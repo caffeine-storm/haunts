@@ -539,17 +539,16 @@ func saveGameState(gp *GamePanel) lua.LuaGoFunction {
 		L.GetGlobal("store")
 		LuaEncodeValue(buf, L, -1)
 		L.Pop(1)
-		base.DeprecatedLog().Printf("SaveGameState-1: %d", buf.Len())
+		logging.Debug("SaveGameState", "buf.Len()", buf.Len())
 		ts := totalState{
 			Game:  &gp.game,
 			Store: buf.Bytes(),
 		}
 		str, err := base.ToGobToBase64(ts)
 		if err != nil {
-			base.DeprecatedError().Printf("Error gobbing game state: %v", err)
-			return 0
+			panic(fmt.Errorf("lua>saveGameState: gobbing failure: %w", err))
 		}
-		base.DeprecatedLog().Printf("SaveGameState-2: %d", len(str)-buf.Len())
+		logging.Debug("SaveGameState", "delta", len(str)-buf.Len())
 
 		L.PushString(str)
 		return 1
