@@ -101,8 +101,8 @@ func (hv *HouseViewer) Think(g *gui.Gui, t int64) {
 	scale := 1 - float32(math.Pow(0.005, float64(dt)/1000))
 
 	if hv.target_on {
-		f := mathgl.Vec2{hv.fx, hv.fy}
-		v := mathgl.Vec2{hv.targetx, hv.targety}
+		f := mathgl.Vec2{X: hv.fx, Y: hv.fy}
+		v := mathgl.Vec2{X: hv.targetx, Y: hv.targety}
 		v.Subtract(&f)
 		v.Scale(scale)
 		f.Add(&v)
@@ -139,7 +139,7 @@ func (hv *HouseViewer) RemoveFloorDrawable(fd RenderOnFloorer) {
 }
 
 func (hv *HouseViewer) modelviewToBoard(mx, my float32) (x, y, dist float32) {
-	mz := d2p(hv.floor, mathgl.Vec3{mx, my, 0}, mathgl.Vec3{0, 0, 1})
+	mz := d2p(hv.floor, mathgl.Vec3{X: mx, Y: my, Z: 0}, mathgl.Vec3{X: 0, Y: 0, Z: 1})
 	v := mathgl.Vec4{X: mx, Y: my, Z: mz, W: 1}
 	v.Transform(&hv.ifloor)
 	return v.X, v.Y, mz
@@ -216,9 +216,9 @@ func (hv *HouseViewer) SetBounds() {
 
 func (hv *HouseViewer) Drag(dx, dy float64) {
 	v := mathgl.Vec3{X: hv.fx, Y: hv.fy}
-	vx := mathgl.Vec3{1, -1, 0}
+	vx := mathgl.Vec3{X: 1, Y: -1, Z: 0}
 	vx.Normalize()
-	vy := mathgl.Vec3{1, 1, 0}
+	vy := mathgl.Vec3{X: 1, Y: 1, Z: 0}
 	vy.Normalize()
 	vx.Scale(float32(dx) / hv.zoom * 2)
 	vy.Scale(float32(dy) / hv.zoom * 2)
