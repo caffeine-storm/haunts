@@ -28,8 +28,8 @@
     ],
     "Name": "tutorial-entry",
     "Size": {
-        "Dx": 10,
-        "Dy": 15,
+        "Dx": 200,
+        "Dy": 300,
         "Name": "Small_Rect_A"
     },
     "Sizes": null,
