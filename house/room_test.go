@@ -53,7 +53,7 @@ func loadRoom(roomName string) *house.Room {
 func RoomSpecs() {
 	base.SetDatadir("../data")
 
-	rendertest.WithGlForTest(266, 246, func(sys system.System, queue render.RenderQueueInterface) {
+	rendertest.WithGlForTest(1024, 768, func(sys system.System, queue render.RenderQueueInterface) {
 		registry.LoadAllRegistries()
 		base.InitShaders(queue)
 		texture.Init(queue)

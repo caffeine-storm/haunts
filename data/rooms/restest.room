@@ -2,8 +2,8 @@
   "Name": "restest",
   "Size": {
     "Name": "Small",
-    "Dx": 10,
-    "Dy": 10
+    "Dx": 640,
+    "Dy": 640
   },
   "Furniture": [],
   "WallTextures": [
