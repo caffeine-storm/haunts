@@ -1,1 +1,208 @@
-{"Name":"versus-2","Icon":{"Path":"houses/icons"},"Floors":[{"Rooms":[{"Defname":"lvl1_library","Doors":[{"Defname":"Door 02 - Panel","Facing":3,"Pos":6,"Opened":false},{"Defname":"Door 02 - Panel Always Open","Facing":2,"Pos":12,"Opened":false}],"X":-16,"Y":-21},{"Defname":"lvl1_hall_a","Doors":[{"Defname":"Door 02 - Panel","Facing":3,"Pos":3,"Opened":false},{"Defname":"Door 02 - Panel","Facing":0,"Pos":1,"Opened":false}],"X":4,"Y":-16},{"Defname":"lvl1_hall_b","Doors":[{"Defname":"Door 02 - Panel Always Open","Facing":1,"Pos":2,"Opened":false},{"Defname":"Door 02 - Panel","Facing":2,"Pos":2,"Opened":false}],"X":-6,"Y":-6},{"Defname":"lvl1_parlor","Doors":[{"Defname":"Door 02 - Panel","Facing":1,"Pos":9,"Opened":false},{"Defname":"Door 02 - Panel","Facing":3,"Pos":7,"Opened":false}],"X":-13,"Y":14},{"Defname":"lvl1_hall_a","Doors":[{"Defname":"Door 02 - Panel","Facing":3,"Pos":2,"Opened":false},{"Defname":"Door 02 - Panel","Facing":0,"Pos":1,"Opened":false}],"X":7,"Y":20},{"Defname":"lvl1_kitchen","Doors":[{"Defname":"Door 02 - Panel","Facing":2,"Pos":9,"Opened":false},{"Defname":"Door 02 - Panel","Facing":0,"Pos":10,"Opened":false}],"X":24,"Y":-23},{"Defname":"lvl1_hall_b","Doors":[{"Defname":"Door 02 - Panel","Facing":2,"Pos":2,"Opened":false},{"Defname":"Door 02 - Panel","Facing":1,"Pos":3,"Opened":false}],"X":30,"Y":-3},{"Defname":"lvl1_study","Doors":[{"Defname":"Door 02 - Panel","Facing":0,"Pos":5,"Opened":false},{"Defname":"Door 02 - Panel","Facing":1,"Pos":5,"Opened":false}],"X":27,"Y":17}],"Spawns":[{"Name":"Intruders-FrontDoor","Dx":4,"Dy":1,"X":-8,"Y":-21},{"Name":"Master","Dx":5,"Dy":4,"X":36,"Y":27},{"Name":"Relics","Dx":4,"Dy":4,"X":-12,"Y":22},{"Name":"Relics","Dx":4,"Dy":3,"X":31,"Y":-10},{"Name":"Relics","Dx":4,"Dy":4,"X":40,"Y":21},{"Name":"Relics","Dx":4,"Dy":1,"X":-6,"Y":-10}]}]}
+{
+    "Floors": [
+        {
+            "Rooms": [
+                {
+                    "Defname": "lvl1_library",
+                    "Doors": [
+                        {
+                            "Defname": "Door 02 - Panel",
+                            "Facing": 3,
+                            "Opened": false,
+                            "Pos": 6
+                        },
+                        {
+                            "Defname": "Door 02 - Panel Always Open",
+                            "Facing": 2,
+                            "Opened": false,
+                            "Pos": 12
+                        }
+                    ],
+                    "X": -16,
+                    "Y": -21
+                },
+                {
+                    "Defname": "lvl1_hall_a",
+                    "Doors": [
+                        {
+                            "Defname": "Door 02 - Panel",
+                            "Facing": 3,
+                            "Opened": false,
+                            "Pos": 3
+                        },
+                        {
+                            "Defname": "Door 02 - Panel",
+                            "Facing": 0,
+                            "Opened": false,
+                            "Pos": 1
+                        }
+                    ],
+                    "X": 4,
+                    "Y": -16
+                },
+                {
+                    "Defname": "lvl1_hall_b",
+                    "Doors": [
+                        {
+                            "Defname": "Door 02 - Panel Always Open",
+                            "Facing": 1,
+                            "Opened": false,
+                            "Pos": 2
+                        },
+                        {
+                            "Defname": "Door 02 - Panel",
+                            "Facing": 2,
+                            "Opened": false,
+                            "Pos": 2
+                        }
+                    ],
+                    "X": -6,
+                    "Y": -6
+                },
+                {
+                    "Defname": "lvl1_parlor",
+                    "Doors": [
+                        {
+                            "Defname": "Door 02 - Panel",
+                            "Facing": 1,
+                            "Opened": false,
+                            "Pos": 9
+                        },
+                        {
+                            "Defname": "Door 02 - Panel",
+                            "Facing": 3,
+                            "Opened": false,
+                            "Pos": 7
+                        }
+                    ],
+                    "X": -13,
+                    "Y": 14
+                },
+                {
+                    "Defname": "lvl1_hall_a",
+                    "Doors": [
+                        {
+                            "Defname": "Door 02 - Panel",
+                            "Facing": 3,
+                            "Opened": false,
+                            "Pos": 2
+                        },
+                        {
+                            "Defname": "Door 02 - Panel",
+                            "Facing": 0,
+                            "Opened": false,
+                            "Pos": 1
+                        }
+                    ],
+                    "X": 7,
+                    "Y": 20
+                },
+                {
+                    "Defname": "lvl1_kitchen",
+                    "Doors": [
+                        {
+                            "Defname": "Door 02 - Panel",
+                            "Facing": 2,
+                            "Opened": false,
+                            "Pos": 9
+                        },
+                        {
+                            "Defname": "Door 02 - Panel",
+                            "Facing": 0,
+                            "Opened": false,
+                            "Pos": 10
+                        }
+                    ],
+                    "X": 24,
+                    "Y": -23
+                },
+                {
+                    "Defname": "lvl1_hall_b",
+                    "Doors": [
+                        {
+                            "Defname": "Door 02 - Panel",
+                            "Facing": 2,
+                            "Opened": false,
+                            "Pos": 2
+                        },
+                        {
+                            "Defname": "Door 02 - Panel",
+                            "Facing": 1,
+                            "Opened": false,
+                            "Pos": 3
+                        }
+                    ],
+                    "X": 30,
+                    "Y": -3
+                },
+                {
+                    "Defname": "lvl1_study",
+                    "Doors": [
+                        {
+                            "Defname": "Door 02 - Panel",
+                            "Facing": 0,
+                            "Opened": false,
+                            "Pos": 5
+                        },
+                        {
+                            "Defname": "Door 02 - Panel",
+                            "Facing": 1,
+                            "Opened": false,
+                            "Pos": 5
+                        }
+                    ],
+                    "X": 27,
+                    "Y": 17
+                }
+            ],
+            "Spawns": [
+                {
+                    "Dx": 4,
+                    "Dy": 1,
+                    "Name": "Intruders-FrontDoor",
+                    "X": -8,
+                    "Y": -21
+                },
+                {
+                    "Dx": 5,
+                    "Dy": 4,
+                    "Name": "Master",
+                    "X": 36,
+                    "Y": 27
+                },
+                {
+                    "Dx": 4,
+                    "Dy": 4,
+                    "Name": "Relics",
+                    "X": -12,
+                    "Y": 22
+                },
+                {
+                    "Dx": 4,
+                    "Dy": 3,
+                    "Name": "Relics",
+                    "X": 31,
+                    "Y": -10
+                },
+                {
+                    "Dx": 4,
+                    "Dy": 4,
+                    "Name": "Relics",
+                    "X": 40,
+                    "Y": 21
+                },
+                {
+                    "Dx": 4,
+                    "Dy": 1,
+                    "Name": "Relics",
+                    "X": -6,
+                    "Y": -10
+                }
+            ]
+        }
+    ],
+    "Icon": {
+        "Path": "houses/icons"
+    },
+    "Name": "versus-2"
+}

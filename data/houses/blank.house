@@ -1,1 +1,19 @@
-{"Name":"blank","Icon":{"Path":"houses/icons"},"Floors":[{"Rooms":[{"Defname":"blank","Doors":[],"X":0,"Y":-3}],"Spawns":[]}]}
+{
+    "Floors": [
+        {
+            "Rooms": [
+                {
+                    "Defname": "blank",
+                    "Doors": [],
+                    "X": 0,
+                    "Y": -3
+                }
+            ],
+            "Spawns": []
+        }
+    ],
+    "Icon": {
+        "Path": "houses/icons"
+    },
+    "Name": "blank"
+}
