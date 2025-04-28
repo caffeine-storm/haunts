@@ -272,19 +272,19 @@ func (d *Door) setupGlStuff(room *Room) {
 	d.thresholdIds.vBuffer = gl.GenBuffer()
 	d.thresholdIds.vBuffer.Bind(gl.ARRAY_BUFFER)
 	size := int(unsafe.Sizeof(roomVertex{}))
-	gl.BufferData(gl.ARRAY_BUFFER, size*len(vs), gl.Pointer(&vs[0].x), gl.STATIC_DRAW)
+	gl.BufferData(gl.ARRAY_BUFFER, size*len(vs), vs, gl.STATIC_DRAW)
 
 	is := []uint16{0, 1, 2, 0, 2, 3}
 	d.thresholdIds.iBuffer = gl.GenBuffer()
 	d.thresholdIds.iBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
-	gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), gl.Pointer(&is[0]), gl.STATIC_DRAW)
+	gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is), is, gl.STATIC_DRAW)
 	d.thresholdIds.iCount = 6
 
 	if d.Facing == FarLeft || d.Facing == FarRight {
 		is2 := []uint16{4, 5, 6, 4, 6, 7}
 		d.doorGlIds.iBuffer = gl.GenBuffer()
 		d.doorGlIds.iBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
-		gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is[0]))*len(is2), gl.Pointer(&is2[0]), gl.STATIC_DRAW)
+		gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, int(unsafe.Sizeof(is2[0]))*len(is2), is2, gl.STATIC_DRAW)
 		d.doorGlIds.iCount = 6
 	}
 }
