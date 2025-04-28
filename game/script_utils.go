@@ -198,24 +198,24 @@ func LuaPushSmartFunctionTable(L *lua.State, ft FunctionTable) {
 		i++
 	}
 	sort.Strings(names)
-	valid_selectors := "["
+	validSelectors := "["
 	for i, name := range names {
 		if i > 0 {
-			valid_selectors += ", "
+			validSelectors += ", "
 		}
-		valid_selectors += fmt.Sprintf("'%s'", name)
+		validSelectors += fmt.Sprintf("'%s'", name)
 	}
-	valid_selectors += "]."
+	validSelectors += "]."
 
 	L.NewTable()
 	L.PushString("__index")
 	L.PushGoClosure(func(L *lua.State) int {
-		name := L.ToString(-1)
-		logging.Trace("handling __index", "name", name)
-		if f, ok := myft[name]; ok {
+		funcName := L.ToString(-1)
+		if f, ok := myft[funcName]; ok {
+			logging.Trace("handling __index", "funcName", funcName)
 			f()
 		} else {
-			base.DeprecatedError().Printf("'%s' is not a valid selector, valid seletors are %s", name, valid_selectors)
+			logging.Error("invalid Script selector", "funcName", funcName, "valid-selectors", validSelectors)
 			L.PushNil()
 		}
 		return 1
