@@ -348,6 +348,7 @@ type houseDataTab struct {
 	temp_spawns []*SpawnPoint
 }
 
+// TODO(tmckee): add test coverage for this!
 func makeHouseDataTab(house *HouseDef, viewer *HouseViewer) *houseDataTab {
 	var hdt houseDataTab
 	hdt.VerticalTable = gui.MakeVerticalTable()

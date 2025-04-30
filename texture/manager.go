@@ -52,8 +52,9 @@ func (o *Object) Data() *Data {
 }
 
 type Data struct {
-	dx, dy   int
-	texture  gl.Texture // TODO(#27): we need to start protecting from concurrent access by the manager's mutex
+	dx, dy int
+	// TODO: have 'getTexture', not exported, does a 'mustBeOnRenderThread'
+	texture  gl.Texture // only accessed on the render thread so no mutex needed
 	accessed int        // protected from concurrent access by the manager's mutex
 }
 
@@ -62,6 +63,11 @@ func (d *Data) Dx() int {
 }
 func (d *Data) Dy() int {
 	return d.dy
+}
+
+func (d *Data) isLoaded() bool {
+	render.MustBeOnRenderThread()
+	return d.texture != 0
 }
 
 var textureList uint
@@ -160,13 +166,13 @@ func RenderAdvanced(x, y, dx, dy, rot float64, flip bool) {
 
 func (d *Data) Bind() {
 	render.MustBeOnRenderThread()
-	if d.texture == 0 {
+	if d.isLoaded() {
+		d.texture.Bind(gl.TEXTURE_2D)
+	} else {
 		if error_texture == 0 {
 			makeErrorTexture()
 		}
 		error_texture.Bind(gl.TEXTURE_2D)
-	} else {
-		d.texture.Bind(gl.TEXTURE_2D)
 	}
 }
 
@@ -534,31 +540,36 @@ func (m *Manager) BlockUntilLoaded(ctx context.Context, paths ...string) error {
 		m.mutex.Lock()
 		defer m.mutex.Unlock()
 
-		// Prune out what's already loaded
-		for path, data := range m.registry {
-			// The texture is only loaded if there's an opengl texture id associated
-			// with what's in the registry. Zero-valued 'Data' instances live in the
-			// registry and get updated once the texture is loaded.
-			// TODO(tmckee): it might be cleaner to have a 'loadingRegistry' and a
-			// 'loadedRegistry'.
-			// TODO(#27): accessing data.texture off of the render thread is a data
-			// race.
-			if data.texture != 0 {
-				delete(pathset, path)
-			}
-		}
-
 		for path := range pathset {
-			waitChan, found := m.loadWaiters[path]
-			if !found {
-				logging.Trace("waiter add", "path", path)
-				waitChan = make(chan bool, 1)
-				m.loadWaiters[path] = waitChan
+			if waitChan, found := m.loadWaiters[path]; found {
+				waitChannels = append(waitChannels, waitChan)
+				continue
 			}
-			waitChannels = append(waitChannels, waitChan)
+
+			_, found := m.registry[path]
+			if !found {
+				// Need a new channel to wait on
+				newchan := make(chan bool, 1)
+				m.loadWaiters[path] = newchan
+				waitChannels = append(waitChannels, newchan)
+				continue
+			}
+
+			// There's an entry in the registry but the texture might not be loaded
+			// yet. If so, the path will be in 'inFlight'.
+			if m.inFlight[path] {
+				// Need a new channel to wait on
+				newchan := make(chan bool, 1)
+				m.loadWaiters[path] = newchan
+				waitChannels = append(waitChannels, newchan)
+				continue
+			}
+
+			// ... must be loaded; don't wait for it.
 		}
 	}()
 
+	// TODO(clean): uhhh... why another channel? A: don't need one!
 	collector := make(chan bool, len(waitChannels))
 	for _, waitChan := range waitChannels {
 		c := waitChan
