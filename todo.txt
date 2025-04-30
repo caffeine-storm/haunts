@@ -1,9 +1,14 @@
+- bug#27: there's a race condition where multiple goroutines are
+  reading/writing Data.texture fields through texture.Object instances
+	- we need to make all .texture accesses on the render thread and have a
+	  threadsafe way to check for loaded/not-loaded
+
 - bug#25: make a game start!
 	- tag things that need cleanup with #25
-	- running manually -> RoundStart in Tutorial01.lua errors: 'can't set value through field named "entityDef"'
-		- no line number info T_T
+	- running manually -> mustRunString failure -> no line number info T_T
 	- running test -> TestGamePanel -> draws blank screen ! even though
 	  game.go:83 says there's a house-viewer and an overlay in the anchorbox
+	- failing with gob-encoding fail; need to replace rand.Source with a Gobbable
 
 - bug#26: LuaStringifyParam is stubbed and leading to useless debug output
 
@@ -101,4 +106,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#27: <next>
+- bug#28: <next>

@@ -6,10 +6,10 @@ github.com/MobRulesGames/fsnotify v0.0.0-20121110053322-1b2bc1227408 h1:wdcx9Xfx
 github.com/MobRulesGames/fsnotify v0.0.0-20121110053322-1b2bc1227408/go.mod h1:OEDqSJUPW/UJ6q25GvbR9CiCUNEutiy1VyBd2GbsTxY=
 github.com/MobRulesGames/memory v0.0.0-20120626004817-db5bb35fd894 h1:26ZCnKDg9vNxiOK0VZ/tN2tg34DfrhKB0Xg5jUWkO8A=
 github.com/MobRulesGames/memory v0.0.0-20120626004817-db5bb35fd894/go.mod h1:w5jrl1aXV+AZaP1ye7wO8xB3ne7U2CkweE0atB7FPwk=
-github.com/caffeine-storm/gl v0.0.0-20240909160157-d1b38f2deb16 h1:lHq5YECDcjZKieQW2YWLh8AjJ9Gs/2jIiXcJjbsJGqU=
-github.com/caffeine-storm/gl v0.0.0-20240909160157-d1b38f2deb16/go.mod h1:5WNXbhdBMLerIscVkSVTRwGcsRywYKYHRKFEBZOUBEA=
-github.com/caffeine-storm/glop v0.0.0-20250430132306-3e1fe0456d31 h1:Ei3Pj9CweEDSb/N7SL9wyzWSZS8gruhBQOgTOkShi9A=
-github.com/caffeine-storm/glop v0.0.0-20250430132306-3e1fe0456d31/go.mod h1:oILqs6qqzIqIpRmMK0SLGbNSlYs4RDQN4zugdE4+99c=
+github.com/caffeine-storm/gl v0.0.0-20250430135644-d77ee19e0153 h1:kXQr7qKc9SihShL2xiUgVpkOSpAqbPd2Osw5asQ+/LE=
+github.com/caffeine-storm/gl v0.0.0-20250430135644-d77ee19e0153/go.mod h1:L86rxjA8/HgyZTK0nI9WNXSXtFfJ3Jz5cOvYDO44mfw=
+github.com/caffeine-storm/glop v0.0.0-20250430142533-e3b18e1a9a67 h1:UsUn1eZMAsm81M7bVH68MTXc7751dHg1JrbEuLGMHlw=
+github.com/caffeine-storm/glop v0.0.0-20250430142533-e3b18e1a9a67/go.mod h1:tTdW2L5usHIhsjFB94S+kns4RfRL/NCuQzjydXLRCCI=
 github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c h1:KqJxBrec/mnKQ+QgBu3/iJvaiurKpNDsXLrrXSau73U=
 github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c/go.mod h1:ntYmIr0ULu7QxKlmOE6cC87X4pWDG8jO/wSUBn2ZzJY=
 github.com/caffeine-storm/golua v0.0.0-20240910150920-bb0104c032e4 h1:zTOKTYGNmZCZVDgvjsTEXhaFIcTWiccPHKBFaWQzo80=

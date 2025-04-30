@@ -33,6 +33,8 @@ type Object struct {
 }
 
 func (o *Object) Data() *Data {
+	// TODO(#27): need synchronization with the render thread before reaching
+	// into o.data
 	if o.data == nil || o.path != o.Path || o.data.texture == 0 {
 		var err error
 		o.data, err = LoadFromPath(string(o.Path))
@@ -56,9 +58,6 @@ func (d *Data) Dx() int {
 }
 func (d *Data) Dy() int {
 	return d.dy
-}
-func (d *Data) GetGlTexture() gl.Texture {
-	return d.texture
 }
 
 var textureList uint
@@ -156,6 +155,7 @@ func RenderAdvanced(x, y, dx, dy, rot float64, flip bool) {
 }
 
 func (d *Data) Bind() {
+	render.MustBeOnRenderThread()
 	if d.texture == 0 {
 		if error_texture == 0 {
 			makeErrorTexture()
@@ -479,6 +479,8 @@ func (m *Manager) BlockUntilLoaded(ctx context.Context, paths ...string) error {
 			// registry and get updated once the texture is loaded.
 			// TODO(tmckee): it might be cleaner to have a 'loadingRegistry' and a
 			// 'loadedRegistry'.
+			// TODO(#27): accessing data.texture off of the render thread is a data
+			// race.
 			if data.texture != 0 {
 				delete(pathset, path)
 			}

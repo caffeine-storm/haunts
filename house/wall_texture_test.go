@@ -11,16 +11,11 @@ import (
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
 	"github.com/runningwild/glop/system"
 	. "github.com/smartystreets/goconvey/convey"
 )
-
-func getGlTexture(wt *house.WallTexture) gl.Texture {
-	return wt.Texture.Data().GetGlTexture()
-}
 
 // TODO(tmckee): rename 'WallTexture' to 'Decal' or something.
 func TestWallTextureSpecs(t *testing.T) {
