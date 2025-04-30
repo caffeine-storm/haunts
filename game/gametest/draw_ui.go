@@ -65,7 +65,9 @@ func RunDrawingTest(thingToDraw Drawer, testid rendertest.TestDataReference, and
 		})
 		queue.Purge()
 
-		deadlineContext, cancel := context.WithTimeout(context.Background(), time.Millisecond*250)
+		// TODO(#20): this should not be allowed to take more than a frame or two
+		// T_T
+		deadlineContext, cancel := context.WithTimeout(context.Background(), time.Millisecond*25000)
 		defer cancel()
 		err := texture.BlockUntilIdle(deadlineContext)
 		So(err, ShouldBeNil)

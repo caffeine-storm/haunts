@@ -248,12 +248,6 @@ type loadRequest struct {
 	data *Data
 }
 
-var load_requests chan loadRequest
-var load_count int
-var load_mutex sync.Mutex
-
-const load_threshold = 1000 * 1000
-
 type Manager struct {
 	// Currently loaded/loading textures are in the registry
 	registry map[string]*Data
@@ -281,7 +275,15 @@ type Manager struct {
 	// time a texture is accessed it is updated with the current generation.
 	generation int
 
+	// Protects all fields above this.
 	mutex sync.RWMutex
+
+	load struct {
+		requests chan loadRequest
+		count    int
+		// Protects other members of the 'load' substruct.
+		mutex sync.Mutex
+	}
 }
 
 var (
@@ -297,10 +299,10 @@ func Init(renderQueue render.RenderQueueInterface) {
 		generation:  0,
 		loadWaiters: make(map[string]chan bool),
 	}
+	manager.load.requests = make(chan loadRequest, 10)
 
 	go manager.Scavenger()
 
-	load_requests = make(chan loadRequest, 10)
 	pipe := make(chan loadRequest, 10)
 	// We want to be able to handle any number of incoming load requests, so
 	// we have one go-routine collect them all and send them along pipe any
@@ -311,7 +313,7 @@ func Init(renderQueue render.RenderQueueInterface) {
 		var hold loadRequest
 		for {
 			select {
-			case r := <-load_requests:
+			case r := <-manager.load.requests:
 				rs = append(rs, r)
 			case send <- hold:
 				rs = rs[1:]
@@ -370,6 +372,8 @@ func GetInFlightRequests() []string {
 	return manager.GetInFlightRequests()
 }
 
+const load_threshold = 1000 * 1000
+
 func handleLoadRequest(req loadRequest) {
 	logging.Trace("texture manager: handleLoadRequest", "path", req.path)
 	f, _ := os.Open(req.path)
@@ -413,15 +417,15 @@ func handleLoadRequest(req loadRequest) {
 		canvas = imgmanip.NewInvertedCanvas(rgbaImage)
 	}
 	draw.Draw(canvas, im.Bounds(), im, image.Point{}, draw.Src)
-	load_mutex.Lock()
-	load_count += len(pix)
+	manager.load.mutex.Lock()
+	manager.load.count += len(pix)
 	manual_unlock := false
 	// This prevents us from trying to send too much to opengl in a single
 	// frame.  If we go over the threshold then we hold the lock until we're
 	// done sending data to opengl, then other requests will be free to
 	// queue up and they will run on the next frame.
-	if load_count < load_threshold {
-		load_mutex.Unlock()
+	if manager.load.count < load_threshold {
+		manager.load.mutex.Unlock()
 	} else {
 		manual_unlock = true
 	}
@@ -443,8 +447,8 @@ func handleLoadRequest(req loadRequest) {
 		}
 		memory.FreeBlock(pix)
 		if manual_unlock {
-			load_count = 0
-			load_mutex.Unlock()
+			manager.load.count = 0
+			manager.load.mutex.Unlock()
 		}
 
 		manager.signalLoad(req.path, true)
@@ -482,7 +486,7 @@ func (m *Manager) LoadFromPath(path string) (*Data, error) {
 	data.dy = config.Height
 
 	logging.Trace("texture manager: sending load request", "path", path)
-	load_requests <- loadRequest{path, data}
+	m.load.requests <- loadRequest{path, data}
 	return data, nil
 }
 
