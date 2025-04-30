@@ -1173,8 +1173,9 @@ func pickFromN(gp *GamePanel) lua.LuaGoFunction {
 			}
 			option := iconWithText{
 				Name: name,
-				Icon: texture.Object{Path: base.Path(path)},
+				Icon: texture.Object{},
 			}
+			option.Icon.ResetPath(base.Path(path))
 			options = append(options, &option)
 			L.Pop(1)
 		}

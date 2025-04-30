@@ -116,7 +116,7 @@ func RoomSpecs() {
 
 		Convey("drawing restest", func() {
 			restestRoom := loadRoom("restest.room")
-			if restestRoom.Wall.Path == "" {
+			if restestRoom.Wall.GetPath() == "" {
 				panic("the 'restest.room' file should have specified a texture for the walls")
 			}
 			floor, _, left, _, right, _ := house.MakeRoomMatsForTest(restestRoom, camera.region, camera.focusx, camera.focusy, camera.angle, camera.zoom)
@@ -142,7 +142,7 @@ func RoomSpecs() {
 
 		Convey("drawing tutorial-entry", func() {
 			tutRoom := loadRoom("tutorial-entry.room")
-			if tutRoom.Wall.Path == "" {
+			if tutRoom.Wall.GetPath() == "" {
 				panic("the 'tutorial-entry.room' file should have specified a texture for the walls")
 			}
 			floor, _, left, _, right, _ := house.MakeRoomMatsForTest(tutRoom, camera.region, camera.focusx, camera.focusy, camera.angle, camera.zoom)

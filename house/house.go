@@ -357,10 +357,8 @@ func makeHouseDataTab(house *HouseDef, viewer *HouseViewer) *houseDataTab {
 	hdt.name = gui.MakeTextEditLine("standard_18", "name", 300, 1, 1, 1, 1)
 	num_floors_options := []string{"1 Floor", "2 Floors", "3 Floors", "4 Floors"}
 	hdt.num_floors = gui.MakeComboTextBox(num_floors_options, 300)
-	if hdt.house.Icon.Path == "" {
-		hdt.house.Icon.Path = base.Path(filepath.Join(datadir, "houses", "icons"))
-	}
-	hdt.icon = gui.MakeFileWidget(string(hdt.house.Icon.Path), imagePathFilter)
+	hdt.house.Icon.ResetPath(base.Path(filepath.Join(datadir, "houses", "icons")))
+	hdt.icon = gui.MakeFileWidget(hdt.house.Icon.GetPath(), imagePathFilter)
 
 	hdt.VerticalTable.AddChild(hdt.name)
 	hdt.VerticalTable.AddChild(hdt.num_floors)
@@ -415,7 +413,7 @@ func (hdt *houseDataTab) Think(ui *gui.Gui, t int64) {
 		}
 	}
 	hdt.house.Name = hdt.name.GetText()
-	hdt.house.Icon.Path = base.Path(hdt.icon.GetPath())
+	hdt.house.Icon.ResetPath(base.Path(hdt.icon.GetPath()))
 }
 
 func (hdt *houseDataTab) onEscape() {
@@ -514,7 +512,7 @@ func (hdt *houseDataTab) Collapse() {}
 func (hdt *houseDataTab) Expand()   {}
 func (hdt *houseDataTab) Reload() {
 	hdt.name.SetText(hdt.house.Name)
-	hdt.icon.SetPath(string(hdt.house.Icon.Path))
+	hdt.icon.SetPath(hdt.house.Icon.GetPath())
 }
 
 type houseDoorTab struct {

@@ -381,12 +381,12 @@ func showpaths(parts []string) string {
 func (room *Room) LoadAndWaitForTexturesForTest() {
 	paths := []string{}
 	for _, wt := range room.WallTextures {
-		paths = append(paths, string(wt.Texture.Path))
+		paths = append(paths, wt.Texture.GetPath())
 	}
-	paths = append(paths, string(room.Floor.Path))
-	paths = append(paths, string(room.Wall.Path))
+	paths = append(paths, room.Floor.GetPath())
+	paths = append(paths, room.Wall.GetPath())
 
-	logging.Warn("going to block on textures", "paths", showpaths(paths), "wall", room.Wall.Path, "floor", room.Floor.Path)
+	logging.Warn("going to block on textures", "paths", showpaths(paths), "wall", room.Wall.GetPath(), "floor", room.Floor.GetPath())
 	for i, path := range paths {
 		_, err := texture.LoadFromPath(path)
 		if err != nil {
@@ -590,7 +590,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 			// Now draw the plane
 			plane.texture.Data().Bind()
 			plane.iBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
-			if (plane.mat == &left || plane.mat == &right) && strings.Contains(string(room.Wall.Path), "gradient.png") {
+			if (plane.mat == &left || plane.mat == &right) && strings.Contains(room.Wall.GetPath(), "gradient.png") {
 				logging.Trace("seeing a gradient.png texture; enabling 'gorey' shader", "planeIdx", planeIdx)
 				base.EnableShader("gorey")
 				base.SetUniformI("gorey", "tex", 0)
@@ -599,7 +599,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 				base.SetUniformF("gorey", "noise_rate", Noise_rate)
 				base.SetUniformF("gorey", "num_steps", Num_steps)
 			}
-			if plane.mat == &floor && strings.Contains(string(room.Floor.Path), "gradient.png") {
+			if plane.mat == &floor && strings.Contains(room.Floor.GetPath(), "gradient.png") {
 				logging.Trace("seeing a gradient.png texture; enabling 'gorey' shader", "planeIdx", planeIdx)
 				base.EnableShader("gorey")
 				base.SetUniformI("gorey", "tex", 0)

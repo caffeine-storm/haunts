@@ -126,8 +126,9 @@ func (b *Button) RenderAt(x, y int) {
 	// TODO(tmckee): clean: why not
 	// gl.Color4d(1, 1, 1, b.opacity))
 	gl.Color4ub(255, 255, 255, byte(b.opacity*255))
-	logging.Trace("Button.RenderAt", "tex-path", b.Texture.Path)
-	if b.Texture.Path != "" {
+	texpath := b.Texture.GetPath()
+	logging.Trace("Button.RenderAt", "texpath", texpath)
+	if texpath != "" {
 		b.Texture.Data().RenderNatural(b.X+x, b.Y+y)
 		b.bounds.x = b.X + x
 		b.bounds.y = b.Y + y

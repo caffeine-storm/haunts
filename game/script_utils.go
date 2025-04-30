@@ -298,7 +298,7 @@ func LuaPushEntity(L *lua.State, _ent *Entity) {
 					g.Defname = gear_name
 					base.GetObject("gear", &g)
 					L.PushString(gear_name)
-					L.PushString(g.Large_icon.Path.String())
+					L.PushString(g.Large_icon.GetPath())
 					L.SetTable(-3)
 				}
 			}

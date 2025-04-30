@@ -24,33 +24,37 @@ import (
 )
 
 type Object struct {
+	// Only exported so that the registry stuff can load paths from disk. Use
+	// 'GetPath()' if you want to read, ResetPath() if you want to write.
 	Path base.Path
-
-	// this path is the last one that was loaded, so that if we change Path then
-	// we know to reload the texture.
-	path base.Path
 	data *Data
 }
 
+func (o *Object) GetPath() string {
+	return getPath(o)
+}
+
+func (o *Object) ResetPath(newpath base.Path) {
+	resetPath(o, newpath)
+}
+
 func (o *Object) Data() *Data {
-	// TODO(#27): need synchronization with the render thread before reaching
-	// into o.data
-	if o.data == nil || o.path != o.Path || o.data.texture == 0 {
+	if o.data == nil {
 		var err error
 		o.data, err = LoadFromPath(string(o.Path))
 		if err != nil {
 			panic(fmt.Errorf("texture manager LoadFromPath failed: path: %q: %w", o.Path, err))
 		}
-		o.path = o.Path
 	}
-	o.data.accessed = generation
+
+	onAccess(o.data)
 	return o.data
 }
 
 type Data struct {
 	dx, dy   int
-	texture  gl.Texture
-	accessed int
+	texture  gl.Texture // TODO(#27): we need to start protecting from concurrent access by the manager's mutex
+	accessed int        // protected from concurrent access by the manager's mutex
 }
 
 func (d *Data) Dx() int {
@@ -166,29 +170,22 @@ func (d *Data) Bind() {
 	}
 }
 
-// Instead of keeping track of access time, we just keep track of how many
-// times the scavenger has seen something without it being accessed.
-// generation is incremented every time the scavenger loop runs, and any
-// time a texture is accessed it is updated with the current generation.
-var generation int
-
 // Launch this in its own go-routine if you want to occassionally
 // delete textures that haven't been used in a while.
 func (m *Manager) Scavenger() {
-	var unused []string
 	for {
 		time.Sleep(time.Minute)
-		unused = unused[0:0]
+		unused := []string{}
 		m.mutex.RLock()
 		for s, d := range m.registry {
-			if generation-d.accessed >= 2 {
+			if m.generation-d.accessed >= 2 {
 				unused = append(unused, s)
 			}
 		}
 		m.mutex.RUnlock()
 
 		m.mutex.Lock()
-		generation++
+		m.generation++
 		if len(unused) == 0 {
 			m.mutex.Unlock()
 			continue
@@ -216,6 +213,30 @@ func LoadFromPath(path string) (*Data, error) {
 	}
 
 	return manager.LoadFromPath(path)
+}
+
+func getPath(o *Object) string {
+	if manager == nil {
+		panic("need to call texure.Init before texture.getPath")
+	}
+
+	return manager.getPath(o)
+}
+
+func resetPath(o *Object, newpath base.Path) {
+	if manager == nil {
+		panic("need to call texure.Init before texture.resetPath")
+	}
+
+	manager.resetPath(o, newpath)
+}
+
+func onAccess(d *Data) {
+	if manager == nil {
+		panic("need to call texure.Init before texture.onAccess")
+	}
+
+	manager.onAccess(d)
 }
 
 type loadRequest struct {
@@ -250,6 +271,12 @@ type Manager struct {
 	// loads.
 	loadWaiters map[string]chan bool
 
+	// Instead of keeping track of access time, we just keep track of how many
+	// times the scavenger has seen something without it being accessed.
+	// generation is incremented every time the scavenger loop runs, and any
+	// time a texture is accessed it is updated with the current generation.
+	generation int
+
 	mutex sync.RWMutex
 }
 
@@ -263,6 +290,7 @@ func Init(renderQueue render.RenderQueueInterface) {
 		deleted:     make(map[string]*Data),
 		inFlight:    make(map[string]bool),
 		renderQueue: renderQueue,
+		generation:  0,
 		loadWaiters: make(map[string]chan bool),
 	}
 
@@ -428,9 +456,7 @@ func (m *Manager) LoadFromPath(path string) (*Data, error) {
 	var ok bool
 	if data, ok = m.registry[path]; ok {
 		m.mutex.RUnlock()
-		m.mutex.Lock()
-		data.accessed = generation
-		m.mutex.Unlock()
+		m.onAccess(data)
 		return data, nil
 	}
 	m.mutex.RUnlock()
@@ -440,7 +466,7 @@ func (m *Manager) LoadFromPath(path string) (*Data, error) {
 	} else {
 		data = &Data{}
 	}
-	data.accessed = generation
+	data.accessed = m.generation
 	m.registry[path] = data
 	m.inFlight[path] = true
 	m.mutex.Unlock()
@@ -457,6 +483,40 @@ func (m *Manager) LoadFromPath(path string) (*Data, error) {
 	logging.Trace("texture manager: sending load request", "path", path)
 	load_requests <- loadRequest{path, data}
 	return data, nil
+}
+
+func (m *Manager) resetPath(o *Object, newpath base.Path) error {
+	var oldData *Data
+	m.mutex.Lock()
+	oldData = o.data
+	o.data = nil
+	m.mutex.Unlock()
+
+	m.renderQueue.Queue(func(render.RenderQueueState) {
+		oldData.texture.Delete()
+	})
+
+	// TODO(#27): o.data is a data race here
+	var err error
+	o.data, err = m.LoadFromPath(string(newpath))
+	if err != nil {
+		return fmt.Errorf("couldn't m.LoadFromPath(%q): %w", newpath, err)
+	}
+
+	return nil
+}
+
+func (m *Manager) onAccess(d *Data) {
+	m.mutex.Lock()
+	defer m.mutex.Unlock()
+	d.accessed = m.generation
+}
+
+func (m *Manager) getPath(o *Object) string {
+	manager.mutex.RLock()
+	defer manager.mutex.RUnlock()
+
+	return string(o.Path)
 }
 
 func (m *Manager) BlockUntilLoaded(ctx context.Context, paths ...string) error {

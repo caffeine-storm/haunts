@@ -50,15 +50,8 @@ func makeFurniturePanel(room *Room, viewer *roomViewer) *FurniturePanel {
 	}
 	fp.name = gui.MakeTextEditLine("standard_18", room.Name, 300, 1, 1, 1, 1)
 
-	if room.Floor.Path == "" {
-		room.Floor.Path = base.Path(datadir)
-	}
-	fp.floor_path = gui.MakeFileWidget(room.Floor.Path.String(), imagePathFilter)
-
-	if room.Wall.Path == "" {
-		room.Wall.Path = base.Path(datadir)
-	}
-	fp.wall_path = gui.MakeFileWidget(room.Wall.Path.String(), imagePathFilter)
+	fp.floor_path = gui.MakeFileWidget(room.Floor.GetPath(), imagePathFilter)
+	fp.wall_path = gui.MakeFileWidget(room.Wall.GetPath(), imagePathFilter)
 
 	var args []string
 	algorithm.Map(tags.RoomSizes, &args, func(a RoomSize) string { return a.String() })
@@ -190,8 +183,8 @@ func (w *FurniturePanel) Reload() {
 		}
 	}
 	w.name.SetText(w.Room.Name)
-	w.floor_path.SetPath(w.Room.Floor.Path.String())
-	w.wall_path.SetPath(w.Room.Wall.Path.String())
+	w.floor_path.SetPath(w.Room.Floor.GetPath())
+	w.wall_path.SetPath(w.Room.Wall.GetPath())
 	w.onEscape()
 }
 
@@ -239,6 +232,6 @@ func (w *FurniturePanel) Think(ui *gui.Gui, t int64) {
 	logging.Debug("FurniturePanel.Think", "room sizes", tags.RoomSizes, "selectedidx", w.room_size.GetComboedIndex())
 	w.Room.Resize(tags.RoomSizes[w.room_size.GetComboedIndex()])
 	w.Room.Name = w.name.GetText()
-	w.Room.Floor.Path = base.Path(w.floor_path.GetPath())
-	w.Room.Wall.Path = base.Path(w.wall_path.GetPath())
+	w.Room.Floor.ResetPath(base.Path(w.floor_path.GetPath()))
+	w.Room.Wall.ResetPath(base.Path(w.wall_path.GetPath()))
 }
