@@ -404,13 +404,10 @@ func handleLoadRequest(req loadRequest) {
 		ga.Pix = pix
 		canvas = imgmanip.NewInvertedCanvas(ga)
 	} else {
-		// TODO(tmckee): reading from 'req.data' ought to synchronize with what's
-		// going on on the render thread... we ought to pass dx/dy explicity by
-		// value in a loadRequest instead.
-		pix = memory.GetBlock(4 * req.data.dx * req.data.dy)
+		pix = memory.GetBlock(4 * dx * dy)
 		rgbaImage := &image.RGBA{
 			Pix:    pix,
-			Stride: 4 * req.data.dx,
+			Stride: 4 * dx,
 			Rect:   im.Bounds(),
 		}
 		canvas = imgmanip.NewInvertedCanvas(rgbaImage)
