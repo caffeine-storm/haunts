@@ -787,7 +787,7 @@ func loadHouse(gp *GamePanel) lua.LuaGoFunction {
 		}
 		// TODO(tmckee): this is a bug; we will get a nil sprite manager from
 		// GetSpriteManager because gp.game isn't initialized ... right?
-		gp.game = makeGame(def, gp.game.GetSpriteManager())
+		gp.game = MakeGame(def, gp.game.GetSpriteManager())
 		gp.game.viewer.Edit_mode = true
 		gp.game.script = gp.script
 

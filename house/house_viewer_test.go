@@ -6,19 +6,16 @@ import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game/gametest"
 	"github.com/MobRulesGames/haunts/house"
+	"github.com/MobRulesGames/haunts/house/housetest"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/runningwild/glop/render"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func givenAHouseDef() *house.HouseDef {
-	return house.MakeHouseFromName("tutorial")
-}
-
 var _ gametest.Drawer = (*house.HouseViewer)(nil)
 
 func givenAHouseViewer(queue render.RenderQueueInterface) gametest.Drawer {
-	return house.MakeHouseViewer(givenAHouseDef(), 62)
+	return house.MakeHouseViewer(housetest.GivenAHouseDef(), 62)
 }
 
 func TestHouseViewer(t *testing.T) {

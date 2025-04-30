@@ -847,10 +847,10 @@ func makeGameTheWrongWay(scenario Scenario) *Game {
 	mgr := sprite.MakeManager(rendertest.MakeDiscardingRenderQueue(), func(s string) cache.ByteBank {
 		return cache.MakeLockingByteBank(cache.MakeRamByteBank())
 	})
-	return makeGame(hdef, mgr)
+	return MakeGame(hdef, mgr)
 }
 
-func makeGame(h *house.HouseDef, spriteManager *sprite.Manager) *Game {
+func MakeGame(h *house.HouseDef, spriteManager *sprite.Manager) *Game {
 	var g Game
 	g.Side = SideExplorers
 	g.House = h
