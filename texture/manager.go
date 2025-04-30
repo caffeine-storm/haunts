@@ -492,9 +492,11 @@ func (m *Manager) resetPath(o *Object, newpath base.Path) error {
 	o.data = nil
 	m.mutex.Unlock()
 
-	m.renderQueue.Queue(func(render.RenderQueueState) {
-		oldData.texture.Delete()
-	})
+	if oldData != nil {
+		m.renderQueue.Queue(func(render.RenderQueueState) {
+			oldData.texture.Delete()
+		})
+	}
 
 	// TODO(#27): o.data is a data race here
 	var err error
