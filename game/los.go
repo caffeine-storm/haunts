@@ -204,9 +204,8 @@ type gameDataGobbable struct {
 
 	// PRNG, need it here so that we serialize it along with everything
 	// else so that replays work properly.
-	// TODO(tmckee): I doubt that a 'rand.Source' is gobbable; we can use a
-	// struct that pulls from a source twice, yields one value and uses the other
-	// as a seed.
+	// TODO(tmckee:#25): 'rand.Source' is not gobbable; we can use a struct that
+	// pulls from a source twice, yields one value and uses the other as a seed.
 	Rand rand.Source
 
 	// Waypoints, used for signaling things to the player on the map
