@@ -52,8 +52,7 @@ func (o *Object) Data() *Data {
 }
 
 type Data struct {
-	dx, dy int
-	// TODO: have 'getTexture', not exported, does a 'mustBeOnRenderThread'
+	dx, dy   int
 	texture  gl.Texture // only accessed on the render thread so no mutex needed
 	accessed int        // protected from concurrent access by the manager's mutex
 }
@@ -165,7 +164,6 @@ func RenderAdvanced(x, y, dx, dy, rot float64, flip bool) {
 }
 
 func (d *Data) Bind() {
-	render.MustBeOnRenderThread()
 	if d.isLoaded() {
 		d.texture.Bind(gl.TEXTURE_2D)
 	} else {
