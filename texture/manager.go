@@ -487,23 +487,20 @@ func (m *Manager) LoadFromPath(path string) (*Data, error) {
 }
 
 func (m *Manager) resetPath(o *Object, newpath base.Path) error {
-	var oldData *Data
+	newData, err := m.LoadFromPath(string(newpath))
+	if err != nil {
+		return fmt.Errorf("couldn't m.LoadFromPath(%q): %w", newpath, err)
+	}
+
 	m.mutex.Lock()
-	oldData = o.data
-	o.data = nil
+	oldData := o.data
+	o.data = newData
 	m.mutex.Unlock()
 
 	if oldData != nil {
 		m.renderQueue.Queue(func(render.RenderQueueState) {
 			oldData.texture.Delete()
 		})
-	}
-
-	// TODO(#27): o.data is a data race here
-	var err error
-	o.data, err = m.LoadFromPath(string(newpath))
-	if err != nil {
-		return fmt.Errorf("couldn't m.LoadFromPath(%q): %w", newpath, err)
 	}
 
 	return nil
