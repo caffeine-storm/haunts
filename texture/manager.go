@@ -569,19 +569,10 @@ func (m *Manager) BlockUntilLoaded(ctx context.Context, paths ...string) error {
 		}
 	}()
 
-	// TODO(clean): uhhh... why another channel? A: don't need one!
-	collector := make(chan bool, len(waitChannels))
-	for _, waitChan := range waitChannels {
-		c := waitChan
-		go func() {
-			collector <- (<-c)
-		}()
-	}
-
 	loadOk := true
-	for range waitChannels {
+	for _, c := range waitChannels {
 		select {
-		case loadResult := <-collector:
+		case loadResult := <-c:
 			loadOk = loadOk && loadResult
 		case <-ctx.Done():
 			return fmt.Errorf("deadline exceeded")
