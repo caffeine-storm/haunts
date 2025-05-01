@@ -63,6 +63,11 @@ var _ SetOpacityer = (*Button)(nil)
 // If x,y is inside the button's region then it will run its function and
 // return true, otherwise it does nothing and returns false.
 func (b *Button) handleClick(x, y int, data interface{}) bool {
+	if b.valid_func != nil {
+		b.valid = b.valid_func()
+	} else {
+		b.valid = true
+	}
 	in := b.Over(x, y)
 	if in && b.valid {
 		b.f(data)
@@ -90,6 +95,9 @@ func (b *Button) Respond(group gui.EventGroup, data interface{}) bool {
 		return false
 	}
 
+	// TODO(tmckee): if the button is invalid, shouldn't we return false?
+	// Otherwise, it looks like the button handled the event but we didn't call
+	// the wrapped func.
 	if b.valid {
 		b.f(data)
 	}
