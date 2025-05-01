@@ -1,8 +1,3 @@
-- bug#27: there's a race condition where multiple goroutines are
-  reading/writing Data.texture fields through texture.Object instances
-	- we need to make all .texture accesses on the render thread and have a
-	  threadsafe way to check for loaded/not-loaded
-
 - bug#25: make a game start!
 	- tag things that need cleanup with #25
 	- running manually -> mustRunString failure -> no line number info T_T
