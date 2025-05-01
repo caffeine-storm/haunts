@@ -86,9 +86,9 @@ func RunStartupSpecs() {
 	Convey("drawing the startup ui", func() {
 		gametest.RunDrawingTest(menu, "startup", func(drawTestCtx gametest.DrawTestContext) {
 			Convey("should let you click the menu", func() {
-				flag := false
+				flag := make(chan bool, 1)
 				menu.PatchButtonForTest("Credits", func() {
-					flag = true
+					flag <- true
 				})
 
 				// TODO(tmckee): this sucks; we have to like, 'prime' the menu? It needs
@@ -118,7 +118,7 @@ func RunStartupSpecs() {
 				// attempt-to-respond-to'd.
 				driver.ProcessFrame()
 
-				So(flag, ShouldEqual, true)
+				So(<-flag, ShouldEqual, true)
 			})
 		})
 	})
