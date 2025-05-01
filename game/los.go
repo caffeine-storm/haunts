@@ -850,13 +850,50 @@ func makeGameTheWrongWay(scenario Scenario) *Game {
 	return MakeGame(hdef, mgr)
 }
 
+type gobbableRandSource struct {
+	Buf []int64
+}
+
+var _ rand.Source = (*gobbableRandSource)(nil)
+
+func (grs *gobbableRandSource) Int63() int64 {
+	if len(grs.Buf) > 1 {
+		ret := grs.Buf[len(grs.Buf)-1]
+		grs.Buf = grs.Buf[:len(grs.Buf)-1]
+		return ret
+	}
+
+	src := rand.NewSource(grs.Buf[0])
+	newbuf := make([]int64, 64)
+	for i := 0; i < 64; i++ {
+		newbuf[i] = src.Int63()
+	}
+	grs.Buf = newbuf
+	return src.Int63()
+}
+
+func (grs *gobbableRandSource) Seed(n int64) {
+	grs.Buf = []int64{n}
+}
+
+func gobbableRand(src rand.Source) rand.Source {
+	init := src.Int63()
+	return &gobbableRandSource{
+		Buf: []int64{init},
+	}
+}
+
+func init() {
+	gob.Register(&gobbableRandSource{})
+}
+
 func MakeGame(h *house.HouseDef, spriteManager *sprite.Manager) *Game {
 	var g Game
 	g.Side = SideExplorers
 	g.House = h
 	g.House.Normalize()
 	g.viewer = house.MakeHouseViewer(g.House, 62)
-	g.Rand = rand.New(rand.NewSource(4285415527))
+	g.Rand = gobbableRand(rand.NewSource(4285415527))
 	g.spriteManager = spriteManager
 
 	// This way an unset id will be invalid
