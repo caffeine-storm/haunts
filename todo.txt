@@ -1,9 +1,11 @@
 - bug#25: make a game start!
 	- tag things that need cleanup with #25
-	- running manually -> mustRunString failure -> no line number info T_T
-	- running test -> TestGamePanel -> draws blank screen ! even though
-	  game.go:83 says there's a house-viewer and an overlay in the anchorbox
-	- failing with gob-encoding fail; need to replace rand.Source with a Gobbable
+	1. running manually -> click-through ui to start level -> blank screen
+		- running test -> TestGamePanel -> draws blank screen ! even though
+		  game.go:83 says there's a house-viewer and an overlay in the anchorbox
+		- does overlay draw anything?
+	2. ui startup test is flaky (unless run in isolation)
+	3. lots of data races
 
 - bug#26: LuaStringifyParam is stubbed and leading to useless debug output
 
