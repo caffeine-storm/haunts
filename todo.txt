@@ -14,14 +14,14 @@
 - bug#26: LuaStringifyParam is stubbed and leading to useless debug output
 
 - bug#24: game/script.go:loadgameStateRaw reaches into the GamePanel to set a
-  'Game' pointer; it should just load the state and let calling code make Game
+	'Game' pointer; it should just load the state and let calling code make Game
 	objects if needed, I'd think
 
 - bug#22: editing key_binds.json can cause panics; e.g. remove 'screenshot'
-  from the mapping in the .json file and main.go will panic
+	from the mapping in the .json file and main.go will panic
 
 - bug#21: sometimes (don't know why yet) the window doesn't get focus when
-  starting
+	starting
 
 - bug#20: add better feedback for TextureManager.BlockUntilLoaded failures
 	- include the set of textures waited on
@@ -107,4 +107,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#28: <next>
+- bug#29: <next>
