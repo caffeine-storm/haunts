@@ -1,12 +1,8 @@
 package house_test
 
 import (
-	"fmt"
 	"image"
-	"image/color"
-	"image/png"
 	"math"
-	"os"
 	"testing"
 
 	"github.com/MobRulesGames/haunts/base"
@@ -15,6 +11,7 @@ import (
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/mathgl"
+	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/debug"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/gui/guitest"
@@ -72,8 +69,10 @@ func TestMath(t *testing.T) {
 }
 
 func TestMakeRoomMats(t *testing.T) {
+	jankyOneOverRoot2 := mathgl.Fsin32(math.Pi / 4)
+
 	t.Run("blank room", func(t *testing.T) {
-		DefaultRoomMatrices := func() []mathgl.Mat4 {
+		PreTiltRoomMatrices := func() []mathgl.Mat4 {
 			defaultRoom := house.BlankRoom()
 			defaultRegion := gui.Region{
 				Point: gui.Point{X: 0, Y: 0},
@@ -92,13 +91,10 @@ func TestMakeRoomMats(t *testing.T) {
 			return []mathgl.Mat4{a, b, c, d, e, f}
 		}
 
-		roomMats := DefaultRoomMatrices()
+		roomMats := PreTiltRoomMatrices()
 
-		jankyOneOverRoot2 := mathgl.Fsin32(math.Pi / 4)
-
-		// The floor transform should rotate its input by 45 degrees about the
-		// z-axis, then translate to adjust to the middle of the room then by the
-		// focus.
+		// This floor transform should rotate its input by 45 degrees about the
+		// z-axis, then translate to adjust to the middle of the room.
 		defaultFloor := mathgl.Mat4{
 			jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
 			-jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
@@ -131,8 +127,6 @@ func TestMakeRoomMats(t *testing.T) {
 
 		roomMats := MakeRoomMatrices()
 
-		jankyOneOverRoot2 := mathgl.Fsin32(math.Pi / 4)
-
 		// The floor transform should rotate its input by 45 degrees about
 		// the z-axis, then translate to adjust by the focus.
 		expectedFloor := mathgl.Mat4{
@@ -147,55 +141,33 @@ func TestMakeRoomMats(t *testing.T) {
 		}
 	})
 
-	t.Run("floor matrix properly smushes a floor image", func(t *testing.T) {
-		// TODO(#10): don't skip, fix!
-		t.Skip("#10: skipping so we can focus elsewhere for now")
-
+	Convey("floor matrix properly smushes a floor image", t, func() {
 		floorMatrix := &mathgl.Mat4{
-			8.622922, 8.622922, 0, 0,
-			-8.622922, 8.622922, 0, 0,
+			jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
+			-jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
 			0, 0, 1, 0,
-			128, 41.770782, 0, 1,
+			0, 0, 0, 1,
 		}
 
-		imageName := "floor_21_mahogany_tiny"
+		floorMatrix.Identity()
+
 		screenRegion := image.Rect(0, 0, 400, 400)
-		expected := rendertest.MustLoadImage(fmt.Sprintf("testdata/images/%s_expected.png", imageName))
 
 		rendertest.WithGlForTest(screenRegion.Dx(), screenRegion.Dy(), func(sys system.System, queue render.RenderQueueInterface) {
 
-			var result image.Image
 			queue.Queue(func(st render.RenderQueueState) {
-				tex := rendertest.GivenATexture(fmt.Sprintf("images/%s.png", imageName))
-				render.WithMatrixInMode(floorMatrix, render.MatrixModeModelView, func() {
+				tex := rendertest.GivenATexture("mahogany/input.png")
+				render.WithMultMatrixInMode(floorMatrix, render.MatrixModeModelView, func() {
+					gl.Enable(gl.TEXTURE_2D)
 					rendertest.DrawTexturedQuad(screenRegion, tex, st.Shaders())
 				})
 
 				debug.LogAndClearGlErrors(logging.ErrorLogger())
-
-				result = debug.ScreenShotRgba(screenRegion.Dx(), screenRegion.Dy())
 			})
 			queue.Purge()
 
-			ok := rendertest.ImagesAreWithinThreshold(result, expected, rendertest.Threshold(3), color.RGBA{A: 255})
-
-			if !ok {
-				outfileName := fmt.Sprintf("testdata/images/%s.rej.png", imageName)
-				outfile, err := os.Create(outfileName)
-				if err != nil {
-					panic(fmt.Errorf("couldn't os.Create %q: %w", outfileName, err))
-				}
-				defer outfile.Close()
-
-				err = png.Encode(outfile, result)
-				if err != nil {
-					panic(fmt.Errorf("couldn't png.Encode %q: %w", outfileName, err))
-				}
-
-				t.Fatalf("image mismatch")
-			}
+			So(queue, rendertest.ShouldLookLikeFile, "mahogany")
 		})
-
 	})
 }
 
