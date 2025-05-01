@@ -286,9 +286,10 @@ type Manager struct {
 	}
 }
 
-var (
-	manager *Manager
-)
+// TODO(tmckee:#28): package level state is causing problems w.r.t. data races
+// during tests. We should return a manager instance from Init instead of
+// relying on this variable.
+var manager *Manager
 
 func Init(renderQueue render.RenderQueueInterface) {
 	manager = &Manager{

@@ -1,3 +1,7 @@
+- bug#28: texture package has package-level state to reference a Manager
+	instance. Leads to data-races when running multiple tests that want to
+	texture.Init() over separate render queues.
+
 - bug#25: make a game start!
 	- tag things that need cleanup with #25
 	1. running manually -> click-through ui to start level -> blank screen
