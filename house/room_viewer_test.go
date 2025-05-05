@@ -1,6 +1,7 @@
 package house_test
 
 import (
+	"fmt"
 	"image"
 	"math"
 	"testing"
@@ -95,14 +96,14 @@ func TestMakeRoomMats(t *testing.T) {
 
 		// This floor transform should rotate its input by 45 degrees about the
 		// z-axis, then translate to adjust to the middle of the room.
-		defaultFloor := mathgl.Mat4{
+		preTiltFloor := mathgl.Mat4{
 			jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
 			-jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
 			0, 0, 1, 0,
 			100, 100, 0, 1,
 		}
-		if !matsAreEqual(roomMats[0], defaultFloor) {
-			t.Fatalf("expected matrix mismatch: expected %+v, got %+v", render.Showmat(defaultFloor), render.Showmat(roomMats[0]))
+		if !matsAreEqual(roomMats[0], preTiltFloor) {
+			t.Fatalf("expected matrix mismatch: expected %+v, got %+v", render.Showmat(preTiltFloor), render.Showmat(roomMats[0]))
 		}
 	})
 	t.Run("non-zero-zero focus", func(t *testing.T) {
@@ -149,24 +150,50 @@ func TestMakeRoomMats(t *testing.T) {
 			0, 0, 0, 1,
 		}
 
-		floorMatrix.Identity()
-
-		screenRegion := image.Rect(0, 0, 400, 400)
-
-		rendertest.WithGlForTest(screenRegion.Dx(), screenRegion.Dy(), func(sys system.System, queue render.RenderQueueInterface) {
-
+		screen := image.Rect(0, 0, 400, 400)
+		rendertest.WithIsolatedGlAndHandleForTest(screen.Dx(), screen.Dy(), func(sys system.System, hdl system.NativeWindowHandle, queue render.RenderQueueInterface) {
 			queue.Queue(func(st render.RenderQueueState) {
+				//gl.Enable(gl.TEXTURE_2D)
+				debug.LogAndClearGlErrors(logging.ErrorLogger())
 				tex := rendertest.GivenATexture("mahogany/input.png")
 				render.WithMultMatrixInMode(floorMatrix, render.MatrixModeModelView, func() {
-					gl.Enable(gl.TEXTURE_2D)
-					rendertest.DrawTexturedQuad(screenRegion, tex, st.Shaders())
+					fmt.Printf("glstate: %v\n", debug.GetGlState())
+					rendertest.DrawTexturedQuad(screen, tex, st.Shaders())
 				})
-
-				debug.LogAndClearGlErrors(logging.ErrorLogger())
 			})
 			queue.Purge()
 
 			So(queue, rendertest.ShouldLookLikeFile, "mahogany")
+		})
+	})
+}
+
+// Test cross-talk is causing strange render issues; running this test with
+// everything else seems to repro consistently. Note that running this and
+// TestMakeRoomMats alone is not enough to repro.
+func TestTexturedQuadRegr(t *testing.T) {
+	Convey("drawing textured quads", t, func() {
+		screen := image.Rect(0, 0, 50, 50)
+		rendertest.WithGlForTest(screen.Dx(), screen.Dy(), func(sys system.System, queue render.RenderQueueInterface) {
+			queue.Queue(func(st render.RenderQueueState) {
+				debug.LogAndClearGlErrors(logging.ErrorLogger())
+				tex := rendertest.GivenATexture("images/red.png")
+
+				gl.Disable(gl.STENCIL_TEST)
+				defer gl.Disable(gl.STENCIL_TEST)
+				gl.ClearStencil(0)
+				gl.Clear(gl.STENCIL_BUFFER_BIT)
+				gl.StencilFunc(gl.ALWAYS, 1, 1)
+				gl.StencilOp(gl.KEEP, gl.KEEP, gl.KEEP)
+
+				gl.Enable(gl.TEXTURE_2D)
+				gl.ActiveTexture(gl.TEXTURE0)
+				fmt.Printf("glstate: %v\n", debug.GetGlState())
+				rendertest.DrawTexturedQuad(screen, tex, st.Shaders())
+			})
+			queue.Purge()
+
+			So(queue, rendertest.ShouldLookLikeFile, "heckinwhat")
 		})
 	})
 }

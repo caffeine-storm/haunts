@@ -8,8 +8,7 @@
 		- running test -> TestGamePanel -> draws blank screen ! even though
 		  game.go:83 says there's a house-viewer and an overlay in the anchorbox
 		- does overlay draw anything?
-	2. ui startup test is flaky (unless run in isolation)
-	3. lots of data races
+	2. lots of data races
 
 - bug#26: LuaStringifyParam is stubbed and leading to useless debug output
 
