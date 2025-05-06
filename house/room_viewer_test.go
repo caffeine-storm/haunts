@@ -179,16 +179,7 @@ func TestTexturedQuadRegr(t *testing.T) {
 				debug.LogAndClearGlErrors(logging.ErrorLogger())
 				tex := rendertest.GivenATexture("images/red.png")
 
-				gl.Disable(gl.STENCIL_TEST)
-				defer gl.Disable(gl.STENCIL_TEST)
-				gl.ClearStencil(0)
-				gl.Clear(gl.STENCIL_BUFFER_BIT)
-				gl.StencilFunc(gl.ALWAYS, 1, 1)
-				gl.StencilOp(gl.KEEP, gl.KEEP, gl.KEEP)
-
-				gl.Enable(gl.TEXTURE_2D)
-				gl.ActiveTexture(gl.TEXTURE0)
-				fmt.Printf("glstate: %v\n", debug.GetGlState())
+				gl.Buffer(0).Bind(gl.ELEMENT_ARRAY_BUFFER)
 				rendertest.DrawTexturedQuad(screen, tex, st.Shaders())
 			})
 			queue.Purge()
