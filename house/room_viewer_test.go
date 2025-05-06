@@ -1,7 +1,6 @@
 package house_test
 
 import (
-	"fmt"
 	"image"
 	"math"
 	"testing"
@@ -12,7 +11,6 @@ import (
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/mathgl"
-	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/debug"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/gui/guitest"
@@ -51,6 +49,10 @@ func pair(a, b float32) floatPair {
 	}
 }
 
+// mathgl is trading accuracy for speed but should at least be internally
+// consistent.
+var jankyOneOverRoot2 = mathgl.Fsin32(math.Pi / 4)
+
 func TestMath(t *testing.T) {
 	assert := assert.New(t)
 	s, c := sincos(0)
@@ -63,15 +65,10 @@ func TestMath(t *testing.T) {
 	assert.Equal(pair(1, 0), pair(s, c), "math.Pi/2")
 
 	s, c = sincos(math.Pi / 4)
-	// mathgl is trading accuracy for speed but should at least be internally
-	// consistent.
-	jankyOneOverRoot2 := mathgl.Fsin32(math.Pi / 4)
-	assert.Equal(pair(jankyOneOverRoot2, jankyOneOverRoot2), pair(s, c), "math.Pi/2")
+	assert.Equal(pair(jankyOneOverRoot2, jankyOneOverRoot2), pair(s, c), "math.Pi/4")
 }
 
 func TestMakeRoomMats(t *testing.T) {
-	jankyOneOverRoot2 := mathgl.Fsin32(math.Pi / 4)
-
 	t.Run("blank room", func(t *testing.T) {
 		PreTiltRoomMatrices := func() []mathgl.Mat4 {
 			defaultRoom := house.BlankRoom()
@@ -153,11 +150,9 @@ func TestMakeRoomMats(t *testing.T) {
 		screen := image.Rect(0, 0, 400, 400)
 		rendertest.WithIsolatedGlAndHandleForTest(screen.Dx(), screen.Dy(), func(sys system.System, hdl system.NativeWindowHandle, queue render.RenderQueueInterface) {
 			queue.Queue(func(st render.RenderQueueState) {
-				//gl.Enable(gl.TEXTURE_2D)
 				debug.LogAndClearGlErrors(logging.ErrorLogger())
 				tex := rendertest.GivenATexture("mahogany/input.png")
 				render.WithMultMatrixInMode(floorMatrix, render.MatrixModeModelView, func() {
-					fmt.Printf("glstate: %v\n", debug.GetGlState())
 					rendertest.DrawTexturedQuad(screen, tex, st.Shaders())
 				})
 			})
@@ -168,9 +163,8 @@ func TestMakeRoomMats(t *testing.T) {
 	})
 }
 
-// Test cross-talk is causing strange render issues; running this test with
-// everything else seems to repro consistently. Note that running this and
-// TestMakeRoomMats alone is not enough to repro.
+// Test cross-talk was causing strange render issues; this exists to be a smoke
+// test for rendering/GL state.
 func TestTexturedQuadRegr(t *testing.T) {
 	Convey("drawing textured quads", t, func() {
 		screen := image.Rect(0, 0, 50, 50)
@@ -179,7 +173,6 @@ func TestTexturedQuadRegr(t *testing.T) {
 				debug.LogAndClearGlErrors(logging.ErrorLogger())
 				tex := rendertest.GivenATexture("images/red.png")
 
-				gl.Buffer(0).Bind(gl.ELEMENT_ARRAY_BUFFER)
 				rendertest.DrawTexturedQuad(screen, tex, st.Shaders())
 			})
 			queue.Purge()
