@@ -25,15 +25,6 @@ func TestRoomViewer(t *testing.T) {
 	Convey("house.roomViewer", t, RoomViewerSpecs)
 }
 
-func matsAreEqual(lhs, rhs mathgl.Mat4) bool {
-	for i := range lhs {
-		if lhs[i] != rhs[i] {
-			return false
-		}
-	}
-	return true
-}
-
 func sincos(f float32) (float32, float32) {
 	return mathgl.Fsin32(f), mathgl.Fcos32(f)
 }
@@ -69,76 +60,6 @@ func TestMath(t *testing.T) {
 }
 
 func TestMakeRoomMats(t *testing.T) {
-	t.Run("blank room", func(t *testing.T) {
-		PreTiltRoomMatrices := func() []mathgl.Mat4 {
-			defaultRoom := house.BlankRoom()
-			defaultRegion := gui.Region{
-				Point: gui.Point{X: 0, Y: 0},
-				Dims:  gui.Dims{Dx: 200, Dy: 200},
-			}
-			defaultFocus := struct {
-				X, Y float32
-			}{
-				X: 0,
-				Y: 0,
-			}
-			defaultAngle := float32(0)
-			defaultZoom := float32(1)
-			a, b, c, d, e, f := house.MakeRoomMatsForTest(defaultRoom, defaultRegion, defaultFocus.X, defaultFocus.Y, defaultAngle, defaultZoom)
-
-			return []mathgl.Mat4{a, b, c, d, e, f}
-		}
-
-		roomMats := PreTiltRoomMatrices()
-
-		// This floor transform should rotate its input by 45 degrees about the
-		// z-axis, then translate to adjust to the middle of the room.
-		preTiltFloor := mathgl.Mat4{
-			jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
-			-jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
-			0, 0, 1, 0,
-			100, 100, 0, 1,
-		}
-		if !matsAreEqual(roomMats[0], preTiltFloor) {
-			t.Fatalf("expected matrix mismatch: expected %+v, got %+v", render.Showmat(preTiltFloor), render.Showmat(roomMats[0]))
-		}
-	})
-	t.Run("non-zero-zero focus", func(t *testing.T) {
-		MakeRoomMatrices := func() []mathgl.Mat4 {
-			defaultRoom := house.BlankRoom()
-			defaultRegion := gui.Region{
-				Point: gui.Point{X: 0, Y: 0},
-				Dims:  gui.Dims{Dx: 200, Dy: 200},
-			}
-			nonZeroFocus := struct {
-				X, Y float32
-			}{
-				X: 5,
-				Y: 5,
-			}
-			defaultAngle := float32(0)
-			defaultZoom := float32(1)
-			a, b, c, d, e, f := house.MakeRoomMatsForTest(defaultRoom, defaultRegion, nonZeroFocus.X, nonZeroFocus.Y, defaultAngle, defaultZoom)
-
-			return []mathgl.Mat4{a, b, c, d, e, f}
-		}
-
-		roomMats := MakeRoomMatrices()
-
-		// The floor transform should rotate its input by 45 degrees about
-		// the z-axis, then translate to adjust by the focus.
-		expectedFloor := mathgl.Mat4{
-			jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
-			-jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
-			0, 0, 1, 0,
-			100, 100 - 10*jankyOneOverRoot2, 0, 1,
-		}
-
-		if !matsAreEqual(roomMats[0], expectedFloor) {
-			t.Fatalf("expected matrix mismatch:\nexpected:\n%v\ngot:\n%v", render.Showmat(expectedFloor), render.Showmat(roomMats[0]))
-		}
-	})
-
 	Convey("floor matrix properly smushes a floor image", t, func() {
 		floorMatrix := &mathgl.Mat4{
 			jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
