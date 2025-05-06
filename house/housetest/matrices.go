@@ -22,7 +22,7 @@ func MatsAreEqual(lhs, rhs mathgl.Mat4) bool {
 }
 
 func PreTiltRoomMatrices() []mathgl.Mat4 {
-	defaultRoom := house.BlankRoom()
+	defaultRoomSize := house.BlankRoom().Size
 	defaultRegion := gui.Region{
 		Point: gui.Point{X: 0, Y: 0},
 		Dims:  gui.Dims{Dx: 200, Dy: 200},
@@ -35,13 +35,13 @@ func PreTiltRoomMatrices() []mathgl.Mat4 {
 	}
 	defaultAngle := float32(0)
 	defaultZoom := float32(1)
-	a, b, c, d, e, f := house.MakeRoomMatsForTest(defaultRoom, defaultRegion, defaultFocus.X, defaultFocus.Y, defaultAngle, defaultZoom)
+	a, b, c, d, e, f := house.MakeRoomMatsForTest(defaultRoomSize, defaultRegion, defaultFocus.X, defaultFocus.Y, defaultAngle, defaultZoom)
 
 	return []mathgl.Mat4{a, b, c, d, e, f}
 }
 
 func MakeRoomMatrices() []mathgl.Mat4 {
-	defaultRoom := house.BlankRoom()
+	defaultRoomSize := house.BlankRoom().Size
 	defaultRegion := gui.Region{
 		Point: gui.Point{X: 0, Y: 0},
 		Dims:  gui.Dims{Dx: 200, Dy: 200},
@@ -54,7 +54,7 @@ func MakeRoomMatrices() []mathgl.Mat4 {
 	}
 	defaultAngle := float32(0)
 	defaultZoom := float32(1)
-	a, b, c, d, e, f := house.MakeRoomMatsForTest(defaultRoom, defaultRegion, nonZeroFocus.X, nonZeroFocus.Y, defaultAngle, defaultZoom)
+	a, b, c, d, e, f := house.MakeRoomMatsForTest(defaultRoomSize, defaultRegion, nonZeroFocus.X, nonZeroFocus.Y, defaultAngle, defaultZoom)
 
 	return []mathgl.Mat4{a, b, c, d, e, f}
 }
@@ -63,8 +63,8 @@ type RoomMats struct {
 	Floor, IFloor, Left, ILeft, Right, IRight mathgl.Mat4
 }
 
-func MakeRoomMatsForCamera(room *house.Room, cam CameraConfig) RoomMats {
-	floor, ifloor, left, ileft, right, iright := house.MakeRoomMatsForTest(room, cam.Region, cam.FocusX, cam.FocusY, cam.Angle, cam.Zoom)
+func MakeRoomMatsForCamera(roomSize house.RoomSize, cam CameraConfig) RoomMats {
+	floor, ifloor, left, ileft, right, iright := house.MakeRoomMatsForTest(roomSize, cam.Region, cam.FocusX, cam.FocusY, cam.Angle, cam.Zoom)
 
 	return RoomMats{
 		Floor:  floor,

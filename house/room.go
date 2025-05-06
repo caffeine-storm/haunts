@@ -45,6 +45,8 @@ func loadTags() error {
 	return base.LoadJson(filepath.Join(datadir, "tags.json"), &tags)
 }
 
+// TODO(tmckee:clean): make an interface for 'has a Dx(), Dy()' and use that
+// instead of this struct for places that just need the size and not the name.
 type RoomSize struct {
 	Name   string
 	Dx, Dy int
@@ -134,6 +136,7 @@ type Room struct {
 	wall_texture_state_map map[*WallTexture]wallTextureState
 }
 
+// TODO(tmckee:clean): add a "Blank(Small)" helper func to just get a RoomSize
 func BlankRoom() *Room {
 	return &Room{
 		Defname: "blank",

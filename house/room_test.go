@@ -77,7 +77,7 @@ func RoomSpecs() {
 
 		Convey("drawing walls", func() {
 			room := loadRoom("restest.room")
-			floor := housetest.MakeRoomMatsForCamera(room, camera).Floor
+			floor := housetest.MakeRoomMatsForCamera(room.Size, camera).Floor
 
 			queue.Queue(func(render.RenderQueueState) {
 				// TODO(#12): having to remember to call some weird init function is
@@ -104,7 +104,7 @@ func RoomSpecs() {
 			if restestRoom.Wall.GetPath() == "" {
 				panic("the 'restest.room' file should have specified a texture for the walls")
 			}
-			allMats := housetest.MakeRoomMatsForCamera(restestRoom, camera)
+			allMats := housetest.MakeRoomMatsForCamera(restestRoom.Size, camera)
 
 			queue.Queue(func(render.RenderQueueState) {
 				restestRoom.SetupGlStuff(&house.RoomRealGl{})
@@ -130,7 +130,7 @@ func RoomSpecs() {
 			if tutRoom.Wall.GetPath() == "" {
 				panic("the 'tutorial-entry.room' file should have specified a texture for the walls")
 			}
-			allMats := housetest.MakeRoomMatsForCamera(tutRoom, camera)
+			allMats := housetest.MakeRoomMatsForCamera(tutRoom.Size, camera)
 
 			queue.Queue(func(render.RenderQueueState) {
 				tutRoom.SetupGlStuff(&house.RoomRealGl{})

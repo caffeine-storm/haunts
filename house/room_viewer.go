@@ -139,14 +139,14 @@ func (rv *roomViewer) Drag(dx, dy float64) {
 }
 
 func (rv *roomViewer) makeMat() {
-	rv.mat, rv.imat, rv.left_wall_mat, rv.left_wall_imat, rv.right_wall_mat, rv.right_wall_imat = makeRoomMats(rv.room, rv.Render_region, rv.fx, rv.fy, rv.angle, rv.zoom)
+	rv.mat, rv.imat, rv.left_wall_mat, rv.left_wall_imat, rv.right_wall_mat, rv.right_wall_imat = makeRoomMats(rv.room.Size, rv.Render_region, rv.fx, rv.fy, rv.angle, rv.zoom)
 }
 
-func MakeRoomMatsForTest(room *Room, region gui.Region, focusx, focusy, angle, zoom float32) (floor, ifloor, left, ileft, right, iright mathgl.Mat4) {
-	return makeRoomMats(room, region, focusx, focusy, angle, zoom)
+func MakeRoomMatsForTest(roomSize RoomSize, region gui.Region, focusx, focusy, angle, zoom float32) (floor, ifloor, left, ileft, right, iright mathgl.Mat4) {
+	return makeRoomMats(roomSize, region, focusx, focusy, angle, zoom)
 }
 
-func makeRoomMats(room *Room, region gui.Region, focusx, focusy, angle, zoom float32) (floor, ifloor, left, ileft, right, iright mathgl.Mat4) {
+func makeRoomMats(roomSize RoomSize, region gui.Region, focusx, focusy, angle, zoom float32) (floor, ifloor, left, ileft, right, iright mathgl.Mat4) {
 	// Note: repeated matrix multiplication is equivalent to composing
 	// application of a series of transforms in reverse. So, we build up a
 	// transform by multiplying logical pieces but its easiest to see the overall
@@ -189,7 +189,7 @@ func makeRoomMats(room *Room, region gui.Region, focusx, focusy, angle, zoom flo
 	left.Assign(&floor)
 	m.RotationX(-math.Pi / 2)
 	left.Multiply(&m)
-	m.Translation(0, 0, float32(room.Size.Dy))
+	m.Translation(0, 0, float32(roomSize.Dy))
 	left.Multiply(&m)
 	ileft.Assign(&left)
 	ileft.Inverse()
@@ -201,7 +201,7 @@ func makeRoomMats(room *Room, region gui.Region, focusx, focusy, angle, zoom flo
 	right.Multiply(&m)
 	m.Scaling(1, 1, 1)
 	right.Multiply(&m)
-	m.Translation(0, 0, -float32(room.Size.Dx))
+	m.Translation(0, 0, -float32(roomSize.Dx))
 	right.Multiply(&m)
 	swap_x_y := mathgl.Mat4{
 		0, 1, 0, 0,
@@ -214,7 +214,7 @@ func makeRoomMats(room *Room, region gui.Region, focusx, focusy, angle, zoom flo
 	iright.Inverse()
 
 	logging.Trace("makeRoomMats returning",
-		"roomsize", room.Size,
+		"roomsize", roomSize,
 		"region", region,
 		"focusx", focusx,
 		"focusy", focusy,
