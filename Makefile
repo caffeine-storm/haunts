@@ -183,7 +183,7 @@ ${TEST_REPORT_TAR}:
 		)
 
 trace-house-test:
-	go test ${testrunargs} -exec ../tools/apitrace/trace-gl.sh -tags nosound ./house
+	xvfb-run -a go test ${testrunargs} -exec ../tools/apitrace/trace-gl.sh -tags nosound ./house
 
 # Let go tooling decide if things are out-of-date
 .PHONY: haunts
