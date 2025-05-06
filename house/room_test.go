@@ -10,7 +10,6 @@ import (
 	"github.com/MobRulesGames/haunts/house/housetest"
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
 	"github.com/runningwild/glop/system"
@@ -54,15 +53,12 @@ func loadRoom(roomName string) *house.Room {
 func RoomSpecs() {
 	base.SetDatadir("../data")
 
-	testDimensions := gui.Dims{
-		Dx: 1024,
-		Dy: 768,
-	}
+	dx, dy := 1024, 768
 	opaquealpha := byte(255)
 
-	camera := housetest.Camera().ForSize(testDimensions).At(256, 256)
+	camera := housetest.Camera().ForSize(dx, dy).At(256, 256)
 
-	rendertest.WithGlForTest(testDimensions.Dx, testDimensions.Dy, func(sys system.System, queue render.RenderQueueInterface) {
+	rendertest.WithGlForTest(dx, dy, func(sys system.System, queue render.RenderQueueInterface) {
 		registry.LoadAllRegistries()
 		base.InitShaders(queue)
 		texture.Init(queue)

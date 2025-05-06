@@ -69,8 +69,8 @@ func (c CameraConfig) At(x, y float32) CameraConfig {
 	return c
 }
 
-func (c CameraConfig) ForSize(dims gui.Dims) CameraConfig {
-	c.Region.Dims = dims
+func (c CameraConfig) ForSize(dx, dy int) CameraConfig {
+	c.Region.Dims = gui.Dims{Dx: dx, Dy: dy}
 	return c
 }
 

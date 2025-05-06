@@ -6,13 +6,12 @@ import (
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/house/housetest"
 	"github.com/MobRulesGames/mathgl"
-	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
 )
 
 func TestRoomMatricesHelpers(t *testing.T) {
 	t.Run("pre-tilt", func(t *testing.T) {
-		camera := housetest.PreTiltCamera().ForSize(gui.Dims{Dx: 200, Dy: 200})
+		camera := housetest.PreTiltCamera().ForSize(200, 200)
 		floorMat := housetest.MakeRoomMatsForCamera(house.BlankRoomSize(), camera).Floor
 
 		// This floor transform should rotate its input by 45 degrees about the
@@ -31,7 +30,7 @@ func TestRoomMatricesHelpers(t *testing.T) {
 	t.Run("non-zero-zero focus", func(t *testing.T) {
 		camera := housetest.Camera().
 			At(5, 5).
-			ForSize(gui.Dims{Dx: 200, Dy: 200}).
+			ForSize(200, 200).
 			AtAngle(0)
 		floorMatrix := housetest.MakeRoomMatsForCamera(house.BlankRoomSize(), camera).Floor
 
