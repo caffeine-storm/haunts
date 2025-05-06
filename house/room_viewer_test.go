@@ -7,6 +7,7 @@ import (
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/house"
+	"github.com/MobRulesGames/haunts/house/housetest"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
@@ -40,9 +41,7 @@ func pair(a, b float32) floatPair {
 	}
 }
 
-// mathgl is trading accuracy for speed but should at least be internally
-// consistent.
-var jankyOneOverRoot2 = mathgl.Fsin32(math.Pi / 4)
+var jankyOneOverRoot2 = housetest.JankyOneOverRoot2
 
 func TestMath(t *testing.T) {
 	assert := assert.New(t)
