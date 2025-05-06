@@ -53,16 +53,6 @@ type HouseViewer struct {
 		max struct{ x, y float32 }
 	}
 
-	Temp struct {
-		Room *Room
-
-		// If we have a temporary door then this is the room it is attached to
-		Door_room *Room
-		Door_info doorInfo
-
-		Spawn *SpawnPoint
-	}
-
 	// Keeping a variety of slices here so that we don't keep allocating new
 	// ones every time we render everything
 	rooms          []RectObject
