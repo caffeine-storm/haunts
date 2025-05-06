@@ -143,14 +143,20 @@ func (hv *HouseViewer) boardToModelview(mx, my float32) (x, y, z float32) {
 }
 
 func (hv *HouseViewer) WindowToBoard(wx, wy int) (float32, float32) {
-	hv.floor, hv.ifloor, _, _, _, _ = makeRoomMats(BlankRoom().Size, hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
+	// TODO(tmckee:clean): makeRoomMats does not need room size for just the
+	// floor/ifloor matrices; it would be cleaner to not need to generate some
+	// value that we end up ignoring!!!
+	hv.floor, hv.ifloor, _, _, _, _ = makeRoomMats(BlankRoomSize(), hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
 
 	fx, fy, _ := hv.modelviewToBoard(float32(wx), float32(wy))
 	return fx, fy
 }
 
 func (hv *HouseViewer) BoardToWindow(bx, by float32) (int, int) {
-	hv.floor, hv.ifloor, _, _, _, _ = makeRoomMats(BlankRoom().Size, hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
+	// TODO(tmckee:clean): makeRoomMats does not need room size for just the
+	// floor/ifloor matrices; it would be cleaner to not need to generate some
+	// value that we end up ignoring!!!
+	hv.floor, hv.ifloor, _, _, _, _ = makeRoomMats(BlankRoomSize(), hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
 
 	fx, fy, _ := hv.boardToModelview(bx, by)
 	return int(fx), int(fy)

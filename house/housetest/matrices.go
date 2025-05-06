@@ -22,7 +22,7 @@ func MatsAreEqual(lhs, rhs mathgl.Mat4) bool {
 }
 
 func PreTiltRoomMatrices() []mathgl.Mat4 {
-	defaultRoomSize := house.BlankRoom().Size
+	defaultRoomSize := house.BlankRoomSize()
 	defaultRegion := gui.Region{
 		Point: gui.Point{X: 0, Y: 0},
 		Dims:  gui.Dims{Dx: 200, Dy: 200},
@@ -41,7 +41,7 @@ func PreTiltRoomMatrices() []mathgl.Mat4 {
 }
 
 func MakeRoomMatrices() []mathgl.Mat4 {
-	defaultRoomSize := house.BlankRoom().Size
+	defaultRoomSize := house.BlankRoomSize()
 	defaultRegion := gui.Region{
 		Point: gui.Point{X: 0, Y: 0},
 		Dims:  gui.Dims{Dx: 200, Dy: 200},
