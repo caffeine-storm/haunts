@@ -60,19 +60,15 @@ func TestMath(t *testing.T) {
 
 func TestMakeRoomMats(t *testing.T) {
 	Convey("floor matrix properly smushes a floor image", t, func() {
-		floorMatrix := &mathgl.Mat4{
-			jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
-			-jankyOneOverRoot2, jankyOneOverRoot2, 0, 0,
-			0, 0, 1, 0,
-			0, 0, 0, 1,
-		}
+		camera := housetest.Camera().ForSize(400, 400).AtAngle(0).At(200/housetest.JankyOneOverRoot2, 0)
+		floorMatrix := housetest.MakeRoomMatsForCamera(house.BlankRoomSize(), camera).Floor
 
 		screen := image.Rect(0, 0, 400, 400)
-		rendertest.WithIsolatedGlAndHandleForTest(screen.Dx(), screen.Dy(), func(sys system.System, hdl system.NativeWindowHandle, queue render.RenderQueueInterface) {
+		rendertest.WithGlForTest(screen.Dx(), screen.Dy(), func(sys system.System, queue render.RenderQueueInterface) {
 			queue.Queue(func(st render.RenderQueueState) {
 				debug.LogAndClearGlErrors(logging.ErrorLogger())
 				tex := rendertest.GivenATexture("mahogany/input.png")
-				render.WithMultMatrixInMode(floorMatrix, render.MatrixModeModelView, func() {
+				render.WithMultMatrixInMode(&floorMatrix, render.MatrixModeModelView, func() {
 					rendertest.DrawTexturedQuad(screen, tex, st.Shaders())
 				})
 			})
