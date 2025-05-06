@@ -21,44 +21,6 @@ func MatsAreEqual(lhs, rhs mathgl.Mat4) bool {
 	return true
 }
 
-func PreTiltRoomMatrices() []mathgl.Mat4 {
-	defaultRoomSize := house.BlankRoomSize()
-	defaultRegion := gui.Region{
-		Point: gui.Point{X: 0, Y: 0},
-		Dims:  gui.Dims{Dx: 200, Dy: 200},
-	}
-	defaultFocus := struct {
-		X, Y float32
-	}{
-		X: 0,
-		Y: 0,
-	}
-	defaultAngle := float32(0)
-	defaultZoom := float32(1)
-	a, b, c, d, e, f := house.MakeRoomMatsForTest(defaultRoomSize, defaultRegion, defaultFocus.X, defaultFocus.Y, defaultAngle, defaultZoom)
-
-	return []mathgl.Mat4{a, b, c, d, e, f}
-}
-
-func MakeRoomMatrices() []mathgl.Mat4 {
-	defaultRoomSize := house.BlankRoomSize()
-	defaultRegion := gui.Region{
-		Point: gui.Point{X: 0, Y: 0},
-		Dims:  gui.Dims{Dx: 200, Dy: 200},
-	}
-	nonZeroFocus := struct {
-		X, Y float32
-	}{
-		X: 5,
-		Y: 5,
-	}
-	defaultAngle := float32(0)
-	defaultZoom := float32(1)
-	a, b, c, d, e, f := house.MakeRoomMatsForTest(defaultRoomSize, defaultRegion, nonZeroFocus.X, nonZeroFocus.Y, defaultAngle, defaultZoom)
-
-	return []mathgl.Mat4{a, b, c, d, e, f}
-}
-
 type RoomMats struct {
 	Floor, IFloor, Left, ILeft, Right, IRight mathgl.Mat4
 }
@@ -96,6 +58,11 @@ func Camera() CameraConfig {
 	}
 }
 
+func PreTiltCamera() CameraConfig {
+	return Camera().AtAngle(0)
+}
+
+// TODO(tmckee:clean): rename AtFocus
 func (c CameraConfig) At(x, y float32) CameraConfig {
 	c.FocusX = x
 	c.FocusY = y
@@ -104,5 +71,10 @@ func (c CameraConfig) At(x, y float32) CameraConfig {
 
 func (c CameraConfig) ForSize(dims gui.Dims) CameraConfig {
 	c.Region.Dims = dims
+	return c
+}
+
+func (c CameraConfig) AtAngle(theta float32) CameraConfig {
+	c.Angle = theta
 	return c
 }

@@ -3,14 +3,17 @@ package housetest_test
 import (
 	"testing"
 
+	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/house/housetest"
 	"github.com/MobRulesGames/mathgl"
+	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
 )
 
 func TestRoomMatricesHelpers(t *testing.T) {
 	t.Run("pre-tilt", func(t *testing.T) {
-		roomMats := housetest.PreTiltRoomMatrices()
+		camera := housetest.PreTiltCamera().ForSize(gui.Dims{Dx: 200, Dy: 200})
+		floorMat := housetest.MakeRoomMatsForCamera(house.BlankRoomSize(), camera).Floor
 
 		// This floor transform should rotate its input by 45 degrees about the
 		// z-axis, then translate to adjust to the middle of the room.
@@ -20,13 +23,17 @@ func TestRoomMatricesHelpers(t *testing.T) {
 			0, 0, 1, 0,
 			100, 100, 0, 1,
 		}
-		if !housetest.MatsAreEqual(roomMats[0], preTiltFloor) {
-			t.Fatalf("expected matrix mismatch: expected %+v, got %+v", render.Showmat(preTiltFloor), render.Showmat(roomMats[0]))
+		if !housetest.MatsAreEqual(floorMat, preTiltFloor) {
+			t.Fatalf("matrix mismatch: expected %+v, got %+v", render.Showmat(preTiltFloor), render.Showmat(floorMat))
 		}
 	})
 
 	t.Run("non-zero-zero focus", func(t *testing.T) {
-		roomMats := housetest.MakeRoomMatrices()
+		camera := housetest.Camera().
+			At(5, 5).
+			ForSize(gui.Dims{Dx: 200, Dy: 200}).
+			AtAngle(0)
+		floorMatrix := housetest.MakeRoomMatsForCamera(house.BlankRoomSize(), camera).Floor
 
 		// The floor transform should rotate its input by 45 degrees about
 		// the z-axis, then translate to adjust by the focus.
@@ -37,8 +44,8 @@ func TestRoomMatricesHelpers(t *testing.T) {
 			100, 100 - 10*housetest.JankyOneOverRoot2, 0, 1,
 		}
 
-		if !housetest.MatsAreEqual(roomMats[0], expectedFloor) {
-			t.Fatalf("expected matrix mismatch:\nexpected:\n%v\ngot:\n%v", render.Showmat(expectedFloor), render.Showmat(roomMats[0]))
+		if !housetest.MatsAreEqual(floorMatrix, expectedFloor) {
+			t.Fatalf("matrix mismatch:\nexpected:\n%v\ngot:\n%v", render.Showmat(expectedFloor), render.Showmat(floorMatrix))
 		}
 	})
 }
