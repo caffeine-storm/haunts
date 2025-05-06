@@ -7,6 +7,7 @@ import (
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/house"
+	"github.com/MobRulesGames/haunts/house/housetest"
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/runningwild/glop/gui"
@@ -50,13 +51,6 @@ func loadRoom(roomName string) *house.Room {
 	return output
 }
 
-type CameraConfig struct {
-	focusx, focusy float32
-	angle          float32
-	zoom           float32
-	region         gui.Region
-}
-
 func RoomSpecs() {
 	base.SetDatadir("../data")
 
@@ -66,16 +60,7 @@ func RoomSpecs() {
 	}
 	opaquealpha := byte(255)
 
-	camera := CameraConfig{
-		focusx: float32(256),
-		focusy: float32(256),
-		angle:  float32(62),
-		zoom:   float32(1.0),
-		region: gui.Region{
-			Point: gui.Point{X: 0, Y: 0},
-			Dims:  testDimensions,
-		},
-	}
+	camera := housetest.Camera().ForSize(testDimensions).At(256, 256)
 
 	rendertest.WithGlForTest(testDimensions.Dx, testDimensions.Dy, func(sys system.System, queue render.RenderQueueInterface) {
 		registry.LoadAllRegistries()
@@ -92,7 +77,7 @@ func RoomSpecs() {
 
 		Convey("drawing walls", func() {
 			room := loadRoom("restest.room")
-			floor, _, _, _, _, _ := house.MakeRoomMatsForTest(room, camera.region, camera.focusx, camera.focusy, camera.angle, camera.zoom)
+			floor := housetest.MakeRoomMatsForCamera(room, camera).Floor
 
 			queue.Queue(func(render.RenderQueueState) {
 				// TODO(#12): having to remember to call some weird init function is
@@ -119,7 +104,7 @@ func RoomSpecs() {
 			if restestRoom.Wall.GetPath() == "" {
 				panic("the 'restest.room' file should have specified a texture for the walls")
 			}
-			floor, _, left, _, right, _ := house.MakeRoomMatsForTest(restestRoom, camera.region, camera.focusx, camera.focusy, camera.angle, camera.zoom)
+			allMats := housetest.MakeRoomMatsForCamera(restestRoom, camera)
 
 			queue.Queue(func(render.RenderQueueState) {
 				restestRoom.SetupGlStuff(&house.RoomRealGl{})
@@ -133,7 +118,7 @@ func RoomSpecs() {
 			var nilLos *house.LosTexture = nil
 			noFloorDrawers := []house.RenderOnFloorer{}
 			queue.Queue(func(render.RenderQueueState) {
-				restestRoom.Render(floor, left, right, camera.zoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
+				restestRoom.Render(allMats.Floor, allMats.Left, allMats.Right, camera.Zoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
 			})
 			queue.Purge()
 
@@ -145,7 +130,7 @@ func RoomSpecs() {
 			if tutRoom.Wall.GetPath() == "" {
 				panic("the 'tutorial-entry.room' file should have specified a texture for the walls")
 			}
-			floor, _, left, _, right, _ := house.MakeRoomMatsForTest(tutRoom, camera.region, camera.focusx, camera.focusy, camera.angle, camera.zoom)
+			allMats := housetest.MakeRoomMatsForCamera(tutRoom, camera)
 
 			queue.Queue(func(render.RenderQueueState) {
 				tutRoom.SetupGlStuff(&house.RoomRealGl{})
@@ -159,7 +144,7 @@ func RoomSpecs() {
 			var nilLos *house.LosTexture = nil
 			noFloorDrawers := []house.RenderOnFloorer{}
 			queue.Queue(func(render.RenderQueueState) {
-				tutRoom.Render(floor, left, right, camera.zoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
+				tutRoom.Render(allMats.Floor, allMats.Left, allMats.Right, camera.Zoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
 			})
 			queue.Purge()
 
