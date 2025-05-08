@@ -1,10 +1,10 @@
 package house
 
 import (
-	"github.com/MobRulesGames/GoLLRB/llrb"
-	"github.com/MobRulesGames/haunts/base"
-	"github.com/runningwild/glop/util/algorithm"
 	"sort"
+
+	"github.com/MobRulesGames/GoLLRB/llrb"
+	"github.com/runningwild/glop/util/algorithm"
 )
 
 type endpoint struct {
@@ -73,25 +73,19 @@ func (a adag) Successors(n int) []int {
 	return a[n]
 }
 
-func OrderRectObjects(ra []RectObject) []RectObject {
+func OrderRectObjects[T RectObject](ra []T) []T {
 	p := order(ra)
 	if p == nil {
 		return ra
 	}
-	r := make([]RectObject, len(ra))
+	r := make([]T, len(ra))
 	for i := range p {
 		r[i] = ra[p[i]]
 	}
 	return r
 }
 
-func order(input []RectObject) []int {
-	// TODO(tmckee): let's just crash instead
-	defer func() {
-		if err := recover(); err != nil {
-			base.DeprecatedLog().Error("order failed", "err", err)
-		}
-	}()
+func order[T RectObject](input []T) []int {
 	var minx, miny int
 	for _, r := range input {
 		x, y := r.Pos()

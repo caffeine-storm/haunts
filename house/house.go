@@ -155,24 +155,22 @@ func (f *Floor) RoomFurnSpawnAtPos(x, y int) (room *Room, furn *Furniture, spawn
 
 func (f *Floor) render(region gui.Region, focusx, focusy, angle, zoom float32, drawables []Drawable, los_tex *LosTexture, floor_drawers []RenderOnFloorer) {
 	logging.Trace("Floor.render", "rooms", f.Rooms, "region", region)
-	// TODO(tmckee): extract this "re-order rooms as RectObjects" stanza as a
-	// helper.
-	var ros []RectObject
-	algorithm.Map(f.Rooms, &ros, func(r *Room) RectObject { return r })
+	roomsToDraw := make([]*Room, len(f.Rooms))
+	copy(roomsToDraw, f.Rooms)
 	// Do not include temporary objects in the ordering, since they will likely
 	// overlap with other objects and make it difficult to determine the proper
 	// ordering. Just draw the temporary ones last.
 	num_temp := 0
-	for i := range ros {
-		if ros[i].(*Room).temporary {
-			ros[num_temp], ros[i] = ros[i], ros[num_temp]
+	for i := range roomsToDraw {
+		if roomsToDraw[i].temporary {
+			roomsToDraw[num_temp], roomsToDraw[i] = roomsToDraw[i], roomsToDraw[num_temp]
 			num_temp++
 		}
 	}
-	placed := OrderRectObjects(ros[num_temp:])
-	ros = ros[0:num_temp]
+	placed := OrderRectObjects(roomsToDraw[num_temp:])
+	roomsToDraw = roomsToDraw[0:num_temp]
 	for i := range placed {
-		ros = append(ros, placed[i])
+		roomsToDraw = append(roomsToDraw, placed[i])
 	}
 
 	alpha_map := make(map[*Room]byte)
@@ -181,8 +179,8 @@ func (f *Floor) render(region gui.Region, focusx, focusy, angle, zoom float32, d
 	// First pass over the rooms - this will determine at what alpha the rooms
 	// should be drawn. We will use this data later to determine the alpha for
 	// the doors of adjacent rooms.
-	for i := len(ros) - 1; i >= 0; i-- {
-		room := ros[i].(*Room)
+	for i := len(roomsToDraw) - 1; i >= 0; i-- {
+		room := roomsToDraw[i]
 		los_alpha := room.getMaxLosAlpha(los_tex)
 		room.SetupGlStuff(&RoomRealGl{})
 		tx := (focusx + 3) - float32(room.X+room.Size.Dx)
@@ -246,8 +244,8 @@ func (f *Floor) render(region gui.Region, focusx, focusy, angle, zoom float32, d
 	// Third pass - now that we know what alpha to use on the rooms, walls, and
 	// doors we can actually render everything.  We still need to go back to
 	// front though.
-	for i := len(ros) - 1; i >= 0; i-- {
-		room := ros[i].(*Room)
+	for i := len(roomsToDraw) - 1; i >= 0; i-- {
+		room := roomsToDraw[i]
 		fx := focusx - float32(room.X)
 		fy := focusy - float32(room.Y)
 		floor, _, left, _, right, _ := makeRoomMats(room.Size, region, fx, fy, angle, zoom)
