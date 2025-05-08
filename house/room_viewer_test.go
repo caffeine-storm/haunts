@@ -64,7 +64,7 @@ func TestMakeRoomMats(t *testing.T) {
 		floorMatrix := housetest.MakeRoomMatsForCamera(house.BlankRoomSize(), camera).Floor
 
 		screen := image.Rect(0, 0, 400, 400)
-		rendertest.WithGlForTest(screen.Dx(), screen.Dy(), func(sys system.System, queue render.RenderQueueInterface) {
+		rendertest.DeprecatedWithGlForTest(screen.Dx(), screen.Dy(), func(sys system.System, queue render.RenderQueueInterface) {
 			queue.Queue(func(st render.RenderQueueState) {
 				debug.LogAndClearGlErrors(logging.ErrorLogger())
 				tex := rendertest.GivenATexture("mahogany/input.png")
@@ -84,7 +84,7 @@ func TestMakeRoomMats(t *testing.T) {
 func TestTexturedQuadRegr(t *testing.T) {
 	Convey("drawing textured quads", t, func() {
 		screen := image.Rect(0, 0, 50, 50)
-		rendertest.WithGlForTest(screen.Dx(), screen.Dy(), func(sys system.System, queue render.RenderQueueInterface) {
+		rendertest.DeprecatedWithGlForTest(screen.Dx(), screen.Dy(), func(sys system.System, queue render.RenderQueueInterface) {
 			queue.Queue(func(st render.RenderQueueState) {
 				debug.LogAndClearGlErrors(logging.ErrorLogger())
 				tex := rendertest.GivenATexture("images/red.png")
@@ -109,7 +109,7 @@ func RoomViewerSpecs() {
 			Dx: 256, Dy: 256,
 		},
 	}
-	rendertest.WithGlForTest(screenRegion.Dx, screenRegion.Dy, func(sys system.System, queue render.RenderQueueInterface) {
+	rendertest.DeprecatedWithGlForTest(screenRegion.Dx, screenRegion.Dy, func(sys system.System, queue render.RenderQueueInterface) {
 		registry.LoadAllRegistries()
 		base.InitShaders(queue)
 		texture.Init(queue)

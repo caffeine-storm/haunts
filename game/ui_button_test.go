@@ -21,7 +21,7 @@ func TestButton(t *testing.T) {
 		screenDims := gui.Dims{
 			Dx: 256, Dy: 256,
 		}
-		rendertest.WithGlForTest(screenDims.Dx, screenDims.Dy, func(sys system.System, queue render.RenderQueueInterface) {
+		rendertest.DeprecatedWithGlForTest(screenDims.Dx, screenDims.Dy, func(sys system.System, queue render.RenderQueueInterface) {
 			queue.Queue(func(st render.RenderQueueState) {
 				globals.SetRenderQueueState(st)
 			})

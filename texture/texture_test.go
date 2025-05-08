@@ -32,7 +32,7 @@ func TestTextureDrawElements(t *testing.T) {
 		0, 1, 2,
 		0, 2, 3,
 	}
-	rendertest.WithGlForTest(64, 64, func(sys system.System, queue render.RenderQueueInterface) {
+	rendertest.DeprecatedWithGlForTest(64, 64, func(sys system.System, queue render.RenderQueueInterface) {
 		queue.Queue(func(render.RenderQueueState) {
 			gl.Enable(gl.TEXTURE_2D)
 			defer gl.Disable(gl.TEXTURE_2D)

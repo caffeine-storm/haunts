@@ -48,7 +48,7 @@ func RunDrawingTest(thingToDraw Drawer, testid rendertest.TestDataReference, and
 		Dims:  gui.Dims{Dx: 1024, Dy: 750},
 	}
 
-	rendertest.WithGlAndHandleForTest(windowRegion.Dx, windowRegion.Dy, func(sys system.System, windowHandle system.NativeWindowHandle, queue render.RenderQueueInterface) {
+	rendertest.DeprecatedWithGlAndHandleForTest(windowRegion.Dx, windowRegion.Dy, func(sys system.System, windowHandle system.NativeWindowHandle, queue render.RenderQueueInterface) {
 		queue.Queue(func(st render.RenderQueueState) {
 			globals.SetRenderQueueState(st)
 		})
@@ -99,7 +99,7 @@ func RunOtherDrawingTest(objectCreator func(render.RenderQueueInterface) Drawer,
 		Dims:  gui.Dims{Dx: 1024, Dy: 750},
 	}
 
-	rendertest.WithGlAndHandleForTest(windowRegion.Dx, windowRegion.Dy, func(sys system.System, windowHandle system.NativeWindowHandle, queue render.RenderQueueInterface) {
+	rendertest.DeprecatedWithGlAndHandleForTest(windowRegion.Dx, windowRegion.Dy, func(sys system.System, windowHandle system.NativeWindowHandle, queue render.RenderQueueInterface) {
 		queue.Queue(func(st render.RenderQueueState) {
 			globals.SetRenderQueueState(st)
 		})

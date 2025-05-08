@@ -20,7 +20,7 @@ import (
 // TODO(tmckee): rename 'WallTexture' to 'Decal' or something.
 func TestWallTextureSpecs(t *testing.T) {
 	base.SetDatadir("../data")
-	rendertest.WithGlForTest(266, 246, func(sys system.System, queue render.RenderQueueInterface) {
+	rendertest.DeprecatedWithGlForTest(266, 246, func(sys system.System, queue render.RenderQueueInterface) {
 		Convey("Wall Textures", t, func() {
 			Convey("can be made", func() {
 				datadir := base.GetDataDir()

@@ -58,7 +58,7 @@ func RoomSpecs() {
 
 	camera := housetest.Camera().ForSize(dx, dy).At(256, 256)
 
-	rendertest.WithGlForTest(dx, dy, func(sys system.System, queue render.RenderQueueInterface) {
+	rendertest.DeprecatedWithGlForTest(dx, dy, func(sys system.System, queue render.RenderQueueInterface) {
 		registry.LoadAllRegistries()
 		base.InitShaders(queue)
 		texture.Init(queue)
