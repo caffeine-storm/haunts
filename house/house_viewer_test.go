@@ -19,8 +19,7 @@ func givenAHouseViewer(queue render.RenderQueueInterface) gametest.Drawer {
 }
 
 func TestHouseViewer(t *testing.T) {
-	// TODO(#10): skipped for now while we make rooms render correctly
-	SkipConvey("HouseViewer", t, func() {
+	Convey("HouseViewer", t, func() {
 		base.SetDatadir("../data")
 
 		Convey("can draw houseviewer", func() {
