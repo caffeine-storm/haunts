@@ -31,6 +31,8 @@ type Scenario struct {
 	HouseName string
 }
 
+// TODO(#25): add a render.RenderQueueInterface to the parameter list and store
+// it with the GamePanel so that the GamePanel can forward it to ... stuff.
 func MakeGamePanel(scenario Scenario, p *Player, data map[string]string, game_key mrgnet.GameKey) *GamePanel {
 	var gp GamePanel
 	if p == nil {

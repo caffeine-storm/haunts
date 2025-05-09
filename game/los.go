@@ -14,9 +14,9 @@ import (
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/mrgnet"
+	"github.com/MobRulesGames/haunts/texture"
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/cache"
-	"github.com/runningwild/glop/render/rendertest"
 	"github.com/runningwild/glop/sprite"
 	"github.com/runningwild/glop/util/algorithm"
 )
@@ -844,8 +844,9 @@ func (g *Game) setup() {
 func makeGameTheWrongWay(scenario Scenario) *Game {
 	logging.Debug("and now for the wrong (but maybe less-wrong?) way")
 	hdef := house.MakeHouseFromName(scenario.HouseName)
-	// TODO(tmckee:#25): we should probably use a real render queue... no?
-	mgr := sprite.MakeManager(rendertest.MakeStubbedRenderQueue(), func(s string) cache.ByteBank {
+	// TODO(tmckee:#25): we should pass in a render queue instead!
+	queue := texture.GetRenderQueue()
+	mgr := sprite.MakeManager(queue, func(s string) cache.ByteBank {
 		return cache.MakeLockingByteBank(cache.MakeRamByteBank())
 	})
 	return MakeGame(hdef, mgr)
