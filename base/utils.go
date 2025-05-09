@@ -107,6 +107,9 @@ type immediateQueue struct{}
 
 var _ render.RenderQueueInterface = (*immediateQueue)(nil)
 
+func (q *immediateQueue) AddErrorCallback(fn func(_ render.RenderQueueInterface, e error)) {
+	panic(fmt.Errorf("immediateQueue doesn't support adding error callbacks"))
+}
 func (q *immediateQueue) Queue(f render.RenderJob) {
 	queue_state := globals.RenderQueueState()
 	f(queue_state)

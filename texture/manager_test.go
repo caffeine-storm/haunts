@@ -18,7 +18,7 @@ import (
 func TestBlockUntilLoaded(t *testing.T) {
 	base.SetDatadir("../data")
 	t.Run("should take a context with deadline", func(t *testing.T) {
-		queue := rendertest.MakeDiscardingRenderQueue()
+		queue := rendertest.MakeStubbedRenderQueue()
 		texture.Init(queue)
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Millisecond)
 		defer cancel()
@@ -61,7 +61,7 @@ func givenATimedOutContext() context.Context {
 func TestBlockUntilIdle(t *testing.T) {
 	t.Run("should take a context with deadline", func(t *testing.T) {
 		t.Run("is idle upon creation", func(t *testing.T) {
-			queue := rendertest.MakeDiscardingRenderQueue()
+			queue := rendertest.MakeStubbedRenderQueue()
 			texture.Init(queue)
 			ctx := givenATimedOutContext()
 
@@ -72,7 +72,7 @@ func TestBlockUntilIdle(t *testing.T) {
 			}
 		})
 		t.Run("blocks callers when texture loads are in flight", func(t *testing.T) {
-			queue := rendertest.MakeDiscardingRenderQueue()
+			queue := rendertest.MakeStubbedRenderQueue()
 			texture.Init(queue)
 			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Millisecond)
 			defer cancel()
@@ -109,7 +109,7 @@ func givenATexturePath() string {
 
 func TestGetInFlightRequests(t *testing.T) {
 	t.Run("should return a slice of strings", func(t *testing.T) {
-		queue := rendertest.MakeDiscardingRenderQueue()
+		queue := rendertest.MakeStubbedRenderQueue()
 		texture.Init(queue)
 
 		noPaths := texture.GetInFlightRequests()
@@ -120,7 +120,7 @@ func TestGetInFlightRequests(t *testing.T) {
 	})
 	t.Run("returns paths that haven't loaded", func(t *testing.T) {
 		assert := assert.New(t)
-		queue := rendertest.MakeDiscardingRenderQueue()
+		queue := rendertest.MakeStubbedRenderQueue()
 		texture.Init(queue)
 
 		texturePath := givenATexturePath()

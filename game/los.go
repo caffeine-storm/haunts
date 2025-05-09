@@ -844,7 +844,8 @@ func (g *Game) setup() {
 func makeGameTheWrongWay(scenario Scenario) *Game {
 	logging.Debug("and now for the wrong (but maybe less-wrong?) way")
 	hdef := house.MakeHouseFromName(scenario.HouseName)
-	mgr := sprite.MakeManager(rendertest.MakeDiscardingRenderQueue(), func(s string) cache.ByteBank {
+	// TODO(tmckee:#25): we should probably use a real render queue... no?
+	mgr := sprite.MakeManager(rendertest.MakeStubbedRenderQueue(), func(s string) cache.ByteBank {
 		return cache.MakeLockingByteBank(cache.MakeRamByteBank())
 	})
 	return MakeGame(hdef, mgr)
