@@ -213,7 +213,7 @@ func makeRoomMats(roomSize RoomSize, region gui.Region, focusx, focusy, angle, z
 	iright.Assign(&right)
 	iright.Inverse()
 
-	logging.Trace("makeRoomMats returning",
+	logging.Debug("makeRoomMats returning",
 		"roomsize", roomSize,
 		"region", region,
 		"focusx", focusx,
@@ -345,11 +345,11 @@ func clamp(f, min, max float32) float32 {
 }
 
 // Changes the current zoom from e^(zoom) to e^(zoom+dz)
-func (rv *roomViewer) Zoom(dz float64) {
+func (rv *roomViewer) Zoom(dz float32) {
 	if dz == 0 {
 		return
 	}
-	exp := math.Log(float64(rv.zoom)) + dz
+	exp := math.Log(float64(rv.zoom)) + float64(dz)
 	exp = float64(clamp(float32(exp), 2.5, 5.0))
 	rv.zoom = float32(math.Exp(exp))
 	rv.makeMat()

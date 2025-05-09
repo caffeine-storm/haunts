@@ -78,3 +78,8 @@ func (c CameraConfig) AtAngle(theta float32) CameraConfig {
 	c.Angle = theta
 	return c
 }
+
+func (c CameraConfig) AtZoom(zoom float32) CameraConfig {
+	c.Zoom = zoom
+	return c
+}

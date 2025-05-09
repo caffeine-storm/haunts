@@ -137,8 +137,8 @@ func (wt *WallTexture) setupGlStuff(roomX, roomY, roomDx, roomDy int, glIDs *wal
 	// TODO(tmckee): we _were_ dividing these by 100 ... why?
 	// Maybe the source images for the textures were much larger than the
 	// expected size of the decal?
-	tdx := float32(wt.Texture.Data().Dx())
-	tdy := float32(wt.Texture.Data().Dy())
+	tdx := float32(wt.Texture.Data().Dx() / 100)
+	tdy := float32(wt.Texture.Data().Dy() / 100)
 
 	wtx := wt.X
 	wty := wt.Y

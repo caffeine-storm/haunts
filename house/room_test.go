@@ -8,6 +8,7 @@ import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/house/housetest"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/runningwild/glop/render"
@@ -56,7 +57,7 @@ func RoomSpecs() {
 	dx, dy := 1024, 768
 	opaquealpha := byte(255)
 
-	camera := housetest.Camera().ForSize(dx, dy).At(256, 256)
+	camera := housetest.Camera().ForSize(dx, dy).At(5, 5).AtZoom(50.0)
 
 	rendertest.DeprecatedWithGlForTest(dx, dy, func(sys system.System, queue render.RenderQueueInterface) {
 		registry.LoadAllRegistries()
@@ -87,6 +88,7 @@ func RoomSpecs() {
 
 			queue.Queue(func(render.RenderQueueState) {
 				house.WithRoomRenderGlSettings(floor, func() {
+					logging.Info("about to render wall textures", "floor", render.Showmat(floor))
 					room.RenderWallTextures(&floor, opaquealpha)
 				})
 			})

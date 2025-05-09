@@ -1,11 +1,14 @@
 package house
 
 import (
+	"fmt"
+	"math"
+	"reflect"
+
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/mathgl"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/util/algorithm"
-	"math"
-	"reflect"
 )
 
 // This structure is used for temporary doors (that are being dragged around in
@@ -170,16 +173,11 @@ func (hv *HouseViewer) SetState(state HouseViewerState) {
 	hv.HouseViewerState = state
 }
 
-// Changes the current zoom from e^(zoom) to e^(zoom+dz)
-func (hv *HouseViewer) Zoom(dz float64) {
+func (hv *HouseViewer) Zoom(dz float32) {
 	if dz == 0 {
-		return
+		panic(fmt.Errorf("you don't want 0 zoom; it means don't draw anything!"))
 	}
-	exp := math.Log(float64(hv.zoom)) + dz
-	// This effectively clamps the 100x150 sprites to a width in the range
-	// [25,100]
-	exp = float64(clamp(float32(exp), 2.87130468509059, 4.25759904621048))
-	hv.zoom = float32(math.Exp(exp))
+	hv.zoom = dz
 	hv.target_zoom_on = false
 }
 
@@ -365,5 +363,6 @@ func (hv *HouseViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
 		hv.temp_floor_drawers = append(hv.temp_floor_drawers, fd)
 	}
 
+	logging.Debug("HouseViewer.Draw", "zoom", hv.zoom)
 	hv.house.Floors[0].render(region, hv.fx, hv.fy, hv.angle, hv.zoom, hv.drawables, hv.Los_tex, hv.temp_floor_drawers)
 }

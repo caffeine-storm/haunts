@@ -133,7 +133,7 @@ func init() {
 
 type draggerZoomer interface {
 	Drag(float64, float64)
-	Zoom(float64)
+	Zoom(float32)
 }
 
 func draggingAndZooming(ui *gui.Gui, dz draggerZoomer) {
@@ -144,14 +144,15 @@ func draggingAndZooming(ui *gui.Gui, dz draggerZoomer) {
 		return
 	}
 
+	// TODO(#29): figure out the scale/style that makes sense here
 	var zoom float64
 	if gin.In().GetKeyById(gin.AnySpace).FramePressAmt() > 0 {
 		zoom = gin.In().GetKeyById(gin.AnyMouseWheelVertical).FramePressAmt()
 	}
-	dz.Zoom(zoom / 100)
+	dz.Zoom(float32(zoom) / 100)
 
-	dz.Zoom(key_map["zoom in"].FramePressAmt() / 20)
-	dz.Zoom(-key_map["zoom out"].FramePressAmt() / 20)
+	dz.Zoom(float32(key_map["zoom in"].FramePressAmt()) / 20)
+	dz.Zoom(float32(-key_map["zoom out"].FramePressAmt()) / 20)
 
 	if key_map["drag"].IsDown() != dragging {
 		dragging = !dragging

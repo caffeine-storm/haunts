@@ -15,7 +15,9 @@ import (
 var _ gametest.Drawer = (*house.HouseViewer)(nil)
 
 func givenAHouseViewer(queue render.RenderQueueInterface) gametest.Drawer {
-	return house.MakeHouseViewer(housetest.GivenAHouseDef(), 62)
+	ret := house.MakeHouseViewer(housetest.GivenAHouseDef(), 62)
+	ret.Zoom(10)
+	return ret
 }
 
 func TestHouseViewer(t *testing.T) {

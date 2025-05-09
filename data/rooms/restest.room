@@ -6,8 +6,8 @@
     "Furniture": [],
     "Name": "restest",
     "Size": {
-        "Dx": 512,
-        "Dy": 512,
+        "Dx": 10,
+        "Dy": 10,
         "Name": "Small"
     },
     "Sizes": null,
@@ -20,8 +20,8 @@
             "Defname": "Cobweb",
             "Flip": false,
             "Rot": 0,
-            "X": 600,
-            "Y": 300
+            "X": 15.754118,
+            "Y": 1.2256411
         }
     ],
     "debug-disabled": [
