@@ -11,7 +11,6 @@ import (
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/gui/guitest"
-	"github.com/runningwild/glop/render"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -83,7 +82,7 @@ func RunStartupSpecs() {
 	base.SetDatadir("../data")
 	menu := givenAStartMenu()
 	menu.SetOpacity(0.6)
-	menuMaker := func(render.RenderQueueInterface) gametest.Drawer {
+	menuMaker := func() gametest.Drawer {
 		return menu
 	}
 

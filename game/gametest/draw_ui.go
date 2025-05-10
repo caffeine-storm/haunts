@@ -42,7 +42,7 @@ func (ctx *rendertestDrawTestContext) NewWindow() systemtest.Window {
 
 }
 
-func RunDrawingTest(objectCreator func(render.RenderQueueInterface) Drawer, testid rendertest.TestDataReference, andThen func(DrawTestContext)) {
+func RunDrawingTest(objectCreator func() Drawer, testid rendertest.TestDataReference, andThen func(DrawTestContext)) {
 	windowRegion := gui.Region{
 		Point: gui.Point{X: 0, Y: 0},
 		Dims:  gui.Dims{Dx: 1024, Dy: 750},
@@ -60,7 +60,7 @@ func RunDrawingTest(objectCreator func(render.RenderQueueInterface) Drawer, test
 		texture.Init(queue)
 		base.InitShaders(queue)
 
-		thingToDraw := objectCreator(queue)
+		thingToDraw := objectCreator()
 
 		// Draw it once to start loading textures.
 		queue.Queue(func(st render.RenderQueueState) {

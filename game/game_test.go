@@ -9,7 +9,6 @@ import (
 	"github.com/MobRulesGames/haunts/game/gametest"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/mrgnet"
-	"github.com/runningwild/glop/render"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -34,7 +33,7 @@ func givenAScenario() game.Scenario {
 
 var _ gametest.Drawer = (*game.GamePanel)(nil)
 
-func givenAGamePanel(render.RenderQueueInterface) gametest.Drawer {
+func givenAGamePanel() gametest.Drawer {
 	scenario := givenAScenario()
 	player := givenAPlayer()
 	noSpecialData := map[string]string{}
