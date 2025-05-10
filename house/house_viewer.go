@@ -73,7 +73,7 @@ func MakeHouseViewer(house *HouseDef, angle float32) *HouseViewer {
 	hv.Ey = true
 	hv.house = house
 	hv.angle = angle
-	hv.Zoom(1)
+	hv.Zoom(10)
 
 	hv.SetBounds()
 
