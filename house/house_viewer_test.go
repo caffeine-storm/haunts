@@ -23,7 +23,7 @@ func TestHouseViewer(t *testing.T) {
 		base.SetDatadir("../data")
 
 		Convey("can draw houseviewer", func() {
-			gametest.RunDrawingTest(givenAHouseViewer, "house-viewer", func(gametest.DrawTestContext) {})
+			gametest.RunDrawingTest(givenAHouseViewer, "house-viewer")
 		})
 	})
 }

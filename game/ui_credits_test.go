@@ -25,6 +25,6 @@ func TestUiCredits(t *testing.T) {
 	Convey("UI for the Credits screen", t, func() {
 		base.SetDatadir("../data")
 
-		gametest.RunDrawingTest(givenACreditsMenu, "credits", func(gametest.DrawTestContext) {})
+		gametest.RunDrawingTest(givenACreditsMenu, "credits")
 	})
 }

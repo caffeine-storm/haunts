@@ -42,7 +42,7 @@ func (ctx *rendertestDrawTestContext) NewWindow() systemtest.Window {
 
 }
 
-func RunDrawingTest(objectCreator func() Drawer, testid rendertest.TestDataReference, andThen func(DrawTestContext)) {
+func RunDrawingTest(objectCreator func() Drawer, testid rendertest.TestDataReference, andThen ...func(DrawTestContext)) {
 	windowRegion := gui.Region{
 		Point: gui.Point{X: 0, Y: 0},
 		Dims:  gui.Dims{Dx: 1024, Dy: 750},
@@ -88,10 +88,12 @@ func RunDrawingTest(objectCreator func() Drawer, testid rendertest.TestDataRefer
 			So(queue, rendertest.ShouldLookLikeFile, testid, rendertest.Threshold(8))
 		})
 
-		andThen(&rendertestDrawTestContext{
-			sys:   sys,
-			hdl:   windowHandle,
-			queue: queue,
-		})
+		for _, each := range andThen {
+			each(&rendertestDrawTestContext{
+				sys:   sys,
+				hdl:   windowHandle,
+				queue: queue,
+			})
+		}
 	})
 }

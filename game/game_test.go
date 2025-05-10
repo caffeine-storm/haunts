@@ -7,7 +7,6 @@ import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/game/gametest"
-	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/mrgnet"
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -46,9 +45,7 @@ func TestGamePanel(t *testing.T) {
 	SkipConvey("GamePanelSpecs", t, func() {
 		base.SetDatadir("../data")
 		Convey("can draw game panel", func() {
-			logging.TraceBracket(func() {
-				gametest.RunDrawingTest(givenAGamePanel, "game-panel", func(gametest.DrawTestContext) {})
-			})
+			gametest.RunDrawingTest(givenAGamePanel, "game-panel")
 		})
 	})
 }

@@ -7,13 +7,11 @@ import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/game/gametest"
-	"github.com/MobRulesGames/haunts/logging"
 	"github.com/runningwild/glop/gui"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
 func panicInsteadOfReplace(x gui.WidgetParent) error {
-
 	panic(fmt.Errorf("panicInsteadOfReplace got called with %v", x))
 }
 
@@ -31,8 +29,6 @@ func TestUiVersus(t *testing.T) {
 	Convey("UI for starting an online game", t, func() {
 		base.SetDatadir("../data")
 
-		logging.DebugBracket(func() {
-			gametest.RunDrawingTest(givenAVersusMenu, "versus", func(gametest.DrawTestContext) {})
-		})
+		gametest.RunDrawingTest(givenAVersusMenu, "versus")
 	})
 }
