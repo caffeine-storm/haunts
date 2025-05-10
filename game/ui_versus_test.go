@@ -9,6 +9,7 @@ import (
 	"github.com/MobRulesGames/haunts/game/gametest"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/runningwild/glop/gui"
+	"github.com/runningwild/glop/render"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -30,10 +31,13 @@ func givenAVersusMenu() gametest.Drawer {
 func TestUiVersus(t *testing.T) {
 	Convey("UI for starting an online game", t, func() {
 		base.SetDatadir("../data")
-		versusScreen := givenAVersusMenu()
+
+		makeScreen := func(render.RenderQueueInterface) gametest.Drawer {
+			return givenAVersusMenu()
+		}
 
 		logging.DebugBracket(func() {
-			gametest.RunDrawingTest(versusScreen, "versus", func(gametest.DrawTestContext) {})
+			gametest.RunDrawingTest(makeScreen, "versus", func(gametest.DrawTestContext) {})
 		})
 	})
 }

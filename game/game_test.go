@@ -48,7 +48,7 @@ func TestGamePanel(t *testing.T) {
 		base.SetDatadir("../data")
 		Convey("can draw game panel", func() {
 			logging.TraceBracket(func() {
-				gametest.RunOtherDrawingTest(givenAGamePanel, "game-panel", func(gametest.DrawTestContext) {})
+				gametest.RunDrawingTest(givenAGamePanel, "game-panel", func(gametest.DrawTestContext) {})
 			})
 		})
 	})

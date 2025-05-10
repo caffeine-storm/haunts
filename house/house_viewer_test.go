@@ -7,7 +7,6 @@ import (
 	"github.com/MobRulesGames/haunts/game/gametest"
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/house/housetest"
-	"github.com/MobRulesGames/haunts/logging"
 	"github.com/runningwild/glop/render"
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -25,10 +24,7 @@ func TestHouseViewer(t *testing.T) {
 		base.SetDatadir("../data")
 
 		Convey("can draw houseviewer", func() {
-			logging.DebugBracket(func() {
-				gametest.RunOtherDrawingTest(givenAHouseViewer, "house-viewer", func(gametest.DrawTestContext) {})
-			})
+			gametest.RunDrawingTest(givenAHouseViewer, "house-viewer", func(gametest.DrawTestContext) {})
 		})
-
 	})
 }

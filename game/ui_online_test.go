@@ -7,8 +7,8 @@ import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/game/gametest"
-	"github.com/MobRulesGames/haunts/logging"
 	"github.com/runningwild/glop/gui"
+	"github.com/runningwild/glop/render"
 
 	. "github.com/smartystreets/goconvey/convey"
 )
@@ -26,10 +26,10 @@ func givenAnOnlineMenu() *game.OnlineMenu {
 func TestUiOnline(t *testing.T) {
 	Convey("UI for starting an online game", t, func() {
 		base.SetDatadir("../data")
-		onlineScreen := givenAnOnlineMenu()
 
-		logging.DebugBracket(func() {
-			gametest.RunDrawingTest(onlineScreen, "online", func(gametest.DrawTestContext) {})
-		})
+		uiMaker := func(render.RenderQueueInterface) gametest.Drawer {
+			return givenAnOnlineMenu()
+		}
+		gametest.RunDrawingTest(uiMaker, "online", func(gametest.DrawTestContext) {})
 	})
 }

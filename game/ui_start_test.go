@@ -11,6 +11,7 @@ import (
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/gui/guitest"
+	"github.com/runningwild/glop/render"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -82,9 +83,12 @@ func RunStartupSpecs() {
 	base.SetDatadir("../data")
 	menu := givenAStartMenu()
 	menu.SetOpacity(0.6)
+	menuMaker := func(render.RenderQueueInterface) gametest.Drawer {
+		return menu
+	}
 
 	Convey("drawing the startup ui", func() {
-		gametest.RunDrawingTest(menu, "startup", func(drawTestCtx gametest.DrawTestContext) {
+		gametest.RunDrawingTest(menuMaker, "startup", func(drawTestCtx gametest.DrawTestContext) {
 			Convey("should let you click the menu", func() {
 				flag := false
 				menu.PatchButtonForTest("Credits", func() {

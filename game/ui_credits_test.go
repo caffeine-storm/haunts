@@ -7,8 +7,8 @@ import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/game/gametest"
-	"github.com/MobRulesGames/haunts/logging"
 	"github.com/runningwild/glop/gui"
+	"github.com/runningwild/glop/render"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -26,9 +26,9 @@ func TestUiCredits(t *testing.T) {
 	Convey("UI for the Credits screen", t, func() {
 		base.SetDatadir("../data")
 
-		logging.DebugBracket(func() {
-			creditsScreen := givenACreditsMenu()
-			gametest.RunDrawingTest(creditsScreen, "credits", func(gametest.DrawTestContext) {})
-		})
+		menuMaker := func(render.RenderQueueInterface) gametest.Drawer {
+			return givenACreditsMenu()
+		}
+		gametest.RunDrawingTest(menuMaker, "credits", func(gametest.DrawTestContext) {})
 	})
 }
