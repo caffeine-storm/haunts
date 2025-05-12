@@ -22,10 +22,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestRoomViewer(t *testing.T) {
-	Convey("house.roomViewer", t, RoomViewerSpecs)
-}
-
 func sincos(f float32) (float32, float32) {
 	return mathgl.Fsin32(f), mathgl.Fcos32(f)
 }
@@ -98,7 +94,7 @@ func TestTexturedQuadRegr(t *testing.T) {
 	})
 }
 
-func RoomViewerSpecs() {
+func TestRoomViewer(t *testing.T) {
 	base.SetDatadir("../data")
 
 	screenRegion := gui.Region{
@@ -109,28 +105,30 @@ func RoomViewerSpecs() {
 			Dx: 256, Dy: 256,
 		},
 	}
-	rendertest.DeprecatedWithGlForTest(screenRegion.Dx, screenRegion.Dy, func(sys system.System, queue render.RenderQueueInterface) {
-		registry.LoadAllRegistries()
-		base.InitShaders(queue)
-		texture.Init(queue)
-		room := loadRoom("restest.room")
+	Convey("house.roomViewer", t, func() {
+		rendertest.DeprecatedWithGlForTest(screenRegion.Dx, screenRegion.Dy, func(sys system.System, queue render.RenderQueueInterface) {
+			registry.LoadAllRegistries()
+			base.InitShaders(queue)
+			texture.Init(queue)
+			room := loadRoom("restest.room")
 
-		Convey("can be made", func() {
-			rv := house.MakeRoomViewer(room, 0)
-			So(rv, ShouldNotBeNil)
+			Convey("can be made", func() {
+				rv := house.MakeRoomViewer(room, 0)
+				So(rv, ShouldNotBeNil)
 
-			// TODO(#10): don't skip, fix!
-			SkipConvey("can be drawn", func() {
-				g := guitest.MakeStubbedGui(screenRegion.Dims)
-				g.AddChild(rv)
-				queue.Queue(func(render.RenderQueueState) {
-					logging.TraceBracket(func() {
-						g.Draw()
+				// TODO(#10): don't skip, fix!
+				SkipConvey("can be drawn", func() {
+					g := guitest.MakeStubbedGui(screenRegion.Dims)
+					g.AddChild(rv)
+					queue.Queue(func(render.RenderQueueState) {
+						logging.TraceBracket(func() {
+							g.Draw()
+						})
 					})
-				})
-				queue.Purge()
+					queue.Purge()
 
-				So(queue, rendertest.ShouldLookLikeFile, "room-viewer", rendertest.Threshold(0))
+					So(queue, rendertest.ShouldLookLikeFile, "room-viewer", rendertest.Threshold(0))
+				})
 			})
 		})
 	})
