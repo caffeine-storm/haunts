@@ -13,7 +13,7 @@ import (
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
-	"github.com/runningwild/glop/system"
+	"github.com/runningwild/glop/render/rendertest/testbuilder"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -59,7 +59,7 @@ func RoomSpecs() {
 
 	camera := housetest.Camera().ForSize(dx, dy).At(5, 5).AtZoom(50.0)
 
-	rendertest.DeprecatedWithGlForTest(dx, dy, func(sys system.System, queue render.RenderQueueInterface) {
+	testbuilder.New().WithSize(dx, dy).WithQueue().Run(func(queue render.RenderQueueInterface) {
 		registry.LoadAllRegistries()
 		base.InitShaders(queue)
 		texture.Init(queue)

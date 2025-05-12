@@ -35,7 +35,7 @@ replace github.com/MobRulesGames/mathgl => github.com/caffeine-storm/mathgl v0.0
 
 replace github.com/runningwild/glop => ../deps-for-haunts/glop
 
-replace github.com/go-gl-legacy/gl => github.com/caffeine-storm/gl v0.0.0-20250430135644-d77ee19e0153
+replace github.com/go-gl-legacy/gl => github.com/caffeine-storm/gl v0.0.0-20250506174032-5994dccd6839
 
 replace github.com/go-gl-legacy/glu => github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c
 

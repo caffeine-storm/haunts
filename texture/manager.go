@@ -124,6 +124,7 @@ func (d *Data) Render(x, y, dx, dy float64) {
 		return
 	}
 	d.Bind()
+	defer d.Unbind()
 	Render(x, y, dx, dy)
 }
 
@@ -133,6 +134,7 @@ func (d *Data) RenderAdvanced(x, y, dx, dy, rot float64, flip bool) {
 		return
 	}
 	d.Bind()
+	defer d.Unbind()
 	RenderAdvanced(x, y, dx, dy, rot, flip)
 }
 
@@ -172,6 +174,10 @@ func (d *Data) Bind() {
 		}
 		error_texture.Bind(gl.TEXTURE_2D)
 	}
+}
+
+func (d *Data) Unbind() {
+	gl.Texture(0).Unbind(gl.TEXTURE_2D)
 }
 
 // Launch this in its own go-routine if you want to occassionally
@@ -435,6 +441,7 @@ func handleLoadRequest(req loadRequest) {
 			gl.Enable(gl.TEXTURE_2D)
 			req.data.texture = gl.GenTexture()
 			req.data.texture.Bind(gl.TEXTURE_2D)
+			defer req.data.texture.Unbind(gl.TEXTURE_2D)
 			gl.TexEnvf(gl.TEXTURE_ENV, gl.TEXTURE_ENV_MODE, gl.MODULATE)
 			gl.TexParameterf(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR)
 			gl.TexParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)

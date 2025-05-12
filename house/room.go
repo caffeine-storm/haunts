@@ -410,6 +410,12 @@ func (room *Room) RenderWallTextures(worldToView *mathgl.Mat4, base_alpha byte) 
 		room.wall_texture_state_map = make(map[*WallTexture]wallTextureState)
 	}
 
+	defer func() {
+		gl.Buffer(0).Unbind(gl.ARRAY_BUFFER)
+		gl.Buffer(0).Unbind(gl.ELEMENT_ARRAY_BUFFER)
+		gl.Texture(0).Unbind(gl.TEXTURE_2D)
+	}()
+
 	var vert roomVertex
 	for _, wt := range room.WallTextures {
 		var ids wallTextureGlIDs = room.getWallTextureState(wt)
@@ -482,6 +488,12 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 	debug.LogAndClearGlErrors(logging.InfoLogger())
 
 	logging.Info("Room.Render called", "glstate", debug.GetGlState(), "floor", floor)
+
+	defer func() {
+		gl.Buffer(0).Unbind(gl.ARRAY_BUFFER)
+		gl.Buffer(0).Unbind(gl.ELEMENT_ARRAY_BUFFER)
+		gl.Texture(0).Unbind(gl.TEXTURE_2D)
+	}()
 
 	do_color := func(r, g, b, a byte) {
 		doColour(room, r, g, b, a, base_alpha)
@@ -760,6 +772,11 @@ func (room *Room) SetupGlStuff(glProxy RoomSetupGlProxy) {
 	}
 	room.resetGlDataInputs()
 	room.resetGlData()
+
+	defer func() {
+		gl.Buffer(0).Unbind(gl.ARRAY_BUFFER)
+		gl.Buffer(0).Unbind(gl.ELEMENT_ARRAY_BUFFER)
+	}()
 
 	dx := float32(room.Size.Dx)
 	dy := float32(room.Size.Dy)

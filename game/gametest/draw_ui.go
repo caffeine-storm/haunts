@@ -12,8 +12,7 @@ import (
 	"github.com/runningwild/glop/gui/guitest"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
-	"github.com/runningwild/glop/system"
-	"github.com/runningwild/glop/system/systemtest"
+	"github.com/runningwild/glop/render/rendertest/testbuilder"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -26,21 +25,18 @@ type Drawer interface {
 }
 
 type DrawTestContext interface {
-	NewWindow() systemtest.Window
+	GetTestBuilder() *testbuilder.GlTestBuilder
 }
 
 type rendertestDrawTestContext struct {
-	sys   system.System
-	hdl   system.NativeWindowHandle
-	queue render.RenderQueueInterface
+	testBuilder *testbuilder.GlTestBuilder
+}
+
+func (ctx *rendertestDrawTestContext) GetTestBuilder() *testbuilder.GlTestBuilder {
+	return ctx.testBuilder
 }
 
 var _ DrawTestContext = (*rendertestDrawTestContext)(nil)
-
-func (ctx *rendertestDrawTestContext) NewWindow() systemtest.Window {
-	return systemtest.NewTestWindow(ctx.sys, ctx.hdl, ctx.queue)
-
-}
 
 func RunDrawingTest(objectCreator func() Drawer, testid rendertest.TestDataReference, andThen ...func(DrawTestContext)) {
 	windowRegion := gui.Region{
@@ -48,7 +44,8 @@ func RunDrawingTest(objectCreator func() Drawer, testid rendertest.TestDataRefer
 		Dims:  gui.Dims{Dx: 1024, Dy: 750},
 	}
 
-	rendertest.DeprecatedWithGlAndHandleForTest(windowRegion.Dx, windowRegion.Dy, func(sys system.System, windowHandle system.NativeWindowHandle, queue render.RenderQueueInterface) {
+	testBuilder := testbuilder.New().WithSize(windowRegion.Dx, windowRegion.Dy)
+	testBuilder.WithQueue().Run(func(queue render.RenderQueueInterface) {
 		queue.Queue(func(st render.RenderQueueState) {
 			globals.SetRenderQueueState(st)
 		})
@@ -88,12 +85,10 @@ func RunDrawingTest(objectCreator func() Drawer, testid rendertest.TestDataRefer
 			So(queue, rendertest.ShouldLookLikeFile, testid, rendertest.Threshold(8))
 		})
 
-		for _, each := range andThen {
-			each(&rendertestDrawTestContext{
-				sys:   sys,
-				hdl:   windowHandle,
-				queue: queue,
-			})
-		}
 	})
+	for _, each := range andThen {
+		each(&rendertestDrawTestContext{
+			testBuilder: testBuilder,
+		})
+	}
 }

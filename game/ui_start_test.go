@@ -11,6 +11,7 @@ import (
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/gui/guitest"
+	"github.com/runningwild/glop/system/systemtest"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -88,40 +89,41 @@ func RunStartupSpecs() {
 
 	Convey("drawing the startup ui", func() {
 		gametest.RunDrawingTest(menuMaker, "startup", func(drawTestCtx gametest.DrawTestContext) {
-			Convey("should let you click the menu", func() {
-				flag := false
-				menu.PatchButtonForTest("Credits", func() {
-					flag = true
+			systemtest.TestBuilder(drawTestCtx.GetTestBuilder()).Run(func(window systemtest.Window) {
+				Convey("should let you click the menu", func() {
+					flag := false
+					menu.PatchButtonForTest("Credits", func() {
+						flag = true
+					})
+
+					// TODO(tmckee): this sucks; we have to like, 'prime' the menu? It needs
+					// a 'Think' with a non-zero horizon before it will try to propagate
+					// Thinks to its children T_T
+					menu.Think(nil, 12)
+
+					driver := window.NewDriver()
+					x, y := getButtonLocation(menu, "Credits")
+					logging.Error("got button location", "x", x, "y", y)
+					driver.Click(x, y)
+
+					// Add a gin.EventHandler to the gin.Input object so that we can dispatch
+					// input events to our 'gui' which is just the startmenu r.n.
+					fel := &forwardingEventListener{
+						gui:     guitest.MakeStubbedGui(window.GetDims()),
+						wrapped: menu,
+					}
+					driver.AddInputListener(fel)
+
+					// calls system.Think(); captures the next 'batch' of input events and
+					// passess them to any "EventHandler" that got registered before this.
+					// An example EventHandler is a gui.Gui which will consult its children
+					// widgets to 'Respond' per-EventGroup, _then_ get an extra Think() call
+					// at the end with a slice of all the groups that were just
+					// attempt-to-respond-to'd.
+					driver.ProcessFrame()
+
+					So(flag, ShouldEqual, true)
 				})
-
-				// TODO(tmckee): this sucks; we have to like, 'prime' the menu? It needs
-				// a 'Think' with a non-zero horizon before it will try to propagate
-				// Thinks to its children T_T
-				menu.Think(nil, 12)
-
-				window := drawTestCtx.NewWindow()
-				driver := window.NewDriver()
-				x, y := getButtonLocation(menu, "Credits")
-				logging.Error("got button location", "x", x, "y", y)
-				driver.Click(x, y)
-
-				// Add a gin.EventHandler to the gin.Input object so that we can dispatch
-				// input events to our 'gui' which is just the startmenu r.n.
-				fel := &forwardingEventListener{
-					gui:     guitest.MakeStubbedGui(window.GetDims()),
-					wrapped: menu,
-				}
-				driver.AddInputListener(fel)
-
-				// calls system.Think(); captures the next 'batch' of input events and
-				// passess them to any "EventHandler" that got registered before this.
-				// An example EventHandler is a gui.Gui which will consult its children
-				// widgets to 'Respond' per-EventGroup, _then_ get an extra Think() call
-				// at the end with a slice of all the groups that were just
-				// attempt-to-respond-to'd.
-				driver.ProcessFrame()
-
-				So(flag, ShouldEqual, true)
 			})
 		})
 	})
