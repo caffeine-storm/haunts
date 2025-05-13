@@ -146,6 +146,7 @@ func MakeRoomMatsForTest(roomSize RoomSize, region gui.Region, focusx, focusy, a
 	return makeRoomMats(roomSize, region, focusx, focusy, angle, zoom)
 }
 
+// TODO(tmckee:clean): put this in a house.perspective package instead of just house
 func makeRoomMats(roomSize RoomSize, region gui.Region, focusx, focusy, angle, zoom float32) (floor, ifloor, left, ileft, right, iright mathgl.Mat4) {
 	// Note: repeated matrix multiplication is equivalent to composing
 	// application of a series of transforms in reverse. So, we build up a

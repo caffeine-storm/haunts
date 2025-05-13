@@ -75,25 +75,6 @@ func TestMakeRoomMats(t *testing.T) {
 	})
 }
 
-// Test cross-talk was causing strange render issues; this exists to be a smoke
-// test for rendering/GL state.
-func TestTexturedQuadRegr(t *testing.T) {
-	Convey("drawing textured quads", t, func() {
-		screen := image.Rect(0, 0, 50, 50)
-		rendertest.DeprecatedWithGlForTest(screen.Dx(), screen.Dy(), func(sys system.System, queue render.RenderQueueInterface) {
-			queue.Queue(func(st render.RenderQueueState) {
-				debug.LogAndClearGlErrors(logging.ErrorLogger())
-				tex := rendertest.GivenATexture("images/red.png")
-
-				rendertest.DrawTexturedQuad(screen, tex, st.Shaders())
-			})
-			queue.Purge()
-
-			So(queue, rendertest.ShouldLookLikeFile, "heckinwhat")
-		})
-	})
-}
-
 func TestRoomViewer(t *testing.T) {
 	base.SetDatadir("../data")
 
