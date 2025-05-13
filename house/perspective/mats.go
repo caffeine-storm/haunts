@@ -14,6 +14,10 @@ type RoomSizey interface {
 	GetDy() int
 }
 
+type RoomMats struct {
+	Floor, IFloor, Left, ILeft, Right, IRight mathgl.Mat4
+}
+
 // TODO(tmckee:clean): taking a size by interface is leading to a bunch of
 // deref/address-of noise; pick something that works and use it everywhere
 func MakeRoomMats(roomSize RoomSizey, region gui.Region, focusx, focusy, angle, zoom float32) (floor, ifloor, left, ileft, right, iright mathgl.Mat4) {
