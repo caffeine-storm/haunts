@@ -56,7 +56,7 @@ func TestMath(t *testing.T) {
 
 func TestMakeRoomMats(t *testing.T) {
 	Convey("floor matrix properly smushes a floor image", t, func() {
-		camera := housetest.Camera().ForSize(400, 400).AtAngle(0).At(200/housetest.JankyOneOverRoot2, 0)
+		camera := housetest.Camera().ForSize(400, 400).AtAngle(0).AtFocus(200/housetest.JankyOneOverRoot2, 0)
 		floorMatrix := housetest.MakeRoomMatsForCamera(*house.BlankRoomSize(), camera).Floor
 
 		screen := image.Rect(0, 0, 400, 400)

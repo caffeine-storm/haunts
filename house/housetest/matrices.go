@@ -59,8 +59,7 @@ func PreTiltCamera() CameraConfig {
 	return Camera().AtAngle(0)
 }
 
-// TODO(tmckee:clean): rename AtFocus
-func (c CameraConfig) At(x, y float32) CameraConfig {
+func (c CameraConfig) AtFocus(x, y float32) CameraConfig {
 	c.FocusX = x
 	c.FocusY = y
 	return c

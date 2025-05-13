@@ -57,7 +57,7 @@ func RoomSpecs() {
 	dx, dy := 1024, 768
 	opaquealpha := byte(255)
 
-	camera := housetest.Camera().ForSize(dx, dy).At(5, 5).AtZoom(50.0)
+	camera := housetest.Camera().ForSize(dx, dy).AtFocus(5, 5).AtZoom(50.0)
 
 	testbuilder.New().WithSize(dx, dy).WithQueue().Run(func(queue render.RenderQueueInterface) {
 		registry.LoadAllRegistries()

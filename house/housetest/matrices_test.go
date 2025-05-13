@@ -29,7 +29,7 @@ func TestRoomMatricesHelpers(t *testing.T) {
 
 	t.Run("non-zero-zero focus", func(t *testing.T) {
 		camera := housetest.Camera().
-			At(5, 5).
+			AtFocus(5, 5).
 			ForSize(200, 200).
 			AtAngle(0)
 		floorMatrix := housetest.MakeRoomMatsForCamera(*house.BlankRoomSize(), camera).Floor
