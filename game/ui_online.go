@@ -12,6 +12,7 @@ import (
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
+	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/util/algorithm"
 )
 
@@ -491,83 +492,85 @@ func (sm *OnlineMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 func (sm *OnlineMenu) Draw(region gui.Region, ctx gui.DrawingContext) {
 	shaderBank := globals.RenderQueueState().Shaders()
 	sm.region = region
-	gl.Color4ub(255, 255, 255, 255)
-	sm.layout.Background.Data().RenderNatural(region.X, region.Y)
-	title := sm.layout.Title
-	title.Texture.Data().RenderNatural(region.X+title.X, region.Y+title.Y)
-	for _, button := range sm.buttons {
-		button.RenderAt(sm.region.X, sm.region.Y)
-	}
+	render.WithColour(1, 1, 1, 1, func() {
+		sm.layout.Background.Data().RenderNatural(region.X, region.Y)
+		title := sm.layout.Title
+		title.Texture.Data().RenderNatural(region.X+title.X, region.Y+title.Y)
+		for _, button := range sm.buttons {
+			button.RenderAt(sm.region.X, sm.region.Y)
+		}
 
-	d := base.GetDictionary(sm.layout.Text.Size)
-	for _, glb := range []*gameListBox{&sm.layout.Active, &sm.layout.Unstarted} {
-		title_d := base.GetDictionary(glb.Title.Size)
-		title_x := glb.Scroll.X + glb.Scroll.Dx/2
-		title_y := glb.Scroll.Y + glb.Scroll.Dy
-		gl.Disable(gl.TEXTURE_2D)
-		gl.Color4ub(255, 255, 255, 255)
-		title_d.RenderString(glb.Title.Text, gui.Point{X: title_x, Y: title_y}, title_d.MaxHeight(), gui.Center, shaderBank)
-
-		sx := glb.Scroll.X
-		sy := glb.Scroll.Top()
-		glb.Scroll.Region().PushClipPlanes()
-		for _, game := range glb.games {
-			sy -= int(d.MaxHeight())
-			game.join.RenderAt(sx, sy)
+		d := base.GetDictionary(sm.layout.Text.Size)
+		for _, glb := range []*gameListBox{&sm.layout.Active, &sm.layout.Unstarted} {
+			title_d := base.GetDictionary(glb.Title.Size)
+			title_x := glb.Scroll.X + glb.Scroll.Dx/2
+			title_y := glb.Scroll.Y + glb.Scroll.Dy
 			gl.Disable(gl.TEXTURE_2D)
 			gl.Color4ub(255, 255, 255, 255)
-			d.RenderString(game.name, gui.Point{X: sx + 50, Y: sy}, d.MaxHeight(), gui.Left, shaderBank)
-			if game.delete != nil {
-				game.delete.RenderAt(sx+50+glb.Scroll.Dx-100, sy)
+			title_d.RenderString(glb.Title.Text, gui.Point{X: title_x, Y: title_y}, title_d.MaxHeight(), gui.Center, shaderBank)
+
+			sx := glb.Scroll.X
+			sy := glb.Scroll.Top()
+			glb.Scroll.Region().PushClipPlanes()
+			for _, game := range glb.games {
+				sy -= int(d.MaxHeight())
+				game.join.RenderAt(sx, sy)
+				gl.Disable(gl.TEXTURE_2D)
+				gl.Color4ub(255, 255, 255, 255)
+				d.RenderString(game.name, gui.Point{X: sx + 50, Y: sy}, d.MaxHeight(), gui.Left, shaderBank)
+				if game.delete != nil {
+					game.delete.RenderAt(sx+50+glb.Scroll.Dx-100, sy)
+				}
 			}
+			glb.Scroll.Region().PopClipPlanes()
 		}
-		glb.Scroll.Region().PopClipPlanes()
-	}
 
-	gl.Color4ub(255, 255, 255, byte(255*sm.update_alpha))
-	sx := sm.layout.User.Entry.X + sm.layout.User.Entry.Dx + 10
-	sy := sm.layout.User.Button.Y
-	d.RenderString("Name Updated", gui.Point{X: sx, Y: sy}, d.MaxHeight(), gui.Left, shaderBank)
+		gl.Color4ub(255, 255, 255, byte(255*sm.update_alpha))
+		sx := sm.layout.User.Entry.X + sm.layout.User.Entry.Dx + 10
+		sy := sm.layout.User.Button.Y
+		d.RenderString("Name Updated", gui.Point{X: sx, Y: sy}, d.MaxHeight(), gui.Left, shaderBank)
 
-	if sm.hover_game != nil {
-		game := sm.hover_game
-		gl.Disable(gl.TEXTURE_2D)
-		gl.Color4ub(255, 255, 255, 255)
-		d := base.GetDictionary(sm.layout.GameStats.Size)
-		x := sm.layout.GameStats.X + sm.layout.GameStats.Dx/2
-		y := sm.layout.GameStats.Y + sm.layout.GameStats.Dy - d.MaxHeight()
+		if sm.hover_game != nil {
+			game := sm.hover_game
+			gl.Disable(gl.TEXTURE_2D)
+			gl.Color4ub(255, 255, 255, 255)
+			d := base.GetDictionary(sm.layout.GameStats.Size)
+			x := sm.layout.GameStats.X + sm.layout.GameStats.Dx/2
+			y := sm.layout.GameStats.Y + sm.layout.GameStats.Dy - d.MaxHeight()
 
-		if game.game.Denizens_id == net_id {
-			d.RenderString("You: Denizens", gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center, shaderBank)
-		} else {
-			d.RenderString("You: Intruders", gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center, shaderBank)
-		}
-		y -= d.MaxHeight()
-		if game.game.Denizens_id == net_id {
-			var opponent string
-			if game.game.Intruders_name == "" {
-				opponent = "no opponent yet"
+			if game.game.Denizens_id == net_id {
+				d.RenderString("You: Denizens", gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center, shaderBank)
 			} else {
-				opponent = fmt.Sprintf("Vs: %s", game.game.Intruders_name)
+				d.RenderString("You: Intruders", gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center, shaderBank)
 			}
-			d.RenderString(opponent, gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center, shaderBank)
-		} else {
-			d.RenderString(fmt.Sprintf("Vs: %s", game.game.Denizens_name), gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center, shaderBank)
+			y -= d.MaxHeight()
+			if game.game.Denizens_id == net_id {
+				var opponent string
+				if game.game.Intruders_name == "" {
+					opponent = "no opponent yet"
+				} else {
+					opponent = fmt.Sprintf("Vs: %s", game.game.Intruders_name)
+				}
+				d.RenderString(opponent, gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center, shaderBank)
+			} else {
+				d.RenderString(fmt.Sprintf("Vs: %s", game.game.Denizens_name), gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center, shaderBank)
+			}
+			y -= d.MaxHeight()
+			if (game.game.Denizens_id == net_id) == (len(game.game.Execs)%2 == 0) {
+				d.RenderString("Your move", gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center, shaderBank)
+			} else {
+				d.RenderString("Their move", gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center, shaderBank)
+			}
 		}
-		y -= d.MaxHeight()
-		if (game.game.Denizens_id == net_id) == (len(game.game.Execs)%2 == 0) {
-			d.RenderString("Your move", gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center, shaderBank)
-		} else {
-			d.RenderString("Their move", gui.Point{X: x, Y: y}, d.MaxHeight(), gui.Center, shaderBank)
-		}
-	}
 
-	if sm.layout.Error.err != "" {
-		gl.Color4ub(255, 0, 0, 255)
-		l := sm.layout.Error
-		d := base.GetDictionary(l.Size)
-		d.RenderString(fmt.Sprintf("ERROR: %s", l.err), gui.Point{X: l.X, Y: l.Y}, d.MaxHeight(), gui.Left, shaderBank)
-	}
+		if sm.layout.Error.err != "" {
+			gl.Color4ub(255, 0, 0, 255)
+			l := sm.layout.Error
+			d := base.GetDictionary(l.Size)
+			d.RenderString(fmt.Sprintf("ERROR: %s", l.err), gui.Point{X: l.X, Y: l.Y}, d.MaxHeight(), gui.Left, shaderBank)
+		}
+
+	})
 }
 
 func (sm *OnlineMenu) DrawFocused(region gui.Region, ctx gui.DrawingContext) {

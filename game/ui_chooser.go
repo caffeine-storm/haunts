@@ -13,6 +13,7 @@ import (
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
+	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/util/algorithm"
 )
 
@@ -164,17 +165,19 @@ func (ob *OptionBasic) Scenario() Scenario {
 	}
 }
 func (ob *OptionBasic) Draw(x, y, dx int) {
-	gl.Color4ub(255, 255, 255, ob.alpha)
-	ob.Small.Data().RenderNatural(x, y)
+	render.WithColour(1, 1, 1, float32(ob.alpha)/255.0, func() {
+		ob.Small.Data().RenderNatural(x, y)
+	})
 }
 func (ob *OptionBasic) DrawInfo(x, y, dx, dy int) {
 	shaderBank := globals.RenderQueueState().Shaders()
-	gl.Color4ub(255, 255, 255, 255)
-	tx := x + (dx-ob.Large.Data().Dx())/2
-	ty := y + dy - ob.Large.Data().Dy()
-	ob.Large.Data().RenderNatural(tx, ty)
-	d := base.GetDictionary(ob.Size)
-	d.RenderParagraph(ob.Text, x, y+dy-ob.Large.Data().Dy()-d.MaxHeight(), dx, d.MaxHeight(), gui.Left, gui.Top, shaderBank)
+	render.WithColour(1, 1, 1, 1, func() {
+		tx := x + (dx-ob.Large.Data().Dx())/2
+		ty := y + dy - ob.Large.Data().Dy()
+		ob.Large.Data().RenderNatural(tx, ty)
+		d := base.GetDictionary(ob.Size)
+		d.RenderParagraph(ob.Text, x, y+dy-ob.Large.Data().Dy()-d.MaxHeight(), dx, d.MaxHeight(), gui.Left, gui.Top, shaderBank)
+	})
 }
 func (ob *OptionBasic) Height() int {
 	return ob.Small.Data().Dy()
@@ -453,42 +456,43 @@ func (c *Chooser) Respond(g *gui.Gui, group gui.EventGroup) bool {
 }
 func (c *Chooser) Draw(region gui.Region, ctx gui.DrawingContext) {
 	c.region = region
-	gl.Color4ub(255, 255, 255, 255)
-	c.layout.Background.Data().RenderNatural(region.X, region.Y)
-	tex := c.layout.Scroller.Texture.Data()
-	tex.RenderNatural(region.X+c.layout.Scroller.X, region.Y+c.layout.Scroller.Y)
+	render.WithColour(1, 1, 1, 1, func() {
+		c.layout.Background.Data().RenderNatural(region.X, region.Y)
+		tex := c.layout.Scroller.Texture.Data()
+		tex.RenderNatural(region.X+c.layout.Scroller.X, region.Y+c.layout.Scroller.Y)
 
-	buttons := c.buttons
-	if c.optionsHeight() <= c.layout.Options.Dy {
-		buttons = c.non_scroll_buttons
-	}
-	logging.TraceBracket(func() {
-		for _, button := range buttons {
-			button.RenderAt(region.X, region.Y)
+		buttons := c.buttons
+		if c.optionsHeight() <= c.layout.Options.Dy {
+			buttons = c.non_scroll_buttons
 		}
-	})
-
-	c.layout.Options.Region().PushClipPlanes()
-	hovered := -1
-	c.doOnOptions(func(index int, opt Option, data doOnOptionData) {
-		if data.hovered {
-			hovered = index
-		}
-		opt.Draw(data.x, data.y, data.dx)
-	})
-	c.layout.Options.Region().PopClipPlanes()
-	c.info_region.PushClipPlanes()
-	if hovered != -1 {
-		c.options[hovered].DrawInfo(c.layout.Info.X, c.layout.Info.Y, c.layout.Info.Dx, c.layout.Info.Dy)
-	} else {
-		if c.min == 1 && c.max == 1 && len(c.selected) == 1 {
-			var index int
-			for index = range c.selected {
+		logging.TraceBracket(func() {
+			for _, button := range buttons {
+				button.RenderAt(region.X, region.Y)
 			}
-			c.options[index].DrawInfo(c.layout.Info.X, c.layout.Info.Y, c.layout.Info.Dx, c.layout.Info.Dy)
+		})
+
+		c.layout.Options.Region().PushClipPlanes()
+		hovered := -1
+		c.doOnOptions(func(index int, opt Option, data doOnOptionData) {
+			if data.hovered {
+				hovered = index
+			}
+			opt.Draw(data.x, data.y, data.dx)
+		})
+		c.layout.Options.Region().PopClipPlanes()
+		c.info_region.PushClipPlanes()
+		if hovered != -1 {
+			c.options[hovered].DrawInfo(c.layout.Info.X, c.layout.Info.Y, c.layout.Info.Dx, c.layout.Info.Dy)
+		} else {
+			if c.min == 1 && c.max == 1 && len(c.selected) == 1 {
+				var index int
+				for index = range c.selected {
+				}
+				c.options[index].DrawInfo(c.layout.Info.X, c.layout.Info.Y, c.layout.Info.Dx, c.layout.Info.Dy)
+			}
 		}
-	}
-	c.info_region.PopClipPlanes()
+		c.info_region.PopClipPlanes()
+	})
 }
 func (c *Chooser) DrawFocused(region gui.Region, ctx gui.DrawingContext) {
 	c.Draw(region, ctx)

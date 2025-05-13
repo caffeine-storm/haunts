@@ -33,7 +33,7 @@ replace code.google.com/p/freetype-go => github.com/golang/freetype v0.0.0-20120
 
 replace github.com/MobRulesGames/mathgl => github.com/caffeine-storm/mathgl v0.0.0-20250501161438-e2d066155663
 
-replace github.com/runningwild/glop => github.com/caffeine-storm/glop v0.0.0-20250512152901-75cb5a5f6a75
+replace github.com/runningwild/glop => github.com/caffeine-storm/glop v0.0.0-20250513170324-be02dba66467
 
 replace github.com/go-gl-legacy/gl => github.com/caffeine-storm/gl v0.0.0-20250506174032-5994dccd6839
 

@@ -465,6 +465,7 @@ func doColour(room *Room, r, g, b, a, base_alpha byte) {
 
 func WithRoomRenderGlSettings(modelView mathgl.Mat4, fn func()) {
 	render.MustBeOnRenderThread()
+
 	gl.Enable(gl.TEXTURE_2D)
 	gl.Enable(gl.BLEND)
 	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
@@ -479,7 +480,9 @@ func WithRoomRenderGlSettings(modelView mathgl.Mat4, fn func()) {
 	defer gl.DisableClientState(gl.TEXTURE_COORD_ARRAY)
 
 	render.WithMultMatrixInMode(&modelView, render.MatrixModeModelView, func() {
-		fn()
+		render.WithColour(1, 1, 1, 1, func() {
+			fn()
+		})
 	})
 }
 

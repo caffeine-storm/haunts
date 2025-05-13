@@ -7,9 +7,9 @@ import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
+	"github.com/runningwild/glop/render"
 )
 
 type MenuConfig struct {
@@ -185,20 +185,21 @@ func (sm *StartMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 func (sm *StartMenu) Draw(region gui.Region, ctx gui.DrawingContext) {
 	logging.Trace("StartMenu.Draw", "region", region)
 	sm.region = region
-	gl.Color4ub(255, 255, 255, 255)
-	// TODO(tmckee): this is racy. .Data() lazy-loads the texture through the
-	// texture manager but we immediately call RenderNatural. This is okayish IRL
-	// because eventually there'll be a frame where things _have_ loaded; we'll
-	// actually draw then. For testing, we can use texture.BlockUntilLoaded.
-	sm.Layout.Background.Data().RenderNatural(sm.region.X, sm.region.Y)
-	sm.Layout.Menu.Texture.Data().RenderNatural(sm.region.X+sm.Layout.Menu.X, sm.region.Y+sm.Layout.Menu.Y)
-	logging.Trace("StartMenu.Draw: about to render buttons", "numbuttons", len(sm.buttons), "sm.layout", sm.Layout)
-	for _, button := range sm.buttons {
-		// TODO(tmckee): clean: (x,y) given to RenderAt is not a target location
-		// but an offset from the button's (X,Y) fields. This does not seem clear
-		// to me.
-		button.RenderAt(sm.region.X, sm.region.Y)
-	}
+	render.WithColour(1, 1, 1, 1, func() {
+		// TODO(tmckee): this is racy. .Data() lazy-loads the texture through the
+		// texture manager but we immediately call RenderNatural. This is okayish IRL
+		// because eventually there'll be a frame where things _have_ loaded; we'll
+		// actually draw then. For testing, we can use texture.BlockUntilLoaded.
+		sm.Layout.Background.Data().RenderNatural(sm.region.X, sm.region.Y)
+		sm.Layout.Menu.Texture.Data().RenderNatural(sm.region.X+sm.Layout.Menu.X, sm.region.Y+sm.Layout.Menu.Y)
+		logging.Trace("StartMenu.Draw: about to render buttons", "numbuttons", len(sm.buttons), "sm.layout", sm.Layout)
+		for _, button := range sm.buttons {
+			// TODO(tmckee): clean: (x,y) given to RenderAt is not a target location
+			// but an offset from the button's (X,Y) fields. This does not seem clear
+			// to me.
+			button.RenderAt(sm.region.X, sm.region.Y)
+		}
+	})
 }
 
 func (sm *StartMenu) DrawFocused(region gui.Region, ctx gui.DrawingContext) {
