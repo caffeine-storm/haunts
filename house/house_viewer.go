@@ -150,7 +150,8 @@ func (hv *HouseViewer) WindowToBoard(wx, wy int) (float32, float32) {
 	// TODO(tmckee:clean): makeRoomMats does not need room size for just the
 	// floor/ifloor matrices; it would be cleaner to not need to generate some
 	// value that we end up ignoring!!!
-	hv.floor, hv.ifloor, _, _, _, _ = perspective.MakeRoomMats(BlankRoomSize(), hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
+	mats := perspective.MakeRoomMats(BlankRoomSize(), hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
+	hv.floor, hv.ifloor = mats.Floor, mats.IFloor
 
 	fx, fy, _ := hv.modelviewToBoard(float32(wx), float32(wy))
 	return fx, fy
@@ -160,7 +161,8 @@ func (hv *HouseViewer) BoardToWindow(bx, by float32) (int, int) {
 	// TODO(tmckee:clean): makeRoomMats does not need room size for just the
 	// floor/ifloor matrices; it would be cleaner to not need to generate some
 	// value that we end up ignoring!!!
-	hv.floor, hv.ifloor, _, _, _, _ = perspective.MakeRoomMats(BlankRoomSize(), hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
+	mats := perspective.MakeRoomMats(BlankRoomSize(), hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
+	hv.floor, hv.ifloor = mats.Floor, mats.IFloor
 
 	fx, fy, _ := hv.boardToModelview(bx, by)
 	return int(fx), int(fy)

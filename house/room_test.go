@@ -116,7 +116,7 @@ func RoomSpecs() {
 			var nilLos *house.LosTexture = nil
 			noFloorDrawers := []house.RenderOnFloorer{}
 			queue.Queue(func(render.RenderQueueState) {
-				restestRoom.Render(allMats.Floor, allMats.Left, allMats.Right, camera.Zoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
+				restestRoom.Render(allMats, camera.Zoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
 			})
 			queue.Purge()
 
@@ -142,7 +142,7 @@ func RoomSpecs() {
 			var nilLos *house.LosTexture = nil
 			noFloorDrawers := []house.RenderOnFloorer{}
 			queue.Queue(func(render.RenderQueueState) {
-				tutRoom.Render(allMats.Floor, allMats.Left, allMats.Right, camera.Zoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
+				tutRoom.Render(allMats, camera.Zoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
 			})
 			queue.Purge()
 

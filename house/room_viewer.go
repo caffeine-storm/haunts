@@ -71,16 +71,9 @@ type roomViewer struct {
 	// Zoom factor, 1.0 is standard
 	zoom float32
 
-	// The modelview matrix that is sent to opengl.  Updated any time focus, zoom, or viewing
-	// angle changes
-	mat            mathgl.Mat4
-	left_wall_mat  mathgl.Mat4
-	right_wall_mat mathgl.Mat4
-
-	// Inverse of mat
-	imat            mathgl.Mat4
-	left_wall_imat  mathgl.Mat4
-	right_wall_imat mathgl.Mat4
+	// The modelview matrices that are sent to opengl. Updated any time focus,
+	// zoom, or viewing angle changes.
+	roomMats perspective.RoomMats
 
 	Temp struct {
 		Furniture   *Furniture
@@ -140,10 +133,10 @@ func (rv *roomViewer) Drag(dx, dy float64) {
 }
 
 func (rv *roomViewer) makeMat() {
-	rv.mat, rv.imat, rv.left_wall_mat, rv.left_wall_imat, rv.right_wall_mat, rv.right_wall_imat = perspective.MakeRoomMats(&rv.room.Size, rv.Render_region, rv.fx, rv.fy, rv.angle, rv.zoom)
+	rv.roomMats = perspective.MakeRoomMats(&rv.room.Size, rv.Render_region, rv.fx, rv.fy, rv.angle, rv.zoom)
 }
 
-func MakeRoomMatsForTest(roomSize RoomSize, region gui.Region, focusx, focusy, angle, zoom float32) (floor, ifloor, left, ileft, right, iright mathgl.Mat4) {
+func MakeRoomMatsForTest(roomSize RoomSize, region gui.Region, focusx, focusy, angle, zoom float32) perspective.RoomMats {
 	return perspective.MakeRoomMats(&roomSize, region, focusx, focusy, angle, zoom)
 }
 
@@ -188,9 +181,9 @@ func (rv *roomViewer) BoardToWindowf(bx, by float32) (float32, float32) {
 }
 
 func (rv *roomViewer) modelviewToLeftWall(mx, my float32) (x, y, dist float32) {
-	mz := d2p(rv.left_wall_mat, mathgl.Vec3{X: mx, Y: my, Z: 0}, mathgl.Vec3{X: 0, Y: 0, Z: 1})
+	mz := d2p(rv.roomMats.Left, mathgl.Vec3{X: mx, Y: my, Z: 0}, mathgl.Vec3{X: 0, Y: 0, Z: 1})
 	v := mathgl.Vec4{X: mx, Y: my, Z: mz, W: 1}
-	v.Transform(&rv.left_wall_imat)
+	v.Transform(&rv.roomMats.ILeft)
 	if v.X > float32(rv.room.Size.Dx) {
 		v.X = float32(rv.room.Size.Dx)
 	}
@@ -198,9 +191,9 @@ func (rv *roomViewer) modelviewToLeftWall(mx, my float32) (x, y, dist float32) {
 }
 
 func (rv *roomViewer) modelviewToRightWall(mx, my float32) (x, y, dist float32) {
-	mz := d2p(rv.right_wall_mat, mathgl.Vec3{X: mx, Y: my, Z: 0}, mathgl.Vec3{X: 0, Y: 0, Z: 1})
+	mz := d2p(rv.roomMats.Right, mathgl.Vec3{X: mx, Y: my, Z: 0}, mathgl.Vec3{X: 0, Y: 0, Z: 1})
 	v := mathgl.Vec4{X: mx, Y: my, Z: mz, W: 1}
-	v.Transform(&rv.right_wall_imat)
+	v.Transform(&rv.roomMats.IRight)
 	if v.Y > float32(rv.room.Size.Dy) {
 		v.Y = float32(rv.room.Size.Dy)
 	}
@@ -209,13 +202,13 @@ func (rv *roomViewer) modelviewToRightWall(mx, my float32) (x, y, dist float32) 
 
 func (rv *roomViewer) leftWallToModelview(bx, by float32) (x, y, z float32) {
 	v := mathgl.Vec4{X: bx, Y: by - float32(rv.room.Size.Dy), W: 1}
-	v.Transform(&rv.left_wall_mat)
+	v.Transform(&rv.roomMats.Left)
 	return v.X, v.Y, v.Z
 }
 
 func (rv *roomViewer) rightWallToModelview(bx, by float32) (x, y, z float32) {
 	v := mathgl.Vec4{X: bx - float32(rv.room.Size.Dx), Y: by, W: 1}
-	v.Transform(&rv.right_wall_mat)
+	v.Transform(&rv.roomMats.Right)
 	return v.X, v.Y, v.Z
 }
 
@@ -240,16 +233,16 @@ func d2p(tmat mathgl.Mat4, point, ray mathgl.Vec3) float32 {
 }
 
 func (rv *roomViewer) modelviewToBoard(mx, my float32) (x, y, dist float32) {
-	mz := d2p(rv.mat, mathgl.Vec3{X: mx, Y: my, Z: 0}, mathgl.Vec3{X: 0, Y: 0, Z: 1})
+	mz := d2p(rv.roomMats.Floor, mathgl.Vec3{X: mx, Y: my, Z: 0}, mathgl.Vec3{X: 0, Y: 0, Z: 1})
 	//  mz := (my - float32(rv.Render_region.Y+rv.Render_region.Dy/2)) * float32(math.Tan(float64(rv.angle*math.Pi/180)))
 	v := mathgl.Vec4{X: mx, Y: my, Z: mz, W: 1}
-	v.Transform(&rv.imat)
+	v.Transform(&rv.roomMats.IFloor)
 	return v.X, v.Y, mz
 }
 
 func (rv *roomViewer) boardToModelview(mx, my float32) (x, y, z float32) {
 	v := mathgl.Vec4{X: mx, Y: my, W: 1}
-	v.Transform(&rv.mat)
+	v.Transform(&rv.roomMats.Floor)
 	x, y, z = v.X, v.Y, v.Z
 	return
 }
@@ -670,7 +663,7 @@ func drawFloor(room *Room, floor mathgl.Mat4, temp *WallTexture, cstack base.Col
 }
 
 func (rv *roomViewer) drawFloor() {
-	render.WithMatrixInMode(&rv.mat, render.MatrixModeModelView, func() {
+	render.WithMatrixInMode(&rv.roomMats.Floor, render.MatrixModeModelView, func() {
 		gl.Disable(gl.TEXTURE_2D)
 		gl.Color4f(1, 0, 1, 0.9)
 		if rv.edit_mode == editCells {
@@ -837,11 +830,11 @@ func (rv *roomViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
 
 	logging.Trace("roomViewer.Draw", "region", region, "rv", rv)
 
-	render.WithMatrixInMode(&rv.mat, render.MatrixModeModelView, func() {
+	render.WithMatrixInMode(&rv.roomMats.Floor, render.MatrixModeModelView, func() {
 		rv.room.SetupGlStuff(&RoomRealGl{})
 		rv.room.far_left.wall_alpha = 255
 		rv.room.far_right.wall_alpha = 255
-		rv.room.Render(rv.mat, rv.left_wall_mat, rv.right_wall_mat, rv.zoom, 255, nil, nil, nil)
+		rv.room.Render(rv.roomMats, rv.zoom, 255, nil, nil, nil)
 
 		rv.cstack.Push(1, 1, 1, 1)
 		defer rv.cstack.Pop()
@@ -852,11 +845,11 @@ func (rv *roomViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
 
 		debug.LogAndClearGlErrors(logging.DebugLogger())
 
-		drawWall(rv.room, rv.mat, rv.left_wall_mat, rv.right_wall_mat, rv.Temp.WallTexture, doorInfo{}, rv.cstack, nil, 1.0)
+		drawWall(rv.room, rv.roomMats.Floor, rv.roomMats.Left, rv.roomMats.Right, rv.Temp.WallTexture, doorInfo{}, rv.cstack, nil, 1.0)
 
 		debug.LogAndClearGlErrors(logging.DebugLogger())
 
-		drawFloor(rv.room, rv.mat, rv.Temp.WallTexture, rv.cstack, nil, 1.0, nil)
+		drawFloor(rv.room, rv.roomMats.Floor, rv.Temp.WallTexture, rv.cstack, nil, 1.0, nil)
 		rv.drawFloor()
 
 		debug.LogAndClearGlErrors(logging.DebugLogger())
@@ -868,7 +861,7 @@ func (rv *roomViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
 			rv.cstack.Push(1, 1, 1, 1)
 			defer rv.cstack.Pop()
 		}
-		drawFurniture(0, 0, rv.mat, rv.zoom, rv.room.Furniture, rv.Temp.Furniture, nil, rv.cstack, nil, 1.0)
+		drawFurniture(0, 0, rv.roomMats.Floor, rv.zoom, rv.room.Furniture, rv.Temp.Furniture, nil, rv.cstack, nil, 1.0)
 
 		debug.LogAndClearGlErrors(logging.DebugLogger())
 	})

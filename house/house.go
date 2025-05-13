@@ -249,10 +249,10 @@ func (f *Floor) render(region gui.Region, focusx, focusy, angle, zoom float32, d
 		room := roomsToDraw[i]
 		fx := focusx - float32(room.X)
 		fy := focusy - float32(room.Y)
-		floor, _, left, _, right, _ := perspective.MakeRoomMats(&room.Size, region, fx, fy, angle, zoom)
+		matrices := perspective.MakeRoomMats(&room.Size, region, fx, fy, angle, zoom)
 		v := alpha_map[room]
 		if los_map[room] > 5 {
-			room.Render(floor, left, right, zoom, v, drawables, los_tex, floor_drawers)
+			room.Render(matrices, zoom, v, drawables, los_tex, floor_drawers)
 		}
 	}
 }

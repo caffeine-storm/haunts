@@ -23,16 +23,7 @@ func MatsAreEqual(lhs, rhs mathgl.Mat4) bool {
 }
 
 func MakeRoomMatsForCamera(roomSize house.RoomSize, cam CameraConfig) perspective.RoomMats {
-	floor, ifloor, left, ileft, right, iright := perspective.MakeRoomMats(&roomSize, cam.Region, cam.FocusX, cam.FocusY, cam.Angle, cam.Zoom)
-
-	return perspective.RoomMats{
-		Floor:  floor,
-		IFloor: ifloor,
-		Left:   left,
-		ILeft:  ileft,
-		Right:  right,
-		IRight: iright,
-	}
+	return perspective.MakeRoomMats(&roomSize, cam.Region, cam.FocusX, cam.FocusY, cam.Angle, cam.Zoom)
 }
 
 type CameraConfig struct {

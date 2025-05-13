@@ -10,6 +10,7 @@ import (
 	"unsafe"
 
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/house/perspective"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/mathgl"
@@ -495,10 +496,10 @@ func WithRoomRenderGlSettings(modelView mathgl.Mat4, fn func()) {
 }
 
 // Need floor, right wall, and left wall matrices to draw the details
-func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alpha byte, drawables []Drawable, los_tex *LosTexture, floor_drawers []RenderOnFloorer) {
+func (room *Room) Render(roomMats perspective.RoomMats, zoom float32, base_alpha byte, drawables []Drawable, los_tex *LosTexture, floor_drawers []RenderOnFloorer) {
 	debug.LogAndClearGlErrors(logging.InfoLogger())
 
-	logging.Info("Room.Render called", "glstate", debug.GetGlState(), "floor", floor)
+	logging.Info("Room.Render called", "glstate", debug.GetGlState(), "floor", roomMats.Floor)
 
 	defer func() {
 		gl.Buffer(0).Unbind(gl.ARRAY_BUFFER)
@@ -510,20 +511,20 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 		doColour(room, r, g, b, a, base_alpha)
 	}
 
-	WithRoomRenderGlSettings(floor, func() {
+	WithRoomRenderGlSettings(roomMats.Floor, func() {
 		var vert roomVertex
 
 		planes := []plane{
-			{room.glData.leftWallIBuffer, room.Wall, &left},
-			{room.glData.rightWallIBuffer, room.Wall, &right},
-			{room.glData.floorIBuffer, room.Floor, &floor},
+			{room.glData.leftWallIBuffer, room.Wall, &roomMats.Left},
+			{room.glData.rightWallIBuffer, room.Wall, &roomMats.Right},
+			{room.glData.floorIBuffer, room.Floor, &roomMats.Floor},
 		}
 
 		if los_tex != nil {
 			logging.Trace("los_tex not nil")
 			// TODO: this won't work; we need to respect incoming modelviewmatrix
 			// state. Needs tests but removing this line is expected to solve.
-			gl.LoadMatrixf((*[16]float32)(&floor))
+			gl.LoadMatrixf((*[16]float32)(&roomMats.Floor))
 			gl.ClientActiveTexture(gl.TEXTURE1)
 			gl.ActiveTexture(gl.TEXTURE1)
 			gl.Enable(gl.TEXTURE_2D)
@@ -541,7 +542,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 			// Render the doors and cut out the stencil buffer so we leave them empty
 			// if they're open
 			switch plane.mat {
-			case &left:
+			case &roomMats.Left:
 				gl.StencilFunc(gl.ALWAYS, 1, 1)
 				gl.StencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE)
 				for _, door := range room.Doors {
@@ -567,7 +568,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 				gl.StencilOp(gl.KEEP, gl.KEEP, gl.KEEP)
 				do_color(255, 255, 255, room.far_left.wall_alpha)
 
-			case &right:
+			case &roomMats.Right:
 				gl.StencilFunc(gl.ALWAYS, 1, 1)
 				gl.StencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE)
 				for _, door := range room.Doors {
@@ -593,7 +594,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 				gl.StencilOp(gl.KEEP, gl.KEEP, gl.KEEP)
 				do_color(255, 255, 255, room.far_right.wall_alpha)
 
-			case &floor:
+			case &roomMats.Floor:
 				// Write '0b00000010' to the stencil buffer when stencil testing.
 				gl.StencilFunc(gl.ALWAYS, 2, 2)
 				gl.StencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE)
@@ -617,7 +618,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 			// Now draw the plane
 			plane.texture.Data().Bind()
 			plane.iBuffer.Bind(gl.ELEMENT_ARRAY_BUFFER)
-			if (plane.mat == &left || plane.mat == &right) && strings.Contains(room.Wall.GetPath(), "gradient.png") {
+			if (plane.mat == &roomMats.Left || plane.mat == &roomMats.Right) && strings.Contains(room.Wall.GetPath(), "gradient.png") {
 				logging.Trace("seeing a gradient.png texture; enabling 'gorey' shader", "planeIdx", planeIdx)
 				base.EnableShader("gorey")
 				base.SetUniformI("gorey", "tex", 0)
@@ -626,7 +627,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 				base.SetUniformF("gorey", "noise_rate", Noise_rate)
 				base.SetUniformF("gorey", "num_steps", Num_steps)
 			}
-			if plane.mat == &floor && strings.Contains(room.Floor.GetPath(), "gradient.png") {
+			if plane.mat == &roomMats.Floor && strings.Contains(room.Floor.GetPath(), "gradient.png") {
 				logging.Trace("seeing a gradient.png texture; enabling 'gorey' shader", "planeIdx", planeIdx)
 				base.EnableShader("gorey")
 				base.SetUniformI("gorey", "tex", 0)
@@ -646,7 +647,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 					base.SetUniformI("gorey", "range", 3)
 				}
 			}
-			if plane.mat == &floor {
+			if plane.mat == &roomMats.Floor {
 				R, G, B, _ := room.Color()
 				gl.Color4ub(R, G, B, 255)
 			}
@@ -661,7 +662,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 			}
 		}
 
-		room.RenderWallTextures(&floor, base_alpha)
+		room.RenderWallTextures(&roomMats.Floor, base_alpha)
 
 		base.EnableShader("marble")
 		base.SetUniformI("marble", "tex2", 1)
@@ -701,7 +702,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 		}
 
 		var mul, run mathgl.Mat4
-		run.Assign(&floor)
+		run.Assign(&roomMats.Floor)
 		mul.Translation(float32(-room.X), float32(-room.Y), 0)
 		run.Multiply(&mul)
 		gl.LoadMatrixf((*[16]float32)(&run))
@@ -719,7 +720,7 @@ func (room *Room) Render(floor, left, right mathgl.Mat4, zoom float32, base_alph
 		do_color(255, 255, 255, 255)
 		gl.LoadIdentity()
 		gl.Disable(gl.STENCIL_TEST)
-		room.renderFurniture(floor, 255, drawables, los_tex)
+		room.renderFurniture(roomMats.Floor, 255, drawables, los_tex)
 
 		gl.ClientActiveTexture(gl.TEXTURE1)
 		gl.Disable(gl.TEXTURE_2D)
