@@ -12,7 +12,7 @@ import (
 func TestRoomMatricesHelpers(t *testing.T) {
 	t.Run("pre-tilt", func(t *testing.T) {
 		camera := housetest.PreTiltCamera().ForSize(200, 200)
-		floorMat := housetest.MakeRoomMatsForCamera(house.BlankRoomSize(), camera).Floor
+		floorMat := housetest.MakeRoomMatsForCamera(*house.BlankRoomSize(), camera).Floor
 
 		// This floor transform should rotate its input by 45 degrees about the
 		// z-axis, then translate to adjust to the middle of the room.
@@ -32,7 +32,7 @@ func TestRoomMatricesHelpers(t *testing.T) {
 			At(5, 5).
 			ForSize(200, 200).
 			AtAngle(0)
-		floorMatrix := housetest.MakeRoomMatsForCamera(house.BlankRoomSize(), camera).Floor
+		floorMatrix := housetest.MakeRoomMatsForCamera(*house.BlankRoomSize(), camera).Floor
 
 		// The floor transform should rotate its input by 45 degrees about
 		// the z-axis, then translate to adjust by the focus.

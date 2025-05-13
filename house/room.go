@@ -50,6 +50,14 @@ type RoomSize struct {
 	Dx, Dy int
 }
 
+func (r *RoomSize) GetDx() int {
+	return r.Dx
+}
+
+func (r *RoomSize) GetDy() int {
+	return r.Dy
+}
+
 func (r RoomSize) String() string {
 	return fmt.Sprintf(r.format(), r.Name, r.Dx, r.Dy)
 }
@@ -134,8 +142,8 @@ type Room struct {
 	wall_texture_state_map map[*WallTexture]wallTextureState
 }
 
-func BlankRoomSize() RoomSize {
-	return RoomSize{
+func BlankRoomSize() *RoomSize {
+	return &RoomSize{
 		Name: "Blank(Small)",
 		Dx:   10,
 		Dy:   10,
@@ -147,7 +155,7 @@ func BlankRoom() *Room {
 		Defname: "blank",
 		RoomDef: &RoomDef{
 			Name: "blank",
-			Size: BlankRoomSize(),
+			Size: *BlankRoomSize(),
 		},
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"math"
 
 	"github.com/MobRulesGames/haunts/house"
+	"github.com/MobRulesGames/haunts/house/perspective"
 	"github.com/MobRulesGames/mathgl"
 	"github.com/runningwild/glop/gui"
 )
@@ -26,7 +27,7 @@ type RoomMats struct {
 }
 
 func MakeRoomMatsForCamera(roomSize house.RoomSize, cam CameraConfig) RoomMats {
-	floor, ifloor, left, ileft, right, iright := house.MakeRoomMatsForTest(roomSize, cam.Region, cam.FocusX, cam.FocusY, cam.Angle, cam.Zoom)
+	floor, ifloor, left, ileft, right, iright := perspective.MakeRoomMats(&roomSize, cam.Region, cam.FocusX, cam.FocusY, cam.Angle, cam.Zoom)
 
 	return RoomMats{
 		Floor:  floor,
