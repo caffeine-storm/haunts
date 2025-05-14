@@ -37,7 +37,6 @@ func DoAction(name string, input, output interface{}) error {
 		gzw.(*gzip.Writer).Close()
 	}
 	host_url := fmt.Sprintf("%s/%s", Host_url, name)
-	// fmt.Printf("Sending %d bytes\n", buf.Len())
 	r, err := http.PostForm(host_url, url.Values{"data": []string{string(buf.Bytes())}})
 	if err != nil {
 		return err

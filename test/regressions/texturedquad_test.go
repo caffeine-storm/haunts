@@ -1,7 +1,6 @@
 package regressions_test
 
 import (
-	"fmt"
 	"image"
 	"testing"
 
@@ -21,9 +20,7 @@ func TestTexturedQuadRegr(t *testing.T) {
 		rendertest.DeprecatedWithGlForTest(screen.Dx(), screen.Dy(), func(sys system.System, queue render.RenderQueueInterface) {
 			queue.Queue(func(st render.RenderQueueState) {
 				debug.LogAndClearGlErrors(logging.ErrorLogger())
-				fmt.Printf("before\n\n\n\n")
 				tex := rendertest.GivenATexture("images/red.png")
-				fmt.Printf("after\n\n\n\n")
 
 				rendertest.DrawTexturedQuad(screen, tex, st.Shaders())
 			})
