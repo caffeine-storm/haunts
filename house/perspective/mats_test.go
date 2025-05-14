@@ -13,7 +13,7 @@ import (
 	"github.com/runningwild/glop/debug"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
-	"github.com/runningwild/glop/system"
+	"github.com/runningwild/glop/render/rendertest/testbuilder"
 	. "github.com/smartystreets/goconvey/convey"
 	"github.com/stretchr/testify/assert"
 )
@@ -52,11 +52,14 @@ func TestMath(t *testing.T) {
 
 func TestMakeRoomMats(t *testing.T) {
 	Convey("floor matrix properly smushes a floor image", t, func() {
-		cam := housetest.Camera().ForSize(400, 400).AtAngle(0).AtFocus(200/housetest.JankyOneOverRoot2, 0)
+		screen := image.Rect(0, 0, 400, 400)
+		cam := housetest.Camera().
+			ForSize(screen.Dx(), screen.Dy()).
+			AtAngle(0).
+			AtFocus(200/housetest.JankyOneOverRoot2, 0)
 		floorMatrix := perspective.MakeRoomMats(house.BlankRoomSize(), cam.Region, cam.FocusX, cam.FocusY, cam.Angle, cam.Zoom).Floor
 
-		screen := image.Rect(0, 0, 400, 400)
-		rendertest.DeprecatedWithGlForTest(screen.Dx(), screen.Dy(), func(sys system.System, queue render.RenderQueueInterface) {
+		testbuilder.New().WithSize(screen.Dx(), screen.Dy()).WithQueue().Run(func(queue render.RenderQueueInterface) {
 			queue.Queue(func(st render.RenderQueueState) {
 				debug.LogAndClearGlErrors(logging.ErrorLogger())
 				tex := rendertest.GivenATexture("mahogany/input.png")
