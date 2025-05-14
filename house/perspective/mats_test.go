@@ -7,6 +7,7 @@ import (
 
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/house/housetest"
+	"github.com/MobRulesGames/haunts/house/perspective"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/mathgl"
 	"github.com/runningwild/glop/debug"
@@ -51,8 +52,8 @@ func TestMath(t *testing.T) {
 
 func TestMakeRoomMats(t *testing.T) {
 	Convey("floor matrix properly smushes a floor image", t, func() {
-		camera := housetest.Camera().ForSize(400, 400).AtAngle(0).AtFocus(200/housetest.JankyOneOverRoot2, 0)
-		floorMatrix := housetest.MakeRoomMatsForCamera(*house.BlankRoomSize(), camera).Floor
+		cam := housetest.Camera().ForSize(400, 400).AtAngle(0).AtFocus(200/housetest.JankyOneOverRoot2, 0)
+		floorMatrix := perspective.MakeRoomMats(house.BlankRoomSize(), cam.Region, cam.FocusX, cam.FocusY, cam.Angle, cam.Zoom).Floor
 
 		screen := image.Rect(0, 0, 400, 400)
 		rendertest.DeprecatedWithGlForTest(screen.Dx(), screen.Dy(), func(sys system.System, queue render.RenderQueueInterface) {
