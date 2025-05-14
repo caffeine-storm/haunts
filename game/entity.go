@@ -218,6 +218,7 @@ func (sc *spriteContainer) Sprite() *sprite.Sprite {
 	return sc.sp
 }
 func (sc *spriteContainer) Load(path string, spriteManager *sprite.Manager) {
+	// TODO(tmckee:#30): this seems to be breaking :(
 	sc.sp, sc.err = spriteManager.LoadSprite(path)
 	if sc.err != nil {
 		base.DeprecatedLog().Error("Unable to load sprite", "path", path, "sc.err", sc.err)

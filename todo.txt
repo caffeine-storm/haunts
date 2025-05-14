@@ -1,3 +1,6 @@
+- bug#30: while trying to load the intruders tutorial, we panicked in some
+  sprite things; need to investigate
+
 - bug#29: the way house viewer was zooming didn't seem correct; need to figure
   out what it should be in main.go
 
@@ -109,4 +112,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#30: <next>
+- bug#31: <next>
