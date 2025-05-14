@@ -12,7 +12,7 @@ import (
 	"github.com/runningwild/glop/gui/guitest"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
-	"github.com/runningwild/glop/system"
+	"github.com/runningwild/glop/render/rendertest/testbuilder"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -28,7 +28,7 @@ func TestRoomViewer(t *testing.T) {
 		},
 	}
 	Convey("house.roomViewer", t, func() {
-		rendertest.DeprecatedWithGlForTest(screenRegion.Dx, screenRegion.Dy, func(sys system.System, queue render.RenderQueueInterface) {
+		testbuilder.New().WithSize(screenRegion.Dx, screenRegion.Dy).WithQueue().Run(func(queue render.RenderQueueInterface) {
 			registry.LoadAllRegistries()
 			base.InitShaders(queue)
 			texture.Init(queue)
