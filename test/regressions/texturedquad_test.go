@@ -8,7 +8,7 @@ import (
 	"github.com/runningwild/glop/debug"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
-	"github.com/runningwild/glop/system"
+	"github.com/runningwild/glop/render/rendertest/testbuilder"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -17,7 +17,7 @@ import (
 func TestTexturedQuadRegr(t *testing.T) {
 	Convey("drawing textured quads", t, func() {
 		screen := image.Rect(0, 0, 50, 50)
-		rendertest.DeprecatedWithGlForTest(screen.Dx(), screen.Dy(), func(sys system.System, queue render.RenderQueueInterface) {
+		testbuilder.New().WithSize(screen.Dx(), screen.Dy()).WithQueue().Run(func(queue render.RenderQueueInterface) {
 			queue.Queue(func(st render.RenderQueueState) {
 				debug.LogAndClearGlErrors(logging.ErrorLogger())
 				tex := rendertest.GivenATexture("images/red.png")
