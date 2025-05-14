@@ -56,7 +56,7 @@ func TestMakeRoomMats(t *testing.T) {
 		cam := housetest.Camera().
 			ForSize(screen.Dx(), screen.Dy()).
 			AtAngle(0).
-			AtFocus(200/housetest.JankyOneOverRoot2, 0)
+			AtFocus(float32(screen.Dx())*housetest.JankyOneOverRoot2, 0)
 		floorMatrix := perspective.MakeRoomMats(house.BlankRoomSize(), cam.Region, cam.FocusX, cam.FocusY, cam.Angle, cam.Zoom).Floor
 
 		testbuilder.New().WithSize(screen.Dx(), screen.Dy()).WithQueue().Run(func(queue render.RenderQueueInterface) {
