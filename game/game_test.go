@@ -41,8 +41,7 @@ func givenAGamePanel() gametest.Drawer {
 }
 
 func TestGamePanel(t *testing.T) {
-	// TODO(#10): re-enable this after pre-factors
-	SkipConvey("GamePanelSpecs", t, func() {
+	Convey("GamePanelSpecs", t, func() {
 		base.SetDatadir("../data")
 		Convey("can draw game panel", func() {
 			gametest.RunDrawingTest(givenAGamePanel, "game-panel")
