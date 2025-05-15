@@ -779,7 +779,7 @@ func (room *Room) resetGlData() {
 
 func (room *Room) SetupGlStuff(glProxy RoomSetupGlProxy) {
 	if room.glDataInputsDiffer() {
-		logging.Trace("room.SetupGlStuff: bailing")
+		logging.Trace("room.SetupGlStuff: reusing cached values")
 		return
 	}
 	room.resetGlDataInputs()

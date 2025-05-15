@@ -8,7 +8,6 @@ import (
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/mathgl"
 	"github.com/go-gl-legacy/gl"
-	"github.com/runningwild/glop/debug"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
 )
@@ -102,7 +101,7 @@ func MakeRoomViewer(room *Room, angle float32) *roomViewer {
 	rv.angle = angle
 	rv.fx = float32(rv.room.Size.Dx / 2)
 	rv.fy = float32(rv.room.Size.Dy / 2)
-	rv.zoom = 1.0
+	rv.zoom = 10.0
 	rv.size = rv.room.Size
 	rv.makeMat()
 	rv.Request_dims.Dx = 100
@@ -133,11 +132,10 @@ func (rv *roomViewer) Drag(dx, dy float64) {
 }
 
 func (rv *roomViewer) makeMat() {
+	logging.Debug("roomViewer>makeMat", "rv", []any{
+		rv.room.Size, rv.Render_region, rv.fx, rv.fy, rv.angle, rv.zoom,
+	})
 	rv.roomMats = perspective.MakeRoomMats(&rv.room.Size, rv.Render_region, rv.fx, rv.fy, rv.angle, rv.zoom)
-}
-
-func MakeRoomMatsForTest(roomSize RoomSize, region gui.Region, focusx, focusy, angle, zoom float32) perspective.RoomMats {
-	return perspective.MakeRoomMats(&roomSize, region, focusx, focusy, angle, zoom)
 }
 
 // Transforms a cursor position in window coordinates to board coordinates.
@@ -295,292 +293,291 @@ var g_stuff []RectObject
 // specified in room
 // left,right: the xy planes of the left and right walls
 func drawWall(room *Room, floor, left, right mathgl.Mat4, temp_tex *WallTexture, temp_door doorInfo, cstack base.ColorStack, los_tex *LosTexture, los_alpha float64) {
-	render.WithMatrixInMode(&floor, render.MatrixModeModelView, func() {
-		gl.Enable(gl.STENCIL_TEST)
-		defer gl.Disable(gl.STENCIL_TEST)
+	gl.Enable(gl.STENCIL_TEST)
+	defer gl.Disable(gl.STENCIL_TEST)
 
-		var dz int
-		if room.Wall.Data().Dx() > 0 {
-			dz = room.Wall.Data().Dy() * (room.Size.Dx + room.Size.Dy) / room.Wall.Data().Dx()
-		}
-		corner := float32(room.Size.Dx) / float32(room.Size.Dx+room.Size.Dy)
+	var dz int
+	if room.Wall.Data().Dx() > 0 {
+		dz = room.Wall.Data().Dy() * (room.Size.Dx + room.Size.Dy) / room.Wall.Data().Dx()
+	}
+	corner := float32(room.Size.Dx) / float32(room.Size.Dx+room.Size.Dy)
 
-		g_texs = g_texs[0:0]
-		if temp_tex != nil {
-			g_texs = append(g_texs, *temp_tex)
-		}
-		for _, tex := range room.WallTextures {
-			g_texs = append(g_texs, *tex)
-		}
+	g_texs = g_texs[0:0]
+	if temp_tex != nil {
+		g_texs = append(g_texs, *temp_tex)
+	}
+	for _, tex := range room.WallTextures {
+		g_texs = append(g_texs, *tex)
+	}
 
-		do_right_wall := func() {
+	do_right_wall := func() {
+		gl.Begin(gl.QUADS)
+		gl.TexCoord2f(1, 0)
+		gl.Vertex3i(room.Size.Dx, 0, 0)
+		gl.TexCoord2f(1, -1)
+		gl.Vertex3i(room.Size.Dx, 0, -dz)
+		gl.TexCoord2f(corner, -1)
+		gl.Vertex3i(room.Size.Dx, room.Size.Dy, -dz)
+		gl.TexCoord2f(corner, 0)
+		gl.Vertex3i(room.Size.Dx, room.Size.Dy, 0)
+		gl.End()
+	}
+
+	g_doors = g_doors[0:0]
+	for _, door := range room.Doors {
+		g_doors = append(g_doors, door)
+	}
+	if temp_door.Door != nil {
+		g_doors = append(g_doors, temp_door.Door)
+	}
+
+	alpha := 0.2
+
+	do_right_doors := func(opened bool) {
+		for _, door := range g_doors {
+			if door.Facing != FarRight {
+				continue
+			}
+			if door.IsOpened() != opened {
+				continue
+			}
+			door.TextureData().Bind()
+			if door == temp_door.Door {
+				if temp_door.Valid {
+					cstack.Push(0, 0, 1, alpha)
+				} else {
+					cstack.Push(1, 0, 0, alpha)
+				}
+			}
+			cstack.ApplyWithAlpha(alpha * los_alpha)
+			height := float64(door.Width*door.TextureData().Dy()) / float64(door.TextureData().Dx())
 			gl.Begin(gl.QUADS)
 			gl.TexCoord2f(1, 0)
-			gl.Vertex3i(room.Size.Dx, 0, 0)
+			gl.Vertex3d(float64(room.Size.Dx), float64(door.Pos), 0)
 			gl.TexCoord2f(1, -1)
-			gl.Vertex3i(room.Size.Dx, 0, -dz)
-			gl.TexCoord2f(corner, -1)
-			gl.Vertex3i(room.Size.Dx, room.Size.Dy, -dz)
-			gl.TexCoord2f(corner, 0)
-			gl.Vertex3i(room.Size.Dx, room.Size.Dy, 0)
-			gl.End()
-		}
-
-		g_doors = g_doors[0:0]
-		for _, door := range room.Doors {
-			g_doors = append(g_doors, door)
-		}
-		if temp_door.Door != nil {
-			g_doors = append(g_doors, temp_door.Door)
-		}
-
-		alpha := 0.2
-
-		do_right_doors := func(opened bool) {
-			for _, door := range g_doors {
-				if door.Facing != FarRight {
-					continue
-				}
-				if door.IsOpened() != opened {
-					continue
-				}
-				door.TextureData().Bind()
-				if door == temp_door.Door {
-					if temp_door.Valid {
-						cstack.Push(0, 0, 1, alpha)
-					} else {
-						cstack.Push(1, 0, 0, alpha)
-					}
-				}
-				cstack.ApplyWithAlpha(alpha * los_alpha)
-				height := float64(door.Width*door.TextureData().Dy()) / float64(door.TextureData().Dx())
-				gl.Begin(gl.QUADS)
-				gl.TexCoord2f(1, 0)
-				gl.Vertex3d(float64(room.Size.Dx), float64(door.Pos), 0)
-				gl.TexCoord2f(1, -1)
-				gl.Vertex3d(float64(room.Size.Dx), float64(door.Pos), -height)
-				gl.TexCoord2f(0, -1)
-				gl.Vertex3d(float64(room.Size.Dx), float64(door.Pos+door.Width), -height)
-				gl.TexCoord2f(0, 0)
-				gl.Vertex3d(float64(room.Size.Dx), float64(door.Pos+door.Width), 0)
-				gl.End()
-				if door == temp_door.Door {
-					cstack.Pop()
-				}
-			}
-		}
-
-		// Right wall
-		gl.StencilFunc(gl.NOTEQUAL, 8, 7)
-		gl.StencilOp(gl.DECR_WRAP, gl.REPLACE, gl.REPLACE)
-		gl.Color4d(0, 0, 0, 0)
-		do_right_wall()
-		gl.Enable(gl.TEXTURE_2D)
-		cstack.ApplyWithAlpha(alpha * los_alpha)
-		gl.StencilFunc(gl.EQUAL, 8, 15)
-		gl.StencilOp(gl.KEEP, gl.ZERO, gl.ZERO)
-		do_right_doors(true)
-		cstack.ApplyWithAlpha(1.0 * los_alpha)
-		gl.StencilFunc(gl.EQUAL, 15, 15)
-		gl.StencilOp(gl.KEEP, gl.ZERO, gl.ZERO)
-		do_right_doors(true)
-		for _, alpha := range []float64{alpha, 1.0} {
-			cstack.ApplyWithAlpha(alpha * los_alpha)
-			if alpha == 1.0 {
-				gl.StencilFunc(gl.EQUAL, 15, 15)
-				gl.StencilOp(gl.KEEP, gl.KEEP, gl.KEEP)
-			} else {
-				gl.StencilFunc(gl.EQUAL, 8, 15)
-				gl.StencilOp(gl.KEEP, gl.KEEP, gl.KEEP)
-			}
-			room.Wall.Data().Bind()
-
-			do_right_wall()
-
-			render.WithMatrixInMode(&right, render.MatrixModeProjection, func() {
-				for i, tex := range g_texs {
-					dx, dy := float32(room.Size.Dx), float32(room.Size.Dy)
-					if tex.Y > dy {
-						tex.X, tex.Y = dx+tex.Y-dy, dy+dx-tex.X
-					}
-					if tex.X > dx {
-						tex.Rot -= 3.1415926535 / 2
-					}
-					tex.X -= dx
-					if temp_tex != nil && i == 0 {
-						cstack.Push(1, 0.7, 0.7, 0.7)
-					}
-					cstack.ApplyWithAlpha(alpha * los_alpha)
-					tex.Render()
-					if temp_tex != nil && i == 0 {
-						cstack.Pop()
-					}
-				}
-			})
-		}
-		cstack.ApplyWithAlpha(alpha * los_alpha)
-		gl.StencilFunc(gl.EQUAL, 8, 15)
-		do_right_doors(false)
-		cstack.ApplyWithAlpha(1.0 * los_alpha)
-		gl.StencilFunc(gl.EQUAL, 15, 15)
-		do_right_doors(false)
-		// Go back over the area we just drew on and replace it with all b0001
-		gl.StencilFunc(gl.ALWAYS, 1, 1)
-		gl.StencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE)
-		gl.Color4d(0, 0, 0, 0)
-		do_right_wall()
-
-		// Now that the entire wall has been draw we can cast shadows on it if we've
-		// got a los texture
-		if los_tex != nil {
-			los_tex.Bind()
-			gl.BlendFunc(gl.SRC_ALPHA_SATURATE, gl.SRC_ALPHA)
-			gl.Color4d(0, 0, 0, 1)
-
-			tx := (float64(room.X+room.Size.Dx) - 0.5) / float64(los_tex.Size())
-			ty := (float64(room.Y) + 0.5) / float64(los_tex.Size())
-			ty2 := (float64(room.Y+room.Size.Dy) - 0.5) / float64(los_tex.Size())
-			gl.Begin(gl.QUADS)
-			gl.TexCoord2d(ty, tx)
-			gl.Vertex3i(room.Size.Dx, 0, 0)
-			gl.TexCoord2d(ty, tx)
-			gl.Vertex3i(room.Size.Dx, 0, -dz)
-			gl.TexCoord2d(ty2, tx)
-			gl.Vertex3i(room.Size.Dx, room.Size.Dy, -dz)
-			gl.TexCoord2d(ty2, tx)
-			gl.Vertex3i(room.Size.Dx, room.Size.Dy, 0)
-			gl.End()
-			gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
-		}
-
-		do_left_wall := func() {
-			gl.Begin(gl.QUADS)
-			gl.TexCoord2f(corner, 0)
-			gl.Vertex3i(room.Size.Dx, room.Size.Dy, 0)
-			gl.TexCoord2f(corner, -1)
-			gl.Vertex3i(room.Size.Dx, room.Size.Dy, -dz)
+			gl.Vertex3d(float64(room.Size.Dx), float64(door.Pos), -height)
 			gl.TexCoord2f(0, -1)
-			gl.Vertex3i(0, room.Size.Dy, -dz)
+			gl.Vertex3d(float64(room.Size.Dx), float64(door.Pos+door.Width), -height)
 			gl.TexCoord2f(0, 0)
-			gl.Vertex3i(0, room.Size.Dy, 0)
+			gl.Vertex3d(float64(room.Size.Dx), float64(door.Pos+door.Width), 0)
 			gl.End()
+			if door == temp_door.Door {
+				cstack.Pop()
+			}
 		}
+	}
 
-		do_left_doors := func(opened bool) {
-			for _, door := range g_doors {
-				if door.Facing != FarLeft {
-					continue
+	// Right wall
+	gl.StencilFunc(gl.NOTEQUAL, 8, 7)
+	gl.StencilOp(gl.DECR_WRAP, gl.REPLACE, gl.REPLACE)
+	gl.Color4d(0, 0, 0, 0)
+	do_right_wall()
+	gl.Enable(gl.TEXTURE_2D)
+	cstack.ApplyWithAlpha(alpha * los_alpha)
+	gl.StencilFunc(gl.EQUAL, 8, 15)
+	gl.StencilOp(gl.KEEP, gl.ZERO, gl.ZERO)
+	do_right_doors(true)
+	cstack.ApplyWithAlpha(1.0 * los_alpha)
+	gl.StencilFunc(gl.EQUAL, 15, 15)
+	gl.StencilOp(gl.KEEP, gl.ZERO, gl.ZERO)
+	do_right_doors(true)
+	for _, alpha := range []float64{alpha, 1.0} {
+		cstack.ApplyWithAlpha(alpha * los_alpha)
+		if alpha == 1.0 {
+			gl.StencilFunc(gl.EQUAL, 15, 15)
+			gl.StencilOp(gl.KEEP, gl.KEEP, gl.KEEP)
+		} else {
+			gl.StencilFunc(gl.EQUAL, 8, 15)
+			gl.StencilOp(gl.KEEP, gl.KEEP, gl.KEEP)
+		}
+		room.Wall.Data().Bind()
+
+		do_right_wall()
+
+		render.WithMatrixInMode(&right, render.MatrixModeProjection, func() {
+			for i, tex := range g_texs {
+				dx, dy := float32(room.Size.Dx), float32(room.Size.Dy)
+				if tex.Y > dy {
+					tex.X, tex.Y = dx+tex.Y-dy, dy+dx-tex.X
 				}
-				if door.IsOpened() != opened {
-					continue
+				if tex.X > dx {
+					tex.Rot -= 3.1415926535 / 2
 				}
-				door.TextureData().Bind()
-				if door == temp_door.Door {
-					if temp_door.Valid {
-						cstack.Push(0, 0, 1, alpha)
-					} else {
-						cstack.Push(1, 0, 0, alpha)
-					}
+				tex.X -= dx
+				if temp_tex != nil && i == 0 {
+					cstack.Push(1, 0.7, 0.7, 0.7)
 				}
 				cstack.ApplyWithAlpha(alpha * los_alpha)
-				height := float64(door.Width*door.TextureData().Dy()) / float64(door.TextureData().Dx())
-				gl.Begin(gl.QUADS)
-				gl.TexCoord2f(0, 0)
-				gl.Vertex3d(float64(door.Pos), float64(room.Size.Dy), 0)
-				gl.TexCoord2f(0, -1)
-				gl.Vertex3d(float64(door.Pos), float64(room.Size.Dy), -height)
-				gl.TexCoord2f(1, -1)
-				gl.Vertex3d(float64(door.Pos+door.Width), float64(room.Size.Dy), -height)
-				gl.TexCoord2f(1, 0)
-				gl.Vertex3d(float64(door.Pos+door.Width), float64(room.Size.Dy), 0)
-				gl.End()
-				if door == temp_door.Door {
+				tex.Render()
+				if temp_tex != nil && i == 0 {
 					cstack.Pop()
 				}
 			}
-		}
+		})
+	}
+	cstack.ApplyWithAlpha(alpha * los_alpha)
+	gl.StencilFunc(gl.EQUAL, 8, 15)
+	do_right_doors(false)
+	cstack.ApplyWithAlpha(1.0 * los_alpha)
+	gl.StencilFunc(gl.EQUAL, 15, 15)
+	do_right_doors(false)
+	// Go back over the area we just drew on and replace it with all b0001
+	gl.StencilFunc(gl.ALWAYS, 1, 1)
+	gl.StencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE)
+	gl.Color4d(0, 0, 0, 0)
+	do_right_wall()
 
-		gl.StencilFunc(gl.NOTEQUAL, 8, 7)
-		gl.StencilOp(gl.DECR_WRAP, gl.REPLACE, gl.REPLACE)
-		gl.Color4d(0, 0, 0, 0)
-		do_left_wall()
-		gl.Enable(gl.TEXTURE_2D)
-		cstack.ApplyWithAlpha(alpha * los_alpha)
-		gl.StencilFunc(gl.EQUAL, 8, 15)
-		gl.StencilOp(gl.KEEP, gl.ZERO, gl.ZERO)
-		do_left_doors(true)
-		cstack.ApplyWithAlpha(1.0 * los_alpha)
-		gl.StencilFunc(gl.EQUAL, 15, 15)
-		gl.StencilOp(gl.KEEP, gl.ZERO, gl.ZERO)
-		do_left_doors(true)
-		for _, alpha := range []float64{alpha, 1.0} {
-			if alpha == 1.0 {
-				gl.StencilFunc(gl.EQUAL, 15, 15)
-				gl.StencilOp(gl.KEEP, gl.KEEP, gl.KEEP)
-			} else {
-				gl.StencilFunc(gl.EQUAL, 8, 15)
-				gl.StencilOp(gl.KEEP, gl.KEEP, gl.KEEP)
+	// Now that the entire wall has been draw we can cast shadows on it if we've
+	// got a los texture
+	if los_tex != nil {
+		los_tex.Bind()
+		gl.BlendFunc(gl.SRC_ALPHA_SATURATE, gl.SRC_ALPHA)
+		gl.Color4d(0, 0, 0, 1)
+
+		tx := (float64(room.X+room.Size.Dx) - 0.5) / float64(los_tex.Size())
+		ty := (float64(room.Y) + 0.5) / float64(los_tex.Size())
+		ty2 := (float64(room.Y+room.Size.Dy) - 0.5) / float64(los_tex.Size())
+		gl.Begin(gl.QUADS)
+		gl.TexCoord2d(ty, tx)
+		gl.Vertex3i(room.Size.Dx, 0, 0)
+		gl.TexCoord2d(ty, tx)
+		gl.Vertex3i(room.Size.Dx, 0, -dz)
+		gl.TexCoord2d(ty2, tx)
+		gl.Vertex3i(room.Size.Dx, room.Size.Dy, -dz)
+		gl.TexCoord2d(ty2, tx)
+		gl.Vertex3i(room.Size.Dx, room.Size.Dy, 0)
+		gl.End()
+		gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+	}
+
+	do_left_wall := func() {
+		gl.Begin(gl.QUADS)
+		gl.TexCoord2f(corner, 0)
+		gl.Vertex3i(room.Size.Dx, room.Size.Dy, 0)
+		gl.TexCoord2f(corner, -1)
+		gl.Vertex3i(room.Size.Dx, room.Size.Dy, -dz)
+		gl.TexCoord2f(0, -1)
+		gl.Vertex3i(0, room.Size.Dy, -dz)
+		gl.TexCoord2f(0, 0)
+		gl.Vertex3i(0, room.Size.Dy, 0)
+		gl.End()
+	}
+
+	do_left_doors := func(opened bool) {
+		for _, door := range g_doors {
+			if door.Facing != FarLeft {
+				continue
 			}
-			room.Wall.Data().Bind()
-			cstack.ApplyWithAlpha(alpha * los_alpha)
-			do_left_wall()
-
-			render.WithMatrixInMode(&left, render.MatrixModeProjection, func() {
-				for i, tex := range g_texs {
-					dx, dy := float32(room.Size.Dx), float32(room.Size.Dy)
-					if tex.X > dx {
-						tex.X, tex.Y = dx+dy-tex.Y, dy+tex.X-dx
-					}
-					tex.Y -= dy
-					if temp_tex != nil && i == 0 {
-						cstack.Push(1, 0.7, 0.7, 0.7)
-					}
-					cstack.ApplyWithAlpha(alpha * los_alpha)
-					tex.Render()
-					if temp_tex != nil && i == 0 {
-						cstack.Pop()
-					}
+			if door.IsOpened() != opened {
+				continue
+			}
+			door.TextureData().Bind()
+			if door == temp_door.Door {
+				if temp_door.Valid {
+					cstack.Push(0, 0, 1, alpha)
+				} else {
+					cstack.Push(1, 0, 0, alpha)
 				}
-			})
+			}
+			cstack.ApplyWithAlpha(alpha * los_alpha)
+			height := float64(door.Width*door.TextureData().Dy()) / float64(door.TextureData().Dx())
+			gl.Begin(gl.QUADS)
+			gl.TexCoord2f(0, 0)
+			gl.Vertex3d(float64(door.Pos), float64(room.Size.Dy), 0)
+			gl.TexCoord2f(0, -1)
+			gl.Vertex3d(float64(door.Pos), float64(room.Size.Dy), -height)
+			gl.TexCoord2f(1, -1)
+			gl.Vertex3d(float64(door.Pos+door.Width), float64(room.Size.Dy), -height)
+			gl.TexCoord2f(1, 0)
+			gl.Vertex3d(float64(door.Pos+door.Width), float64(room.Size.Dy), 0)
+			gl.End()
+			if door == temp_door.Door {
+				cstack.Pop()
+			}
 		}
+	}
+
+	gl.StencilFunc(gl.NOTEQUAL, 8, 7)
+	gl.StencilOp(gl.DECR_WRAP, gl.REPLACE, gl.REPLACE)
+	gl.Color4d(0, 0, 0, 0)
+	do_left_wall()
+	gl.Enable(gl.TEXTURE_2D)
+	cstack.ApplyWithAlpha(alpha * los_alpha)
+	gl.StencilFunc(gl.EQUAL, 8, 15)
+	gl.StencilOp(gl.KEEP, gl.ZERO, gl.ZERO)
+	do_left_doors(true)
+	cstack.ApplyWithAlpha(1.0 * los_alpha)
+	gl.StencilFunc(gl.EQUAL, 15, 15)
+	gl.StencilOp(gl.KEEP, gl.ZERO, gl.ZERO)
+	do_left_doors(true)
+	for _, alpha := range []float64{alpha, 1.0} {
+		if alpha == 1.0 {
+			gl.StencilFunc(gl.EQUAL, 15, 15)
+			gl.StencilOp(gl.KEEP, gl.KEEP, gl.KEEP)
+		} else {
+			gl.StencilFunc(gl.EQUAL, 8, 15)
+			gl.StencilOp(gl.KEEP, gl.KEEP, gl.KEEP)
+		}
+		room.Wall.Data().Bind()
 		cstack.ApplyWithAlpha(alpha * los_alpha)
-		gl.StencilFunc(gl.EQUAL, 8, 15)
-		do_left_doors(false)
-		cstack.ApplyWithAlpha(1.0 * los_alpha)
-		gl.StencilFunc(gl.EQUAL, 15, 15)
-		do_left_doors(false)
-		// Go back over the area we just drew on and replace it with all b0010
-		gl.StencilFunc(gl.ALWAYS, 2, 2)
-		gl.StencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE)
-		gl.Color4d(0, 0, 0, 0)
 		do_left_wall()
 
-		// Now that the entire wall has been draw we can cast shadows on it if we've
-		// got a los texture
-		if los_tex != nil {
-			los_tex.Bind()
-			gl.BlendFunc(gl.SRC_ALPHA_SATURATE, gl.SRC_ALPHA)
-			gl.Color4d(0, 0, 0, 1)
+		render.WithMatrixInMode(&left, render.MatrixModeProjection, func() {
+			for i, tex := range g_texs {
+				dx, dy := float32(room.Size.Dx), float32(room.Size.Dy)
+				if tex.X > dx {
+					tex.X, tex.Y = dx+dy-tex.Y, dy+tex.X-dx
+				}
+				tex.Y -= dy
+				if temp_tex != nil && i == 0 {
+					cstack.Push(1, 0.7, 0.7, 0.7)
+				}
+				cstack.ApplyWithAlpha(alpha * los_alpha)
+				tex.Render()
+				if temp_tex != nil && i == 0 {
+					cstack.Pop()
+				}
+			}
+		})
+	}
+	cstack.ApplyWithAlpha(alpha * los_alpha)
+	gl.StencilFunc(gl.EQUAL, 8, 15)
+	do_left_doors(false)
+	cstack.ApplyWithAlpha(1.0 * los_alpha)
+	gl.StencilFunc(gl.EQUAL, 15, 15)
+	do_left_doors(false)
+	// Go back over the area we just drew on and replace it with all b0010
+	gl.StencilFunc(gl.ALWAYS, 2, 2)
+	gl.StencilOp(gl.REPLACE, gl.REPLACE, gl.REPLACE)
+	gl.Color4d(0, 0, 0, 0)
+	do_left_wall()
 
-			ty := (float64(room.Y+room.Size.Dy) - 0.5) / float64(los_tex.Size())
-			tx := (float64(room.X) + 0.5) / float64(los_tex.Size())
-			tx2 := (float64(room.X+room.Size.Dx) - 0.5) / float64(los_tex.Size())
-			gl.Begin(gl.QUADS)
-			gl.TexCoord2d(ty, tx)
-			gl.Vertex3i(0, room.Size.Dy, 0)
-			gl.TexCoord2d(ty, tx)
-			gl.Vertex3i(0, room.Size.Dy, -dz)
-			gl.TexCoord2d(ty, tx2)
-			gl.Vertex3i(room.Size.Dx, room.Size.Dy, -dz)
-			gl.TexCoord2d(ty, tx2)
-			gl.Vertex3i(room.Size.Dx, room.Size.Dy, 0)
-			gl.End()
-			gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
-		}
-	})
+	// Now that the entire wall has been draw we can cast shadows on it if we've
+	// got a los texture
+	if los_tex != nil {
+		los_tex.Bind()
+		gl.BlendFunc(gl.SRC_ALPHA_SATURATE, gl.SRC_ALPHA)
+		gl.Color4d(0, 0, 0, 1)
+
+		ty := (float64(room.Y+room.Size.Dy) - 0.5) / float64(los_tex.Size())
+		tx := (float64(room.X) + 0.5) / float64(los_tex.Size())
+		tx2 := (float64(room.X+room.Size.Dx) - 0.5) / float64(los_tex.Size())
+		gl.Begin(gl.QUADS)
+		gl.TexCoord2d(ty, tx)
+		gl.Vertex3i(0, room.Size.Dy, 0)
+		gl.TexCoord2d(ty, tx)
+		gl.Vertex3i(0, room.Size.Dy, -dz)
+		gl.TexCoord2d(ty, tx2)
+		gl.Vertex3i(room.Size.Dx, room.Size.Dy, -dz)
+		gl.TexCoord2d(ty, tx2)
+		gl.Vertex3i(room.Size.Dx, room.Size.Dy, 0)
+		gl.End()
+		gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
+	}
 }
 
 func drawFloor(room *Room, floor mathgl.Mat4, temp *WallTexture, cstack base.ColorStack, los_tex *LosTexture, los_alpha float64, floor_drawer []RenderOnFloorer) {
+	// TODO(tmckee): this probably needs to be WithMultMatrix...
 	render.WithMatrixInMode(&floor, render.MatrixModeModelView, func() {
 		gl.Enable(gl.STENCIL_TEST)
 		defer gl.Disable(gl.STENCIL_TEST)
@@ -663,6 +660,7 @@ func drawFloor(room *Room, floor mathgl.Mat4, temp *WallTexture, cstack base.Col
 }
 
 func (rv *roomViewer) drawFloor() {
+	// TODO(tmckee): this probably needs to be WithMultMatrix...
 	render.WithMatrixInMode(&rv.roomMats.Floor, render.MatrixModeModelView, func() {
 		gl.Disable(gl.TEXTURE_2D)
 		gl.Color4f(1, 0, 1, 0.9)
@@ -710,7 +708,7 @@ func (rv *roomViewer) drawFloor() {
 }
 
 func drawFurniture(roomx, roomy int, mat mathgl.Mat4, zoom float32, furniture []*Furniture, temp_furniture *Furniture, extras []Drawable, cstack base.ColorStack, los_tex *LosTexture, los_alpha float64) {
-	render.WithMatrixMode(render.MatrixModeProjection, func() {
+	render.WithMatrixMode(render.MatrixModeModelView, func() {
 		gl.LoadIdentity()
 
 		gl.Enable(gl.TEXTURE_2D)
@@ -733,6 +731,7 @@ func drawFurniture(roomx, roomy int, mat mathgl.Mat4, zoom float32, furniture []
 		for i := range extras {
 			g_stuff = append(g_stuff, extras[i])
 		}
+		logging.Trace("roomViewer>drawFurniture", "len(g_stuff)", len(g_stuff))
 		g_stuff = OrderRectObjects(g_stuff)
 
 		for i := len(g_stuff) - 1; i >= 0; i-- {
@@ -823,48 +822,54 @@ func (rv *roomViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
 	region.PushClipPlanes()
 	defer region.PopClipPlanes()
 
-	if rv.Render_region.X != region.X || rv.Render_region.Y != region.Y || rv.Render_region.Dx != region.Dx || rv.Render_region.Dy != region.Dy {
+	if rv.Render_region != region {
 		rv.Render_region = region
 		rv.makeMat()
 	}
 
 	logging.Trace("roomViewer.Draw", "region", region, "rv", rv)
 
-	render.WithMatrixInMode(&rv.roomMats.Floor, render.MatrixModeModelView, func() {
-		rv.room.SetupGlStuff(&RoomRealGl{})
-		rv.room.far_left.wall_alpha = 255
-		rv.room.far_right.wall_alpha = 255
-		rv.room.Render(rv.roomMats, rv.zoom, 255, nil, nil, nil)
+	rv.room.SetupGlStuff(&RoomRealGl{})
+	rv.room.SetWallTransparency(false)
+	rv.room.Render(rv.roomMats, rv.zoom, 255, nil, nil, nil)
 
-		rv.cstack.Push(1, 1, 1, 1)
-		defer rv.cstack.Pop()
+	return
 
-		debug.LogAndClearGlErrors(logging.DebugLogger())
+	/*
+		* TODO(tmckee): why was this stuff here? doesn't rv.room.Render draw the room? why should we have to drawWall, drawaFloor, etc?
+		render.WithMultMatrixInMode(&rv.roomMats.Floor, render.MatrixModeModelView, func() {
+			logging.Trace("pre-drawrect", "glstate", debug.GetGlState())
 
-		drawPrep()
-
-		debug.LogAndClearGlErrors(logging.DebugLogger())
-
-		drawWall(rv.room, rv.roomMats.Floor, rv.roomMats.Left, rv.roomMats.Right, rv.Temp.WallTexture, doorInfo{}, rv.cstack, nil, 1.0)
-
-		debug.LogAndClearGlErrors(logging.DebugLogger())
-
-		drawFloor(rv.room, rv.roomMats.Floor, rv.Temp.WallTexture, rv.cstack, nil, 1.0, nil)
-		rv.drawFloor()
-
-		debug.LogAndClearGlErrors(logging.DebugLogger())
-
-		if rv.edit_mode == editCells {
-			rv.cstack.Pop()
-			rv.cstack.Push(1, 1, 1, 0.1)
-		} else {
 			rv.cstack.Push(1, 1, 1, 1)
 			defer rv.cstack.Pop()
-		}
-		drawFurniture(0, 0, rv.roomMats.Floor, rv.zoom, rv.room.Furniture, rv.Temp.Furniture, nil, rv.cstack, nil, 1.0)
 
-		debug.LogAndClearGlErrors(logging.DebugLogger())
-	})
+			debug.LogAndClearGlErrors(logging.DebugLogger())
+
+			drawPrep()
+
+			debug.LogAndClearGlErrors(logging.DebugLogger())
+
+			drawWall(rv.room, rv.roomMats.Floor, rv.roomMats.Left, rv.roomMats.Right, rv.Temp.WallTexture, doorInfo{}, rv.cstack, nil, 1.0)
+
+			debug.LogAndClearGlErrors(logging.DebugLogger())
+
+			drawFloor(rv.room, rv.roomMats.Floor, rv.Temp.WallTexture, rv.cstack, nil, 1.0, nil)
+			rv.drawFloor()
+
+			debug.LogAndClearGlErrors(logging.DebugLogger())
+
+			if rv.edit_mode == editCells {
+				rv.cstack.Pop()
+				rv.cstack.Push(1, 1, 1, 0.1)
+			} else {
+				rv.cstack.Push(1, 1, 1, 1)
+				defer rv.cstack.Pop()
+			}
+			drawFurniture(0, 0, rv.roomMats.Floor, rv.zoom, rv.room.Furniture, rv.Temp.Furniture, nil, rv.cstack, nil, 1.0)
+
+			debug.LogAndClearGlErrors(logging.DebugLogger())
+		})
+	*/
 }
 
 func (rv *roomViewer) Think(*gui.Gui, int64) {
