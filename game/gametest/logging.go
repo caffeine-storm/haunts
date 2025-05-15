@@ -3,6 +3,7 @@ package gametest
 import (
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/runningwild/glop/gui"
+	"github.com/runningwild/glop/render/rendertest"
 )
 
 type drawWithLoggingTrace struct {
@@ -21,4 +22,12 @@ func DrawWithTrace(d Drawer) *drawWithLoggingTrace {
 	return &drawWithLoggingTrace{
 		Drawer: d,
 	}
+}
+
+// Like RunDrawingTest but will enable logging traces when the
+// object-under-test is Draw()ing.
+func RunTracedDrawingTest(builder func() Drawer, ref rendertest.TestDataReference) {
+	RunDrawingTest(func() Drawer {
+		return DrawWithTrace(builder())
+	}, ref)
 }

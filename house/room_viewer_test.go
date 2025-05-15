@@ -13,9 +13,9 @@ func TestRoomViewer(t *testing.T) {
 	base.SetDatadir("../data")
 
 	Convey("house.roomViewer", t, func() {
-		gametest.RunDrawingTest(func() gametest.Drawer {
+		gametest.RunTracedDrawingTest(func() gametest.Drawer {
 			room := loadRoom("restest.room")
-			return gametest.DrawWithTrace(house.MakeRoomViewer(room, 62))
+			return house.MakeRoomViewer(room, 62)
 		}, "room-viewer")
 	})
 }
