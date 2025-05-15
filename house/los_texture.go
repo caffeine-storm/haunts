@@ -51,6 +51,7 @@ func MakeLosTexture() *LosTexture {
 		gl.Enable(gl.TEXTURE_2D)
 		tex := gl.GenTexture()
 		tex.Bind(gl.TEXTURE_2D)
+		defer tex.Unbind(gl.TEXTURE_2D)
 		gl.TexEnvf(gl.TEXTURE_ENV, gl.TEXTURE_ENV_MODE, gl.MODULATE)
 		gl.TexParameterf(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
 		gl.TexParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
