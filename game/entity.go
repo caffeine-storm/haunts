@@ -353,6 +353,7 @@ const (
 	LevelMaster   EntLevel = "Master"
 )
 
+//go:generate go run golang.org/x/tools/cmd/stringer@v0.33.0 -type=Side
 type Side int
 
 const (
