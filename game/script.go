@@ -1629,7 +1629,7 @@ func setWaypoint(gp *GamePanel) lua.LuaGoFunction {
 		gp.script.syncStart()
 		defer gp.script.syncEnd()
 
-		var wp waypoint
+		var wp Waypoint
 		side_str := L.ToString(-3)
 		switch side_str {
 		case "intruders":
@@ -1642,7 +1642,7 @@ func setWaypoint(gp *GamePanel) lua.LuaGoFunction {
 		}
 		wp.Name = L.ToString(-4)
 		// Remove any existing waypoint by the same name
-		algorithm.Choose(&gp.game.Waypoints, func(w waypoint) bool {
+		algorithm.Choose(&gp.game.Waypoints, func(w Waypoint) bool {
 			return w.Name != wp.Name
 		})
 		px, py := LuaToPoint(L, -2)

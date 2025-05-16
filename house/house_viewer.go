@@ -140,7 +140,7 @@ func (hv *HouseViewer) modelviewToBoard(mx, my float32) (x, y, dist float32) {
 }
 
 func (hv *HouseViewer) boardToModelview(mx, my float32) (x, y, z float32) {
-	v := mathgl.Vec4{X: mx, Y: my, W: 1}
+	v := mathgl.Vec4{X: mx, Y: my, Z: 0, W: 1}
 	v.Transform(&hv.floor)
 	x, y, z = v.X, v.Y, v.Z
 	return

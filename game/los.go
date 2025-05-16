@@ -67,24 +67,24 @@ type sideLosData struct {
 	tex  *house.LosTexture
 }
 
-type waypoint struct {
+type Waypoint struct {
 	Name   string
 	Side   Side
 	X, Y   float64
 	Radius float64
-	active bool
+	Active bool
 	drawn  bool
 	// Color, maybe?
 }
 
-func (wp *waypoint) Dims() (int, int) {
+func (wp *Waypoint) Dims() (int, int) {
 	return int(2 * wp.Radius), int(2 * wp.Radius)
 }
-func (wp *waypoint) Pos() (int, int) {
+func (wp *Waypoint) Pos() (int, int) {
 	return int(wp.X), int(wp.Y)
 }
-func (wp *waypoint) RenderOnFloor() {
-	if !wp.active {
+func (wp *Waypoint) RenderOnFloor() {
+	if !wp.Active {
 		return
 	}
 	wp.drawn = true
@@ -106,8 +106,6 @@ func (wp *waypoint) RenderOnFloor() {
 	gl.End()
 
 	base.EnableShader("")
-
-	// base.EnableShader("")
 }
 
 type gameDataTransient struct {
@@ -209,7 +207,7 @@ type gameDataGobbable struct {
 	Rand rand.Source
 
 	// Waypoints, used for signaling things to the player on the map
-	Waypoints []waypoint
+	Waypoints []Waypoint
 
 	// Transient data - none of the following are exported
 
