@@ -38,6 +38,8 @@ func (ctx *rendertestDrawTestContext) GetTestBuilder() *testbuilder.GlTestBuilde
 
 var _ DrawTestContext = (*rendertestDrawTestContext)(nil)
 
+// TODO(tmckee:#31): take a convey.C as a parameter so that callers know they need
+// to be running this under a convey context.
 func RunDrawingTest(objectCreator func() Drawer, testid rendertest.TestDataReference, andThen ...func(DrawTestContext)) {
 	windowRegion := gui.Region{
 		Point: gui.Point{X: 0, Y: 0},

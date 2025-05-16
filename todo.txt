@@ -1,3 +1,6 @@
+- bug#31: take a convey.C as a parameter in our gamtest helper to encourage
+  callers to run from within a convey context.
+
 - bug#30: while trying to load the intruders tutorial, we panicked in some
   sprite things; need to investigate
 
@@ -112,4 +115,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#31: <next>
+- bug#32: <next>
