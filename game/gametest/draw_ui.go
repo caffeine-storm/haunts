@@ -2,6 +2,7 @@ package gametest
 
 import (
 	"context"
+	"image/color"
 	"time"
 
 	"github.com/MobRulesGames/haunts/base"
@@ -83,8 +84,9 @@ func RunDrawingTest(objectCreator func() Drawer, testid rendertest.TestDataRefer
 		})
 		queue.Purge()
 
+		transparent := color.RGBA{}
 		Convey("should look like the expected screen", func() {
-			So(queue, rendertest.ShouldLookLikeFile, testid, rendertest.Threshold(8))
+			So(queue, rendertest.ShouldLookLikeFile, testid, rendertest.Threshold(8), rendertest.BackgroundColour(transparent))
 		})
 
 	})

@@ -75,8 +75,11 @@ func setupTextureList(queue render.RenderQueueInterface) {
 	queue.Queue(func(render.RenderQueueState) {
 		textureList = gl.GenLists(1)
 		gl.NewList(textureList, gl.COMPILE)
-		gl.Begin(gl.QUADS)
 
+		gl.PushAttrib(gl.COLOR_BUFFER_BIT)
+		gl.Enable(gl.BLEND)
+		gl.BlendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ZERO, gl.ONE)
+		gl.Begin(gl.QUADS)
 		// bottom-left
 		gl.TexCoord2d(0, 0)
 		gl.Vertex2i(0, 0)
@@ -92,8 +95,9 @@ func setupTextureList(queue render.RenderQueueInterface) {
 		// bottom-right
 		gl.TexCoord2d(1, 0)
 		gl.Vertex2i(1, 0)
-
 		gl.End()
+		gl.PopAttrib()
+
 		gl.EndList()
 	})
 }

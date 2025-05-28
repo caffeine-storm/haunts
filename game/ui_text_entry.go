@@ -218,6 +218,10 @@ func (te *TextEntry) RenderAt(x, y int) {
 	te.Entry.bounds.y = y
 	te.Entry.bounds.dx = x2 - x
 	te.Entry.bounds.dy = y2 - y
+
+	gl.Enable(gl.BLEND)
+	gl.BlendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ZERO, gl.ONE)
+
 	gl.Disable(gl.TEXTURE_2D)
 	if te.Entry.entering {
 		gl.Color4ub(255, 255, 255, 255)

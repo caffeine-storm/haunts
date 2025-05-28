@@ -114,6 +114,12 @@ func (o *Overlay) Draw(region gui.Region, ctx gui.DrawingContext) {
 
 			base.SetUniformF("waypoint", "radius", float32(wp.Radius))
 
+			gl.PushAttrib(gl.COLOR_BUFFER_BIT)
+			defer gl.PopAttrib()
+
+			gl.Enable(gl.BLEND)
+			gl.BlendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ZERO, gl.ONE)
+
 			gl.Begin(gl.QUADS)
 			gl.TexCoord2i(0, 1)
 			gl.Vertex2i(cx1, cy1)

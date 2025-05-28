@@ -2,6 +2,7 @@ package house_test
 
 import (
 	"fmt"
+	"image/color"
 	"strings"
 	"testing"
 
@@ -56,6 +57,7 @@ func RoomSpecs() {
 
 	dx, dy := 1024, 768
 	opaquealpha := byte(255)
+	transparent := color.RGBA{}
 
 	camera := housetest.Camera().ForSize(dx, dy).AtFocus(5, 5).AtZoom(50.0)
 
@@ -94,7 +96,7 @@ func RoomSpecs() {
 			})
 			queue.Purge()
 
-			So(queue, rendertest.ShouldLookLikeFile, "restest-walls")
+			So(queue, rendertest.ShouldLookLikeFile, "restest-walls", rendertest.BackgroundColour(transparent))
 		})
 
 		Convey("drawing restest", func() {
@@ -120,7 +122,7 @@ func RoomSpecs() {
 			})
 			queue.Purge()
 
-			So(queue, rendertest.ShouldLookLikeFile, "restest", rendertest.Threshold(13))
+			So(queue, rendertest.ShouldLookLikeFile, "restest", rendertest.Threshold(13), rendertest.BackgroundColour(transparent))
 		})
 
 		Convey("drawing tutorial-entry", func() {
@@ -146,7 +148,7 @@ func RoomSpecs() {
 			})
 			queue.Purge()
 
-			So(queue, rendertest.ShouldLookLikeFile, "tutorial-entry", rendertest.Threshold(13))
+			So(queue, rendertest.ShouldLookLikeFile, "tutorial-entry", rendertest.Threshold(13), rendertest.BackgroundColour(transparent))
 		})
 	})
 }
