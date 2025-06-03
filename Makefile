@@ -9,6 +9,8 @@ else
 testrunargs:=
 endif
 
+# On WSL, Xvfb thinks it can talk to hardware. Tell it not to.
+LIBGL_ALWAYS_SOFTWARE=true
 XVFB_RUN:=xvfb-run -a
 
 SRC_DATADIR:=data
