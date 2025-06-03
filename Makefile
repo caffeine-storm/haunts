@@ -10,8 +10,7 @@ testrunargs:=
 endif
 
 # On WSL, Xvfb thinks it can talk to hardware. Tell it not to.
-LIBGL_ALWAYS_SOFTWARE=true
-XVFB_RUN:=xvfb-run -a
+XVFB_RUN:=LIBGL_ALWAYS_SOFTWARE=true xvfb-run -a
 
 SRC_DATADIR:=data
 RUNTIME_DATADIR:=data-runtime
