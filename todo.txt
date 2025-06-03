@@ -1,3 +1,8 @@
+- bug#33: for the commit b9e73874a4bc36da7ef0435c797f737abab4b3e1 we're seeing
+  strange behaviour. The commit introduces a test that clicks some UI through,
+	what was then, new test harness code. The clicks seem to work except on
+	nexus.
+
 - bug#32: logging a game.Game spams the logs
 
 - bug#31: take a convey.C as a parameter in our gamtest helper to encourage
@@ -117,4 +122,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#33: <next>
+- bug#34: <next>
