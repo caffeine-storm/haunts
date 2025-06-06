@@ -420,6 +420,11 @@ func handleLoadRequest(req loadRequest) {
 		canvas = imgmanip.NewInvertedCanvas(ga)
 	} else {
 		pix = memory.GetBlock(4 * dx * dy)
+		// DON'T use a image.NRGBA here; we want the data we send to OpenGL to be
+		// in an alpha-premultiplied format. The draw.Draw call below will do the
+		// right thing to make 'pix' valid for the image type that wraps it. So, if
+		// we use and image.RGBA here, draw.Draw will correctly write
+		// alpha-premultiplied colours to the byte array.
 		rgbaImage := &image.RGBA{
 			Pix:    pix,
 			Stride: 4 * dx,
