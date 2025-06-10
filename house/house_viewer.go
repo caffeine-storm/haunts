@@ -247,7 +247,26 @@ func (hv *HouseViewer) FocusZoom(z float64) {
 }
 
 func (hv *HouseViewer) String() string {
-	return "house viewer"
+	mp := map[string]any{}
+	mp["HouseDef"] = hv.house
+	mp["HouseViewerState"] = hv.HouseViewerState
+	mp["drawables"] = hv.drawables
+	mp["Los_tex"] = hv.Los_tex
+	mp["temp_floor_drawers"] = hv.temp_floor_drawers
+	mp["Edit_mode"] = hv.Edit_mode
+	mp["bounds"] = hv.bounds
+	mp["rooms"] = hv.rooms
+	mp["temp_drawables"] = hv.temp_drawables
+	mp["all_furn"] = hv.all_furn
+	mp["spawns"] = hv.spawns
+	mp["floor_drawers"] = hv.floor_drawers
+
+	mpp := map[string]string{}
+	for k, v := range mp {
+		mpp[k] = fmt.Sprintf("%+v", v)
+	}
+
+	return fmt.Sprintf("%v", mpp)
 }
 
 func roomOverlapOnce(a, b *Room) bool {
