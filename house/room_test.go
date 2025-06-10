@@ -99,7 +99,7 @@ func TestRoom(t *testing.T) {
 			Convey("drawing restest", func() {
 				restestRoom := loadRoom("restest.room")
 				if restestRoom.Wall.GetPath() == "" {
-					panic("the 'restest.room' file should have specified a texture for the walls")
+					panic(fmt.Errorf("the 'restest.room' file should have specified a texture for the walls"))
 				}
 				allMats := housetest.MakeRoomMatsForCamera(restestRoom.Size, camera)
 
@@ -125,7 +125,7 @@ func TestRoom(t *testing.T) {
 			Convey("drawing tutorial-entry", func() {
 				tutRoom := loadRoom("tutorial-entry.room")
 				if tutRoom.Wall.GetPath() == "" {
-					panic("the 'tutorial-entry.room' file should have specified a texture for the walls")
+					panic(fmt.Errorf("the 'tutorial-entry.room' file should have specified a texture for the walls"))
 				}
 				allMats := housetest.MakeRoomMatsForCamera(tutRoom.Size, camera)
 
