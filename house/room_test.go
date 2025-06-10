@@ -38,13 +38,23 @@ func GivenARoom(defname string) *house.Room {
 	}
 }
 
-func loadRoom(roomName string) *house.Room {
+func loadRoom(roomName string, queue render.RenderQueueInterface) *house.Room {
 	defname, _, _ := strings.Cut(roomName, ".room")
 	output := GivenARoom(defname)
 	err := base.LoadAndProcessObject(fmt.Sprintf("../data/rooms/%s", roomName), "json", output)
 	if err != nil {
 		panic(fmt.Errorf("failed to LoadAndProcessObject %q: %w", roomName, err))
 	}
+
+	queue.Queue(func(render.RenderQueueState) {
+		// TODO(#12): having to remember to call some weird init function is
+		// sad making.
+		output.SetupGlStuff(&house.RoomRealGl{})
+		output.SetWallTransparency(false)
+	})
+	queue.Purge()
+	output.LoadAndWaitForTexturesForTest()
+
 	return output
 }
 
@@ -64,7 +74,7 @@ func TestRoom(t *testing.T) {
 			texture.Init(queue)
 
 			Convey("loading from registry", func() {
-				restestRoom := loadRoom("restest.room")
+				restestRoom := loadRoom("restest.room", queue)
 
 				So(restestRoom, ShouldNotBeNil)
 				So(restestRoom.Defname, ShouldEqual, "restest")
@@ -72,18 +82,8 @@ func TestRoom(t *testing.T) {
 			})
 
 			Convey("drawing walls", func() {
-				room := loadRoom("restest.room")
+				room := loadRoom("restest.room", queue)
 				floor := housetest.MakeRoomMatsForCamera(room.Size, camera).Floor
-
-				queue.Queue(func(render.RenderQueueState) {
-					// TODO(#12): having to remember to call some weird init function is
-					// sad making.
-					room.SetupGlStuff(&house.RoomRealGl{})
-					room.SetWallTransparency(false)
-				})
-				queue.Purge()
-
-				room.LoadAndWaitForTexturesForTest()
 
 				queue.Queue(func(render.RenderQueueState) {
 					house.WithRoomRenderGlSettings(floor, func() {
@@ -97,19 +97,11 @@ func TestRoom(t *testing.T) {
 			})
 
 			Convey("drawing restest", func() {
-				restestRoom := loadRoom("restest.room")
+				restestRoom := loadRoom("restest.room", queue)
 				if restestRoom.Wall.GetPath() == "" {
 					panic(fmt.Errorf("the 'restest.room' file should have specified a texture for the walls"))
 				}
 				allMats := housetest.MakeRoomMatsForCamera(restestRoom.Size, camera)
-
-				queue.Queue(func(render.RenderQueueState) {
-					restestRoom.SetupGlStuff(&house.RoomRealGl{})
-					restestRoom.SetWallTransparency(false)
-				})
-				queue.Purge()
-
-				restestRoom.LoadAndWaitForTexturesForTest()
 
 				noDrawables := []house.Drawable{}
 				var nilLos *house.LosTexture = nil
@@ -123,19 +115,11 @@ func TestRoom(t *testing.T) {
 			})
 
 			Convey("drawing tutorial-entry", func() {
-				tutRoom := loadRoom("tutorial-entry.room")
+				tutRoom := loadRoom("tutorial-entry.room", queue)
 				if tutRoom.Wall.GetPath() == "" {
 					panic(fmt.Errorf("the 'tutorial-entry.room' file should have specified a texture for the walls"))
 				}
 				allMats := housetest.MakeRoomMatsForCamera(tutRoom.Size, camera)
-
-				queue.Queue(func(render.RenderQueueState) {
-					tutRoom.SetupGlStuff(&house.RoomRealGl{})
-					tutRoom.SetWallTransparency(false)
-				})
-				queue.Purge()
-
-				tutRoom.LoadAndWaitForTexturesForTest()
 
 				noDrawables := []house.Drawable{}
 				var nilLos *house.LosTexture = nil

@@ -49,6 +49,7 @@ func RunDrawingTest(objectCreator func() Drawer, testid rendertest.TestDataRefer
 
 	testBuilder := testbuilder.New().WithSize(windowRegion.Dx, windowRegion.Dy)
 	testBuilder.WithQueue().Run(func(queue render.RenderQueueInterface) {
+		globals.SetRenderQueue(queue)
 		queue.Queue(func(st render.RenderQueueState) {
 			globals.SetRenderQueueState(st)
 		})
