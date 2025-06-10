@@ -73,6 +73,24 @@ func TestRoom(t *testing.T) {
 			base.InitShaders(queue)
 			texture.Init(queue)
 
+			doRoomTest := func(roomid string) {
+				room := loadRoom(roomid+".room", queue)
+				if room.Wall.GetPath() == "" {
+					panic(fmt.Errorf("the '%s.room' file should have specified a texture for the walls", roomid))
+				}
+				allMats := housetest.MakeRoomMatsForCamera(room.Size, camera)
+
+				noDrawables := []house.Drawable{}
+				var nilLos *house.LosTexture = nil
+				noFloorDrawers := []house.RenderOnFloorer{}
+				queue.Queue(func(render.RenderQueueState) {
+					room.Render(allMats, camera.Zoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
+				})
+				queue.Purge()
+
+				So(queue, rendertest.ShouldLookLikeFile, roomid, rendertest.Threshold(13), rendertest.BackgroundColour(transparent))
+			}
+
 			Convey("loading from registry", func() {
 				restestRoom := loadRoom("restest.room", queue)
 
@@ -97,39 +115,11 @@ func TestRoom(t *testing.T) {
 			})
 
 			Convey("drawing restest", func() {
-				restestRoom := loadRoom("restest.room", queue)
-				if restestRoom.Wall.GetPath() == "" {
-					panic(fmt.Errorf("the 'restest.room' file should have specified a texture for the walls"))
-				}
-				allMats := housetest.MakeRoomMatsForCamera(restestRoom.Size, camera)
-
-				noDrawables := []house.Drawable{}
-				var nilLos *house.LosTexture = nil
-				noFloorDrawers := []house.RenderOnFloorer{}
-				queue.Queue(func(render.RenderQueueState) {
-					restestRoom.Render(allMats, camera.Zoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
-				})
-				queue.Purge()
-
-				So(queue, rendertest.ShouldLookLikeFile, "restest", rendertest.Threshold(13), rendertest.BackgroundColour(transparent))
+				doRoomTest("restest")
 			})
 
 			Convey("drawing tutorial-entry", func() {
-				tutRoom := loadRoom("tutorial-entry.room", queue)
-				if tutRoom.Wall.GetPath() == "" {
-					panic(fmt.Errorf("the 'tutorial-entry.room' file should have specified a texture for the walls"))
-				}
-				allMats := housetest.MakeRoomMatsForCamera(tutRoom.Size, camera)
-
-				noDrawables := []house.Drawable{}
-				var nilLos *house.LosTexture = nil
-				noFloorDrawers := []house.RenderOnFloorer{}
-				queue.Queue(func(render.RenderQueueState) {
-					tutRoom.Render(allMats, camera.Zoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
-				})
-				queue.Purge()
-
-				So(queue, rendertest.ShouldLookLikeFile, "tutorial-entry", rendertest.Threshold(13), rendertest.BackgroundColour(transparent))
+				doRoomTest("tutorial-entry")
 			})
 		})
 	})
