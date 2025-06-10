@@ -38,10 +38,6 @@ func GivenARoom(defname string) *house.Room {
 	}
 }
 
-func TestRoom(t *testing.T) {
-	Convey("house.Room", t, RoomSpecs)
-}
-
 func loadRoom(roomName string) *house.Room {
 	defname, _, _ := strings.Cut(roomName, ".room")
 	output := GivenARoom(defname)
@@ -52,103 +48,105 @@ func loadRoom(roomName string) *house.Room {
 	return output
 }
 
-func RoomSpecs() {
-	base.SetDatadir("../data")
+func TestRoom(t *testing.T) {
+	Convey("house.Room", t, func() {
+		base.SetDatadir("../data")
 
-	dx, dy := 1024, 768
-	opaquealpha := byte(255)
-	transparent := color.RGBA{}
+		dx, dy := 1024, 768
+		opaquealpha := byte(255)
+		transparent := color.RGBA{}
 
-	camera := housetest.Camera().ForSize(dx, dy).AtFocus(5, 5).AtZoom(50.0)
+		camera := housetest.Camera().ForSize(dx, dy).AtFocus(5, 5).AtZoom(50.0)
 
-	testbuilder.New().WithSize(dx, dy).WithQueue().Run(func(queue render.RenderQueueInterface) {
-		registry.LoadAllRegistries()
-		base.InitShaders(queue)
-		texture.Init(queue)
+		testbuilder.New().WithSize(dx, dy).WithQueue().Run(func(queue render.RenderQueueInterface) {
+			registry.LoadAllRegistries()
+			base.InitShaders(queue)
+			texture.Init(queue)
 
-		Convey("loading from registry", func() {
-			restestRoom := loadRoom("restest.room")
+			Convey("loading from registry", func() {
+				restestRoom := loadRoom("restest.room")
 
-			So(restestRoom, ShouldNotBeNil)
-			So(restestRoom.Defname, ShouldEqual, "restest")
-			So(restestRoom.Doors, ShouldHaveLength, 0)
-		})
-
-		Convey("drawing walls", func() {
-			room := loadRoom("restest.room")
-			floor := housetest.MakeRoomMatsForCamera(room.Size, camera).Floor
-
-			queue.Queue(func(render.RenderQueueState) {
-				// TODO(#12): having to remember to call some weird init function is
-				// sad making.
-				room.SetupGlStuff(&house.RoomRealGl{})
-				room.SetWallTransparency(false)
+				So(restestRoom, ShouldNotBeNil)
+				So(restestRoom.Defname, ShouldEqual, "restest")
+				So(restestRoom.Doors, ShouldHaveLength, 0)
 			})
-			queue.Purge()
 
-			room.LoadAndWaitForTexturesForTest()
+			Convey("drawing walls", func() {
+				room := loadRoom("restest.room")
+				floor := housetest.MakeRoomMatsForCamera(room.Size, camera).Floor
 
-			queue.Queue(func(render.RenderQueueState) {
-				house.WithRoomRenderGlSettings(floor, func() {
-					logging.Info("about to render wall textures", "floor", render.Showmat(floor))
-					room.RenderWallTextures(&floor, opaquealpha)
+				queue.Queue(func(render.RenderQueueState) {
+					// TODO(#12): having to remember to call some weird init function is
+					// sad making.
+					room.SetupGlStuff(&house.RoomRealGl{})
+					room.SetWallTransparency(false)
 				})
+				queue.Purge()
+
+				room.LoadAndWaitForTexturesForTest()
+
+				queue.Queue(func(render.RenderQueueState) {
+					house.WithRoomRenderGlSettings(floor, func() {
+						logging.Info("about to render wall textures", "floor", render.Showmat(floor))
+						room.RenderWallTextures(&floor, opaquealpha)
+					})
+				})
+				queue.Purge()
+
+				So(queue, rendertest.ShouldLookLikeFile, "restest-walls", rendertest.BackgroundColour(transparent))
 			})
-			queue.Purge()
 
-			So(queue, rendertest.ShouldLookLikeFile, "restest-walls", rendertest.BackgroundColour(transparent))
-		})
+			Convey("drawing restest", func() {
+				restestRoom := loadRoom("restest.room")
+				if restestRoom.Wall.GetPath() == "" {
+					panic("the 'restest.room' file should have specified a texture for the walls")
+				}
+				allMats := housetest.MakeRoomMatsForCamera(restestRoom.Size, camera)
 
-		Convey("drawing restest", func() {
-			restestRoom := loadRoom("restest.room")
-			if restestRoom.Wall.GetPath() == "" {
-				panic("the 'restest.room' file should have specified a texture for the walls")
-			}
-			allMats := housetest.MakeRoomMatsForCamera(restestRoom.Size, camera)
+				queue.Queue(func(render.RenderQueueState) {
+					restestRoom.SetupGlStuff(&house.RoomRealGl{})
+					restestRoom.SetWallTransparency(false)
+				})
+				queue.Purge()
 
-			queue.Queue(func(render.RenderQueueState) {
-				restestRoom.SetupGlStuff(&house.RoomRealGl{})
-				restestRoom.SetWallTransparency(false)
+				restestRoom.LoadAndWaitForTexturesForTest()
+
+				noDrawables := []house.Drawable{}
+				var nilLos *house.LosTexture = nil
+				noFloorDrawers := []house.RenderOnFloorer{}
+				queue.Queue(func(render.RenderQueueState) {
+					restestRoom.Render(allMats, camera.Zoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
+				})
+				queue.Purge()
+
+				So(queue, rendertest.ShouldLookLikeFile, "restest", rendertest.Threshold(13), rendertest.BackgroundColour(transparent))
 			})
-			queue.Purge()
 
-			restestRoom.LoadAndWaitForTexturesForTest()
+			Convey("drawing tutorial-entry", func() {
+				tutRoom := loadRoom("tutorial-entry.room")
+				if tutRoom.Wall.GetPath() == "" {
+					panic("the 'tutorial-entry.room' file should have specified a texture for the walls")
+				}
+				allMats := housetest.MakeRoomMatsForCamera(tutRoom.Size, camera)
 
-			noDrawables := []house.Drawable{}
-			var nilLos *house.LosTexture = nil
-			noFloorDrawers := []house.RenderOnFloorer{}
-			queue.Queue(func(render.RenderQueueState) {
-				restestRoom.Render(allMats, camera.Zoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
+				queue.Queue(func(render.RenderQueueState) {
+					tutRoom.SetupGlStuff(&house.RoomRealGl{})
+					tutRoom.SetWallTransparency(false)
+				})
+				queue.Purge()
+
+				tutRoom.LoadAndWaitForTexturesForTest()
+
+				noDrawables := []house.Drawable{}
+				var nilLos *house.LosTexture = nil
+				noFloorDrawers := []house.RenderOnFloorer{}
+				queue.Queue(func(render.RenderQueueState) {
+					tutRoom.Render(allMats, camera.Zoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
+				})
+				queue.Purge()
+
+				So(queue, rendertest.ShouldLookLikeFile, "tutorial-entry", rendertest.Threshold(13), rendertest.BackgroundColour(transparent))
 			})
-			queue.Purge()
-
-			So(queue, rendertest.ShouldLookLikeFile, "restest", rendertest.Threshold(13), rendertest.BackgroundColour(transparent))
-		})
-
-		Convey("drawing tutorial-entry", func() {
-			tutRoom := loadRoom("tutorial-entry.room")
-			if tutRoom.Wall.GetPath() == "" {
-				panic("the 'tutorial-entry.room' file should have specified a texture for the walls")
-			}
-			allMats := housetest.MakeRoomMatsForCamera(tutRoom.Size, camera)
-
-			queue.Queue(func(render.RenderQueueState) {
-				tutRoom.SetupGlStuff(&house.RoomRealGl{})
-				tutRoom.SetWallTransparency(false)
-			})
-			queue.Purge()
-
-			tutRoom.LoadAndWaitForTexturesForTest()
-
-			noDrawables := []house.Drawable{}
-			var nilLos *house.LosTexture = nil
-			noFloorDrawers := []house.RenderOnFloorer{}
-			queue.Queue(func(render.RenderQueueState) {
-				tutRoom.Render(allMats, camera.Zoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
-			})
-			queue.Purge()
-
-			So(queue, rendertest.ShouldLookLikeFile, "tutorial-entry", rendertest.Threshold(13), rendertest.BackgroundColour(transparent))
 		})
 	})
 }
