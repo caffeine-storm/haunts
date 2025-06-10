@@ -95,9 +95,9 @@ func (lt *LosTexture) Remap() {
 	})
 }
 
-// TODO(tmckee): ummm... doesn't this _have_ to be run on the render thread?
-// Binds the texture, not run on the render thread
+// Binds the texture, run on the render thread
 func (lt *LosTexture) Bind() {
+	render.MustBeOnRenderThread()
 	lt.ready()
 	lt.tex.Bind(gl.TEXTURE_2D)
 }
