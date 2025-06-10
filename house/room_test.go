@@ -58,7 +58,7 @@ func TestRoom(t *testing.T) {
 
 		camera := housetest.Camera().ForSize(dx, dy).AtFocus(5, 5).AtZoom(50.0)
 
-		testbuilder.New().WithSize(dx, dy).WithQueue().Run(func(queue render.RenderQueueInterface) {
+		testbuilder.WithSize(dx, dy, func(queue render.RenderQueueInterface) {
 			registry.LoadAllRegistries()
 			base.InitShaders(queue)
 			texture.Init(queue)
