@@ -1,6 +1,8 @@
 package house_test
 
 import (
+	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/MobRulesGames/haunts/base"
@@ -8,6 +10,7 @@ import (
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/house/housetest"
 	. "github.com/smartystreets/goconvey/convey"
+	"github.com/stretchr/testify/assert"
 )
 
 var _ gametest.Drawer = (*house.HouseViewer)(nil)
@@ -24,6 +27,15 @@ func TestHouseViewer(t *testing.T) {
 
 		Convey("can draw houseviewer", func() {
 			gametest.RunDrawingTest(givenAHouseViewer, "house-viewer")
+		})
+
+		Convey("has a useful stringification", func() {
+			houseViewer := givenAHouseViewer()
+			asString := fmt.Sprintf("%v", houseViewer)
+			asLower := strings.ToLower(asString)
+
+			// Every house should have a set of 'floors'.
+			assert.Contains(t, asLower, "floors")
 		})
 	})
 }
