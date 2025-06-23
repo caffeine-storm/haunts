@@ -522,9 +522,6 @@ func (room *Room) Render(roomMats perspective.RoomMats, zoom float32, base_alpha
 
 		if los_tex != nil {
 			logging.Trace("los_tex not nil")
-			// TODO: this won't work; we need to respect incoming modelviewmatrix
-			// state. Needs tests but removing this line is expected to solve.
-			gl.LoadMatrixf((*[16]float32)(&roomMats.Floor))
 			gl.ClientActiveTexture(gl.TEXTURE1)
 			gl.ActiveTexture(gl.TEXTURE1)
 			gl.Enable(gl.TEXTURE_2D)
@@ -692,7 +689,6 @@ func (room *Room) Render(roomMats perspective.RoomMats, zoom float32, base_alpha
 		}
 		base.EnableShader("")
 		if los_tex != nil {
-			base.EnableShader("")
 			gl.ActiveTexture(gl.TEXTURE1)
 			gl.Disable(gl.TEXTURE_2D)
 			gl.ActiveTexture(gl.TEXTURE0)

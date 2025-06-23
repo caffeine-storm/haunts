@@ -38,6 +38,18 @@ func GivenARoom(defname string) *house.Room {
 	}
 }
 
+func canSeeEverything() *house.LosTexture {
+	queue := texture.GetRenderQueue()
+	ret := house.MakeLosTexture()
+	queue.Purge()
+
+	ret.Clear(255)
+	ret.Remap()
+	queue.Purge()
+
+	return ret
+}
+
 func loadRoom(roomName string, queue render.RenderQueueInterface) *house.Room {
 	defname, _, _ := strings.Cut(roomName, ".room")
 	output := GivenARoom(defname)
@@ -58,13 +70,15 @@ func loadRoom(roomName string, queue render.RenderQueueInterface) *house.Room {
 	return output
 }
 
+var transparent = color.RGBA{}
+var black = color.RGBA{A: 255}
+
 func TestRoom(t *testing.T) {
 	Convey("house.Room", t, func() {
 		base.SetDatadir("../data")
 
 		dx, dy := 1024, 768
 		opaquealpha := byte(255)
-		transparent := color.RGBA{}
 
 		camera := housetest.Camera().ForSize(dx, dy).AtFocus(5, 5).AtZoom(50.0)
 
@@ -72,8 +86,10 @@ func TestRoom(t *testing.T) {
 			registry.LoadAllRegistries()
 			base.InitShaders(queue)
 			texture.Init(queue)
+			var losTexture *house.LosTexture = nil
 
 			doRoomTest := func(roomid string) {
+				fmt.Printf("TestRoom: losTexture: %v\n", losTexture)
 				room := loadRoom(roomid+".room", queue)
 				if room.Wall.GetPath() == "" {
 					panic(fmt.Errorf("the '%s.room' file should have specified a texture for the walls", roomid))
@@ -81,14 +97,13 @@ func TestRoom(t *testing.T) {
 				allMats := housetest.MakeRoomMatsForCamera(room.Size, camera)
 
 				noDrawables := []house.Drawable{}
-				var nilLos *house.LosTexture = nil
 				noFloorDrawers := []house.RenderOnFloorer{}
 				queue.Queue(func(render.RenderQueueState) {
-					room.Render(allMats, camera.Zoom, opaquealpha, noDrawables, nilLos, noFloorDrawers)
+					room.Render(allMats, camera.Zoom, opaquealpha, noDrawables, losTexture, noFloorDrawers)
 				})
 				queue.Purge()
 
-				So(queue, rendertest.ShouldLookLikeFile, roomid, rendertest.Threshold(13), rendertest.BackgroundColour(transparent))
+				So(queue, rendertest.ShouldLookLikeFile, roomid, rendertest.Threshold(13), rendertest.BackgroundColour(black))
 			}
 
 			Convey("loading from registry", func() {
@@ -116,10 +131,18 @@ func TestRoom(t *testing.T) {
 
 			Convey("drawing restest", func() {
 				doRoomTest("restest")
+				Convey("with non-nil LosTexture", func() {
+					losTexture = canSeeEverything()
+					doRoomTest("restest")
+				})
 			})
 
 			Convey("drawing tutorial-entry", func() {
 				doRoomTest("tutorial-entry")
+				Convey("with non-nil LosTexture", func() {
+					losTexture = canSeeEverything()
+					doRoomTest("tutorial-entry")
+				})
 			})
 		})
 	})

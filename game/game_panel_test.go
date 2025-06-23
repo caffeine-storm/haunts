@@ -7,6 +7,7 @@ import (
 	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/game/gametest"
 	"github.com/MobRulesGames/haunts/mrgnet"
+	"github.com/MobRulesGames/haunts/texture"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -17,16 +18,23 @@ func givenAGamePanel() gametest.Drawer {
 	player := givenAPlayer()
 	noSpecialData := map[string]string{}
 	noGameKey := mrgnet.GameKey("")
-	return game.MakeGamePanel(scenario, player, noSpecialData, noGameKey)
+	ret := game.MakeGamePanel(scenario, player, noSpecialData, noGameKey)
+
+	queue := texture.GetRenderQueue()
+	queue.Purge()
+	ret.SetLosModeAll()
+	queue.Purge()
+
+	return ret
 }
 
 func TestGamePanel(t *testing.T) {
 	// TODO(#10): once the Overlay and House Viewer are working, we can come back
 	// to getting the GamePanel working.
-	SkipConvey("GamePanelSpecs", t, func() {
+	Convey("GamePanelSpecs", t, func() {
 		base.SetDatadir("../data")
 		Convey("can draw game panel", func() {
-			gametest.RunDrawingTest(givenAGamePanel, "game-panel")
+			gametest.RunTracedDrawingTest(givenAGamePanel, "game-panel")
 		})
 	})
 }

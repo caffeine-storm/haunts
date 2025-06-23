@@ -57,13 +57,11 @@ type HouseViewer struct {
 		max struct{ x, y float32 }
 	}
 
-	// Keeping a variety of slices here so that we don't keep allocating new
-	// ones every time we render everything
-	rooms          []RectObject
-	temp_drawables []Drawable
-	all_furn       []*Furniture
-	spawns         []*SpawnPoint
-	floor_drawers  []RenderOnFloorer
+	floor_drawers []RenderOnFloorer
+}
+
+func (hv *HouseViewer) GetFloors() []*Floor {
+	return hv.house.Floors
 }
 
 func MakeHouseViewer(house *HouseDef, angle float32) *HouseViewer {
@@ -126,6 +124,7 @@ func (hv *HouseViewer) AddFloorDrawable(fd RenderOnFloorer) {
 	}
 	hv.floor_drawers = append(hv.floor_drawers, fd)
 }
+
 func (hv *HouseViewer) RemoveFloorDrawable(fd RenderOnFloorer) {
 	algorithm.Choose(&hv.floor_drawers, func(t RenderOnFloorer) bool {
 		return t != fd
@@ -255,10 +254,6 @@ func (hv *HouseViewer) String() string {
 	mp["temp_floor_drawers"] = hv.temp_floor_drawers
 	mp["Edit_mode"] = hv.Edit_mode
 	mp["bounds"] = hv.bounds
-	mp["rooms"] = hv.rooms
-	mp["temp_drawables"] = hv.temp_drawables
-	mp["all_furn"] = hv.all_furn
-	mp["spawns"] = hv.spawns
 	mp["floor_drawers"] = hv.floor_drawers
 
 	mpp := map[string]string{}

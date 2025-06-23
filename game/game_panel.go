@@ -6,6 +6,7 @@ import (
 	"github.com/MobRulesGames/haunts/mrgnet"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
+	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/strmanip"
 )
 
@@ -22,6 +23,12 @@ type GamePanel struct {
 
 	script *gameScript
 	game   *Game
+}
+
+func (gp *GamePanel) SetLosModeAll() {
+	render.MustNotBeOnRenderThread()
+	gp.game.SetLosMode(SideExplorers, LosModeAll, nil)
+	gp.game.SetLosMode(SideHaunt, LosModeAll, nil)
 }
 
 // TODO(#25): add a render.RenderQueueInterface to the parameter list and store

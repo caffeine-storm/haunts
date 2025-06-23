@@ -170,7 +170,13 @@ func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[
 
 	logging.Info("Sync", "gp.script.sync", gp.script.sync)
 
-	// if resp.Game.Denizens_id ==
+	// Make sure we don't return from this function until 'gp.Game' is set. We
+	// make the game in another goroutine so we'll block on a signalling channel.
+	// Why make the game in a separte goroutine? I don't know 🙃.
+	// TODO(tmckee): how important is it that some of this setup happens off of
+	// the calling goroutine? I'd much rather just call a function.
+	gameStartChan := make(chan error)
+
 	go func() {
 		if game_key != "" {
 			var net_id mrgnet.NetId
@@ -182,6 +188,7 @@ func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[
 			mrgnet.DoAction("status", req, &resp)
 			if resp.Err != "" {
 				base.DeprecatedError().Printf("%s", resp.Err)
+				gameStartChan <- fmt.Errorf("gameStart failure: %s", resp.Err)
 				return
 			}
 
@@ -195,7 +202,7 @@ func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[
 					var resp mrgnet.UpdateGameResponse
 					err := mrgnet.DoAction("update", req, &resp)
 					if err != nil {
-						base.DeprecatedError().Printf("Unable to make initial update: %v", err)
+						gameStartChan <- fmt.Errorf("unable to make initial update: %w", err)
 						return
 					}
 				} else {
@@ -204,6 +211,7 @@ func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[
 				res := gp.script.L.DoString(string(prog))
 				if res != nil {
 					logging.Error("script error", "script_path", scenario.Script, "script_contents", prog, "err", res)
+					gameStartChan <- fmt.Errorf("script error: %w", res)
 					return
 				}
 				if len(resp.Game.Execs) > 0 {
@@ -258,6 +266,7 @@ func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[
 			gp.script.L.SetExecutionLimit(250000)
 
 			gp.game = makeGameTheWrongWay(scenario)
+			gameStartChan <- nil
 			gp.game.script = gp.script
 			gp.AnchorBox = gui.MakeAnchorBox(gui.Dims{Dx: 1024, Dy: 768})
 			gp.AnchorBox.AddChild(gp.game.viewer, gui.Anchor{Wx: 0.5, Wy: 0.5, Bx: 0.5, By: 0.5})
@@ -285,7 +294,10 @@ func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[
 					gp.game.player_inactive = gp.game.Ai.intruders.Active()
 				}
 			}
+		} else {
+			gameStartChan <- nil
 		}
+
 		if gp.game == nil {
 			base.DeprecatedError().Printf("Script failed to load a house during Init().")
 		} else {
@@ -293,6 +305,17 @@ func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[
 			gp.game.comm.script_to_game <- nil
 		}
 	}()
+
+	// On success cases, nil will get sent on the channel.
+	select {
+	case gameStartErr := <-gameStartChan:
+		if gameStartErr != nil {
+			panic(fmt.Errorf("couldnt' create a game: %w", gameStartErr))
+		}
+		logging.Info("game started")
+	case <-time.After(1 * time.Second):
+		panic(fmt.Errorf("game startup deadline exceeded"))
+	}
 }
 
 func (gs *gameScript) OnRoundWaiting(g *Game) {

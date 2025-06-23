@@ -1,3 +1,6 @@
+- bug#34: generic cleanup things; removing commented code, dropping unneeded
+  logging, etc.
+
 - bug#33: for the commit b9e73874a4bc36da7ef0435c797f737abab4b3e1 we're seeing
   strange behaviour. The commit introduces a test that clicks some UI through,
 	what was then, new test harness code. The clicks seem to work except on
@@ -120,4 +123,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#34: <next>
+- bug#35: <next>
