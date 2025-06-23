@@ -840,7 +840,7 @@ func (g *Game) setup() {
 }
 
 func makeGameTheWrongWay(scenario Scenario) *Game {
-	logging.Debug("and now for the wrong (but maybe less-wrong?) way")
+	logging.Debug("and now for the wrong (but maybe less-wrong?) way", "scenario", scenario)
 	hdef := house.MakeHouseFromName(scenario.HouseName)
 	// TODO(tmckee:#25): we should pass in a render queue instead!
 	queue := texture.GetRenderQueue()

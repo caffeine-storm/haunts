@@ -278,6 +278,7 @@ func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[
 				gp.game.script = gp.script
 				gp.script.syncEnd()
 			} else {
+				logging.Trace("startGameScript>[unnamed gr]>gp.game-is-nil>player-has-init")
 				gp.script.mustRunString("print(tostring(Init))")
 				gp.script.mustRunString("print(tostring(__data))")
 				gp.script.mustRunString("Init(__data)")

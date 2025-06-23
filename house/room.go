@@ -499,7 +499,7 @@ func WithRoomRenderGlSettings(modelView mathgl.Mat4, fn func()) {
 func (room *Room) Render(roomMats perspective.RoomMats, zoom float32, base_alpha byte, drawables []Drawable, los_tex *LosTexture, floor_drawers []RenderOnFloorer) {
 	debug.LogAndClearGlErrors(logging.InfoLogger())
 
-	logging.Info("Room.Render called", "glstate", debug.GetGlState(), "floor", roomMats.Floor)
+	logging.Debug("Room.Render called", "base_alpha", base_alpha, "glstate", debug.GetGlState(), "floor", roomMats.Floor)
 
 	defer func() {
 		gl.Buffer(0).Unbind(gl.ARRAY_BUFFER)
@@ -532,6 +532,10 @@ func (room *Room) Render(roomMats perspective.RoomMats, zoom float32, base_alpha
 			gl.ClientActiveTexture(gl.TEXTURE0)
 			gl.ActiveTexture(gl.TEXTURE0)
 			base.EnableShader("los")
+			// TODO(tmckee): 🤔🤔🤔 shouldn't we be setting which texture unit the
+			// 'tex1' sampler is set to? Maybe we're just lucky that 0 is the
+			// default?
+			// base.SetUniformI("los", "tex1", 0)
 			base.SetUniformI("los", "tex2", 1)
 		}
 

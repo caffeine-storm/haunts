@@ -87,7 +87,7 @@ func MakeRoomMats(roomSize RoomSizey, region gui.Region, focusx, focusy, angle, 
 	ret.IRight.Assign(&ret.Right)
 	ret.IRight.Inverse()
 
-	logging.Debug("makeRoomMats returning",
+	logging.Trace("makeRoomMats returning",
 		"roomsize", roomSize,
 		"region", region,
 		"focusx", focusx,

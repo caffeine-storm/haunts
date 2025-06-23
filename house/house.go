@@ -19,6 +19,16 @@ type Floor struct {
 	Spawns []*SpawnPoint
 }
 
+func (f *Floor) getWallAlphas() []byte {
+	ret := []byte{}
+
+	for _, room := range f.Rooms {
+		ret = append(ret, room.far_left.wall_alpha, room.far_right.wall_alpha)
+	}
+
+	return ret
+}
+
 func (f *Floor) canAddRoom(add *Room) bool {
 	for _, room := range f.Rooms {
 		if room.temporary {
@@ -206,6 +216,8 @@ func (f *Floor) render(region gui.Region, focusx, focusy, angle, zoom float32, d
 		los_map[room] = los_alpha
 	}
 
+	logging.Debug("Floor.render: after first pass", "alpha_map", alpha_map, "los_map", los_map)
+
 	// Second pass - this time we fill in the alpha that we should use for the
 	// doors, using the values we've already calculated in the first pass.
 	for _, r1 := range f.Rooms {
@@ -241,6 +253,8 @@ func (f *Floor) render(region gui.Region, focusx, focusy, angle, zoom float32, d
 			}
 		}
 	}
+
+	logging.Debug("Floor.render after second pass", "wall alphas", f.getWallAlphas(), "roomsToDraw", roomsToDraw)
 
 	// Third pass - now that we know what alpha to use on the rooms, walls, and
 	// doors we can actually render everything.  We still need to go back to

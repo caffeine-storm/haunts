@@ -60,7 +60,16 @@ func MakeLosTexture() *LosTexture {
 		gl.TexParameterf(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
 		gl.TexParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT)
 		gl.TexParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT)
-		gl.TexImage2D(gl.TEXTURE_2D, 0, gl.ALPHA, dim, dim, 0, gl.ALPHA, gl.BYTE, texels)
+
+		internalFormat := gl.ALPHA
+		noMipMap := 0
+		width := dim
+		height := dim
+		border := 0
+		clientDataFormat := gl.GLenum(gl.ALPHA)
+		clientDataType := gl.GLenum(gl.BYTE)
+		gl.TexImage2D(gl.TEXTURE_2D, noMipMap, internalFormat, width, height, border, clientDataFormat, clientDataType, texels)
+
 		lt.rec <- lt.gltex
 		runtime.SetFinalizer(&lt, func(lt *LosTexture) {
 			renderQueue.Queue(func(render.RenderQueueState) {
