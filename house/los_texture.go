@@ -1,6 +1,7 @@
 package house
 
 import (
+	"fmt"
 	"runtime"
 
 	"github.com/MobRulesGames/haunts/texture"
@@ -65,6 +66,10 @@ func MakeLosTexture() *LosTexture {
 	})
 
 	return &lt
+}
+
+func (lt *LosTexture) String() string {
+	return fmt.Sprintf("LosTexture{len(pix): %d, tex: %d", len(lt.pix), lt.tex)
 }
 
 // If the texture has been created this returns true, otherwise it checks for

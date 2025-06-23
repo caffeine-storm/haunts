@@ -240,8 +240,6 @@ type gameDataGobbable struct {
 	current_action Action
 }
 
-// TODO(tmckee:#32): logging a Game instance spams _lots_ of bool flags;
-// specialize how games stringify to clean it up.
 type Game struct {
 	gameDataTransient
 	gameDataPrivate
