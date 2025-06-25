@@ -187,7 +187,7 @@ func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[
 			var resp mrgnet.StatusResponse
 			mrgnet.DoAction("status", req, &resp)
 			if resp.Err != "" {
-				base.DeprecatedError().Printf("%s", resp.Err)
+				logging.Error("mrgnet.DoAction returned an error response", "err", resp.Err)
 				gameStartChan <- fmt.Errorf("gameStart failure: %s", resp.Err)
 				return
 			}
@@ -240,11 +240,11 @@ func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[
 					gp.game.Turn = len(resp.Game.Execs) + 1
 
 					if net_id == resp.Game.Denizens_id {
-						base.DeprecatedLog().Printf("Setting side to Denizens, Turn %d", gp.game.Turn)
+						logging.Info("Setting side to Denizens", "turn", gp.game.Turn)
 						gp.game.net.side = SideHaunt
 						gp.game.Side = SideHaunt
 					} else {
-						base.DeprecatedLog().Printf("Setting side to Intruders, Turn %d", gp.game.Turn)
+						logging.Info("Setting side to Intruders", "turn", gp.game.Turn)
 						gp.game.net.side = SideExplorers
 						gp.game.Side = SideExplorers
 					}
@@ -300,7 +300,7 @@ func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[
 		}
 
 		if gp.game == nil {
-			base.DeprecatedError().Printf("Script failed to load a house during Init().")
+			logging.Error("script failed to load a house during Init()")
 		} else {
 			gp.game.net.key = game_key
 			gp.game.comm.script_to_game <- nil
