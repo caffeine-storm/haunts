@@ -1105,18 +1105,18 @@ func dialogBox(gp *GamePanel) lua.LuaGoFunction {
 		}
 		box, output, err := MakeDialogBox(filepath.ToSlash(path), args)
 		if err != nil {
-			base.DeprecatedError().Printf("Error making dialog: %v", err)
+			logging.Error("couldn't MakeDialogBox", "err", err)
 			return 0
 		}
 		logging.Trace("dialogBox>abox-addchild>dialogBox")
-		gp.AnchorBox.AddChild(box, gui.Anchor{0.5, 0.5, 0.5, 0.5})
+		gp.AnchorBox.AddChild(box, gui.Anchor{Wx: 0.5, Wy: 0.5, Bx: 0.5, By: 0.5})
 		gp.script.syncEnd()
 
 		var choices []string
 		for choice := range output {
 			choices = append(choices, choice)
 		}
-		base.DeprecatedLog().Printf("Dialog box press: %v", choices)
+		logging.Debug("dialogBox", "choices", choices)
 
 		gp.script.syncStart()
 		gp.AnchorBox.RemoveChild(box)
