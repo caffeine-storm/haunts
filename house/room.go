@@ -429,7 +429,12 @@ func (room *Room) RenderWallTextures(worldToView *mathgl.Mat4, base_alpha byte) 
 	for _, wt := range room.WallTextures {
 		var ids wallTextureGlIDs = room.getWallTextureState(wt)
 		if ids.vBuffer == 0 {
-			logging.Warn("wall texture state had zeroed vBuffer", "name", wt.Defname)
+			logging.ErrorBracket(func() {
+				// TODO(tmckee:#34): do warn about this; it happens if the wall texture
+				// is positioned such that its entirely clipped out when intersected
+				// with what will be drawn. It might happen in other cases too?
+				logging.Warn("wall texture state had zeroed vBuffer", "name", wt.Defname)
+			})
 			continue
 		}
 
