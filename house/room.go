@@ -499,7 +499,7 @@ func WithRoomRenderGlSettings(modelView mathgl.Mat4, fn func()) {
 func (room *Room) Render(roomMats perspective.RoomMats, zoom float32, base_alpha byte, drawables []Drawable, los_tex *LosTexture, floor_drawers []RenderOnFloorer) {
 	debug.LogAndClearGlErrors(logging.InfoLogger())
 
-	logging.Debug("Room.Render called", "base_alpha", base_alpha, "glstate", debug.GetGlState(), "floor", roomMats.Floor)
+	logging.Trace("Room.Render called", "base_alpha", base_alpha, "glstate", debug.GetGlState(), "floor", roomMats.Floor)
 
 	defer func() {
 		gl.Buffer(0).Unbind(gl.ARRAY_BUFFER)

@@ -465,11 +465,9 @@ func (c *Chooser) Draw(region gui.Region, ctx gui.DrawingContext) {
 		if c.optionsHeight() <= c.layout.Options.Dy {
 			buttons = c.non_scroll_buttons
 		}
-		logging.TraceBracket(func() {
-			for _, button := range buttons {
-				button.RenderAt(region.X, region.Y)
-			}
-		})
+		for _, button := range buttons {
+			button.RenderAt(region.X, region.Y)
+		}
 
 		c.layout.Options.Region().PushClipPlanes()
 		hovered := -1

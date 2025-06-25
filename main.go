@@ -98,7 +98,7 @@ func init() {
 	runtime.LockOSThread()
 	gin.In().SetLogger(logging.InfoLogger())
 
-	logging.SetLoggingLevel(slog.LevelDebug)
+	logging.SetLoggingLevel(slog.LevelInfo)
 	sys = system.Make(gos.NewSystemInterface(), gin.In())
 
 	rand.Seed(100)

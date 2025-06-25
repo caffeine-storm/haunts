@@ -82,7 +82,7 @@ func (gp *GamePanel) Think(ui *gui.Gui, t int64) {
 func (gp *GamePanel) Draw(region gui.Region, ctx gui.DrawingContext) {
 	region.PushClipPlanes()
 	defer region.PopClipPlanes()
-	logging.Info("GamePanel.Draw", "anchorbox.Children", strmanip.Show(gp.AnchorBox.GetChildren()))
+	logging.Trace("GamePanel.Draw", "anchorbox.Children", strmanip.Show(gp.AnchorBox.GetChildren()))
 	gp.AnchorBox.Draw(region, ctx)
 }
 
