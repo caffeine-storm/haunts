@@ -41,7 +41,8 @@ func (gs *gameScript) mustRunString(cmd string) {
 	gs.L.MustDoString(cmd)
 }
 
-func initLuaState(ret *lua.State, gp *GamePanel, player *Player, isOnline bool) {
+func makeNewLuaState(gp *GamePanel, player *Player, isOnline bool) *lua.State {
+	ret := lua.NewState()
 	ret.OpenLibs()
 	ret.SetExecutionLimit(25000)
 	ret.NewTable()
@@ -115,16 +116,8 @@ func initLuaState(ret *lua.State, gp *GamePanel, player *Player, isOnline bool) 
 	ret.SetGlobal("Net")
 
 	registerUtilityFunctions(ret)
-}
 
-func makeNewGameScript() *gameScript {
-	// TODO(tmckee:#25): it kinda sucks that we build gameScript instances that need
-	// an 'initLuaState' called on their '.L' field, but it is what it is right
-	// now.
-	return &gameScript{
-		L:    lua.NewState(),
-		sync: make(chan struct{}),
-	}
+	return ret
 }
 
 func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[string]string, game_key mrgnet.GameKey) {
@@ -146,8 +139,11 @@ func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[
 		return
 	}
 
-	gp.script = makeNewGameScript()
-	initLuaState(gp.script.L, gp, player, string(game_key) != "")
+	luaState := makeNewLuaState(gp, player, string(game_key) != "")
+	gp.script = &gameScript{
+		L:    luaState,
+		sync: make(chan struct{}),
+	}
 
 	if player.Lua_store != nil {
 		loadGameStateRaw(gp, gp.script.L, player.Game_state)
