@@ -102,7 +102,7 @@ func init() {
 	sys = system.Make(gos.NewSystemInterface(), gin.In())
 
 	rand.Seed(100)
-	datadir = "data-runtime"
+	datadir = "data"
 	base.SetDatadir(datadir)
 	var err error
 	logFile, err = openLogFile(base.GetDataDir())

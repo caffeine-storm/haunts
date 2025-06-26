@@ -91,7 +91,7 @@
 - bug#39: edit screen is showing a furniture editor by default
 	- we should expect a list of furniture down the RHS
 	- r.n., some furniture (or some other text-line, tbh) has a name
-	  'data-runtime' which seems wrong? see house/furniture_tab.go
+	  'data' which seems wrong? see house/furniture_tab.go
 
 - bug#8: house.MakeLosTexture should either always get called on a render
 	thread or never get called on a render thread. If we refactor game/los.go's

@@ -13,15 +13,14 @@ endif
 XVFB_RUN:=LIBGL_ALWAYS_SOFTWARE=true xvfb-run -a
 
 SRC_DATADIR:=data
-RUNTIME_DATADIR:=data-runtime
 
 all: haunts
 
 it: haunts
-go: haunts ${RUNTIME_DATADIR}
+go: haunts ${SRC_DATADIR}
 	./haunts
 
-debug: devhaunts ${RUNTIME_DATADIR}
+debug: devhaunts ${SRC_DATADIR}
 	./$^
 
 dev.go.mod: go.mod
@@ -32,7 +31,7 @@ dev.go.sum: go.sum
 	# dev.go.sum is just go.sum
 	cp $^ $@
 
-dlv: devhaunts ${RUNTIME_DATADIR} dev.go.mod
+dlv: devhaunts ${SRC_DATADIR} dev.go.mod
 	dlv debug --build-flags='-modfile dev.go.mod -tags nosound' .
 
 devhaunts: dev.go.mod GEN_version.go
@@ -45,10 +44,10 @@ haunts: |go.mod go.sum
 haunts: GEN_version.go
 	go build -x -o $@ -tags nosound main.go $^
 
-profile-haunts: haunts ${RUNTIME_DATADIR}
+profile-haunts: haunts ${SRC_DATADIR}
 	${PERF} record -g ./$^
 
-profile-dev-haunts: devhaunts ${RUNTIME_DATADIR}
+profile-dev-haunts: devhaunts ${SRC_DATADIR}
 	${PERF} record -g ./$^
 
 # TODO(tmckee): this should use 'go gen' instead
@@ -98,14 +97,14 @@ test-fresh: test-nocache
 
 pkg?= -- set 'pkg' to the package under test --
 dlv-test: singlepackage=${pkg}
-dlv-test: ${RUNTIME_DATADIR}
+dlv-test: ${SRC_DATADIR}
 # delve wants exactly one package at a time so "testrunargs" isn't what we
 # want here. We use a var specifically for pointing at a single directory.
 	[ -d "${singlepackage}" ] && \
 	${XVFB_RUN} dlv test --build-flags="-tags nosound" ${singlepackage} -- ${testrunargs}
 
 dlv-devtest: singlepackage=${pkg}
-dlv-devtest: ${RUNTIME_DATADIR}
+dlv-devtest: ${SRC_DATADIR}
 # delve wants exactly one package at a time so "testrunargs" isn't what we
 # want here. We use a var specifically for pointing at a single directory.
 	[ -d "${singlepackage}" ] && \

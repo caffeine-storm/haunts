@@ -1,7 +1,11 @@
 function Init(data)
   -- check data.map == "random" or something else
+  print("type(Script): ", type(Script))
+  print("type(getmetatable(Script): ", type(getmetatable(Script)))
+  print("type(getmetatable(Script)[\"__index\"]: ", type(getmetatable(Script)["__index"]))
+
   Script.LoadHouse("tutorial_intruders")
-  Script.DialogBox("ui/dialog/tutorial/intruders_tutorial_1_units_explained.json")  
+  Script.DialogBox("ui/dialog/tutorial/intruders_tutorial_1_units_explained.json")
 
   store.side = "Intruders"
   Script.BindAi("denizen", "tutorial/denizens.lua")
@@ -17,7 +21,7 @@ function Init(data)
 end
 
 function OnStartup()
-	-- nothing to do
+  -- nothing to see here!
 end
 
 function intrudersSetup()
@@ -26,22 +30,22 @@ function intrudersSetup()
 
   for _, name in pairs(intruder_names) do
     ent = Script.SpawnEntitySomewhereInSpawnPoints(name, intruder_spawn, false)
-  end 
+  end
 end
 
-function denizensSetup() 
+function denizensSetup()
   store.MasterName = "Bosch"
   ServitorEnts = {
     {"Angry Shade", 1},
     {"Lost Soul", 1},
-  }  
+  }
 end
 
 function RoundStart(intruders, round)
   side = {Intruder = intruders, Denizen = not intruders, Npc = false, Object = false}
   if round == 1 then
     if intruders then
-      intrudersSetup() 
+      intrudersSetup()
     else
       denizensSetup()
     end
@@ -49,7 +53,7 @@ function RoundStart(intruders, round)
     Script.SetLosMode("denizens", "entities")
     SelectCharAtTurnStart(side)
     Script.EndPlayerInteraction()
-    return 
+    return
   end
 
   Script.SetVisibility("intruders")
@@ -103,19 +107,19 @@ function OnAction(intruders, round, exec)
     --The intruders got to the first waypoint.
     store.nFirstWaypointDown = true
 
-    Script.RemoveWaypoint("Waypoint1") 
-    Script.SetWaypoint("Waypoint2", "intruders", SelectSpawn("Waypoint2").Pos, 1)  
+    Script.RemoveWaypoint("Waypoint1")
+    Script.SetWaypoint("Waypoint2", "intruders", SelectSpawn("Waypoint2").Pos, 1)
     Script.DialogBox("ui/dialog/tutorial/intruders_tutorial_3_doors.json")
-  end 
+  end
 
 
   if store.nFirstWaypointDown then
     if  exec.Ent.Side.Intruder and GetDistanceBetweenPoints(exec.Ent.Pos, Script.GetSpawnPointsMatching("Waypoint2")[1].Pos) <= 2 and not store.nSecondWaypointDown then
       --The intruders got to the second waypoint.
-      store.nSecondWaypointDown = true 
+      store.nSecondWaypointDown = true
 
       Script.RemoveWaypoint("Waypoint2")
-      Script.SetWaypoint("Waypoint3", "intruders", SelectSpawn("Waypoint3").Pos, 1)  
+      Script.SetWaypoint("Waypoint3", "intruders", SelectSpawn("Waypoint3").Pos, 1)
 
       Script.DialogBox("ui/dialog/tutorial/intruders_tutorial_4_actions.json")
 
@@ -134,7 +138,7 @@ function OnAction(intruders, round, exec)
       Script.BindAi(ent, filename)
       ent = Script.SpawnEntitySomewhereInSpawnPoints("Lost Soul", spawns, false)
       Script.BindAi(ent, filename)
-    end  
+    end
   end
 
 
@@ -147,7 +151,7 @@ function OnAction(intruders, round, exec)
       filename = "tutorial/" .. "Bosch" .. ".lua"
       Script.BindAi(ent, filename)
       Script.RemoveWaypoint("Waypoint3")
-    end   
+    end
   end
 
   if store.bThirdWaypointDown and not MasterIsAlive() then
@@ -158,26 +162,29 @@ function OnAction(intruders, round, exec)
   if not AnyIntrudersAlive() then
     Script.Sleep(2)
     Script.DialogBox("ui/dialog/Lvl01/Victory_Denizens.json")
-  end 
+  end
 
 
   --after any action, if this ent's Ap is 0, we can select the next ent for them
   if exec.Ent.ApCur == 0 then
     nextEnt = GetEntityWithMostAP(exec.Ent.Side)
+    if nextEnt == nil then
+      return
+    end
     if nextEnt.ApCur > 0 then
       if exec.Action.Type ~= "Move" then
         Script.Sleep(2)
       end
       Script.SelectEnt(nextEnt)
     end
-  end   
+  end
 end
 
 function SelectSpawn(SpawnName)
   possible_spawns = Script.GetSpawnPointsMatching(SpawnName)
-  return possible_spawns[1]      
+  return possible_spawns[1]
 end
- 
+
 
 function RoundEnd(intruders, round)
   if round == 1 then
@@ -194,7 +201,7 @@ function MasterIsAlive()
       return true
     end
   end
-  return false  
+  return false
 end
 
 function AnyIntrudersAlive()
@@ -203,21 +210,24 @@ function AnyIntrudersAlive()
       return true
     end
   end
-  return false  
+  return false
 end
 
 function SelectCharAtTurnStart(side)
-  Script.SelectEnt(GetEntityWithMostAP(side))
+  local ent = GetEntityWithMostAP(side)
+  if ent ~= nil then
+    Script.SelectEnt(ent)
+  end
 end
 
 function GetEntityWithMostAP(side)
   entToSelect = nil
   for _, ent in pairs(Script.GetAllEnts()) do
-    if (ent.Side.Intruder and side.Intruder) or (ent.Side.Denizen and side.Denizen) then   
-      if entToSelect then    
-        if entToSelect.ApCur < ent.ApCur then      
+    if (ent.Side.Intruder and side.Intruder) or (ent.Side.Denizen and side.Denizen) then
+      if entToSelect then
+        if entToSelect.ApCur < ent.ApCur then
           entToSelect = ent
-        end 
+        end
       else
         --first pass.  select this one.
         entToSelect = ent
