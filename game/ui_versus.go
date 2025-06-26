@@ -99,6 +99,7 @@ func insertGoalMenu(ui gui.WidgetParent, replace replacer) error {
 	return nil
 }
 
+// TODO(#35): this is not called except in tests. Keeping it around for now.
 func InsertVersusMenu(ui gui.WidgetParent, replace func(gui.WidgetParent) error) error {
 	// return doChooserMenu(ui, makeChooseVersusMetaMenu, replace, inserter(insertGoalMenu))
 	chooser, done, err := makeChooseVersusMetaMenu()
@@ -111,10 +112,7 @@ func InsertVersusMenu(ui gui.WidgetParent, replace func(gui.WidgetParent) error)
 		ui.RemoveChild(chooser)
 		if m != nil && len(m) == 1 {
 			logging.Info("Versus Menu", "chose", m)
-			// TODO(tmckee:#25): we ought not use the GamePanel this way; we should
-			// AddChild some UI for selecting a map or roll the random choice now and
-			// build the GamePanel over the selected map. For now, everyone gets the
-			// tutorial house :p
+			// TODO(tmckee:#35): For now, everyone gets the tutorial house :p
 			scenario := Scenario{
 				Script:    "versus/basic.lua",
 				HouseName: "tutorial",

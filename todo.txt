@@ -1,3 +1,10 @@
+- bug#35: game/ui_versus.go has a function, InsertVersusMenu, that isn't called
+  (except in tests). It seems to add a "what kind of versus game?" step to the
+  flow. See data/ui/start/versus/meta.json for a 'Chooser' layout that seems to
+  have been planned. We should think about what the flow in the UI should be
+  and incorporate this step if we want. For now, just tagging this dead code as
+  something we might want to keep.
+
 - bug#34: generic cleanup things; removing commented code, dropping unneeded
   logging, etc.
 
@@ -118,4 +125,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#35: <next>
+- bug#36: <next>
