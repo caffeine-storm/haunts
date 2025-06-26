@@ -37,9 +37,6 @@
   instance. Leads to data-races when running multiple tests that want to
   texture.Init() over separate render queues.
 
-- bug#25: make a game start!
-	- tag things that need cleanup with #25
-
 - bug#26: LuaStringifyParam is stubbed and leading to useless debug output
 
 - bug#24: game/script.go:loadgameStateRaw reaches into the GamePanel to set a
