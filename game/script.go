@@ -47,20 +47,17 @@ func initLuaState(ret *lua.State, gp *GamePanel, player *Player, isOnline bool) 
 	ret.NewTable()
 
 	LuaPushSmartFunctionTable(ret, FunctionTable{
-		"ChooserFromFile": func() { ret.PushGoFunction(chooserFromFile(gp)) },
-		"StartScript":     func() { ret.PushGoFunction(startScript(gp, player)) },
-		"GameOnRound":     func() { ret.PushGoFunction(doGameOnRound(gp)) },
-		"SaveGameState":   func() { ret.PushGoFunction(saveGameState(gp)) },
-		"LoadGameState":   func() { ret.PushGoFunction(loadGameState(gp)) },
-		"DoExec":          func() { ret.PushGoFunction(doExec(gp)) },
-		"SelectEnt":       func() { ret.PushGoFunction(selectEnt(gp)) },
-		"FocusPos":        func() { ret.PushGoFunction(focusPos(gp)) },
-		"FocusZoom":       func() { ret.PushGoFunction(focusZoom(gp)) },
-		"SelectHouse":     func() { ret.PushGoFunction(selectHouse(gp)) },
-		"LoadHouse": func() {
-			panic("here for testing: see #25")
-			ret.PushGoFunction(loadHouse(gp))
-		},
+		"ChooserFromFile":                   func() { ret.PushGoFunction(chooserFromFile(gp)) },
+		"StartScript":                       func() { ret.PushGoFunction(startScript(gp, player)) },
+		"GameOnRound":                       func() { ret.PushGoFunction(doGameOnRound(gp)) },
+		"SaveGameState":                     func() { ret.PushGoFunction(saveGameState(gp)) },
+		"LoadGameState":                     func() { ret.PushGoFunction(loadGameState(gp)) },
+		"DoExec":                            func() { ret.PushGoFunction(doExec(gp)) },
+		"SelectEnt":                         func() { ret.PushGoFunction(selectEnt(gp)) },
+		"FocusPos":                          func() { ret.PushGoFunction(focusPos(gp)) },
+		"FocusZoom":                         func() { ret.PushGoFunction(focusZoom(gp)) },
+		"SelectHouse":                       func() { ret.PushGoFunction(selectHouse(gp)) },
+		"LoadHouse":                         func() { ret.PushGoFunction(loadHouse(gp)) },
 		"SaveStore":                         func() { ret.PushGoFunction(saveStore(gp, player)) },
 		"ShowMainBar":                       func() { ret.PushGoFunction(showMainBar(gp, player)) },
 		"SpawnEntityAtPosition":             func() { ret.PushGoFunction(spawnEntityAtPosition(gp)) },
@@ -1945,7 +1942,7 @@ func registerUtilityFunctions(L *lua.State) {
 		for i := -n; i < 0; i++ {
 			res += LuaStringifyParam(L, i) + " "
 		}
-		logging.Debug("GameScript::print", "L", L, "msg", res)
+		logging.Info("GameScript::print", "L", L, "msg", res)
 		return 0
 	})
 }
