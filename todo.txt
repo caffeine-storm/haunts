@@ -88,10 +88,10 @@
 
 - console is getting input even when it's not open
 
-- edit screen is showing a furniture editor by default
+- bug#39: edit screen is showing a furniture editor by default
 	- we should expect a list of furniture down the RHS
 	- r.n., some furniture (or some other text-line, tbh) has a name
-	  'data-runtime' which seems wrong? see house/furniture_tab.go:54
+	  'data-runtime' which seems wrong? see house/furniture_tab.go
 
 - bug#8: house.MakeLosTexture should either always get called on a render
 	thread or never get called on a render thread. If we refactor game/los.go's
@@ -133,4 +133,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#39: <next>
+- bug#40: <next>

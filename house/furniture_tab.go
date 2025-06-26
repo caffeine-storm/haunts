@@ -51,6 +51,7 @@ func makeFurniturePanel(room *Room, viewer *roomViewer) *FurniturePanel {
 	fp.name = gui.MakeTextEditLine("standard_18", room.Name, 300, 1, 1, 1, 1)
 
 	fp.floor_path = gui.MakeFileWidget(room.Floor.GetPath(), imagePathFilter)
+	// TODO(#39): we don't seem to be getting the right thing here?
 	fp.wall_path = gui.MakeFileWidget(room.Wall.GetPath(), imagePathFilter)
 
 	var args []string
