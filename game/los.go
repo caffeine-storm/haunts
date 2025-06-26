@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"reflect"
 	"regexp"
+	"slices"
 	"time"
 
 	"github.com/MobRulesGames/haunts/base"
@@ -200,9 +201,7 @@ type gameDataGobbable struct {
 
 	// PRNG, need it here so that we serialize it along with everything
 	// else so that replays work properly.
-	// TODO(tmckee:#25): 'rand.Source' is not gobbable; we can use a struct that
-	// pulls from a source twice, yields one value and uses the other as a seed.
-	Rand rand.Source
+	Rand gobbablePrng
 
 	// Waypoints, used for signaling things to the player on the map
 	Waypoints []Waypoint
@@ -848,6 +847,11 @@ func makeGameTheWrongWay(scenario Scenario) *Game {
 	return MakeGame(hdef, mgr)
 }
 
+type gobbablePrng interface {
+	rand.Source
+	SameState(gobbablePrng) bool
+}
+
 type gobbableRandSource struct {
 	Buf []int64
 }
@@ -874,7 +878,22 @@ func (grs *gobbableRandSource) Seed(n int64) {
 	grs.Buf = []int64{n}
 }
 
-func gobbableRand(src rand.Source) rand.Source {
+func (grs *gobbableRandSource) SameState(other gobbablePrng) bool {
+	asGrs, ok := other.(*gobbableRandSource)
+	if !ok {
+		// Can only have the same state if we're the same type.
+		return false
+	}
+	// optimization: foo.SameState(foo) should always be true.
+	if asGrs == grs {
+		return true
+	}
+
+	// Our states are equal iff the data in each Buf is equal.
+	return slices.Equal(grs.Buf, asGrs.Buf)
+}
+
+func gobbableRand(src rand.Source) gobbablePrng {
 	init := src.Int63()
 	return &gobbableRandSource{
 		Buf: []int64{init},

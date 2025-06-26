@@ -13,6 +13,7 @@ import (
 	"github.com/runningwild/glop/cache"
 	"github.com/runningwild/glop/render/rendertest"
 	"github.com/runningwild/glop/sprite"
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -48,5 +49,8 @@ func TestGobbableGameState(t *testing.T) {
 		err = gob.NewDecoder(buf).Decode(&newSt)
 
 		require.NoError(err)
+
+		// make sure we've got the same source of random numbers
+		assert.True(t, gm.Rand.SameState(newSt.Rand))
 	})
 }
