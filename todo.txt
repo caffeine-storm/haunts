@@ -1,3 +1,14 @@
+- bug#38: reaching into the GamePanel and resetting the AnchorBox field is
+  barftastic; need to have GamePanel API that encapsualtes the work.
+
+- bug#37: verify/test that a 'game_key' is enough to join an online
+  game-in-progress; also think about improving APIs to not control-couple to
+  'is game_key empty?'.
+
+- bug#36: inject a render.RenderQueueInterface dependency to
+  game.MakeGamePanel. Then, we can pass that reference in to
+  'makeGameTheWrongWay' so it doesn't have to look at a global.
+
 - bug#35: game/ui_versus.go has a function, InsertVersusMenu, that isn't called
   (except in tests). It seems to add a "what kind of versus game?" step to the
   flow. See data/ui/start/versus/meta.json for a 'Chooser' layout that seems to
@@ -125,4 +136,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#36: <next>
+- bug#39: <next>

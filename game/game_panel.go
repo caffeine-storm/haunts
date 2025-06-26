@@ -11,6 +11,8 @@ import (
 )
 
 type GamePanel struct {
+	// TODO(tmckee:#38): hide this field from client code; too much coupling
+	// ensues when everyone is expected to manipulate this themselves.
 	*gui.AnchorBox
 
 	main_bar *MainBar
@@ -31,7 +33,7 @@ func (gp *GamePanel) SetLosModeAll() {
 	gp.game.SetLosMode(SideHaunt, LosModeAll, nil)
 }
 
-// TODO(#25): add a render.RenderQueueInterface to the parameter list and store
+// TODO(#36): add a render.RenderQueueInterface to the parameter list and store
 // it with the GamePanel so that the GamePanel can forward it to ... stuff.
 func MakeGamePanel(scenario Scenario, p *Player, data map[string]string, game_key mrgnet.GameKey) *GamePanel {
 	var gp GamePanel

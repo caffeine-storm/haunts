@@ -133,6 +133,7 @@ func makeNewGameScript() *gameScript {
 func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[string]string, game_key mrgnet.GameKey) {
 	// Clear out the panel, now the script can do whatever it wants
 	player.Script_path = scenario.Script
+	// TODO(tmckee:#38): have a GamePanel.Clear() or smth
 	gp.AnchorBox = gui.MakeAnchorBox(gui.Dims{Dx: 1024, Dy: 768})
 	logging.Info("startGameScript", "scenario", scenario)
 	if scenario.Script != "" && !filepath.IsAbs(scenario.Script) {
@@ -766,8 +767,6 @@ func chooserFromFile(gp *GamePanel) lua.LuaGoFunction {
 		}
 		gp.script.syncStart()
 		defer gp.script.syncEnd()
-		// TODO(tmckee:#25): ummm... map_select.json doesn't seem to be something
-		// we should expect+need the user to point us at ... but it is what it is.
 		path := filepath.Join(base.GetDataDir(), L.ToString(-1))
 		chooser, done, err := makeChooserFromOptionBasicsFile(path)
 		if err != nil {
@@ -778,7 +777,6 @@ func chooserFromFile(gp *GamePanel) lua.LuaGoFunction {
 		gp.AnchorBox.AddChild(chooser, gui.Anchor{0.5, 0.5, 0.5, 0.5})
 		gp.script.syncEnd()
 
-		// TODO(tmckee:#25): might want more info than just scenario.Script?
 		res := <-done
 		L.NewTable()
 		for i, scenario := range res {

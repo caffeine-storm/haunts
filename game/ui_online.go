@@ -322,8 +322,9 @@ func (sm *OnlineMenu) Think(g *gui.Gui, t int64) {
 								return
 							}
 							sm.ui.RemoveChild(sm)
-							// TODO(tmckee:#25): we need a real scenario here
-							panic(fmt.Errorf("#25: we need to figure out which scenario"))
+							// TODO(tmckee:#37): we're panicking to help us rememeber we
+							// haven't done the work yet; we should do the work.
+							panic(fmt.Errorf("#37: we need to verify/test that a 'game_key' is enough context"))
 							sm.ui.AddChild(MakeGamePanel(Scenario{}, nil, nil, game_key))
 						}()
 					} else {
@@ -353,7 +354,9 @@ func (sm *OnlineMenu) Think(g *gui.Gui, t int64) {
 								return
 							}
 							sm.ui.RemoveChild(sm)
-							panic(fmt.Errorf("#25: we need to figure out which scenario"))
+							// TODO(tmckee:#37): we're panicking to help us rememeber we
+							// haven't done the work yet; we should do the work.
+							panic(fmt.Errorf("#37: we need to verify/test that a 'game_key' is enough context"))
 							sm.ui.AddChild(MakeGamePanel(Scenario{}, nil, nil, game_key))
 						}()
 					}

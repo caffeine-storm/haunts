@@ -155,8 +155,6 @@ func (gdt *gameDataTransient) alloc() {
 	gdt.comm.script_to_game = make(chan interface{}, 1)
 	gdt.comm.game_to_script = make(chan interface{}, 1)
 
-	// XXX: #25: perhaps a nil .script is something we should live with?
-	// gdt.script = makeNewGameScript()
 	logging.Info("gdt.alloc leaving gdt.script as nil")
 }
 
@@ -842,7 +840,7 @@ func (g *Game) setup() {
 func makeGameTheWrongWay(scenario Scenario) *Game {
 	logging.Debug("and now for the wrong (but maybe less-wrong?) way", "scenario", scenario)
 	hdef := house.MakeHouseFromName(scenario.HouseName)
-	// TODO(tmckee:#25): we should pass in a render queue instead!
+	// TODO(tmckee:#36): we should pass in a render queue instead!
 	queue := texture.GetRenderQueue()
 	mgr := sprite.MakeManager(queue, func(s string) cache.ByteBank {
 		return cache.MakeLockingByteBank(cache.MakeRamByteBank())
