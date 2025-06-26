@@ -3,8 +3,8 @@
 
 - bug#33: for the commit b9e73874a4bc36da7ef0435c797f737abab4b3e1 we're seeing
   strange behaviour. The commit introduces a test that clicks some UI through,
-	what was then, new test harness code. The clicks seem to work except on
-	nexus.
+  what was then, new test harness code. The clicks seem to work except on
+  nexus.
 
 - bug#31: take a convey.C as a parameter in our gamtest helper to encourage
   callers to run from within a convey context.
@@ -16,16 +16,11 @@
   out what it should be in main.go
 
 - bug#28: texture package has package-level state to reference a Manager
-	instance. Leads to data-races when running multiple tests that want to
-	texture.Init() over separate render queues.
+  instance. Leads to data-races when running multiple tests that want to
+  texture.Init() over separate render queues.
 
 - bug#25: make a game start!
 	- tag things that need cleanup with #25
-	1. running manually -> click-through ui to start level -> blank screen
-		- running test -> TestGamePanel -> draws blank screen ! even though
-		  game.go:83 says there's a house-viewer and an overlay in the anchorbox
-		- does overlay draw anything?
-	2. lots of data races
 
 - bug#26: LuaStringifyParam is stubbed and leading to useless debug output
 
