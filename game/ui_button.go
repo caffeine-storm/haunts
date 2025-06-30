@@ -6,9 +6,9 @@ import (
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/sound"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
+	"github.com/runningwild/glop/render"
 )
 
 type ButtonLike interface {
@@ -131,40 +131,39 @@ func (b *Button) Think(x, y, mx, my int, dt int64) {
 }
 
 func (b *Button) RenderAt(x, y int) {
-	// TODO(tmckee): clean: why not
-	// gl.Color4d(1, 1, 1, b.opacity))
-	gl.Color4ub(255, 255, 255, byte(b.opacity*255))
-	texpath := b.Texture.GetPath()
-	logging.Trace("Button.RenderAt", "texpath", texpath)
-	if texpath != "" {
-		b.Texture.Data().RenderNatural(b.X+x, b.Y+y)
-		b.bounds.x = b.X + x
-		b.bounds.y = b.Y + y
-		b.bounds.dx = b.Texture.Data().Dx()
-		b.bounds.dy = b.Texture.Data().Dy()
-	} else {
-		d := base.GetDictionary(b.Text.Size)
-		b.bounds.x = b.X + x
-		b.bounds.y = b.Y + y
-		b.bounds.dx = int(d.StringPixelWidth(b.Text.String))
-		b.bounds.dy = int(d.MaxHeight())
-		var just gui.Justification
-		switch b.Text.Justification {
-		case "center":
-			just = gui.Center
-			b.bounds.x -= b.bounds.dx / 2
-		case "left":
-			just = gui.Left
-		case "right":
-			just = gui.Right
-			b.bounds.x -= b.bounds.dx
-		default:
-			just = gui.Center
-			b.bounds.x -= b.bounds.dx / 2
-			b.Text.Justification = "center"
+	render.WithColour(1.0, 1.0, 1.0, float32(b.opacity), func() {
+		texpath := b.Texture.GetPath()
+		logging.Trace("Button.RenderAt", "texpath", texpath)
+		if texpath != "" {
+			b.Texture.Data().RenderNatural(b.X+x, b.Y+y)
+			b.bounds.x = b.X + x
+			b.bounds.y = b.Y + y
+			b.bounds.dx = b.Texture.Data().Dx()
+			b.bounds.dy = b.Texture.Data().Dy()
+		} else {
+			d := base.GetDictionary(b.Text.Size)
+			b.bounds.x = b.X + x
+			b.bounds.y = b.Y + y
+			b.bounds.dx = int(d.StringPixelWidth(b.Text.String))
+			b.bounds.dy = int(d.MaxHeight())
+			var just gui.Justification
+			switch b.Text.Justification {
+			case "center":
+				just = gui.Center
+				b.bounds.x -= b.bounds.dx / 2
+			case "left":
+				just = gui.Left
+			case "right":
+				just = gui.Right
+				b.bounds.x -= b.bounds.dx
+			default:
+				just = gui.Center
+				b.bounds.x -= b.bounds.dx / 2
+				b.Text.Justification = "center"
+			}
+			logging.Trace("button.RenderAt", "b.Text.String", b.Text.String, "b.X", b.X, "b.Y", b.Y, "x", x, "y", y)
+			shaderBank := globals.RenderQueueState().Shaders()
+			d.RenderString(b.Text.String, gui.Point{X: b.X + x, Y: b.Y + y}, d.MaxHeight(), just, shaderBank)
 		}
-		logging.Trace("button.RenderAt", "b.Text.String", b.Text.String, "b.X", b.X, "b.Y", b.Y, "x", x, "y", y)
-		shaderBank := globals.RenderQueueState().Shaders()
-		d.RenderString(b.Text.String, gui.Point{X: b.X + x, Y: b.Y + y}, d.MaxHeight(), just, shaderBank)
-	}
+	})
 }

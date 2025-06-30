@@ -7,7 +7,7 @@ import (
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
-	"github.com/runningwild/glop/system"
+	"github.com/runningwild/glop/render/rendertest/testbuilder"
 )
 
 type point struct {
@@ -32,7 +32,7 @@ func TestTextureDrawElements(t *testing.T) {
 		0, 1, 2,
 		0, 2, 3,
 	}
-	rendertest.DeprecatedWithGlForTest(64, 64, func(sys system.System, queue render.RenderQueueInterface) {
+	testbuilder.Run(func(queue render.RenderQueueInterface) {
 		queue.Queue(func(render.RenderQueueState) {
 			gl.Enable(gl.TEXTURE_2D)
 			defer gl.Disable(gl.TEXTURE_2D)
@@ -51,12 +51,14 @@ func TestTextureDrawElements(t *testing.T) {
 			// upload vertices
 			vertBuf := gl.GenBuffer()
 			vertBuf.Bind(gl.ARRAY_BUFFER)
+			defer vertBuf.Unbind(gl.ARRAY_BUFFER)
 			geometryByteCount := len(geometry) * int(unsafe.Sizeof(geometry[0]))
 			gl.BufferData(gl.ARRAY_BUFFER, geometryByteCount, geometry, gl.STATIC_DRAW)
 
 			// upload indices
 			idxBuf := gl.GenBuffer()
 			idxBuf.Bind(gl.ELEMENT_ARRAY_BUFFER)
+			defer idxBuf.Unbind(gl.ELEMENT_ARRAY_BUFFER)
 			indicesByteCount := len(indices) * int(unsafe.Sizeof(indices[0]))
 			gl.BufferData(gl.ELEMENT_ARRAY_BUFFER, indicesByteCount, indices, gl.STATIC_DRAW)
 			// teach opengl where the vertices are
@@ -69,6 +71,7 @@ func TestTextureDrawElements(t *testing.T) {
 			tex := rendertest.GivenATexture("checker/0.png")
 			gl.ActiveTexture(gl.TEXTURE0)
 			tex.Bind(gl.TEXTURE_2D)
+			defer tex.Unbind(gl.TEXTURE_2D)
 
 			gl.EnableClientState(gl.VERTEX_ARRAY)
 			defer gl.DisableClientState(gl.VERTEX_ARRAY)

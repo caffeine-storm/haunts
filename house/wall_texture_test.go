@@ -13,14 +13,14 @@ import (
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
-	"github.com/runningwild/glop/system"
+	"github.com/runningwild/glop/render/rendertest/testbuilder"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
 // TODO(tmckee): rename 'WallTexture' to 'Decal' or something.
 func TestWallTextureSpecs(t *testing.T) {
 	base.SetDatadir("../data")
-	rendertest.DeprecatedWithGlForTest(266, 246, func(sys system.System, queue render.RenderQueueInterface) {
+	testbuilder.WithSize(266, 246, func(queue render.RenderQueueInterface) {
 		Convey("Wall Textures", t, func() {
 			Convey("can be made", func() {
 				datadir := base.GetDataDir()

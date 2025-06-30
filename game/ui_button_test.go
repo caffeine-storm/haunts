@@ -10,8 +10,7 @@ import (
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
-	"github.com/runningwild/glop/render/rendertest"
-	"github.com/runningwild/glop/system"
+	"github.com/runningwild/glop/render/rendertest/testbuilder"
 )
 
 func TestButton(t *testing.T) {
@@ -21,7 +20,7 @@ func TestButton(t *testing.T) {
 		screenDims := gui.Dims{
 			Dx: 256, Dy: 256,
 		}
-		rendertest.DeprecatedWithGlForTest(screenDims.Dx, screenDims.Dy, func(sys system.System, queue render.RenderQueueInterface) {
+		testbuilder.WithSize(screenDims.Dx, screenDims.Dy, func(queue render.RenderQueueInterface) {
 			queue.Queue(func(st render.RenderQueueState) {
 				globals.SetRenderQueueState(st)
 			})

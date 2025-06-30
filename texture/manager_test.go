@@ -11,7 +11,7 @@ import (
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
-	"github.com/runningwild/glop/system"
+	"github.com/runningwild/glop/render/rendertest/testbuilder"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -29,7 +29,7 @@ func TestBlockUntilLoaded(t *testing.T) {
 	})
 
 	t.Run("can load a texture", func(t *testing.T) {
-		rendertest.DeprecatedWithGlForTest(50, 50, func(sys system.System, queue render.RenderQueueInterface) {
+		testbuilder.WithSize(50, 50, func(queue render.RenderQueueInterface) {
 			texture.Init(queue)
 			queue.Purge()
 
@@ -135,7 +135,7 @@ func TestGetInFlightRequests(t *testing.T) {
 	t.Run("finished loads are not in flight", func(t *testing.T) {
 		assert := assert.New(t)
 
-		rendertest.DeprecatedWithGlForTest(50, 50, func(sys system.System, queue render.RenderQueueInterface) {
+		testbuilder.WithSize(50, 50, func(queue render.RenderQueueInterface) {
 			texture.Init(queue)
 			queue.Purge()
 
