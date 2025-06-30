@@ -51,7 +51,7 @@ func TestMath(t *testing.T) {
 }
 
 func TestMakeRoomMats(t *testing.T) {
-	Convey("floor matrix properly smushes a floor image", t, func() {
+	Convey("floor matrix properly smushes a floor image", t, func(c C) {
 		screen := image.Rect(0, 0, 400, 400)
 		cam := housetest.Camera().
 			ForSize(screen.Dx(), screen.Dy()).
@@ -69,7 +69,7 @@ func TestMakeRoomMats(t *testing.T) {
 			})
 			queue.Purge()
 
-			So(queue, rendertest.ShouldLookLikeFile, "mahogany")
+			c.So(queue, rendertest.ShouldLookLikeFile, "mahogany")
 		})
 	})
 }

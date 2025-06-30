@@ -1,3 +1,7 @@
+- bug#40: during some refactoring, we had to add a bunch of extra calls to
+  Convey("--stubbed-context--", func() {...}). We should use a cleaner way like
+  supporting convey/not-convey in the testbuilder api.
+
 - bug#38: reaching into the GamePanel and resetting the AnchorBox field is
   barftastic; need to have GamePanel API that encapsualtes the work.
 
@@ -133,4 +137,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#40: <next>
+- bug#41: <next>

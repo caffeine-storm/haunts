@@ -115,7 +115,11 @@ func (q *immediateQueue) Queue(f render.RenderJob) {
 	f(queue_state)
 }
 func (q *immediateQueue) StartProcessing() {}
+func (q *immediateQueue) StopProcessing()  {}
 func (q *immediateQueue) Purge()           {}
+func (q *immediateQueue) IsDefunct() bool {
+	return false
+}
 func (q *immediateQueue) IsPurging() bool {
 	return true
 }

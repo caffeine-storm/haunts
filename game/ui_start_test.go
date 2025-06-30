@@ -89,8 +89,8 @@ func RunStartupSpecs() {
 
 	Convey("drawing the startup ui", func() {
 		gametest.RunDrawingTest(menuMaker, "startup", func(drawTestCtx gametest.DrawTestContext) {
-			systemtest.TestBuilder(drawTestCtx.GetTestBuilder()).Run(func(window systemtest.Window) {
-				Convey("should let you click the menu", func() {
+			Convey("should let you click the menu", func(c C) {
+				systemtest.TestBuilder(drawTestCtx.GetTestBuilder()).Run(func(window systemtest.Window) {
 					flag := false
 					menu.PatchButtonForTest("Credits", func() {
 						flag = true
@@ -122,7 +122,7 @@ func RunStartupSpecs() {
 					// attempt-to-respond-to'd.
 					driver.ProcessFrame()
 
-					So(flag, ShouldEqual, true)
+					c.So(flag, ShouldEqual, true)
 				})
 			})
 		})
