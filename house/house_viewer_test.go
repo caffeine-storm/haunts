@@ -17,7 +17,7 @@ var _ gametest.Drawer = (*house.HouseViewer)(nil)
 
 func givenAHouseViewer() gametest.Drawer {
 	ret := house.MakeHouseViewer(housetest.GivenAHouseDef(), 62)
-	ret.Zoom(10)
+	ret.SetZoom(10)
 	return ret
 }
 

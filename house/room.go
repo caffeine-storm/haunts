@@ -1026,7 +1026,8 @@ func (w *RoomEditorPanel) GetViewer() Viewer {
 
 type Viewer interface {
 	gui.Widget
-	Zoom(float32)
+	SetZoom(float32)
+	GetZoom() float32
 	Drag(float64, float64)
 	WindowToBoard(int, int) (float32, float32)
 	BoardToWindow(float32, float32) (int, int)

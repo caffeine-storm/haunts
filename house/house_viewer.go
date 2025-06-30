@@ -72,7 +72,7 @@ func MakeHouseViewer(house *HouseDef, angle float32) *HouseViewer {
 	hv.Ey = true
 	hv.house = house
 	hv.angle = angle
-	hv.Zoom(10)
+	hv.SetZoom(10)
 
 	hv.SetBounds()
 
@@ -175,12 +175,16 @@ func (hv *HouseViewer) SetState(state HouseViewerState) {
 	hv.HouseViewerState = state
 }
 
-func (hv *HouseViewer) Zoom(dz float32) {
+func (hv *HouseViewer) SetZoom(dz float32) {
 	if dz == 0 {
 		panic(fmt.Errorf("you don't want 0 zoom; it means don't draw anything!"))
 	}
 	hv.zoom = dz
 	hv.target_zoom_on = false
+}
+
+func (hv *HouseViewer) GetZoom() float32 {
+	return hv.zoom
 }
 
 func (hv *HouseViewer) SetBounds() {

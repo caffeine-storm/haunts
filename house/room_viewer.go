@@ -255,15 +255,22 @@ func clamp(f, min, max float32) float32 {
 	return f
 }
 
+// TODO(tmckee#40): this is 'AdjustZoom', not 'SetZoom'.
 // Changes the current zoom from e^(zoom) to e^(zoom+dz)
-func (rv *roomViewer) Zoom(dz float32) {
+func (rv *roomViewer) SetZoom(dz float32) {
+	logging.Warn("SetZoom called but this is really AdjustZoom; see #40")
 	if dz == 0 {
+		logging.Warn("attempted to set zoom to 0")
 		return
 	}
 	exp := math.Log(float64(rv.zoom)) + float64(dz)
 	exp = float64(clamp(float32(exp), 2.5, 5.0))
 	rv.zoom = float32(math.Exp(exp))
 	rv.makeMat()
+}
+
+func (rv *roomViewer) GetZoom() float32 {
+	return rv.zoom
 }
 
 func drawPrep() {

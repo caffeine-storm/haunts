@@ -133,7 +133,8 @@ func init() {
 
 type draggerZoomer interface {
 	Drag(float64, float64)
-	Zoom(float32)
+	SetZoom(float32)
+	GetZoom() float32
 }
 
 func draggingAndZooming(ui *gui.Gui, dz draggerZoomer) {
@@ -145,16 +146,13 @@ func draggingAndZooming(ui *gui.Gui, dz draggerZoomer) {
 	}
 
 	// TODO(#29): figure out the scale/style that makes sense here
-	var zoom float64 = 10.0
-	if gin.In().GetKeyById(gin.AnySpace).FramePressAmt() > 0 {
-		zoom += gin.In().GetKeyById(gin.AnyMouseWheelVertical).FramePressAmt()
+	var zoom float64 = float64(dz.GetZoom())
+	delta := key_map["zoom"].FramePressSum()
+	logging.Info("draggingAndZooming", "old zoom", zoom, "delta", delta)
+	if delta != 0 {
+		logging.Info("draggingAndZooming", "setting", zoom+delta)
+		dz.SetZoom(float32(zoom + delta))
 	}
-	zoom += key_map["zoom in"].FramePressAmt() / 20
-	zoom += -key_map["zoom out"].FramePressAmt() / 20
-	if zoom < 0.01 {
-		zoom = 0.01
-	}
-	dz.Zoom(float32(zoom) / 100)
 
 	if key_map["drag"].IsDown() != dragging {
 		dragging = !dragging
@@ -468,6 +466,7 @@ func main() {
 			if key_map["game mode"].FramePressCount() > 0 {
 				switch currentMode {
 				case applicationStartupMode:
+					currentMode = applicationGameMode
 					fallthrough
 				case applicationGameMode:
 					ui.RemoveChild(game_box)
@@ -505,11 +504,13 @@ func main() {
 			}
 
 			switch currentMode {
-			case applicationEditMode:
-				editMode(ui)
+			case applicationStartupMode:
+				currentMode = applicationGameMode
+				fallthrough
 			case applicationGameMode:
 				gameMode(ui)
-			case applicationStartupMode:
+			case applicationEditMode:
+				editMode(ui)
 			}
 		}
 		// Draw a cursor at the cursor - for testing an osx bug in glop.
