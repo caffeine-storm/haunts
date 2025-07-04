@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
 	"path/filepath"
 )
 
@@ -52,6 +53,8 @@ func getCheckFlag(flagname string) bool {
 	return false
 }
 
+// Returns an error if something went wrong. Returns true if the formatter
+// suggests/has-applied changes.
 type Fmter func(string) (bool, error)
 
 func nopfmter(string) (bool, error) {
@@ -120,7 +123,23 @@ func jsonfmt(readOnly bool) Fmter {
 }
 
 func luafmt(readOnly bool) Fmter {
-	return notimplemented("lua")
+	return func(path string) (bool, error) {
+		args := []string{}
+		if readOnly {
+			args = append(args, "--check")
+		}
+		args = append(args, path)
+
+		cmd := exec.Command("stylua", args...)
+		err := cmd.Run()
+
+		// We passed '--check' and got a non-zero return so fmt it!
+		if readOnly && err != nil {
+			return true, nil
+		}
+
+		return false, err
+	}
 }
 
 func xmlfmt(readOnly bool) Fmter {
