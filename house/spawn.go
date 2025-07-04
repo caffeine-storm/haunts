@@ -1,12 +1,17 @@
 package house
 
 import (
+	"fmt"
+	"hash/fnv"
+	"image/color"
+	"regexp"
+
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/mathgl"
 	"github.com/go-gl-legacy/gl"
-	"hash/fnv"
-	"regexp"
+	"github.com/runningwild/glop/debug"
 )
 
 var spawn_regex []*regexp.Regexp
@@ -14,25 +19,21 @@ var spawn_regex []*regexp.Regexp
 func PushSpawnRegexp(pattern string) {
 	re, err := regexp.Compile(pattern)
 	if err != nil {
-		// TODO(tmckee): let's just crash instead
-		base.DeprecatedLog().Error("regexp compile fail", "pattern", pattern, "err", err)
-		// Just duplicate the top one, since this will probably come with an
-		// associated pop.
-		spawn_regex = append(spawn_regex, topSpawnRegexp())
-		return
+		panic(fmt.Errorf("bad regexp pattern: %q, err: %w", pattern, err))
 	}
 	spawn_regex = append(spawn_regex, re)
 }
+
 func PopSpawnRegexp() {
 	if len(spawn_regex) == 0 {
-		base.DeprecatedLog().Error("Tried to pop an empty stack.")
-		return
+		panic(fmt.Errorf("tried to pop empty regex stack"))
 	}
 	spawn_regex = spawn_regex[0 : len(spawn_regex)-1]
 }
+
 func topSpawnRegexp() *regexp.Regexp {
 	if len(spawn_regex) == 0 {
-		return nil
+		panic(fmt.Errorf("tried to peek at empty regex stack"))
 	}
 	return spawn_regex[len(spawn_regex)-1]
 }
@@ -41,6 +42,7 @@ type SpawnPoint struct {
 	Name   string
 	Dx, Dy int
 	X, Y   int
+	Tex    texture.Object
 
 	// just for the shader
 	temporary, invalid bool
@@ -49,15 +51,19 @@ type SpawnPoint struct {
 func (sp *SpawnPoint) Dims() (int, int) {
 	return sp.Dx, sp.Dy
 }
+
 func (sp *SpawnPoint) Pos() (int, int) {
 	return sp.X, sp.Y
 }
+
 func (sp *SpawnPoint) FPos() (float64, float64) {
 	return float64(sp.X), float64(sp.Y)
 }
+
 func (sp *SpawnPoint) Color() (r, g, b, a byte) {
 	return 255, 255, 255, 255
 }
+
 func (sp *SpawnPoint) Render(pos mathgl.Vec2, width float32) {
 	gl.Disable(gl.TEXTURE_2D)
 	gl.Color4d(1, 1, 1, 0.1)
@@ -70,7 +76,8 @@ func (sp *SpawnPoint) Render(pos mathgl.Vec2, width float32) {
 }
 func (sp *SpawnPoint) RenderOnFloor() {
 	re := topSpawnRegexp()
-	if re == nil || !re.MatchString(sp.Name) {
+	if !re.MatchString(sp.Name) {
+		logging.Debug("skipping spawn", "re", re, "spawn", sp)
 		return
 	}
 
@@ -88,10 +95,22 @@ func (sp *SpawnPoint) RenderOnFloor() {
 			break
 		}
 	}
+
 	h := fnv.New32()
 	h.Write([]byte(prefix))
 	hs := h.Sum32()
-	gl.Color4ub(uint8(hs%256), uint8((hs/256)%256), uint8((hs/(256*256))%256), uint8(255*rgba[3]))
+	colour := color.NRGBA{}
+	colour.R = uint8(hs % 256)
+	hs = hs >> 8
+	colour.G = uint8(hs % 256)
+	hs = hs >> 8
+	colour.B = uint8(hs % 256)
+	hs = hs >> 8
+	colour.A = uint8(hs % 256)
+	// gl.Color4ub(, uint8((hs/256)%256), uint8((hs/(256*256))%256), uint8(255*rgba[3]))
+
+	gl.Color4ub(255, 0, 0, 255)
+	logging.Info("glstate", "glstate", debug.GetGlState(), "colour", colour, "for now", "red")
 
 	base.EnableShader("box")
 	base.SetUniformF("box", "dx", float32(sp.Dx))
@@ -103,7 +122,8 @@ func (sp *SpawnPoint) RenderOnFloor() {
 	} else {
 		base.SetUniformI("box", "temp_invalid", 2)
 	}
-	(&texture.Object{}).Data().Render(float64(sp.X), float64(sp.Y), float64(sp.Dx), float64(sp.Dy))
+	gl.Enable(gl.TEXTURE_2D)
+	sp.Tex.Data().Render(float64(sp.X), float64(sp.Y), float64(sp.Dx), float64(sp.Dy))
 	base.EnableShader("")
 	gl.PopAttrib()
 }
