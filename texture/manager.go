@@ -387,10 +387,16 @@ const load_threshold = 1000 * 1000
 
 func handleLoadRequest(req loadRequest) {
 	logging.Trace("texture manager: handleLoadRequest", "path", req.path)
-	f, _ := os.Open(req.path)
-	im, _, err := image.Decode(f)
-	f.Close()
+	f, err := os.Open(req.path)
 	if err != nil {
+		logging.Error("texture manager couldn't os.Open", "err", err)
+		manager.signalLoad(req.path, false)
+		return
+	}
+	defer f.Close()
+	im, _, err := image.Decode(f)
+	if err != nil {
+		logging.Error("texture manager couldn't image.Decode", "err", err)
 		manager.signalLoad(req.path, false)
 		return
 	}
