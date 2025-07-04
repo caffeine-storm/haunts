@@ -10,7 +10,7 @@ testrunargs:=
 endif
 
 # On WSL, Xvfb thinks it can talk to hardware. Tell it not to.
-XVFB_RUN:=LIBGL_ALWAYS_SOFTWARE=true xvfb-run -a
+XVFB_RUN:=LIBGL_ALWAYS_SOFTWARE=true xvfb-run -a --server-args="-screen 0 1920x1080x24"
 
 SRC_DATADIR:=data
 
