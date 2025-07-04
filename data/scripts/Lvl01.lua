@@ -94,7 +94,7 @@ function intrudersSetup()
       filename = "ch01/" .. name .. ".lua"
       Script.BindAi(ent, filename)
     end
-  end 
+  end
 end
 
 function denizensSetup()
@@ -136,7 +136,7 @@ function denizensSetup()
     ServitorEnts = {
       {"Angry Shade", 1},
       {"Lost Soul", 1},
-    }  
+    }
   end
 
   -- Just like before the user gets a ui to place these entities, but this
@@ -160,11 +160,11 @@ function denizensSetup()
 end
 
 function RoundStart(intruders, round)
-  print("SCRIPT: Round Start")
+  print("SCRIPT: Round Start: intruders?" .. tostring(intruders) .. "round:" .. round)
   store.execs = {}
   if round == 1 then
     if intruders then
-      intrudersSetup() 
+      intrudersSetup()
     else
       -- Script.DialogBox("ui/dialog/Lvl01/Opening_Denizens.json")
       denizensSetup()
@@ -201,7 +201,7 @@ function RoundStart(intruders, round)
     Script.SetLosMode("intruders", "entities")
     Script.SetLosMode("denizens", "entities")
   end
-  
+
 
   if store.nSecondWaypointDown and not store.bSetup3Done then
     store.bSetup3Done = true
@@ -273,10 +273,10 @@ function ValueForReinforce()
     for _, entValue in pairs(ServitorEnts) do
       if ent.Name == entValue[1] then
         nTotalValueOnBoard = nTotalValueOnBoard + entValue[2]
-      end 
+      end
     end
   end
-  nValToReturn = (6 - nTotalValueOnBoard) 
+  nValToReturn = (6 - nTotalValueOnBoard)
   if store.nFirstWaypointDown then
     nValToReturn = nValToReturn + 2
   end
@@ -295,13 +295,13 @@ end
 
 function SelectSpawn(SpawnName)
   possible_spawns = Script.GetSpawnPointsMatching(SpawnName)
-  bUsedOne = false   
+  bUsedOne = false
   for _, spawn in pairs(possible_spawns) do
     if Script.Rand(4) > 2 then
       return spawn
-    end 
-  end  
-  return possible_spawns[1]      
+    end
+  end
+  return possible_spawns[1]
 end
 
 -- Does any special processing from an exec.  This is in its own function because
@@ -310,9 +310,9 @@ end
 function checkExec(exec, is_playback)
   if exec.Ent and exec.Ent.Side.Intruder and GetDistanceBetweenEnts(exec.Ent, store.Waypoint1) <= 3 and not store.nFirstWaypointDown then
     --The intruders got to the first waypoint.
-    store.nFirstWaypointDown = 2 --2 because that's what we want to add to the deni's deploy 
-    store.waypoint_spawn = SelectSpawn("Waypoint2") 
-    store.Waypoint2 = StoreSpawn("Chest",  store.waypoint_spawn.Pos)   
+    store.nFirstWaypointDown = 2 --2 because that's what we want to add to the deni's deploy
+    store.waypoint_spawn = SelectSpawn("Waypoint2")
+    store.Waypoint2 = StoreSpawn("Chest",  store.waypoint_spawn.Pos)
     if not is_playback then
       Script.DialogBox("ui/dialog/Lvl01/First_Waypoint_Down_Intruders.json")
     end
@@ -320,24 +320,24 @@ function checkExec(exec, is_playback)
     Script.SetMusicParam("tension_level", 0.3)
 
     Script.RemoveWaypoint("Waypoint1")
-    Script.SetWaypoint("Waypoint2", "intruders", store.Waypoint2.Pos, 3)   
-  end 
+    Script.SetWaypoint("Waypoint2", "intruders", store.Waypoint2.Pos, 3)
+  end
 
 
   if store.nFirstWaypointDown then
     if exec.Ent and exec.Ent.Side.Intruder and GetDistanceBetweenEnts(exec.Ent, store.Waypoint2) <= 3 and not store.nSecondWaypointDown then
       --The intruders got to the second waypoint.
-      store.nSecondWaypointDown = 2 --2 because that's what we want to add to the deni's deploy 
-      store.waypoint_spawn = SelectSpawn("Waypoint3") 
+      store.nSecondWaypointDown = 2 --2 because that's what we want to add to the deni's deploy
+      store.waypoint_spawn = SelectSpawn("Waypoint3")
       store.Waypoint3 = StoreSpawn("Mirror", store.waypoint_spawn.Pos)
       store.tension = 0.5
-      Script.SetMusicParam("tension_level", 0.5) 
+      Script.SetMusicParam("tension_level", 0.5)
       if not is_playback then
-        Script.DialogBox("ui/dialog/Lvl01/Second_Waypoint_Down_Intruders.json")    
+        Script.DialogBox("ui/dialog/Lvl01/Second_Waypoint_Down_Intruders.json")
       end
 
       Script.RemoveWaypoint("Waypoint2")
-      Script.SetWaypoint("Waypoint3", "intruders", store.Waypoint3.Pos, 3)             
+      Script.SetWaypoint("Waypoint3", "intruders", store.Waypoint3.Pos, 3)
     end
   end
 
@@ -350,7 +350,7 @@ function checkExec(exec, is_playback)
       store.tension = 0.7
       Script.SetMusicParam("tension_level", 0.7)
       Script.EndGame()
-    end   
+    end
   end
 
 
@@ -358,10 +358,10 @@ function checkExec(exec, is_playback)
     Script.Sleep(2)
     Script.DialogBox("ui/dialog/Lvl01/Victory_Denizens.json")
     Script.EndGame()
-  end 
+  end
 
   -- --after any action, if this ent's Ap is 0, we can select the next ent for them
-  if exec.Ent.ApCur == 0 then 
+  if exec.Ent.ApCur == 0 then
     nextEnt = GetEntityWithMostAP(exec.Ent.Side)
     if nextEnt.ApCur > 0 then
       if exec.Action.Type ~= "Move" then
@@ -369,7 +369,7 @@ function checkExec(exec, is_playback)
       end
       Script.SelectEnt(nextEnt)
     end
-  end  
+  end
 end
 
 function OnAction(intruders, round, exec)
@@ -380,7 +380,7 @@ function OnAction(intruders, round, exec)
   store.execs[table.getn(store.execs) + 1] = exec
   checkExec(exec, false)
 end
- 
+
 
 function DoPlayback(state, execs)
   Script.LoadGameState(state)
@@ -440,7 +440,7 @@ function denizensOnRound()
     master_spawn = Script.GetSpawnPointsMatching("Master_Start")
     if store.MasterName == "Bosch" then
       store.MasterName = "Bosch's Ghost"
-      store.bUsingGhostBosch = true 
+      store.bUsingGhostBosch = true
       Script.DialogBox("ui/dialog/Lvl01/Bosch_Rises_Denizens.json")
       store.bBoschRespawnedTellIntruders = true
     end
@@ -520,7 +520,7 @@ function MasterIsAlive()
       return true
     end
   end
-  return false  
+  return false
 end
 
 function AnyIntrudersAlive()
@@ -529,7 +529,7 @@ function AnyIntrudersAlive()
       return true
     end
   end
-  return false  
+  return false
 end
 
 function SelectCharAtTurnStart(side)
@@ -540,14 +540,14 @@ function SelectCharAtTurnStart(side)
       Script.SelectEnt(store.LastIntruderEnt)
       bDone = true
     end
-  end  
+  end
   if store.LastDenizenEnt and not bDone then
     if side.Denizen then
---    if store.LastDenizenEnt.Side == side then      
+--    if store.LastDenizenEnt.Side == side then
       Script.SelectEnt(store.LastDenizenEnt)
       bDone = true
-    end  
-  end   
+    end
+  end
 
   if not bDone then
     --select the dood with the most AP
@@ -555,17 +555,17 @@ function SelectCharAtTurnStart(side)
     if ent then
       Script.SelectEnt(ent)
     end
-  end  
+  end
 end
 
 function GetEntityWithMostAP(side)
   entToSelect = nil
   for _, ent in pairs(Script.GetAllEnts()) do
-    if (ent.Side.Intruder and side.Intruder) or (ent.Side.Denizen and side.Denizen) then   
-      if entToSelect then    
-        if entToSelect.ApCur < ent.ApCur then      
+    if (ent.Side.Intruder and side.Intruder) or (ent.Side.Denizen and side.Denizen) then
+      if entToSelect then
+        if entToSelect.ApCur < ent.ApCur then
           entToSelect = ent
-        end 
+        end
       else
         --first pass.  select this one.
         entToSelect = ent
@@ -586,7 +586,7 @@ function GetSpawnsFromListWhereNoLoS(spawns)
           if (visibleSpawn.Pos.X == possibleSpawn.Pos.X) and (visibleSpawn.Pos.Y == possibleSpawn.Pos.Y) then
             bBadSpawn = true
             break
-          end 
+          end
         end
       end
       if bBadSpawn then
@@ -598,7 +598,7 @@ function GetSpawnsFromListWhereNoLoS(spawns)
         GoodSpawns[table.getn(GoodSpawns) + 1] = possibleSpawn
     end
   end
-  
+
   return GoodSpawns
 end
 

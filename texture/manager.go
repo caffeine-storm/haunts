@@ -514,6 +514,9 @@ func (m *Manager) LoadFromPath(path string) (*Data, error) {
 }
 
 func (m *Manager) resetPath(o *Object, newpath base.Path) error {
+	if o.Path == newpath {
+		return nil
+	}
 	newData, err := m.LoadFromPath(string(newpath))
 	if err != nil {
 		return fmt.Errorf("couldn't m.LoadFromPath(%q): %w", newpath, err)

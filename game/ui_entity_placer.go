@@ -140,7 +140,10 @@ func MakeEntityPlacer(game *Game, roster_names []string, roster_costs []int, min
 
 func (ep *EntityPlacer) Requested() gui.Dims {
 	data := ep.layout.Texture.Data()
-	return gui.Dims{data.Dx(), data.Dy()}
+	return gui.Dims{
+		Dx: data.Dx(),
+		Dy: data.Dy(),
+	}
 }
 
 func (ep *EntityPlacer) Expandable() (bool, bool) {
@@ -158,11 +161,6 @@ func (ep *EntityPlacer) Think(g *gui.Gui, t int64) {
 	}
 	dt := t - ep.last_t
 	ep.last_t = t
-	if ep.mx == 0 && ep.my == 0 {
-		// TODO(tmckee): need to ask the gui for a cursor pos
-		// ep.mx, ep.my = gin.In().GetCursor("Mouse").Point()
-		ep.mx, ep.my = 0, 0
-	}
 	for _, button := range ep.buttons {
 		button.Think(ep.region.X, ep.region.Y, ep.mx, ep.my, dt)
 	}

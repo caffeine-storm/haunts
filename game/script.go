@@ -1009,13 +1009,13 @@ func placeEntities(gp *GamePanel) lua.LuaGoFunction {
 		}
 		ep, done, err := MakeEntityPlacer(gp.game, names, costs, L.ToInteger(-2), L.ToInteger(-1), L.ToString(-4))
 		if err != nil {
-			base.DeprecatedError().Printf("Unable to make entity placer: %v", err)
+			logging.Error("placeEntities: MakeEntityPlacer failed", "err", err)
 			return 0
 		}
 		logging.Trace("placeEntities>abox-addchild>entityPlacer")
-		gp.AnchorBox.AddChild(ep, gui.Anchor{0, 0, 0, 0})
-		for i, kid := range gp.AnchorBox.GetChildren() {
-			base.DeprecatedLog().Printf("Kid[%d] = %s", i, kid.String())
+		gp.AnchorBox.AddChild(ep, gui.Anchor{})
+		for _, kid := range gp.AnchorBox.GetChildren() {
+			logging.Trace("placeEntities", "kid", kid.String())
 		}
 		gp.script.syncEnd()
 		ents := <-done

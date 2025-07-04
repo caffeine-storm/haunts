@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"hash/fnv"
 	"image/color"
+	"path"
 	"regexp"
 
 	"github.com/MobRulesGames/haunts/base"
@@ -81,6 +82,7 @@ func (sp *SpawnPoint) RenderOnFloor() {
 		return
 	}
 
+	logging.Info("SpawnPoint.RenderOnFloor not skipping", "spawn", sp)
 	var rgba [4]float64
 	gl.GetDoublev(gl.CURRENT_COLOR, rgba[:])
 	gl.PushAttrib(gl.CURRENT_BIT)
@@ -112,18 +114,21 @@ func (sp *SpawnPoint) RenderOnFloor() {
 	gl.Color4ub(255, 0, 0, 255)
 	logging.Info("glstate", "glstate", debug.GetGlState(), "colour", colour, "for now", "red")
 
-	base.EnableShader("box")
-	base.SetUniformF("box", "dx", float32(sp.Dx))
-	base.SetUniformF("box", "dy", float32(sp.Dy))
-	if !sp.temporary {
-		base.SetUniformI("box", "temp_invalid", 0)
-	} else if !sp.invalid {
-		base.SetUniformI("box", "temp_invalid", 1)
-	} else {
-		base.SetUniformI("box", "temp_invalid", 2)
-	}
+	/*
+		base.EnableShader("box")
+		base.SetUniformF("box", "dx", float32(sp.Dx))
+		base.SetUniformF("box", "dy", float32(sp.Dy))
+		if !sp.temporary {
+			base.SetUniformI("box", "temp_invalid", 0)
+		} else if !sp.invalid {
+			base.SetUniformI("box", "temp_invalid", 1)
+		} else {
+			base.SetUniformI("box", "temp_invalid", 2)
+		}
+	*/
 	gl.Enable(gl.TEXTURE_2D)
+	sp.Tex.ResetPath(base.Path(path.Join(base.GetDataDir(), "textures/pentagram_04_large_red.png")))
 	sp.Tex.Data().Render(float64(sp.X), float64(sp.Y), float64(sp.Dx), float64(sp.Dy))
-	base.EnableShader("")
+	//base.EnableShader("")
 	gl.PopAttrib()
 }
