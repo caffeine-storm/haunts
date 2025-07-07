@@ -34,7 +34,6 @@ import (
 )
 
 var (
-	logReader                 io.Reader
 	key_map                   base.KeyMap
 	editors                   map[string]house.Editor
 	editor                    house.Editor
@@ -140,7 +139,7 @@ func WatchForSlowJobs() *render.JobTimingListener {
 	}
 }
 
-func setupDependencyModules() (system.System, *os.File) {
+func setupDependencyModules() (system.System, io.Reader, func()) {
 	gin.In().SetLogger(logging.InfoLogger())
 
 	logging.SetLoggingLevel(slog.LevelInfo)
@@ -158,7 +157,7 @@ func setupDependencyModules() (system.System, *os.File) {
 
 	// Ignore the returned 'undo' func; it's only really for testing. We don't
 	// want to _not_ log to the log file.
-	_, logReader = logging.RedirectAndSpy(logFile)
+	_, logReader := logging.RedirectAndSpy(logFile)
 
 	logging.Info("Setting datadir", "datadir", base.GetDataDir())
 	err = house.SetDatadir(base.GetDataDir())
@@ -169,12 +168,14 @@ func setupDependencyModules() (system.System, *os.File) {
 	actions.Init()
 	ai.Init()
 
-	return sysret, logFile
+	return sysret, logReader, func() {
+		logFile.Close()
+	}
 }
 
 func main() {
-	sys, logFile := setupDependencyModules()
-	defer logFile.Close()
+	sys, logReader, cleanup := setupDependencyModules()
+	defer cleanup()
 
 	var key_binds base.KeyBinds
 	base.LoadJson(filepath.Join(base.GetDataDir(), "key_binds.json"), &key_binds)
