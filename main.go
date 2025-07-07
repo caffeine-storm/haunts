@@ -218,8 +218,16 @@ func editMode(ui *gui.Gui) {
 				}
 			}
 			chooser = gui.MakeFileChooser(filepath.Join(datadir, fmt.Sprintf("%ss", editor_name)), callback, gui.MakeFileFilter(fmt.Sprintf(".%s", editor_name)))
-			anchor = gui.MakeAnchorBox(gui.Dims{wdx, wdy})
-			anchor.AddChild(chooser, gui.Anchor{0.5, 0.5, 0.5, 0.5})
+			anchor = gui.MakeAnchorBox(gui.Dims{
+				Dx: wdx,
+				Dy: wdy,
+			})
+			anchor.AddChild(chooser, gui.Anchor{
+				Wx: 0.5,
+				Wy: 0.5,
+				Bx: 0.5,
+				By: 0.5,
+			})
 			ui.AddChild(anchor)
 			ui.TakeFocus(chooser)
 		}
@@ -253,19 +261,12 @@ type lowerLeftTable struct {
 }
 
 func (llt *lowerLeftTable) AddChild(w gui.Widget) {
-	llt.AnchorBox.AddChild(w, gui.Anchor{0, 0, 0, 0})
-}
-
-type callsSys struct {
-	sys system.System
-}
-
-func (c *callsSys) Dims() gui.Dims {
-	_, _, dx, dy := c.sys.GetWindowDims()
-	return gui.Dims{
-		Dx: dx,
-		Dy: dy,
-	}
+	llt.AnchorBox.AddChild(w, gui.Anchor{
+		Wx: 0,
+		Wy: 0,
+		Bx: 0,
+		By: 0,
+	})
 }
 
 func onHauntsPanic(recoveredValue interface{}) {
@@ -353,7 +354,10 @@ func main() {
 	game.Restart = func() {
 		logging.Info("Restarting...")
 		ui.RemoveChild(game_box)
-		game_box = &lowerLeftTable{gui.MakeAnchorBox(gui.Dims{1024, 768})}
+		game_box = &lowerLeftTable{gui.MakeAnchorBox(gui.Dims{
+			Dx: 1024,
+			Dy: 768,
+		})}
 		layout, err := game.LoadStartLayoutFromDatadir(datadir)
 		if err != nil {
 			panic(fmt.Errorf("loading start layout failed: %w", err))
@@ -513,18 +517,5 @@ func main() {
 				editMode(ui)
 			}
 		}
-		// Draw a cursor at the cursor - for testing an osx bug in glop.
-		// zx, zy := gin.In().GetCursor("Mouse").Point()
-		// render.Queue(func(render.RenderQueueState) {
-		//   gl.Color4ub(255, 0, 0, 255)
-		//   gl.Begin(gl.LINES)
-		//   {
-		//     gl.Vertex2i(int32(zx-25), int32(zy))
-		//     gl.Vertex2i(int32(zx+25), int32(zy))
-		//     gl.Vertex2i(int32(zx), int32(zy-25))
-		//     gl.Vertex2i(int32(zx), int32(zy+25))
-		//   }
-		//   gl.End()
-		// })
 	}
 }
