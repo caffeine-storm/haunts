@@ -86,9 +86,7 @@ func draggingAndZooming(ui *gui.Gui, dz draggerZoomer) {
 	// TODO(#29): figure out the scale/style that makes sense here
 	var zoom float64 = float64(dz.GetZoom())
 	delta := key_map["zoom"].FramePressSum()
-	logging.Info("draggingAndZooming", "old zoom", zoom, "delta", delta)
 	if delta != 0 {
-		logging.Info("draggingAndZooming", "setting", zoom+delta)
 		dz.SetZoom(float32(zoom + delta))
 	}
 
@@ -142,7 +140,7 @@ func WatchForSlowJobs() *render.JobTimingListener {
 	}
 }
 
-func main() {
+func setupDependencyModules() {
 	gin.In().SetLogger(logging.InfoLogger())
 
 	logging.SetLoggingLevel(slog.LevelInfo)
@@ -171,6 +169,10 @@ func main() {
 
 	actions.Init()
 	ai.Init()
+}
+
+func main() {
+	setupDependencyModules()
 
 	var key_binds base.KeyBinds
 	base.LoadJson(filepath.Join(datadir, "key_binds.json"), &key_binds)
