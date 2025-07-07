@@ -306,81 +306,84 @@ func gameMode(ui *gui.Gui, sys system.System) {
 
 func editMode(ui *gui.Gui, sys system.System) {
 	logging.TraceLogger().Trace("editMode entered")
+	defer logging.TraceLogger().Trace("editMode returning")
+
 	draggingAndZooming(ui, sys, editor.GetViewer())
-	if ui.FocusWidget() == nil {
-		// Did a keypress come in for "change the type of editor"?
-		for name := range editors {
-			if key_map[fmt.Sprintf("%s editor", name)].FramePressCount() > 0 && ui.FocusWidget() == nil {
-				ui.RemoveChild(editor)
-				editor_name = name
-				editor = editors[editor_name]
-				registry.LoadAllRegistries()
-				editor.Reload()
-				ui.AddChild(editor)
-			}
-		}
+	if ui.FocusWidget() != nil {
+		return
+	}
 
-		// Did a keypress come in for "save"?
-		if key_map["save"].FramePressCount() > 0 && chooser == nil {
-			path, err := editor.Save()
-			if err != nil {
-				logging.Warn("Failed to save", "error", err.Error)
-			}
-			if path != "" && err == nil {
-				base.SetStoreVal(fmt.Sprintf("last %s path", editor_name), base.TryRelative(base.GetDataDir(), path))
-			}
-		}
-
-		if key_map["load"].FramePressCount() > 0 && chooser == nil {
-			callback := func(path string, err error) {
-				ui.DropFocus()
-				ui.RemoveChild(anchor)
-				chooser = nil
-				anchor = nil
-				err = editor.Load(path)
-				if err != nil {
-					logging.Warn("Failed to load", "error", err.Error)
-				} else {
-					base.SetStoreVal(fmt.Sprintf("last %s path", editor_name), base.TryRelative(base.GetDataDir(), path))
-				}
-			}
-			chooser = gui.MakeFileChooser(filepath.Join(base.GetDataDir(), fmt.Sprintf("%ss", editor_name)), callback, gui.MakeFileFilter(fmt.Sprintf(".%s", editor_name)))
-			anchor = gui.MakeAnchorBox(gui.Dims{
-				Dx: wdx,
-				Dy: wdy,
-			})
-			anchor.AddChild(chooser, gui.Anchor{
-				Wx: 0.5,
-				Wy: 0.5,
-				Bx: 0.5,
-				By: 0.5,
-			})
-			ui.AddChild(anchor)
-			ui.TakeFocus(chooser)
-		}
-
-		// Don't select tabs in an editor if we're doing some other sort of command
-		ok_to_select := true
-		for _, v := range key_map {
-			if v.FramePressCount() > 0 {
-				ok_to_select = false
-				break
-			}
-		}
-		if ok_to_select {
-			numericKeyId := gin.AnyKeyPad0
-			// Select the tab corresponding to a pressed keypad key.
-			for i := 1; i <= 9; i++ {
-				idx := int(gin.AnyKeyPad0.Index) + i
-				numericKeyId.Index = gin.KeyIndex(idx)
-				if gin.In().GetKeyById(numericKeyId).FramePressCount() > 0 {
-					editor.SelectTab(i - 1)
-				}
-			}
+	// Did a keypress come in for "change the type of editor"?
+	for name := range editors {
+		if key_map[fmt.Sprintf("%s editor", name)].FramePressCount() > 0 && ui.FocusWidget() == nil {
+			ui.RemoveChild(editor)
+			editor_name = name
+			editor = editors[editor_name]
+			registry.LoadAllRegistries()
+			editor.Reload()
+			ui.AddChild(editor)
 		}
 	}
 
-	logging.TraceLogger().Trace("editMode returning")
+	// Did a keypress come in for "save"?
+	if key_map["save"].FramePressCount() > 0 && chooser == nil {
+		path, err := editor.Save()
+		if err != nil {
+			logging.Warn("Failed to save", "error", err.Error)
+		}
+		if path != "" && err == nil {
+			base.SetStoreVal(fmt.Sprintf("last %s path", editor_name), base.TryRelative(base.GetDataDir(), path))
+		}
+	}
+
+	if key_map["load"].FramePressCount() > 0 && chooser == nil {
+		callback := func(path string, err error) {
+			ui.DropFocus()
+			ui.RemoveChild(anchor)
+			chooser = nil
+			anchor = nil
+			err = editor.Load(path)
+			if err != nil {
+				logging.Warn("Failed to load", "error", err.Error)
+			} else {
+				base.SetStoreVal(fmt.Sprintf("last %s path", editor_name), base.TryRelative(base.GetDataDir(), path))
+			}
+		}
+		chooser = gui.MakeFileChooser(filepath.Join(base.GetDataDir(), fmt.Sprintf("%ss", editor_name)), callback, gui.MakeFileFilter(fmt.Sprintf(".%s", editor_name)))
+		anchor = gui.MakeAnchorBox(gui.Dims{
+			Dx: wdx,
+			Dy: wdy,
+		})
+		anchor.AddChild(chooser, gui.Anchor{
+			Wx: 0.5,
+			Wy: 0.5,
+			Bx: 0.5,
+			By: 0.5,
+		})
+		ui.AddChild(anchor)
+		ui.TakeFocus(chooser)
+	}
+
+	// Don't select tabs in an editor if we're doing some other sort of command.
+	// TODO(tmckee): there's got to be a better way than to poll every key on
+	// every frame to find out if any key was pressed? Also, what if someone adds
+	// an entry to key_map for, say, numpad3? Wouldn't we just ignore all numpad
+	// input at that point???
+	for _, v := range key_map {
+		if v.FramePressCount() > 0 {
+			return
+		}
+	}
+
+	numericKeyId := gin.AnyKeyPad0
+	// Select the tab corresponding to a pressed keypad key.
+	for i := 1; i <= 9; i++ {
+		idx := int(gin.AnyKeyPad0.Index) + i
+		numericKeyId.Index = gin.KeyIndex(idx)
+		if gin.In().GetKeyById(numericKeyId).FramePressCount() > 0 {
+			editor.SelectTab(i - 1)
+		}
+	}
 }
 
 func runGameLoop(queue render.RenderQueueInterface, ui *gui.Gui, sys system.System) {
