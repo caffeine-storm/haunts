@@ -34,9 +34,6 @@ import (
 )
 
 var (
-	sys                       system.System
-	datadir                   string
-	logFile                   *os.File
 	logReader                 io.Reader
 	key_map                   base.KeyMap
 	editors                   map[string]house.Editor
@@ -44,10 +41,14 @@ var (
 	editor_name               string
 	anchor                    *gui.AnchorBox
 	chooser                   *gui.FileChooser
-	wdx, wdy                  int
 	game_box                  *lowerLeftTable
 	game_panel                *game.GamePanel
 	zooming, dragging, hiding bool
+)
+
+const (
+	wdx = 1024
+	wdy = 750
 )
 
 func ensureDirectory(filePath string) error {
@@ -75,7 +76,7 @@ type draggerZoomer interface {
 	GetZoom() float32
 }
 
-func draggingAndZooming(ui *gui.Gui, dz draggerZoomer) {
+func draggingAndZooming(ui *gui.Gui, sys system.System, dz draggerZoomer) {
 	if ui.FocusWidget() != nil {
 		dragging = false
 		zooming = false
@@ -123,7 +124,6 @@ func (llt *lowerLeftTable) AddChild(w gui.Widget) {
 func onHauntsPanic(recoveredValue interface{}) {
 	stack := debug.Stack()
 	logging.Error("PANIC", "val", recoveredValue, "stack", stack)
-	logFile.Close()
 	fmt.Printf("PANIC: %v\n", recoveredValue)
 	fmt.Printf("PANIC: %s\n", string(stack))
 }
@@ -140,17 +140,16 @@ func WatchForSlowJobs() *render.JobTimingListener {
 	}
 }
 
-func setupDependencyModules() {
+func setupDependencyModules() (system.System, *os.File) {
 	gin.In().SetLogger(logging.InfoLogger())
 
 	logging.SetLoggingLevel(slog.LevelInfo)
-	sys = system.Make(gos.NewSystemInterface(), gin.In())
+	sysret := system.Make(gos.NewSystemInterface(), gin.In())
 
 	rand.Seed(100)
-	datadir = "data"
-	base.SetDatadir(datadir)
+	base.SetDatadir("data")
 	var err error
-	logFile, err = openLogFile(base.GetDataDir())
+	logFile, err := openLogFile(base.GetDataDir())
 	if err != nil {
 		fmt.Printf("warning: couldn't open logfile in %q\nlogging to stdout instead\n", base.GetDataDir())
 		logFile = os.Stdout
@@ -161,26 +160,26 @@ func setupDependencyModules() {
 	// want to _not_ log to the log file.
 	_, logReader = logging.RedirectAndSpy(logFile)
 
-	logging.Info("Setting datadir", "datadir", datadir)
-	err = house.SetDatadir(datadir)
+	logging.Info("Setting datadir", "datadir", base.GetDataDir())
+	err = house.SetDatadir(base.GetDataDir())
 	if err != nil {
 		panic(err.Error())
 	}
 
 	actions.Init()
 	ai.Init()
+
+	return sysret, logFile
 }
 
 func main() {
-	setupDependencyModules()
+	sys, logFile := setupDependencyModules()
+	defer logFile.Close()
 
 	var key_binds base.KeyBinds
-	base.LoadJson(filepath.Join(datadir, "key_binds.json"), &key_binds)
+	base.LoadJson(filepath.Join(base.GetDataDir(), "key_binds.json"), &key_binds)
 	key_map = key_binds.MakeKeyMap()
 	base.SetDefaultKeyMap(key_map)
-
-	wdx = 1024
-	wdy = 750
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -231,7 +230,7 @@ func main() {
 	}
 	for name, editor := range editors {
 		path := base.GetStoreVal(fmt.Sprintf("last %s path", name))
-		path = filepath.Join(datadir, path)
+		path = filepath.Join(base.GetDataDir(), path)
 		if path != "" {
 			editor.Load(path)
 		}
@@ -249,7 +248,7 @@ func main() {
 			Dx: 1024,
 			Dy: 768,
 		})}
-		layout, err := game.LoadStartLayoutFromDatadir(datadir)
+		layout, err := game.LoadStartLayoutFromDatadir(base.GetDataDir())
 		if err != nil {
 			panic(fmt.Errorf("loading start layout failed: %w", err))
 		}
@@ -273,7 +272,7 @@ func main() {
 	})
 	queue.Purge()
 
-	runGameLoop(queue, ui)
+	runGameLoop(queue, ui, sys)
 }
 
 // TODO(tmckee): move everything below this to a game/game_loop.go file.
@@ -298,15 +297,15 @@ func (mode applicationMode) String() string {
 	panic(fmt.Errorf("unknown applicationMode: %v", int(mode)))
 }
 
-func gameMode(ui *gui.Gui) {
+func gameMode(ui *gui.Gui, sys system.System) {
 	if game_panel != nil && game_panel.Active() {
-		draggingAndZooming(ui, game_panel.GetViewer())
+		draggingAndZooming(ui, sys, game_panel.GetViewer())
 	}
 }
 
-func editMode(ui *gui.Gui) {
+func editMode(ui *gui.Gui, sys system.System) {
 	logging.TraceLogger().Trace("editMode entered")
-	draggingAndZooming(ui, editor.GetViewer())
+	draggingAndZooming(ui, sys, editor.GetViewer())
 	if ui.FocusWidget() == nil {
 		// Did a keypress come in for "change the type of editor"?
 		for name := range editors {
@@ -327,7 +326,7 @@ func editMode(ui *gui.Gui) {
 				logging.Warn("Failed to save", "error", err.Error)
 			}
 			if path != "" && err == nil {
-				base.SetStoreVal(fmt.Sprintf("last %s path", editor_name), base.TryRelative(datadir, path))
+				base.SetStoreVal(fmt.Sprintf("last %s path", editor_name), base.TryRelative(base.GetDataDir(), path))
 			}
 		}
 
@@ -341,10 +340,10 @@ func editMode(ui *gui.Gui) {
 				if err != nil {
 					logging.Warn("Failed to load", "error", err.Error)
 				} else {
-					base.SetStoreVal(fmt.Sprintf("last %s path", editor_name), base.TryRelative(datadir, path))
+					base.SetStoreVal(fmt.Sprintf("last %s path", editor_name), base.TryRelative(base.GetDataDir(), path))
 				}
 			}
-			chooser = gui.MakeFileChooser(filepath.Join(datadir, fmt.Sprintf("%ss", editor_name)), callback, gui.MakeFileFilter(fmt.Sprintf(".%s", editor_name)))
+			chooser = gui.MakeFileChooser(filepath.Join(base.GetDataDir(), fmt.Sprintf("%ss", editor_name)), callback, gui.MakeFileFilter(fmt.Sprintf(".%s", editor_name)))
 			anchor = gui.MakeAnchorBox(gui.Dims{
 				Dx: wdx,
 				Dy: wdy,
@@ -383,7 +382,7 @@ func editMode(ui *gui.Gui) {
 	logging.TraceLogger().Trace("editMode returning")
 }
 
-func runGameLoop(queue render.RenderQueueInterface, ui *gui.Gui) {
+func runGameLoop(queue render.RenderQueueInterface, ui *gui.Gui, sys system.System) {
 	currentMode := applicationStartupMode
 	var profile_output *os.File
 	heap_prof_count := 0
@@ -420,7 +419,7 @@ func runGameLoop(queue render.RenderQueueInterface, ui *gui.Gui) {
 			if key_map["cpu profile"].FramePressCount() > 0 {
 				if profile_output == nil {
 					var err error
-					profile_output, err = os.Create(filepath.Join(datadir, "cpu.prof"))
+					profile_output, err = os.Create(filepath.Join(base.GetDataDir(), "cpu.prof"))
 					if err == nil {
 						err = pprof.StartCPUProfile(profile_output)
 						if err != nil {
@@ -440,7 +439,7 @@ func runGameLoop(queue render.RenderQueueInterface, ui *gui.Gui) {
 			}
 
 			if key_map["heap profile"].FramePressCount() > 0 {
-				out, err := os.Create(filepath.Join(datadir, fmt.Sprintf("heap-%d.prof", heap_prof_count)))
+				out, err := os.Create(filepath.Join(base.GetDataDir(), fmt.Sprintf("heap-%d.prof", heap_prof_count)))
 				heap_prof_count++
 				if err == nil {
 					err = pprof.WriteHeapProfile(out)
@@ -459,7 +458,7 @@ func runGameLoop(queue render.RenderQueueInterface, ui *gui.Gui) {
 
 			if key_map["screenshot"].FramePressCount() > 0 {
 				// Use gl.ReadPixels to dump a 'screen shot' to screen.png
-				fname := filepath.Join(datadir, "screen.png")
+				fname := filepath.Join(base.GetDataDir(), "screen.png")
 				f, err := os.Create(fname)
 				if err != nil {
 					panic(fmt.Errorf("couldn't os.Create %q: %w", fname, err))
@@ -516,9 +515,9 @@ func runGameLoop(queue render.RenderQueueInterface, ui *gui.Gui) {
 				currentMode = applicationGameMode
 				fallthrough
 			case applicationGameMode:
-				gameMode(ui)
+				gameMode(ui, sys)
 			case applicationEditMode:
-				editMode(ui)
+				editMode(ui, sys)
 			}
 		}
 	}
