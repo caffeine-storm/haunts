@@ -15,6 +15,8 @@ import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/console"
 	"github.com/MobRulesGames/haunts/game"
+	"github.com/MobRulesGames/haunts/game/actions"
+	"github.com/MobRulesGames/haunts/game/ai"
 	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/logging"
@@ -29,11 +31,6 @@ import (
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/system"
-
-	// Need to pull in all of the actions we define here and not in
-	// haunts/game because haunts/game/actions depends on it
-	_ "github.com/MobRulesGames/haunts/game/actions"
-	_ "github.com/MobRulesGames/haunts/game/ai"
 )
 
 var (
@@ -276,6 +273,9 @@ func main() {
 	if err != nil {
 		panic(err.Error())
 	}
+
+	actions.Init()
+	ai.Init()
 
 	var key_binds base.KeyBinds
 	base.LoadJson(filepath.Join(datadir, "key_binds.json"), &key_binds)
