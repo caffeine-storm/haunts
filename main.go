@@ -45,7 +45,6 @@ var (
 	editors                   map[string]house.Editor
 	editor                    house.Editor
 	editor_name               string
-	ui                        *gui.Gui
 	anchor                    *gui.AnchorBox
 	chooser                   *gui.FileChooser
 	wdx, wdy                  int
@@ -346,7 +345,6 @@ func main() {
 	editor_name = "room"
 	editor = editors[editor_name]
 
-	currentMode := applicationStartupMode
 	game.Restart = func() {
 		logging.Info("Restarting...")
 		ui.RemoveChild(game_box)
@@ -378,6 +376,11 @@ func main() {
 	})
 	queue.Purge()
 
+	runGameLoop(queue, ui)
+}
+
+func runGameLoop(queue render.RenderQueueInterface, ui *gui.Gui) {
+	currentMode := applicationStartupMode
 	var profile_output *os.File
 	heap_prof_count := 0
 
@@ -412,6 +415,7 @@ func main() {
 		if base.IsDevel() {
 			if key_map["cpu profile"].FramePressCount() > 0 {
 				if profile_output == nil {
+					var err error
 					profile_output, err = os.Create(filepath.Join(datadir, "cpu.prof"))
 					if err == nil {
 						err = pprof.StartCPUProfile(profile_output)
