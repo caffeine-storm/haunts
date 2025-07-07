@@ -93,44 +93,6 @@ func openLogFile(datadir string) (*os.File, error) {
 	return f, nil
 }
 
-func init() {
-	// TODO(tmckee): uhhh... shouldn't we _not_ call this here?
-	runtime.LockOSThread()
-	gin.In().SetLogger(logging.InfoLogger())
-
-	logging.SetLoggingLevel(slog.LevelInfo)
-	sys = system.Make(gos.NewSystemInterface(), gin.In())
-
-	rand.Seed(100)
-	datadir = "data"
-	base.SetDatadir(datadir)
-	var err error
-	logFile, err = openLogFile(base.GetDataDir())
-	if err != nil {
-		fmt.Printf("warning: couldn't open logfile in %q\nlogging to stdout instead\n", base.GetDataDir())
-		logFile = os.Stdout
-		err = nil
-	}
-
-	// Ignore the returned 'undo' func; it's only really for testing. We don't
-	// want to _not_ log to the log file.
-	_, logReader = logging.RedirectAndSpy(logFile)
-
-	logging.Info("Setting datadir", "datadir", datadir)
-	err = house.SetDatadir(datadir)
-	if err != nil {
-		panic(err.Error())
-	}
-
-	var key_binds base.KeyBinds
-	base.LoadJson(filepath.Join(datadir, "key_binds.json"), &key_binds)
-	key_map = key_binds.MakeKeyMap()
-	base.SetDefaultKeyMap(key_map)
-
-	wdx = 1024
-	wdy = 750
-}
-
 type draggerZoomer interface {
 	Drag(float64, float64)
 	SetZoom(float32)
@@ -290,6 +252,40 @@ func WatchForSlowJobs() *render.JobTimingListener {
 }
 
 func main() {
+	gin.In().SetLogger(logging.InfoLogger())
+
+	logging.SetLoggingLevel(slog.LevelInfo)
+	sys = system.Make(gos.NewSystemInterface(), gin.In())
+
+	rand.Seed(100)
+	datadir = "data"
+	base.SetDatadir(datadir)
+	var err error
+	logFile, err = openLogFile(base.GetDataDir())
+	if err != nil {
+		fmt.Printf("warning: couldn't open logfile in %q\nlogging to stdout instead\n", base.GetDataDir())
+		logFile = os.Stdout
+		err = nil
+	}
+
+	// Ignore the returned 'undo' func; it's only really for testing. We don't
+	// want to _not_ log to the log file.
+	_, logReader = logging.RedirectAndSpy(logFile)
+
+	logging.Info("Setting datadir", "datadir", datadir)
+	err = house.SetDatadir(datadir)
+	if err != nil {
+		panic(err.Error())
+	}
+
+	var key_binds base.KeyBinds
+	base.LoadJson(filepath.Join(datadir, "key_binds.json"), &key_binds)
+	key_map = key_binds.MakeKeyMap()
+	base.SetDefaultKeyMap(key_map)
+
+	wdx = 1024
+	wdy = 750
+
 	defer func() {
 		if r := recover(); r != nil {
 			onHauntsPanic(r)
