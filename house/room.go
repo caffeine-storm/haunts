@@ -706,21 +706,21 @@ func (room *Room) Render(roomMats perspective.RoomMats, zoom float32, base_alpha
 			gl.ClientActiveTexture(gl.TEXTURE0)
 		}
 
-		var mul, run mathgl.Mat4
-		run.Assign(&roomMats.Floor)
+		var mul mathgl.Mat4
 		mul.Translation(float32(-room.X), float32(-room.Y), 0)
-		run.Multiply(&mul)
-		gl.LoadMatrixf((*[16]float32)(&run))
-		gl.StencilFunc(gl.EQUAL, 2, 3)
-		gl.StencilOp(gl.KEEP, gl.KEEP, gl.KEEP)
-		room_rect := image.Rect(room.X, room.Y, room.X+room.Size.Dx, room.Y+room.Size.Dy)
-		for _, fd := range floor_drawers {
-			x, y := fd.Pos()
-			dx, dy := fd.Dims()
-			if room_rect.Overlaps(image.Rect(x, y, x+dx, y+dy)) {
-				fd.RenderOnFloor()
+
+		render.WithMultMatrixInMode(&mul, render.MatrixModeModelView, func() {
+			gl.StencilFunc(gl.EQUAL, 2, 3)
+			gl.StencilOp(gl.KEEP, gl.KEEP, gl.KEEP)
+			room_rect := image.Rect(room.X, room.Y, room.X+room.Size.Dx, room.Y+room.Size.Dy)
+			for _, fd := range floor_drawers {
+				x, y := fd.Pos()
+				dx, dy := fd.Dims()
+				if room_rect.Overlaps(image.Rect(x, y, x+dx, y+dy)) {
+					fd.RenderOnFloor()
+				}
 			}
-		}
+		})
 
 		do_color(255, 255, 255, 255)
 		gl.LoadIdentity()
