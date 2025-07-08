@@ -259,7 +259,7 @@ func Main(argv []string) {
 			Dx: 1024,
 			Dy: 768,
 		})}
-		if argv[1] == "lvl1" {
+		if len(argv) > 1 && argv[1] == "lvl1" {
 			lvl1scenario := game.Scenario{
 				Script:    "Lvl01.lua",
 				HouseName: "Lvl_01_Haunted_House",
