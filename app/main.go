@@ -22,6 +22,7 @@ import (
 	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/logging"
+	"github.com/MobRulesGames/haunts/mrgnet"
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/sound"
 	"github.com/MobRulesGames/haunts/texture"
@@ -177,7 +178,7 @@ func initializeDependencies() (system.System, io.Reader, func()) {
 	}
 }
 
-func Main() {
+func Main(argv []string) {
 	sys, logReader, cleanup := initializeDependencies()
 	defer cleanup()
 
@@ -251,21 +252,33 @@ func Main() {
 
 	game.Restart = func() {
 		logging.Info("Restarting...")
+		defer logging.Info("Restarted")
+
 		ui.RemoveChild(game_box)
 		game_box = &lowerLeftTable{gui.MakeAnchorBox(gui.Dims{
 			Dx: 1024,
 			Dy: 768,
 		})}
-		layout, err := game.LoadStartLayoutFromDatadir(base.GetDataDir())
-		if err != nil {
-			panic(fmt.Errorf("loading start layout failed: %w", err))
-		}
-		err = game.InsertStartMenu(game_box, *layout)
-		if err != nil {
-			panic(fmt.Errorf("couldn't insert start menu: %w", err))
+		if argv[1] == "lvl1" {
+			lvl1scenario := game.Scenario{
+				Script:    "Lvl01.lua",
+				HouseName: "Lvl_01_Haunted_House",
+			}
+			var player *game.Player // nil for now
+			nodata := map[string]string{}
+			nogamekey := mrgnet.GameKey("")
+			game_box.AddChild(game.MakeGamePanel(lvl1scenario, player, nodata, nogamekey))
+		} else {
+			layout, err := game.LoadStartLayoutFromDatadir(base.GetDataDir())
+			if err != nil {
+				panic(fmt.Errorf("loading start layout failed: %w", err))
+			}
+			err = game.InsertStartMenu(game_box, *layout)
+			if err != nil {
+				panic(fmt.Errorf("couldn't insert start menu: %w", err))
+			}
 		}
 		ui.AddChild(game_box)
-		logging.Info("Restarted")
 	}
 	game.Restart()
 
