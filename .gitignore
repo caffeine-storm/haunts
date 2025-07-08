@@ -6,7 +6,6 @@ shaunts.app
 _test
 *.sublime-project
 *.sublime-workspace
-GEN*
 openme
 *.log
 data/store

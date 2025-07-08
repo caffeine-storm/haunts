@@ -1,16 +1,19 @@
 package genversion_test
 
 import (
+	"bytes"
 	"fmt"
-	"os"
+	"io"
 	"os/exec"
 	"testing"
 
 	"github.com/MobRulesGames/haunts/tools/genversion"
 )
 
-func checkFmt(path string) error {
-	cmd := exec.Command("gofmt", "-l", path)
+func checkFmt(fileContent io.Reader) error {
+	cmd := exec.Command("gofmt", "-l")
+	cmd.Stdin = fileContent
+
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return err
@@ -18,17 +21,21 @@ func checkFmt(path string) error {
 
 	if len(output) != 0 {
 		fmt.Printf("%s\n", string(output))
-		return fmt.Errorf("target needs reformatting: %q", path)
+		return fmt.Errorf("target needs reformatting")
 	}
+
 	return nil
 }
 
 func TestGeneratedFileIsFormatted(t *testing.T) {
-	os.Chdir("../..")
-	genversion.GenFile()
+	buf := &bytes.Buffer{}
+	err := genversion.GenFile("c0ffeec0ffeec0ffeec0ffeec0ffeec0ffeec0ff", buf)
+	if err != nil {
+		panic(fmt.Errorf("couldn't GenFile on 0xc0ffee: %w", err))
+	}
 
-	// `gofmt -l ../../GEN_version.go` shouldn't complain
-	err := checkFmt("GEN_version.go")
+	// `gofmt -l <(buf)` shouldn't complain
+	err = checkFmt(buf)
 	if err != nil {
 		t.Fatalf("checkFmt failed: %v", err)
 	}

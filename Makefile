@@ -5,12 +5,13 @@ SHELL:=/bin/bash
 # Let go tooling decide if things are out-of-date
 .PHONY: haunts
 .PHONY: devhaunts
-.PHONY: clean fmt lint
+.PHONY: it clean fmt lint
 .PHONY: devtest test-prereqs test test-fresh test-nocache test-report test-verbose
 .PHONY: dlv-devtest dlv-test
 .PHONY: clean_rejects list_rejects promote_rejects view_rejects
 .PHONY: update-appveyor-image update-glop
 
+DATADIR:=data
 TEST_REPORT_TAR:=test-report.tar.gz
 PERF?=perf
 
@@ -23,14 +24,18 @@ endif
 # On WSL, Xvfb thinks it can talk to hardware. Tell it not to.
 XVFB_RUN:=LIBGL_ALWAYS_SOFTWARE=true xvfb-run -a --server-args="-screen 0 1920x1080x24"
 
-SRC_DATADIR:=data
-
-
 it: haunts
-go: haunts ${SRC_DATADIR}
+go: haunts ${DATADIR}
 	./haunts
 
-debug: devhaunts ${SRC_DATADIR}
+GENERATED_TARGETS=game/side_string.go app/gen
+app/gen: .git/HEAD
+	go generate ./app/
+
+game/side_string.go:
+	go generate ./game/
+
+debug: devhaunts ${DATADIR}
 	./$^
 
 dev.go.mod: go.mod
@@ -41,28 +46,24 @@ dev.go.sum: go.sum
 	# dev.go.sum is just go.sum
 	cp $^ $@
 
-dlv: devhaunts ${SRC_DATADIR} dev.go.mod
+dlv: devhaunts ${DATADIR} dev.go.mod
 	dlv debug --build-flags='-modfile dev.go.mod -tags nosound' .
 
-devhaunts: dev.go.mod GEN_version.go
-	go build -x -modfile dev.go.mod -o $@ -tags nosound main.go GEN_version.go
+devhaunts: dev.go.mod ${GENERATED_TARGETS}
+	go build -x -modfile dev.go.mod -o $@ -tags nosound main.go
 
 go.sum: go.mod
 	go mod tidy
 
-haunts: |go.mod go.sum
-haunts: GEN_version.go
-	go build -x -o $@ -tags nosound main.go $^
+haunts: go.mod go.sum ${GENERATED_TARGETS}
+haunts: main.go
+	go build -x -o $@ -tags nosound main.go
 
-profile-haunts: haunts ${SRC_DATADIR}
+profile-haunts: haunts ${DATADIR}
 	${PERF} record -g ./$^
 
-profile-dev-haunts: devhaunts ${SRC_DATADIR}
+profile-dev-haunts: devhaunts ${DATADIR}
 	${PERF} record -g ./$^
-
-# TODO(tmckee): this should use 'go gen' instead
-GEN_version.go: tools/genversion/version.go .git/HEAD
-	go run ./tools/genversion/cmd
 
 clean:
 	rm -f ${TEST_REPORT_TAR}
@@ -87,6 +88,8 @@ checkfmt:
 lint:
 	go run github.com/mgechev/revive@v1.5.1 --config revive.toml ./...
 
+test-prereqs: ${GENERATED_TARGETS}
+
 test:
 	${XVFB_RUN} go test ${testrunargs}                     -tags nosound ./...
 
@@ -107,14 +110,14 @@ test-fresh: test-nocache
 
 pkg?= -- set 'pkg' to the package under test --
 dlv-test: singlepackage=${pkg}
-dlv-test: ${SRC_DATADIR}
+dlv-test: ${DATADIR}
 # delve wants exactly one package at a time so "testrunargs" isn't what we
 # want here. We use a var specifically for pointing at a single directory.
 	[ -d "${singlepackage}" ] && \
 	${XVFB_RUN} dlv test --build-flags="-tags nosound" ${singlepackage} -- ${testrunargs}
 
 dlv-devtest: singlepackage=${pkg}
-dlv-devtest: ${SRC_DATADIR}
+dlv-devtest: ${DATADIR}
 # delve wants exactly one package at a time so "testrunargs" isn't what we
 # want here. We use a var specifically for pointing at a single directory.
 	[ -d "${singlepackage}" ] && \
