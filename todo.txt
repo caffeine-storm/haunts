@@ -1,3 +1,5 @@
+- bug#42: hitting 'back' on the side-select screen for lvl1 starts the game T_T
+
 - bug#41: zooming is broken
 
 - bug#40: during some refactoring, we had to add a bunch of extra calls to
@@ -140,4 +142,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#42: <next>
+- bug#43: <next>
