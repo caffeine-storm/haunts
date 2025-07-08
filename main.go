@@ -139,7 +139,7 @@ func WatchForSlowJobs() *render.JobTimingListener {
 	}
 }
 
-func setupDependencyModules() (system.System, io.Reader, func()) {
+func initializeDependencies() (system.System, io.Reader, func()) {
 	gin.In().SetLogger(logging.InfoLogger())
 
 	logging.SetLoggingLevel(slog.LevelInfo)
@@ -174,11 +174,14 @@ func setupDependencyModules() (system.System, io.Reader, func()) {
 }
 
 func main() {
-	sys, logReader, cleanup := setupDependencyModules()
+	sys, logReader, cleanup := initializeDependencies()
 	defer cleanup()
 
 	var key_binds base.KeyBinds
-	base.LoadJson(filepath.Join(base.GetDataDir(), "key_binds.json"), &key_binds)
+	err := base.LoadJson(filepath.Join(base.GetDataDir(), "key_binds.json"), &key_binds)
+	if err != nil {
+		panic(fmt.Errorf("couldn't load key binds: %w", err))
+	}
 	key_map = key_binds.MakeKeyMap()
 	base.SetDefaultKeyMap(key_map)
 
