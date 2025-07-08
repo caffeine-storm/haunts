@@ -22,11 +22,20 @@ func main() {
 		panic(fmt.Errorf("couldn't os.ReadFile(%q): %w", inpath, err))
 	}
 
-	ref := strings.TrimSpace(strings.SplitAfterN(string(headBytes), " ", 2)[1])
-	commitHashPath := filepath.Join(filepath.Dir(inpath), string(ref))
-	commitHash, err := os.ReadFile(commitHashPath)
-	if err != nil {
-		panic(fmt.Errorf("couldn't os.ReadFile(%q): %w", commitHashPath, err))
+	// the contents of .git/HEAD might be a raw hash like
+	//   c0ffeec0ffec0ffec0ffec0ffec0ffec0ffeec0f
+	// or a line like
+	//   ref: refs/heads/main'
+	var commitHash []byte
+	if bytes.HasPrefix(headBytes, []byte("ref: ")) {
+		ref := strings.TrimSpace(strings.SplitAfterN(string(headBytes), " ", 2)[1])
+		commitHashPath := filepath.Join(filepath.Dir(inpath), string(ref))
+		commitHash, err = os.ReadFile(commitHashPath)
+		if err != nil {
+			panic(fmt.Errorf("couldn't os.ReadFile(%q): %w", commitHashPath, err))
+		}
+	} else {
+		commitHash = headBytes
 	}
 	commitHash = bytes.TrimSpace(commitHash)
 
