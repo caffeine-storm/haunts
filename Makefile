@@ -1,4 +1,15 @@
+all: haunts
+
 SHELL:=/bin/bash
+
+# Let go tooling decide if things are out-of-date
+.PHONY: haunts
+.PHONY: devhaunts
+.PHONY: clean fmt lint
+.PHONY: devtest test-prereqs test test-fresh test-nocache test-report test-verbose
+.PHONY: dlv-devtest dlv-test
+.PHONY: clean_rejects list_rejects promote_rejects view_rejects
+.PHONY: update-appveyor-image update-glop
 
 TEST_REPORT_TAR:=test-report.tar.gz
 PERF?=perf
@@ -14,7 +25,6 @@ XVFB_RUN:=LIBGL_ALWAYS_SOFTWARE=true xvfb-run -a --server-args="-screen 0 1920x1
 
 SRC_DATADIR:=data
 
-all: haunts
 
 it: haunts
 go: haunts ${SRC_DATADIR}
@@ -184,12 +194,3 @@ ${TEST_REPORT_TAR}:
 
 trace-house-test:
 	xvfb-run -a go test ${testrunargs} -exec ../tools/apitrace/trace-gl.sh -tags nosound ./house
-
-# Let go tooling decide if things are out-of-date
-.PHONY: haunts
-.PHONY: devhaunts
-.PHONY: clean fmt lint
-.PHONY: devtest test test-fresh test-nocache test-report test-verbose
-.PHONY: dlv-devtest dlv-test
-.PHONY: clean_rejects list_rejects promote_rejects view_rejects
-.PHONY: update-appveyor-image update-glop
