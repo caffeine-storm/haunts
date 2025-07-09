@@ -1,3 +1,20 @@
+- bug#43: We can lose decent file+line attribution of failing tests when a
+  gametest.RunDrawingTest fails. The reason seems to be that Convey generates
+  attribution by looking for a ".*_test[s].go$" pattern in filenames on the
+  stack according to a runtime.Callers call. This is broken for us because the
+  call to convey.So happens on a purpose-built goroutine that doesn't have the
+  gametest's client-test on the stack __AND__ draw_ui.go doesn't have a
+  matching _test.go suffix. We're kinda stuck because we need draw_ui.go to be
+  used from arbitrary test-packages so we can't just move it to a
+  draw_ui_test.go file T_T.
+
+  The real solution is probably to submit a bug report with Convey; they should
+  support attribution based on the current Convey context instead of just on
+  the current-call-stack.
+
+  For now, we can rely on the rejection file name to point us in the right
+  direction.
+
 - bug#42: hitting 'back' on the side-select screen for lvl1 starts the game T_T
 
 - bug#41: zooming is broken
@@ -139,4 +156,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#43: <next>
+- bug#44: <next>
