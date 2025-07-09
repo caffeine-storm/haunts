@@ -23,9 +23,9 @@ func givenAnOnlineMenu() gametest.Drawer {
 }
 
 func TestUiOnline(t *testing.T) {
-	Convey("UI for starting an online game", t, func() {
+	Convey("UI for starting an online game", t, func(c C) {
 		base.SetDatadir("../data")
 
-		gametest.RunDrawingTest(givenAnOnlineMenu, "online")
+		gametest.RunDrawingTest(c, givenAnOnlineMenu, "online")
 	})
 }

@@ -32,9 +32,6 @@
   what was then, new test harness code. The clicks seem to work except on
   nexus.
 
-- bug#31: take a convey.C as a parameter in our gamtest helper to encourage
-  callers to run from within a convey context.
-
 - bug#30: while trying to load the intruders tutorial, we panicked in some
   sprite things; need to investigate
 

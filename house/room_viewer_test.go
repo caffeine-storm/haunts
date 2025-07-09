@@ -13,8 +13,8 @@ import (
 func TestRoomViewer(t *testing.T) {
 	base.SetDatadir("../data")
 
-	Convey("house.roomViewer", t, func() {
-		gametest.RunDrawingTest(func() gametest.Drawer {
+	Convey("house.roomViewer", t, func(c C) {
+		gametest.RunDrawingTest(c, func() gametest.Drawer {
 			room := loadRoom("restest.room", globals.RenderQueue())
 			return house.MakeRoomViewer(room, 62)
 		}, "room-viewer")

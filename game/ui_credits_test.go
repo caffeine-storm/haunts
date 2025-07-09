@@ -22,9 +22,9 @@ func givenACreditsMenu() gametest.Drawer {
 }
 
 func TestUiCredits(t *testing.T) {
-	Convey("UI for the Credits screen", t, func() {
+	Convey("UI for the Credits screen", t, func(c C) {
 		base.SetDatadir("../data")
 
-		gametest.RunDrawingTest(givenACreditsMenu, "credits")
+		gametest.RunDrawingTest(c, givenACreditsMenu, "credits")
 	})
 }

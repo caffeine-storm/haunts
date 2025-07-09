@@ -87,8 +87,8 @@ func RunStartupSpecs() {
 		return menu
 	}
 
-	Convey("drawing the startup ui", func() {
-		gametest.RunDrawingTest(menuMaker, "startup", func(drawTestCtx gametest.DrawTestContext) {
+	Convey("drawing the startup ui", func(c C) {
+		gametest.RunDrawingTest(c, menuMaker, "startup", func(drawTestCtx gametest.DrawTestContext) {
 			Convey("should let you click the menu", func(c C) {
 				systemtest.TestBuilder(drawTestCtx.GetTestBuilder()).Run(func(window systemtest.Window) {
 					flag := false

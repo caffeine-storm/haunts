@@ -4,6 +4,7 @@ import (
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render/rendertest"
+	"github.com/smartystreets/goconvey/convey"
 )
 
 type drawWithLoggingTrace struct {
@@ -26,8 +27,8 @@ func DrawWithTrace(d Drawer) *drawWithLoggingTrace {
 
 // Like RunDrawingTest but will enable logging traces when the
 // object-under-test is Draw()ing.
-func RunTracedDrawingTest(builder func() Drawer, ref rendertest.TestDataReference) {
-	RunDrawingTest(func() Drawer {
+func RunTracedDrawingTest(c convey.C, builder func() Drawer, ref rendertest.TestDataReference) {
+	RunDrawingTest(c, func() Drawer {
 		return DrawWithTrace(builder())
 	}, ref)
 }

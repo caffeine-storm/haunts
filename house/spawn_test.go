@@ -47,9 +47,9 @@ func TestRenderSpawnPoint(t *testing.T) {
 		return AsGametestDrawer(GivenASpawnPoint())
 	}
 	base.SetDatadir("../data")
-	convey.Convey("spawn points should show up", t, func() {
+	convey.Convey("spawn points should show up", t, func(c convey.C) {
 		house.PushSpawnRegexp(".*")
-		gametest.RunDrawingTest(adapter, "spawnpoint")
+		gametest.RunDrawingTest(c, adapter, "spawnpoint")
 		house.PopSpawnRegexp()
 	})
 }

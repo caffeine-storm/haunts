@@ -43,7 +43,7 @@ func givenAnOverlayWithWaypoints() gametest.Drawer {
 
 func TestOverlay(t *testing.T) {
 	base.SetDatadir("../data")
-	Convey("can be drawn", t, func() {
-		gametest.RunDrawingTest(givenAnOverlayWithWaypoints, "overlay")
+	Convey("can be drawn", t, func(c C) {
+		gametest.RunDrawingTest(c, givenAnOverlayWithWaypoints, "overlay")
 	})
 }

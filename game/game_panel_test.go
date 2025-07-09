@@ -31,8 +31,8 @@ func givenAGamePanel() gametest.Drawer {
 func TestGamePanel(t *testing.T) {
 	Convey("GamePanelSpecs", t, func() {
 		base.SetDatadir("../data")
-		Convey("can draw game panel", func() {
-			gametest.RunDrawingTest(givenAGamePanel, "game-panel")
+		Convey("can draw game panel", func(c C) {
+			gametest.RunDrawingTest(c, givenAGamePanel, "game-panel")
 		})
 	})
 }

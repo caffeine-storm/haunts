@@ -25,8 +25,8 @@ func TestHouseViewer(t *testing.T) {
 	Convey("HouseViewer", t, func() {
 		base.SetDatadir("../data")
 
-		Convey("can draw houseviewer", func() {
-			gametest.RunDrawingTest(givenAHouseViewer, "house-viewer")
+		Convey("can draw houseviewer", func(c C) {
+			gametest.RunDrawingTest(c, givenAHouseViewer, "house-viewer")
 		})
 
 		Convey("has a useful stringification", func() {
