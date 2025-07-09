@@ -12,10 +12,6 @@ import (
 )
 
 type creditsLayout struct {
-	Title struct {
-		X, Y    int
-		Texture texture.Object
-	}
 	Background texture.Object
 	Credits    struct {
 		Scroll ScrollingRegion
@@ -126,8 +122,6 @@ func (cm *CreditsMenu) Draw(region gui.Region, ctx gui.DrawingContext) {
 	cm.region = region
 	gl.Color4ub(255, 255, 255, 255)
 	cm.layout.Background.Data().RenderNatural(region.X, region.Y)
-	title := cm.layout.Title
-	title.Texture.Data().RenderNatural(region.X+title.X, region.Y+title.Y)
 	for _, button := range cm.buttons {
 		button.RenderAt(cm.region.X, cm.region.Y)
 	}

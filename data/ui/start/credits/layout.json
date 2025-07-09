@@ -2,13 +2,6 @@
   "Background": {
     "Path": "ui/dialog/large.png"
   },
-  "Title": {
-    "X": 0,
-    "Y": 0,
-    "Texture": {
-      "Path": ""
-    }
-  },
   "Back": {
     "X": 100,
     "Y": 100,
