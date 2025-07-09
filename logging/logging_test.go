@@ -65,153 +65,151 @@ func ShouldReference(actual interface{}, expected ...interface{}) string {
 	return ShouldContainSourceRef(lineReader, srcRef)
 }
 
-func LoggingSpec() {
-	Convey("Redircet should work", func() {
-		logOutput := &bytes.Buffer{}
-		undo := logging.Redirect(logOutput)
+func TestLogging(t *testing.T) {
+	Convey("logging specification", t, func() {
+		Convey("Redircet should work", func() {
+			logOutput := &bytes.Buffer{}
+			undo := logging.Redirect(logOutput)
 
-		logging.Info("info should emit")
-		logging.Trace("trace should not emit")
+			logging.Info("info should emit")
+			logging.Trace("trace should not emit")
 
-		undo()
+			undo()
 
-		logging.Info("won't be captured")
+			logging.Info("won't be captured")
 
-		So(logOutput.String(), ShouldNotContainSubstring, "won't be captured")
-		So(logOutput.String(), ShouldContainSubstring, "info should emit")
-		So(logOutput.String(), ShouldNotContainSubstring, "trace should not emit")
+			So(logOutput.String(), ShouldNotContainSubstring, "won't be captured")
+			So(logOutput.String(), ShouldContainSubstring, "info should emit")
+			So(logOutput.String(), ShouldNotContainSubstring, "trace should not emit")
 
-		Convey("cleanup should stop redirecting", func() {
-			logging.Info("should not get captured anymore")
-			So(logOutput.String(), ShouldNotContainSubstring, "should not get captured anymore")
+			Convey("cleanup should stop redirecting", func() {
+				logging.Info("should not get captured anymore")
+				So(logOutput.String(), ShouldNotContainSubstring, "should not get captured anymore")
+			})
 		})
-	})
-	Convey("RedircetOutput should work", func() {
-		alsoLogOutput := &bytes.Buffer{}
-		undo, logOutput := logging.RedirectAndSpy(alsoLogOutput)
-		defer undo()
+		Convey("RedircetOutput should work", func() {
+			alsoLogOutput := &bytes.Buffer{}
+			undo, logOutput := logging.RedirectAndSpy(alsoLogOutput)
+			defer undo()
 
-		logging.Info("should be emitted")
-
-		So(len(logOutput.String()), ShouldBeGreaterThan, 0)
-		So(len(alsoLogOutput.String()), ShouldBeGreaterThan, 0)
-		So(logOutput.String(), ShouldContainSubstring, "should be emitted")
-		So(alsoLogOutput.String(), ShouldContainSubstring, "should be emitted")
-	})
-	Convey("calling log helpers should emit records", func() {
-		undo, logOutput := logging.RedirectAndSpy(io.Discard)
-		defer undo()
-		Convey("for tracing if log-level is trace", func() {
-			logging.Trace("should not be emitted -- to verbose")
-			cleanup := logging.SetLoggingLevel(glog.LevelTrace)
-			logging.Trace("should be emitted -- we've releveled")
-			cleanup()
-			So(logOutput.String(), ShouldNotContainSubstring, "ellided")
-			So(logOutput.String(), ShouldNotContainSubstring, "should not be emitted")
-			So(logOutput.String(), ShouldContainSubstring, "should be emitted")
-		})
-		Convey("for infoing", func() {
 			logging.Info("should be emitted")
-			So(len(logOutput.String()), ShouldBeGreaterThan, 0)
-			So(logOutput.String(), ShouldContainSubstring, "should be emitted")
-		})
-		Convey("for erroring", func() {
-			logging.Error("should be emitted")
-			So(len(logOutput.String()), ShouldBeGreaterThan, 0)
-			So(logOutput.String(), ShouldContainSubstring, "should be emitted")
-		})
-	})
 
-	Convey("using logging through the base package", func() {
-		Convey("the source attribute in a log message", func() {
+			So(len(logOutput.String()), ShouldBeGreaterThan, 0)
+			So(len(alsoLogOutput.String()), ShouldBeGreaterThan, 0)
+			So(logOutput.String(), ShouldContainSubstring, "should be emitted")
+			So(alsoLogOutput.String(), ShouldContainSubstring, "should be emitted")
+		})
+		Convey("calling log helpers should emit records", func() {
 			undo, logOutput := logging.RedirectAndSpy(io.Discard)
 			defer undo()
-			Convey("should reference the client code", func() {
-				Convey("when calling 'Info'", func() {
-					base.DeprecatedLog().Info("a test message")
-					So(logOutput, ShouldReference, "logging/logging_test.go")
-				})
-				Convey("when calling 'Trace'", func() {
-					logging.SetDefaultLoggerLevel(glog.LevelTrace)
-					base.DeprecatedLog().Trace("a test message")
-					So(logOutput, ShouldReference, "logging/logging_test.go")
-				})
-				Convey("when calling 'Printf'", func() {
-					base.DeprecatedLog().Printf("a test message")
-					So(logOutput, ShouldReference, "logging/logging_test.go")
-				})
+			Convey("for tracing if log-level is trace", func() {
+				logging.Trace("should not be emitted -- to verbose")
+				cleanup := logging.SetLoggingLevel(glog.LevelTrace)
+				logging.Trace("should be emitted -- we've releveled")
+				cleanup()
+				So(logOutput.String(), ShouldNotContainSubstring, "ellided")
+				So(logOutput.String(), ShouldNotContainSubstring, "should not be emitted")
+				So(logOutput.String(), ShouldContainSubstring, "should be emitted")
+			})
+			Convey("for infoing", func() {
+				logging.Info("should be emitted")
+				So(len(logOutput.String()), ShouldBeGreaterThan, 0)
+				So(logOutput.String(), ShouldContainSubstring, "should be emitted")
+			})
+			Convey("for erroring", func() {
+				logging.Error("should be emitted")
+				So(len(logOutput.String()), ShouldBeGreaterThan, 0)
+				So(logOutput.String(), ShouldContainSubstring, "should be emitted")
 			})
 		})
-		Convey("should print when running tests", func() {
-			lines := logtesting.CollectOutput(func() {
-				base.DeprecatedLog().Error("collected message")
-			})
-			So(strings.Join(lines, "\n"), ShouldContainSubstring, "collected message")
-		})
-	})
 
-	Convey("using logging directly", func() {
-		Convey("the source attribute in a log message", func() {
-			Convey("should reference the client code", func() {
+		Convey("using logging through the base package", func() {
+			Convey("the source attribute in a log message", func() {
 				undo, logOutput := logging.RedirectAndSpy(io.Discard)
 				defer undo()
-				Convey("when using package-level helper funcs", func() {
-					logging.Info("a test message")
-
-					So(logOutput, ShouldReference, "logging/logging_test.go")
+				Convey("should reference the client code", func() {
+					Convey("when calling 'Info'", func() {
+						base.DeprecatedLog().Info("a test message")
+						So(logOutput, ShouldReference, "logging/logging_test.go")
+					})
+					Convey("when calling 'Trace'", func() {
+						logging.SetDefaultLoggerLevel(glog.LevelTrace)
+						base.DeprecatedLog().Trace("a test message")
+						So(logOutput, ShouldReference, "logging/logging_test.go")
+					})
+					Convey("when calling 'Printf'", func() {
+						base.DeprecatedLog().Printf("a test message")
+						So(logOutput, ShouldReference, "logging/logging_test.go")
+					})
 				})
-				Convey("when using a reference to a Logger instance", func() {
-					lgr := logging.InfoLogger()
-					lgr.Info("another test message")
+			})
+			Convey("should print when running tests", func() {
+				lines := logtesting.CollectOutput(func() {
+					base.DeprecatedLog().Error("collected message")
+				})
+				So(strings.Join(lines, "\n"), ShouldContainSubstring, "collected message")
+			})
+		})
 
-					So(logOutput, ShouldReference, "logging/logging_test.go")
+		Convey("using logging directly", func() {
+			Convey("the source attribute in a log message", func() {
+				Convey("should reference the client code", func() {
+					undo, logOutput := logging.RedirectAndSpy(io.Discard)
+					defer undo()
+					Convey("when using package-level helper funcs", func() {
+						logging.Info("a test message")
+
+						So(logOutput, ShouldReference, "logging/logging_test.go")
+					})
+					Convey("when using a reference to a Logger instance", func() {
+						lgr := logging.InfoLogger()
+						lgr.Info("another test message")
+
+						So(logOutput, ShouldReference, "logging/logging_test.go")
+					})
+				})
+			})
+
+			Convey("should print when running tests", func() {
+				lines := logtesting.CollectOutput(func() {
+					logging.Error("collected message")
+				})
+				So(strings.Join(lines, "\n"), ShouldContainSubstring, "collected message")
+			})
+
+			Convey("tracing should be supported during tests", func() {
+				lines := logtesting.CollectOutput(func() {
+					logging.Trace("an ellided message")
+					cleanup := logging.SetLoggingLevel(glog.LevelTrace)
+					logging.Trace("a trace message")
+					cleanup()
+				})
+				So(strings.Join(lines, "\n"), ShouldContainSubstring, "a trace message")
+				Convey("traced messages should be properly attributed", func() {
+					So(strings.Join(lines, "\n"), ShouldContainSubstring, "logging/logging_test.go")
 				})
 			})
 		})
 
-		Convey("should print when running tests", func() {
-			lines := logtesting.CollectOutput(func() {
-				logging.Error("collected message")
-			})
-			So(strings.Join(lines, "\n"), ShouldContainSubstring, "collected message")
-		})
+		Convey("redirection should be resettable", func() {
+			buf1 := &bytes.Buffer{}
 
-		Convey("tracing should be supported during tests", func() {
-			lines := logtesting.CollectOutput(func() {
-				logging.Trace("an ellided message")
-				cleanup := logging.SetLoggingLevel(glog.LevelTrace)
-				logging.Trace("a trace message")
-				cleanup()
-			})
-			So(strings.Join(lines, "\n"), ShouldContainSubstring, "a trace message")
-			Convey("traced messages should be properly attributed", func() {
-				So(strings.Join(lines, "\n"), ShouldContainSubstring, "logging/logging_test.go")
-			})
+			oldErrorLogger := logging.ErrorLogger()
+			resetRedirect := logging.Redirect(buf1)
+
+			oldErrorLogger.Error("oldErrorLogger message 1")
+			logging.Error("logging.Error() message 1")
+
+			resetRedirect()
+
+			oldErrorLogger.Error("oldErrorLogger message 2")
+			logging.Error("logging.Error() message 2")
+
+			// Only 'logging.Error() message 1' should have been sent to buf1
+			bufferedOut := buf1.String()
+			So(bufferedOut, ShouldContainSubstring, "logging.Error() message 1")
+			So(bufferedOut, ShouldNotContainSubstring, "message 2")
+			So(bufferedOut, ShouldNotContainSubstring, "oldErrorLogger")
 		})
 	})
-
-	Convey("redirection should be resettable", func() {
-		buf1 := &bytes.Buffer{}
-
-		oldErrorLogger := logging.ErrorLogger()
-		resetRedirect := logging.Redirect(buf1)
-
-		oldErrorLogger.Error("oldErrorLogger message 1")
-		logging.Error("logging.Error() message 1")
-
-		resetRedirect()
-
-		oldErrorLogger.Error("oldErrorLogger message 2")
-		logging.Error("logging.Error() message 2")
-
-		// Only 'logging.Error() message 1' should have been sent to buf1
-		bufferedOut := buf1.String()
-		So(bufferedOut, ShouldContainSubstring, "logging.Error() message 1")
-		So(bufferedOut, ShouldNotContainSubstring, "message 2")
-		So(bufferedOut, ShouldNotContainSubstring, "oldErrorLogger")
-	})
-}
-
-func TestLogging(t *testing.T) {
-	Convey("base.{Info,Warn,Error} specification", t, LoggingSpec)
 }
