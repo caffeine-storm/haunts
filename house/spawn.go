@@ -32,9 +32,11 @@ func PopSpawnRegexp() {
 	spawn_regex = spawn_regex[0 : len(spawn_regex)-1]
 }
 
+var allowAllRegex = regexp.MustCompile(".*")
+
 func topSpawnRegexp() *regexp.Regexp {
 	if len(spawn_regex) == 0 {
-		panic(fmt.Errorf("tried to peek at empty regex stack"))
+		return allowAllRegex
 	}
 	return spawn_regex[len(spawn_regex)-1]
 }
