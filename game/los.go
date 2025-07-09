@@ -1134,7 +1134,7 @@ func (g *Game) Think(dt int64) {
 		g.viewer.AddFloorDrawable(g.current_action)
 		ent.current_action = g.current_action
 		g.Action_state = verifyingAction
-		logging.Info("ScriptComm: request exec verification")
+		logging.Debug("ScriptComm: request exec verification")
 		g.comm.game_to_script <- g.current_exec
 	}
 

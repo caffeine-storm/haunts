@@ -132,7 +132,7 @@ func GetRasteredFont(size int) *gui.RasteredFont {
 	f, err := os.Open(filename)
 	if err == nil {
 		defer f.Close()
-		logging.Info("font-cache-hit", "fontName", "standard", "size", size)
+		logging.Trace("font-cache-hit", "fontName", "standard", "size", size)
 		var d gui.Dictionary
 		d.Load(f)
 		return &d.Data
@@ -208,7 +208,7 @@ func loadDictionaryByProperties(fontName string, size int) *gui.Dictionary {
 	f, err := os.Open(filename)
 	if err == nil {
 		defer f.Close()
-		logging.Info("font-cache-hit", "fontName", fontName, "size", size)
+		logging.Debug("font-cache-hit", "fontName", fontName, "size", size)
 		d, err := loadDictionaryFromFile(f, &immediateQueue{}, logging.DebugLogger())
 		if err != nil {
 			panic(fmt.Errorf("couldn't loadDictionaryFromFile for %q @%d: %w", fontName, size, err))

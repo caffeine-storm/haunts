@@ -59,7 +59,7 @@ func doChooserMenu(ui gui.WidgetParent, cm chooserMaker, r replacer, i inserter)
 		m := <-done
 		ui.RemoveChild(chooser)
 		if m != nil {
-			logging.Info("doChooserMenu", "chose", m)
+			logging.Debug("doChooserMenu", "chose", m)
 			err = i(ui, r)
 			if err != nil {
 				logging.Error("doChooserMenu", "i(nsert) failed", err)
@@ -84,7 +84,7 @@ func insertGoalMenu(ui gui.WidgetParent, replace replacer) error {
 		m := <-done
 		ui.RemoveChild(chooser)
 		if m != nil {
-			logging.Info("insertGoalMenu", "chose", m)
+			logging.Debug("insertGoalMenu", "chose", m)
 			err = insertGoalMenu(ui, replace)
 			if err != nil {
 				logging.Error("insertGoalMenu", "failed", err)
@@ -111,7 +111,7 @@ func InsertVersusMenu(ui gui.WidgetParent, replace func(gui.WidgetParent) error)
 		m := <-done
 		ui.RemoveChild(chooser)
 		if m != nil && len(m) == 1 {
-			logging.Info("Versus Menu", "chose", m)
+			logging.Debug("Versus Menu", "chose", m)
 			// TODO(tmckee:#35): For now, everyone gets the tutorial house :p
 			scenario := Scenario{
 				Script:    "versus/basic.lua",

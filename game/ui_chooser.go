@@ -228,7 +228,7 @@ func InsertMapChooser(ui gui.WidgetParent, chosen func(Scenario), resert func(ui
 	}
 	var opts []Option
 	algorithm.Map(bops, &opts, func(ob OptionBasic) Option { return &ob })
-	logging.Info("InsertMapChooser", "options", opts)
+	logging.Debug("InsertMapChooser", "options", opts)
 
 	var ch Chooser
 	err = base.LoadAndProcessObject(filepath.Join(datadir, "ui", "chooser", "layout.json"), "json", &ch.layout)

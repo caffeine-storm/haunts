@@ -134,7 +134,7 @@ func spawnEnts(g *Game, ents []*Entity, spawns []*house.SpawnPoint) {
 		}
 	}
 	if sanity > 0 {
-		logging.Info("Placed all objects", "remaning sanity", sanity)
+		logging.Debug("Placed all objects", "remaning sanity", sanity)
 	} else {
 		logging.Warn("Out of sanity while placing objects", "placed", len(places), "requested", len(spawns))
 	}
@@ -143,6 +143,6 @@ func spawnEnts(g *Game, ents []*Entity, spawns []*house.SpawnPoint) {
 		place.ent.Y = float64(place.spawn.Y + rand.Intn(place.spawn.Dy-place.ent.Dy+1))
 		g.viewer.AddDrawable(place.ent)
 		g.Ents = append(g.Ents, place.ent)
-		logging.Info("placing", "object", place.ent.Name, "pos", []any{place.ent.X, place.ent.Y})
+		logging.Debug("placing", "object", place.ent.Name, "pos", []any{place.ent.X, place.ent.Y})
 	}
 }

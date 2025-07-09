@@ -82,7 +82,7 @@ func (sp *SpawnPoint) RenderOnFloor() {
 		return
 	}
 
-	logging.Info("SpawnPoint.RenderOnFloor not skipping", "spawn", sp)
+	logging.Trace("SpawnPoint.RenderOnFloor not skipping", "spawn", sp)
 	var rgba [4]float64
 	gl.GetDoublev(gl.CURRENT_COLOR, rgba[:])
 	gl.PushAttrib(gl.CURRENT_BIT)
@@ -112,7 +112,7 @@ func (sp *SpawnPoint) RenderOnFloor() {
 	// gl.Color4ub(, uint8((hs/256)%256), uint8((hs/(256*256))%256), uint8(255*rgba[3]))
 
 	gl.Color4ub(255, 0, 0, 255)
-	logging.Info("glstate", "glstate", debug.GetGlState(), "colour", colour, "for now", "red")
+	logging.Trace("glstate", "glstate", debug.GetGlState(), "colour", colour, "for now", "red")
 
 	/*
 		base.EnableShader("box")

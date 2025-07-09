@@ -125,7 +125,7 @@ func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[
 	player.Script_path = scenario.Script
 	// TODO(tmckee:#38): have a GamePanel.Clear() or smth
 	gp.AnchorBox = gui.MakeAnchorBox(gui.Dims{Dx: 1024, Dy: 768})
-	logging.Info("startGameScript", "scenario", scenario)
+	logging.Debug("startGameScript", "scenario", scenario)
 	if scenario.Script != "" && !filepath.IsAbs(scenario.Script) {
 		scenario.Script = filepath.Join(base.GetDataDir(), "scripts", filepath.FromSlash(scenario.Script))
 	}
@@ -162,7 +162,7 @@ func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[
 		gp.script.mustRunString(string(prog))
 	}
 
-	logging.Info("Sync", "gp.script.sync", gp.script.sync)
+	logging.Debug("Sync", "gp.script.sync", gp.script.sync)
 
 	// Make sure we don't return from this function until 'gp.Game' is set. We
 	// make the game in another goroutine so we'll block on a signalling channel.
@@ -234,11 +234,11 @@ func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[
 					gp.game.Turn = len(resp.Game.Execs) + 1
 
 					if net_id == resp.Game.Denizens_id {
-						logging.Info("Setting side to Denizens", "turn", gp.game.Turn)
+						logging.Debug("Setting side to Denizens", "turn", gp.game.Turn)
 						gp.game.net.side = SideHaunt
 						gp.game.Side = SideHaunt
 					} else {
-						logging.Info("Setting side to Intruders", "turn", gp.game.Turn)
+						logging.Debug("Setting side to Intruders", "turn", gp.game.Turn)
 						gp.game.net.side = SideExplorers
 						gp.game.Side = SideExplorers
 					}
@@ -307,7 +307,7 @@ func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[
 		if gameStartErr != nil {
 			panic(fmt.Errorf("couldnt' create a game: %w", gameStartErr))
 		}
-		logging.Info("game started")
+		logging.Debug("game started")
 	case <-time.After(1 * time.Second):
 		panic(fmt.Errorf("game startup deadline exceeded"))
 	}
@@ -785,7 +785,7 @@ func chooserFromFile(gp *GamePanel) lua.LuaGoFunction {
 
 func loadHouse(gp *GamePanel) lua.LuaGoFunction {
 	return func(L *lua.State) int {
-		logging.Info("in ur loadHouse")
+		logging.Debug("in ur loadHouse")
 		if !LuaCheckParamsOk(L, "LoadHouse", LuaString) {
 			logging.Error("LuaCheckParamsOk rejection: LoadHouse(LuaString)")
 			return 0
@@ -794,7 +794,7 @@ func loadHouse(gp *GamePanel) lua.LuaGoFunction {
 		defer gp.script.syncEnd()
 
 		name := L.ToString(-1)
-		logging.Info("in ur loadHouse", "loadin ur house", name)
+		logging.Debug("in ur loadHouse", "loadin ur house", name)
 		def := house.MakeHouseFromName(name)
 		if def == nil || len(def.Floors) == 0 {
 			logging.Error("no house with given name", "name", name)
@@ -1216,7 +1216,7 @@ func pickFromN(gp *GamePanel) lua.LuaGoFunction {
 			}
 			done <- struct{}{}
 		}
-		logging.Info("HHHHUUUUUUUUUUUUUUUUIIIIIIIIIIIIII!")
+		logging.Debug("HHHHUUUUUUUUUUUUUUUUIIIIIIIIIIIIII!")
 		chooser = hui.MakeRosterChooser(options, selector, on_complete, nil)
 		gp.script.syncStart()
 		gp.AddChild(chooser, gui.Anchor{0.5, 0.5, 0.5, 0.5})
@@ -1938,7 +1938,7 @@ func registerUtilityFunctions(L *lua.State) {
 		for i := -n; i < 0; i++ {
 			res += LuaStringifyParam(L, i) + " "
 		}
-		logging.Info("GameScript::print", "L", L, "msg", res)
+		logging.Info("GameScript::print", "msg", res)
 		return 0
 	})
 }

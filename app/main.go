@@ -164,7 +164,7 @@ func initializeDependencies() (system.System, io.Reader, func()) {
 	// want to _not_ log to the log file.
 	_, logReader := logging.RedirectAndSpy(logFile)
 
-	logging.Info("Setting datadir", "datadir", base.GetDataDir())
+	logging.Info("setting datadir", "datadir", base.GetDataDir())
 	err = house.SetDatadir(base.GetDataDir())
 	if err != nil {
 		panic(err.Error())
@@ -251,8 +251,8 @@ func Main(argv []string) {
 	editor = editors[editor_name]
 
 	game.Restart = func() {
-		logging.Info("Restarting...")
-		defer logging.Info("Restarted")
+		logging.Info("restarting")
+		defer logging.Info("restarted")
 
 		ui.RemoveChild(game_box)
 		game_box = &lowerLeftTable{gui.MakeAnchorBox(gui.Dims{

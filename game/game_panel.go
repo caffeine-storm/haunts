@@ -68,9 +68,7 @@ func (gp *GamePanel) Think(ui *gui.Gui, t int64) {
 	}
 	dt := t - gp.last_think
 	gp.last_think = t
-	logging.TraceBracket(func() {
-		gp.game.Think(dt)
-	})
+	gp.game.Think(dt)
 
 	if gp.main_bar != nil {
 		if gp.game.selected_ent != nil {

@@ -93,7 +93,7 @@ func InsertStartMenu(ui gui.WidgetParent, layout StartLayout) error {
 		err := InsertMapChooser(
 			ui,
 			func(scenario Scenario) {
-				logging.Info("MenuVersus buttonf", "scenario", scenario)
+				logging.Debug("MenuVersus buttonf", "scenario", scenario)
 				ui.AddChild(MakeGamePanel(scenario, nil, nil, ""))
 			},
 			func(parent gui.WidgetParent) error {
