@@ -214,6 +214,9 @@ func Main(argv []string) {
 		gl.Enable(gl.BLEND)
 		gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 	}, WatchForSlowJobs())
+	queue.AddErrorCallback(func(_ render.RenderQueueInterface, e error) {
+		logging.Error("render-thread error", "err", e)
+	})
 	queue.StartProcessing()
 
 	texture.Init(queue)
