@@ -67,51 +67,51 @@
 - bug#26: LuaStringifyParam is stubbed and leading to useless debug output
 
 - bug#24: game/script.go:loadgameStateRaw reaches into the GamePanel to set a
-	'Game' pointer; it should just load the state and let calling code make Game
-	objects if needed, I'd think
+  'Game' pointer; it should just load the state and let calling code make Game
+  objects if needed, I'd think
 
 - bug#22: editing key_binds.json can cause panics; e.g. remove 'screenshot'
-	from the mapping in the .json file and main.go will panic
+  from the mapping in the .json file and main.go will panic
 
 - bug#21: sometimes (don't know why yet) the window doesn't get focus when
-	starting
+  starting
 
 - bug#20: add better feedback for TextureManager.BlockUntilLoaded failures
 	- include the set of textures waited on
 	- include how long it took to successfully load the textures that _did_ load
 
 - bug#18: the buttons in game/ui_button.go invoke their "on-click" in Respond
-	_and_ in "handleClick" ... it should really only be one or the
-	other!
+  _and_ in "handleClick" ... it should really only be one or the
+  other!
 
 - bug#17: we're doing something weird with key binds in base/bindings.go. We
-	should make sure that we support modifiers on compound derived-keys.
+  should make sure that we support modifiers on compound derived-keys.
 
 - bug#16: `rand.Seed(100)` in main.go is there for testing (we want the same
-	sequence of random nums for reproducibility) but that form of seeding is bad;
-	it couples to package-level state and should be replaced with
-	`rng := rand.New(rand.NewSource(100))` and then pipe `rng` everywhere but I
-	can't be bothered right now.
+  sequence of random nums for reproducibility) but that form of seeding is bad;
+  it couples to package-level state and should be replaced with
+  `rng := rand.New(rand.NewSource(100))` and then pipe `rng` everywhere but I
+  can't be bothered right now.
 
 - bug#15: glop has its own texture package/manager but there is another,
-	similar-but-not-the-same, one in haunts. We should DRY it out.
+  similar-but-not-the-same, one in haunts. We should DRY it out.
 
 - bug#14: naming in door.go seems weird. It might be that 'floor' things are
-	_actually_ referring to drawing operations that will affect the look of the
-	floor, but I kinda doubt it.
+  _actually_ referring to drawing operations that will affect the look of the
+  floor, but I kinda doubt it.
 
 - bug#13: improve base.registry APIs;
 	- lots of reflection was needed b/c of a lack of generics back in the day
 	- there seems to be the start of a "use this initializer hook" with the
-		"autoload" tag but there doesn't seem to be any real use of it? Perhaps
-		redesign how/where/if a constructor runs when loading the object.
+	  "autoload" tag but there doesn't seem to be any real use of it? Perhaps
+	  redesign how/where/if a constructor runs when loading the object.
 
 - bug#12: improve APIs so that we don't have to _remember_ to call SetupGLStuff
-	everywhere.
+  everywhere.
 
 - bug#10: tests that need to be skipped for now can be tagged with this bug.
-	That way, we can easily find them and disable higher-level tests when we need
-	to re-focus.
+  That way, we can easily find them and disable higher-level tests when we need
+  to re-focus.
 
 - console is getting input even when it's not open
 
@@ -121,26 +121,18 @@
 	  'data' which seems wrong? see house/furniture_tab.go
 
 - bug#8: house.MakeLosTexture should either always get called on a render
-	thread or never get called on a render thread. If we refactor game/los.go's
-	alloc() to farm out the call to a render thread, we can remove the
-	queue-from-within in house.MakeLosTexture, then always call the whole
-	function on a render thread.
-
-- room.far_left.wall_alpha == room.far_right.wall_alpha == 0 ... which will
-  make rendering on the wall transparent T_T
-	- not-test calls to room.Render do a _bunch_ of math to get the left, right
-	  and floor matrices
-	- need proper encapsulation on gl ID holding structs
-	- need to DRY out Decal.setupGlStuff; lot of duplication between floor,
-	  left-wall and right-wall
+  thread or never get called on a render thread. If we refactor game/los.go's
+  alloc() to farm out the call to a render thread, we can remove the
+  queue-from-within in house.MakeLosTexture, then always call the whole
+  function on a render thread.
 
 - bug#6: The 'edit mode' screen can really lag out; afterwards, switching back
   to the startup screen seems to break
 	- we need to profile and optimize it
 	- blockage in drivers? __driDriverGetExtensions_d3d12 seems like the culprit
-		; best guess is that it's building a string describing all the GL
-		extensions that the wslg d3d12 'gallium' driver supports. Rebuilding every
-		time most likely T_T
+	  ; best guess is that it's building a string describing all the GL
+	  extensions that the wslg d3d12 'gallium' driver supports. Rebuilding every
+	  time most likely T_T
 	- note: running `glxgears` while running `haunts` can cause `glxgears` to
 	  stop rendering properly once `haunts` hits the hitch
 		- this could indicate that something in WSL is crashing (maybe XWayland?)
@@ -160,4 +152,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#44: <next>
+- bug#45: <next>
