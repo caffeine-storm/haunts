@@ -1,3 +1,7 @@
+- bug#44: when placing entities on spawn points, we should have better feedback
+  when 'Done' is clickable. We brighten it a bit on hover-and-valid but there's
+  no indication before hovering.
+
 - bug#43: We can lose decent file+line attribution of failing tests when a
   gametest.RunDrawingTest fails. The reason seems to be that Convey generates
   attribution by looking for a ".*_test[s].go$" pattern in filenames on the
