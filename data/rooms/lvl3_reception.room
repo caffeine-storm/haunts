@@ -79,7 +79,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_04.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Mirrors - Wall",
             "Flip": false,

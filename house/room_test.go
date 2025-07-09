@@ -121,8 +121,8 @@ func TestRoom(t *testing.T) {
 
 					queue.Queue(func(render.RenderQueueState) {
 						house.WithRoomRenderGlSettings(floor, func() {
-							logging.Info("about to render wall textures", "floor", render.Showmat(floor))
-							room.RenderWallTextures(&floor, opaquealpha)
+							logging.Info("about to render decals", "floor", render.Showmat(floor))
+							room.RenderDecals(&floor, opaquealpha)
 						})
 					})
 					queue.Purge()

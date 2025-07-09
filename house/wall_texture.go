@@ -11,27 +11,27 @@ import (
 	"github.com/go-gl-legacy/gl"
 )
 
-func LoadWallTexture(name string) *WallTexture {
-	wt := WallTexture{Defname: name}
-	wt.Load()
-	return &wt
+func LoadDecal(name string) *Decal {
+	decal := Decal{Defname: name}
+	decal.Load()
+	return &decal
 }
 
-func GetAllWallTextureNames() []string {
-	return base.GetAllNamesInRegistry("wall_textures")
+func GetAllDecalNames() []string {
+	return base.GetAllNamesInRegistry("decals")
 }
 
-func LoadAllWallTexturesInDir(dir string) {
-	base.RemoveRegistry("wall_textures")
-	base.RegisterRegistry("wall_textures", make(map[string]*WallTextureDef))
-	base.RegisterAllObjectsInDir("wall_textures", dir, ".json", "json")
+func LoadAllDecalsInDir(dir string) {
+	base.RemoveRegistry("decals")
+	base.RegisterRegistry("decals", make(map[string]*DecalDef))
+	base.RegisterAllObjectsInDir("decals", dir, ".json", "json")
 }
 
-func (wt *WallTexture) Load() {
-	base.GetObject("wall_textures", wt)
+func (decal *Decal) Load() {
+	base.GetObject("decals", decal)
 }
 
-type wallTextureGlIDs struct {
+type decalGlIDs struct {
 	vBuffer gl.Buffer
 
 	leftIBuffer  gl.Buffer
@@ -42,7 +42,7 @@ type wallTextureGlIDs struct {
 	floorICount  gl.GLsizei
 }
 
-func (ids *wallTextureGlIDs) Reset() {
+func (ids *decalGlIDs) Reset() {
 	deleteIfNeeded := func(buffid *gl.Buffer) {
 		if *buffid == 0 {
 			return
@@ -57,14 +57,14 @@ func (ids *wallTextureGlIDs) Reset() {
 	deleteIfNeeded(&ids.floorIBuffer)
 }
 
-func (ids *wallTextureGlIDs) setVertexData(verts []roomVertex) {
+func (ids *decalGlIDs) setVertexData(verts []roomVertex) {
 	ids.vBuffer = gl.GenBuffer()
 	ids.vBuffer.Bind(gl.ARRAY_BUFFER)
 	size := int(unsafe.Sizeof(roomVertex{}))
 	gl.BufferData(gl.ARRAY_BUFFER, size*len(verts), verts, gl.STATIC_DRAW)
 }
 
-type wallTextureState struct {
+type decalState struct {
 	// for tracking whether the buffers are dirty
 	x, y, rot float32
 	flip      bool
@@ -73,13 +73,13 @@ type wallTextureState struct {
 	}
 }
 
-type WallTexture struct {
+type Decal struct {
 	Defname string
-	*WallTextureDef
+	*DecalDef
 
-	// Position of the texture in floor coordinates.  If these coordinates exceed
+	// Position of the texture in floor coordinates. If these coordinates exceed
 	// either the dx or dy of the room, then this texture will be drawn, at least
-	// partially, on the wall.  The coordinates should not both exceed the
+	// partially, on the wall. The coordinates should not both exceed the
 	// dimensions of the room.
 	X, Y float32
 	Rot  float32
@@ -92,28 +92,28 @@ type WallTexture struct {
 	temporary bool
 }
 
-type WallTextureDef struct {
+type DecalDef struct {
 	// Name of this texture as it appears in the editor, should be unique among
-	// all WallTextures
+	// all Decals
 	Name string
 
 	Texture texture.Object
 }
 
-func (wt *WallTexture) Color() (r, g, b, a byte) {
-	if wt.temporary {
+func (decal *Decal) Color() (r, g, b, a byte) {
+	if decal.temporary {
 		return 127, 127, 255, 200
 	}
 	return 255, 255, 255, 255
 }
 
-func (wt *WallTexture) Render() {
-	data := wt.Texture.Data()
+func (decal *Decal) Render() {
+	data := decal.Texture.Data()
 	dx, dy := data.Dx(), data.Dy()
-	data.RenderAdvanced(float64(wt.X), float64(wt.Y), float64(dx), float64(dy), float64(wt.Rot), wt.Flip)
+	data.RenderAdvanced(float64(decal.X), float64(decal.Y), float64(dx), float64(dy), float64(decal.Rot), decal.Flip)
 }
 
-func (wt *WallTexture) setupGlStuff(roomX, roomY, roomDx, roomDy int, glIDs *wallTextureGlIDs) {
+func (decal *Decal) setupGlStuff(roomX, roomY, roomDx, roomDy int, glIDs *decalGlIDs) {
 	glIDs.Reset()
 
 	// If we panic, don't leak GL resources
@@ -137,22 +137,22 @@ func (wt *WallTexture) setupGlStuff(roomX, roomY, roomDx, roomDy int, glIDs *wal
 	// TODO(tmckee): we _were_ dividing these by 100 ... why?
 	// Maybe the source images for the textures were much larger than the
 	// expected size of the decal?
-	tdx := float32(wt.Texture.Data().Dx() / 100)
-	tdy := float32(wt.Texture.Data().Dy() / 100)
+	tdx := float32(decal.Texture.Data().Dx() / 100)
+	tdy := float32(decal.Texture.Data().Dy() / 100)
 
-	wtx := wt.X
-	wty := wt.Y
-	wtr := wt.Rot
+	wtx := decal.X
+	wty := decal.Y
+	wtr := decal.Rot
 
-	// If the wall-texture is positioned to the right of the room's floor, that
-	// means it's on the wall to the viewer's right. Rotate it 90 degrees
-	// clockwise about the z-axis so that when we 'stand it up', the texture will
-	// be right-side up w.r.t. the rest of the scene.
+	// If the decal is positioned to the right of the room's floor, that means
+	// it's on the wall to the viewer's right. Rotate it 90 degrees clockwise
+	// about the z-axis so that when we 'stand it up', the texture will be
+	// right-side up w.r.t. the rest of the scene.
 	if wtx > frdx {
 		wtr -= math.Pi / 2
 	}
 
-	logging.Trace("wall texture>setupGlStuff", "all the stuff", map[string]any{
+	logging.Trace("decal>setupGlStuff", "all the stuff", map[string]any{
 		"frx":  frx,
 		"fry":  fry,
 		"frdx": frdx,
@@ -182,7 +182,7 @@ func (wt *WallTexture) setupGlStuff(roomX, roomY, roomDx, roomDy int, glIDs *wal
 	run.Multiply(&m)
 	m.RotationZ(wtr)
 	run.Multiply(&m)
-	if wt.Flip {
+	if decal.Flip {
 		m.Scaling(-1, 1)
 		run.Multiply(&m)
 	}
@@ -252,7 +252,7 @@ func (wt *WallTexture) setupGlStuff(roomX, roomY, roomDx, roomDy int, glIDs *wal
 	run.Multiply(&m)
 	m.RotationZ(wtr)
 	run.Multiply(&m)
-	if wt.Flip {
+	if decal.Flip {
 		m.Scaling(-1, 1)
 		run.Multiply(&m)
 	}
@@ -317,7 +317,7 @@ func (wt *WallTexture) setupGlStuff(roomX, roomY, roomDx, roomDy int, glIDs *wal
 	// with the right-hand wall
 	m.RotationZ(wtr)
 	run.Multiply(&m)
-	if wt.Flip {
+	if decal.Flip {
 		m.Scaling(-1, 1)
 		run.Multiply(&m)
 	}

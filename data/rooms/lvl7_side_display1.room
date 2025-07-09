@@ -23,7 +23,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_06.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Curtains 01 Sliding, Closed",
             "Flip": false,

@@ -51,5 +51,5 @@
     "Wall": {
         "Path": "rooms/walls/wall_05.png"
     },
-    "WallTextures": []
+    "Decals": []
 }

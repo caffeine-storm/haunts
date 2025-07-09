@@ -93,7 +93,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_04.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Frame02",
             "Flip": false,

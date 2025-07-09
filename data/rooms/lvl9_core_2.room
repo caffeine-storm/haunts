@@ -86,7 +86,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_06.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Portrait 17",
             "Flip": false,

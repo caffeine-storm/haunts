@@ -58,7 +58,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_04.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Window 01 - Round Top",
             "Flip": false,

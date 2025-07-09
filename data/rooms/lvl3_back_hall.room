@@ -15,7 +15,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_06.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Mouse Hole LF",
             "Flip": false,

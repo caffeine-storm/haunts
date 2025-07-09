@@ -30,7 +30,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_brick_small_01.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Bloodstain - Splatter",
             "Flip": false,

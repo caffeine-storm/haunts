@@ -93,5 +93,5 @@
     "Wall": {
         "Path": "rooms/walls/wall_03.png"
     },
-    "WallTextures": []
+    "Decals": []
 }

@@ -40,7 +40,7 @@ type editMode int
 const (
 	editNothing editMode = iota
 	editFurniture
-	editWallTextures
+	editDecals
 	editCells
 )
 
@@ -75,8 +75,8 @@ type roomViewer struct {
 	roomMats perspective.RoomMats
 
 	Temp struct {
-		Furniture   *Furniture
-		WallTexture *WallTexture
+		Furniture *Furniture
+		Decal     *Decal
 	}
 
 	// This tells us what to highlight based on the mouse position
@@ -286,7 +286,7 @@ func drawPrep() {
 // A single slice of WallTextures that can be reused again and again so we can
 // avoid reallocations.  Since only one drawWall or drawFloor function will
 // ever execute at a time this is safe.
-var g_texs []WallTexture
+var g_texs []Decal
 
 // Same kind of thing as g_texs but for doors
 var g_doors []*Door
@@ -299,7 +299,7 @@ var g_stuff []RectObject
 // temp: an additional texture to render along with the other detail textures
 // specified in room
 // left,right: the xy planes of the left and right walls
-func drawWall(room *Room, floor, left, right mathgl.Mat4, temp_tex *WallTexture, temp_door doorInfo, cstack base.ColorStack, los_tex *LosTexture, los_alpha float64) {
+func drawWall(room *Room, floor, left, right mathgl.Mat4, temp_tex *Decal, temp_door doorInfo, cstack base.ColorStack, los_tex *LosTexture, los_alpha float64) {
 	gl.Enable(gl.STENCIL_TEST)
 	defer gl.Disable(gl.STENCIL_TEST)
 
@@ -313,7 +313,7 @@ func drawWall(room *Room, floor, left, right mathgl.Mat4, temp_tex *WallTexture,
 	if temp_tex != nil {
 		g_texs = append(g_texs, *temp_tex)
 	}
-	for _, tex := range room.WallTextures {
+	for _, tex := range room.Decals {
 		g_texs = append(g_texs, *tex)
 	}
 
@@ -583,7 +583,7 @@ func drawWall(room *Room, floor, left, right mathgl.Mat4, temp_tex *WallTexture,
 	}
 }
 
-func drawFloor(room *Room, floor mathgl.Mat4, temp *WallTexture, cstack base.ColorStack, los_tex *LosTexture, los_alpha float64, floor_drawer []RenderOnFloorer) {
+func drawFloor(room *Room, floor mathgl.Mat4, temp *Decal, cstack base.ColorStack, los_tex *LosTexture, los_alpha float64, floor_drawer []RenderOnFloorer) {
 	// TODO(tmckee): this probably needs to be WithMultMatrix...
 	render.WithMatrixInMode(&floor, render.MatrixModeModelView, func() {
 		gl.Enable(gl.STENCIL_TEST)
@@ -628,7 +628,7 @@ func drawFloor(room *Room, floor mathgl.Mat4, temp *WallTexture, cstack base.Col
 			if temp != nil {
 				g_texs = append(g_texs, *temp)
 			}
-			for _, tex := range room.WallTextures {
+			for _, tex := range room.Decals {
 				g_texs = append(g_texs, *tex)
 			}
 			for i, tex := range g_texs {

@@ -51,7 +51,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_brick_small_01.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Crack 02 - Branching",
             "Flip": false,

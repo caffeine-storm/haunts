@@ -15,7 +15,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_hatch_pattern.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Pentagram 04 - Large Red",
             "Flip": false,

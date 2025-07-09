@@ -51,7 +51,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_03.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Thorns 02",
             "Flip": false,

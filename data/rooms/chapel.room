@@ -44,7 +44,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_01.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Window 03 - Gothic Peak",
             "Flip": false,

@@ -44,7 +44,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_floral_paper.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Wallpaper Tear 04",
             "Flip": false,

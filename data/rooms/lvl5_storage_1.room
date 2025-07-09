@@ -44,7 +44,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_brick_small_01.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Pentagram 03 - Small Black",
             "Flip": false,

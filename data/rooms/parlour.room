@@ -668,7 +668,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_04.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Mouse Hole RF",
             "Rot": 0,

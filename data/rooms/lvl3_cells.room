@@ -100,7 +100,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_brick_medium_01.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Rug Round 04",
             "Flip": false,

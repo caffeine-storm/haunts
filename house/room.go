@@ -82,7 +82,7 @@ type RoomDef struct {
 
 	Furniture []*Furniture `registry:"loadfrom-furniture"`
 
-	WallTextures []*WallTexture `registry:"loadfrom-wall_textures"`
+	Decals []*Decal `registry:"loadfrom-decals"`
 
 	Floor texture.Object
 	Wall  texture.Object
@@ -135,12 +135,12 @@ type Room struct {
 	// We only need to rebuild 'glData' if there was a change to one of the
 	// relevant inputs.
 	glDataInputs struct {
-		x, y, dx, dy             int
-		wall_tex_dx, wall_tex_dy int
+		x, y, dx, dy       int
+		decal_dx, decal_dy int
 	}
 
-	wall_texture_gl_map    map[*WallTexture]wallTextureGlIDs
-	wall_texture_state_map map[*WallTexture]wallTextureState
+	decal_gl_map    map[*Decal]decalGlIDs
+	decal_state_map map[*Decal]decalState
 }
 
 func BlankRoomSize() *RoomSize {
@@ -352,22 +352,22 @@ var Noise_rate float32 = 60
 var Num_steps float32 = 3
 var Foo int = 0
 
-func (room *Room) getWallTextureState(wt *WallTexture) wallTextureGlIDs {
-	result := room.wall_texture_gl_map[wt]
-	cachedState := room.wall_texture_state_map[wt]
-	var new_state wallTextureState
-	new_state.flip = wt.Flip
-	new_state.rot = wt.Rot
-	new_state.x = wt.X
-	new_state.y = wt.Y
+func (room *Room) getDecalState(decal *Decal) decalGlIDs {
+	result := room.decal_gl_map[decal]
+	cachedState := room.decal_state_map[decal]
+	var new_state decalState
+	new_state.flip = decal.Flip
+	new_state.rot = decal.Rot
+	new_state.x = decal.X
+	new_state.y = decal.Y
 	new_state.room.x = room.X
 	new_state.room.y = room.Y
 	new_state.room.dx = room.Size.Dx
 	new_state.room.dy = room.Size.Dy
 	if new_state != cachedState {
-		wt.setupGlStuff(room.X, room.Y, room.Size.Dx, room.Size.Dy, &result)
-		room.wall_texture_gl_map[wt] = result
-		room.wall_texture_state_map[wt] = new_state
+		decal.setupGlStuff(room.X, room.Y, room.Size.Dx, room.Size.Dy, &result)
+		room.decal_gl_map[decal] = result
+		room.decal_state_map[decal] = new_state
 	}
 
 	return result
@@ -393,8 +393,8 @@ func showpaths(parts []string) string {
 
 func (room *Room) LoadAndWaitForTexturesForTest() {
 	paths := []string{}
-	for _, wt := range room.WallTextures {
-		paths = append(paths, wt.Texture.GetPath())
+	for _, decal := range room.Decals {
+		paths = append(paths, decal.Texture.GetPath())
 	}
 	paths = append(paths, room.Floor.GetPath())
 	paths = append(paths, room.Wall.GetPath())
@@ -410,13 +410,13 @@ func (room *Room) LoadAndWaitForTexturesForTest() {
 	texture.BlockUntilLoaded(context.Background(), paths...)
 }
 
-func (room *Room) RenderWallTextures(worldToView *mathgl.Mat4, base_alpha byte) {
+func (room *Room) RenderDecals(worldToView *mathgl.Mat4, base_alpha byte) {
 	// TODO(#13): once the registry supports it, initialize Room instances while
 	// loading them from the registry so we don't have to guard/deal with
 	// half-initialized rooms here.
-	if room.wall_texture_gl_map == nil {
-		room.wall_texture_gl_map = make(map[*WallTexture]wallTextureGlIDs)
-		room.wall_texture_state_map = make(map[*WallTexture]wallTextureState)
+	if room.decal_gl_map == nil {
+		room.decal_gl_map = make(map[*Decal]decalGlIDs)
+		room.decal_state_map = make(map[*Decal]decalState)
 	}
 
 	defer func() {
@@ -426,21 +426,21 @@ func (room *Room) RenderWallTextures(worldToView *mathgl.Mat4, base_alpha byte) 
 	}()
 
 	var vert roomVertex
-	for _, wt := range room.WallTextures {
-		var ids wallTextureGlIDs = room.getWallTextureState(wt)
+	for _, decal := range room.Decals {
+		var ids decalGlIDs = room.getDecalState(decal)
 		if ids.vBuffer == 0 {
 			logging.ErrorBracket(func() {
-				// TODO(tmckee:#34): do warn about this; it happens if the wall texture
-				// is positioned such that its entirely clipped out when intersected
-				// with what will be drawn. It might happen in other cases too?
-				logging.Warn("wall texture state had zeroed vBuffer", "name", wt.Defname)
+				// TODO(tmckee:#34): do warn about this; it happens if the decal is
+				// positioned such that its entirely clipped out when intersected with
+				// what will be drawn. It might happen in other cases too?
+				logging.Warn("decal state had zeroed vBuffer", "name", decal.Defname)
 			})
 			continue
 		}
 
 		// Bind the the texture for the decal.
-		wt.Texture.Data().Bind()
-		R, G, B, A := wt.Color()
+		decal.Texture.Data().Bind()
+		R, G, B, A := decal.Color()
 
 		gl.ClientActiveTexture(gl.TEXTURE0)
 		ids.vBuffer.Bind(gl.ARRAY_BUFFER)
@@ -668,7 +668,7 @@ func (room *Room) Render(roomMats perspective.RoomMats, zoom float32, base_alpha
 			}
 		}
 
-		room.RenderWallTextures(&roomMats.Floor, base_alpha)
+		room.RenderDecals(&roomMats.Floor, base_alpha)
 
 		base.EnableShader("marble")
 		base.SetUniformI("marble", "tex2", 1)
@@ -758,8 +758,8 @@ func (room *Room) glDataInputsDiffer() bool {
 		room.Y == room.glDataInputs.y &&
 		room.Size.Dx == room.glDataInputs.dx &&
 		room.Size.Dy == room.glDataInputs.dy &&
-		room.Wall.Data().Dx() == room.glDataInputs.wall_tex_dx &&
-		room.Wall.Data().Dy() == room.glDataInputs.wall_tex_dy
+		room.Wall.Data().Dx() == room.glDataInputs.decal_dx &&
+		room.Wall.Data().Dy() == room.glDataInputs.decal_dy
 }
 
 func (room *Room) resetGlDataInputs() {
@@ -767,8 +767,8 @@ func (room *Room) resetGlDataInputs() {
 	room.glDataInputs.y = room.Y
 	room.glDataInputs.dx = room.Size.Dx
 	room.glDataInputs.dy = room.Size.Dy
-	room.glDataInputs.wall_tex_dx = room.Wall.Data().Dx()
-	room.glDataInputs.wall_tex_dy = room.Wall.Data().Dy()
+	room.glDataInputs.decal_dx = room.Wall.Data().Dx()
+	room.glDataInputs.decal_dy = room.Wall.Data().Dy()
 }
 
 func (room *Room) resetGlData() {

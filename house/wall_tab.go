@@ -12,10 +12,10 @@ type WallPanel struct {
 	room   *Room
 	viewer *roomViewer
 
-	wall_texture      *WallTexture
-	prev_wall_texture *WallTexture
-	drag_anchor       struct{ X, Y float32 }
-	selected_walls    map[int]bool
+	decal          *Decal
+	prev_decal     *Decal
+	drag_anchor    struct{ X, Y float32 }
+	selected_walls map[int]bool
 }
 
 func MakeWallPanel(room *Room, viewer *roomViewer) *WallPanel {
@@ -25,58 +25,58 @@ func MakeWallPanel(room *Room, viewer *roomViewer) *WallPanel {
 	wp.VerticalTable = gui.MakeVerticalTable()
 	wp.selected_walls = make(map[int]bool)
 
-	tex_table := gui.MakeVerticalTable()
-	fnames := GetAllWallTextureNames()
+	decal_table := gui.MakeVerticalTable()
+	fnames := GetAllDecalNames()
 	for i := range fnames {
 		name := fnames[i]
-		tex_table.AddChild(gui.MakeButton("standard_18", name, 300, 1, 1, 1, 1, func(ctx gui.EventHandlingContext, t int64) {
-			wt := LoadWallTexture(name)
-			if wt == nil {
+		decal_table.AddChild(gui.MakeButton("standard_18", name, 300, 1, 1, 1, 1, func(ctx gui.EventHandlingContext, t int64) {
+			decal := LoadDecal(name)
+			if decal == nil {
 				return
 			}
-			wp.wall_texture = wt
-			wp.wall_texture.temporary = true
-			wp.room.WallTextures = append(wp.room.WallTextures, wp.wall_texture)
+			wp.decal = decal
+			wp.decal.temporary = true
+			wp.room.Decals = append(wp.room.Decals, wp.decal)
 			wp.drag_anchor.X = 0
 			wp.drag_anchor.Y = 0
 		}))
 	}
-	wp.VerticalTable.AddChild(gui.MakeScrollFrame(tex_table, 300, 700))
+	wp.VerticalTable.AddChild(gui.MakeScrollFrame(decal_table, 300, 700))
 
 	return &wp
 }
 
-func (w *WallPanel) textureNear(wx, wy int) *WallTexture {
-	for _, tex := range w.room.WallTextures {
+func (w *WallPanel) decalNear(wx, wy int) *Decal {
+	for _, decal := range w.room.Decals {
 		var xx, yy float32
-		if tex.X > float32(w.room.Size.Dx) {
+		if decal.X > float32(w.room.Size.Dx) {
 			xx, yy, _ = w.viewer.modelviewToRightWall(float32(wx), float32(wy))
-		} else if tex.Y > float32(w.room.Size.Dy) {
+		} else if decal.Y > float32(w.room.Size.Dy) {
 			xx, yy, _ = w.viewer.modelviewToLeftWall(float32(wx), float32(wy))
 		} else {
 			xx, yy, _ = w.viewer.modelviewToBoard(float32(wx), float32(wy))
 		}
-		dx := float32(tex.Texture.Data().Dx()) / 100 / 2
-		dy := float32(tex.Texture.Data().Dy()) / 100 / 2
-		if xx > tex.X-dx && xx < tex.X+dx && yy > tex.Y-dy && yy < tex.Y+dy {
-			return tex
+		dx := float32(decal.Texture.Data().Dx()) / 100 / 2
+		dy := float32(decal.Texture.Data().Dy()) / 100 / 2
+		if xx > decal.X-dx && xx < decal.X+dx && yy > decal.Y-dy && yy < decal.Y+dy {
+			return decal
 		}
 	}
 	return nil
 }
 
 func (w *WallPanel) onEscape() {
-	if w.wall_texture != nil {
-		if w.prev_wall_texture != nil {
-			*w.wall_texture = *w.prev_wall_texture
+	if w.decal != nil {
+		if w.prev_decal != nil {
+			*w.decal = *w.prev_decal
 		} else {
-			algorithm.Choose(&w.room.WallTextures, func(wt *WallTexture) bool {
-				return wt != w.wall_texture
+			algorithm.Choose(&w.room.Decals, func(decal *Decal) bool {
+				return decal != w.decal
 			})
 		}
 	}
-	w.wall_texture = nil
-	w.prev_wall_texture = nil
+	w.decal = nil
+	w.prev_decal = nil
 }
 
 func (w *WallPanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
@@ -85,11 +85,11 @@ func (w *WallPanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 	}
 
 	if group.IsPressed(gin.AnyBackspace) || group.IsPressed(gin.AnyKeyDelete) {
-		algorithm.Choose(&w.room.WallTextures, func(wt *WallTexture) bool {
-			return wt != w.wall_texture
+		algorithm.Choose(&w.room.Decals, func(decal *Decal) bool {
+			return decal != w.decal
 		})
-		w.wall_texture = nil
-		w.prev_wall_texture = nil
+		w.decal = nil
+		w.prev_decal = nil
 		return true
 	}
 
@@ -99,34 +99,34 @@ func (w *WallPanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 	}
 
 	if group.IsPressed(base.GetDefaultKeyMap()["flip"].Id()) {
-		if w.wall_texture != nil {
-			w.wall_texture.Flip = !w.wall_texture.Flip
+		if w.decal != nil {
+			w.decal.Flip = !w.decal.Flip
 		}
 		return true
 	}
 
-	// Hold space and scroll to rotate the wall texture.
-	if w.wall_texture != nil {
+	// Hold space and scroll to rotate the decal.
+	if w.decal != nil {
 		if group.IsPressed(gin.AnySpace) {
 			if event, found := group.FindEvent(gin.AnyMouseWheelVertical); found {
-				w.wall_texture.Rot += float32(event.Key.CurPressAmt() / 100)
+				w.decal.Rot += float32(event.Key.CurPressAmt() / 100)
 			}
 		}
 	}
 
 	if group.IsPressed(gin.AnyMouseLButton) {
-		if w.wall_texture != nil {
-			w.wall_texture.temporary = false
-			w.wall_texture = nil
-		} else if w.wall_texture == nil {
+		if w.decal != nil {
+			w.decal.temporary = false
+			w.decal = nil
+		} else if w.decal == nil {
 			if mpos, ok := ui.UseMousePosition(group); ok {
-				w.wall_texture = w.textureNear(mpos.X, mpos.Y)
-				if w.wall_texture != nil {
-					w.prev_wall_texture = new(WallTexture)
-					*w.prev_wall_texture = *w.wall_texture
-					w.wall_texture.temporary = true
+				w.decal = w.decalNear(mpos.X, mpos.Y)
+				if w.decal != nil {
+					w.prev_decal = new(Decal)
+					*w.prev_decal = *w.decal
+					w.decal.temporary = true
 
-					wx, wy := w.viewer.BoardToWindowf(w.wall_texture.X, w.wall_texture.Y)
+					wx, wy := w.viewer.BoardToWindowf(w.decal.X, w.decal.Y)
 					w.drag_anchor.X = float32(mpos.X) - wx
 					w.drag_anchor.Y = float32(mpos.Y) - wy
 				}
@@ -138,15 +138,15 @@ func (w *WallPanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 }
 
 func (w *WallPanel) Think(ui *gui.Gui, t int64) {
-	if w.wall_texture != nil {
+	if w.decal != nil {
 		// TODO(tmckee): need to ask the gui for cursor pos
 		// px, py := gin.In().GetCursor("Mouse").Point()
 		px, py := 0, 0
 		tx := float32(px) - w.drag_anchor.X
 		ty := float32(py) - w.drag_anchor.Y
 		bx, by := w.viewer.WindowToBoardf(tx, ty)
-		w.wall_texture.X = bx
-		w.wall_texture.Y = by
+		w.decal.X = bx
+		w.decal.Y = by
 	}
 	w.VerticalTable.Think(ui, t)
 }

@@ -23,7 +23,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_hatch_pattern.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Painting 03 Landscape",
             "Flip": false,

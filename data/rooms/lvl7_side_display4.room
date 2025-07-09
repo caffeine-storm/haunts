@@ -44,7 +44,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_02.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Curtains 02 Drapes, Closed",
             "Flip": false,

@@ -113,7 +113,7 @@
 	- not-test calls to room.Render do a _bunch_ of math to get the left, right
 	  and floor matrices
 	- need proper encapsulation on gl ID holding structs
-	- need to DRY out WallTexture.setupGlStuff; lot of duplication between floor,
+	- need to DRY out Decal.setupGlStuff; lot of duplication between floor,
 	  left-wall and right-wall
 
 - bug#6: The 'edit mode' screen can really lag out; afterwards, switching back

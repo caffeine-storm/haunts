@@ -128,5 +128,5 @@
     "Wall": {
         "Path": "rooms/walls/wall_organic_paper.png"
     },
-    "WallTextures": []
+    "Decals": []
 }

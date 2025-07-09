@@ -44,7 +44,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_hatch_pattern.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Plaque01",
             "Flip": false,

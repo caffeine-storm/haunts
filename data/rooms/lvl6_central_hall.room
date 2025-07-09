@@ -107,7 +107,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_02.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Tapestry 11",
             "Flip": false,

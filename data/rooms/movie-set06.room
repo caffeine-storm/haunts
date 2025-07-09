@@ -86,7 +86,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_02.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Painting 02 Nude",
             "Flip": false,

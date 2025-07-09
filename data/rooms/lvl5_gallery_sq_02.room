@@ -23,7 +23,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_hatch_pattern.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Crack 02 - Branching",
             "Flip": false,

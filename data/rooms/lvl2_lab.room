@@ -93,7 +93,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_brick_large_01.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Pentagram",
             "Flip": false,

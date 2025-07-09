@@ -51,7 +51,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_04.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Plaque01",
             "Flip": false,

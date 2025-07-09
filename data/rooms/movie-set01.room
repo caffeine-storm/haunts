@@ -2536,7 +2536,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_floral_paper.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Painting 01 Ship",
             "Flip": false,

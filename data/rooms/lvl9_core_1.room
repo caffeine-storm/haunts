@@ -51,7 +51,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_02.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Pentagram 06 - Large White",
             "Flip": false,

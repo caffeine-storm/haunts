@@ -44,5 +44,5 @@
     "Wall": {
         "Path": "rooms/walls/wall_floral_paper.png"
     },
-    "WallTextures": []
+    "Decals": []
 }

@@ -37,7 +37,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_02.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Cult Symbol 03 - Large Red",
             "Flip": false,

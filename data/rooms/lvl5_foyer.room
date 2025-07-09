@@ -72,7 +72,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_hatch_pattern.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Rug Oval Large 02",
             "Flip": false,

@@ -15,8 +15,7 @@ type Shader struct {
 }
 
 type ShaderDef struct {
-	// Name of this texture as it appears in the editor, should be unique among
-	// all WallTextures
+	// Name of this shader, should be unique amongst all shaders
 	Name string
 
 	// Paths to the vertex and fragment shaders

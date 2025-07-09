@@ -44,7 +44,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_06.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Bloodstain - Splatter",
             "Flip": false,

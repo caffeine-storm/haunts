@@ -23,7 +23,7 @@
     "Wall": {
         "Path": "rooms/walls/wall_05.png"
     },
-    "WallTextures": [
+    "Decals": [
         {
             "Defname": "Mask 06",
             "Flip": false,

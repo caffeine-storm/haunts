@@ -17,18 +17,27 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-// TODO(tmckee): rename 'WallTexture' to 'Decal' or something.
-func TestWallTextureSpecs(t *testing.T) {
+func TestGetAllDecalNames(t *testing.T) {
+	base.SetDatadir("../data")
+	registry.LoadAllRegistries()
+
+	names := house.GetAllDecalNames()
+	if len(names) < 12 {
+		t.Fatalf("expecting more decal names; got %d", len(names))
+	}
+}
+
+func TestDecalSpecs(t *testing.T) {
 	base.SetDatadir("../data")
 	testbuilder.WithSize(266, 246, func(queue render.RenderQueueInterface) {
-		Convey("Wall Textures", t, func() {
+		Convey("Decals", t, func() {
 			Convey("can be made", func() {
 				datadir := base.GetDataDir()
 				registry.LoadAllRegistries()
 				base.InitShaders(queue)
 				texture.Init(queue)
-				wt := house.LoadWallTexture("Cobweb")
-				So(wt, ShouldNotBeNil)
+				decal := house.LoadDecal("Cobweb")
+				So(decal, ShouldNotBeNil)
 
 				Convey("texture loads successfully", func() {
 					queue.Purge()
@@ -48,12 +57,12 @@ func TestWallTextureSpecs(t *testing.T) {
 					err = texture.BlockUntilLoaded(deadline, texpath)
 					So(err, ShouldBeNil)
 
-					So(wt.Texture.Data().Dx(), ShouldBeGreaterThan, 0)
-					So(wt.Texture.Data().Dy(), ShouldBeGreaterThan, 0)
+					So(decal.Texture.Data().Dx(), ShouldBeGreaterThan, 0)
+					So(decal.Texture.Data().Dy(), ShouldBeGreaterThan, 0)
 
 					Convey("can render", func() {
 						queue.Queue(func(render.RenderQueueState) {
-							wt.Render()
+							decal.Render()
 						})
 						queue.Purge()
 
