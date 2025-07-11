@@ -13,7 +13,7 @@ import (
 	"github.com/runningwild/glop/gui/guitest"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
-	"github.com/runningwild/glop/render/rendertest/testbuilder"
+	"github.com/runningwild/glop/system/systemtest"
 	. "github.com/smartystreets/goconvey/convey"
 )
 
@@ -26,27 +26,31 @@ type Drawer interface {
 }
 
 type DrawTestContext interface {
-	GetTestBuilder() *testbuilder.GlTestBuilder
+	GetTestWindow() systemtest.Window
 }
 
 type rendertestDrawTestContext struct {
-	testBuilder *testbuilder.GlTestBuilder
+	testWindow systemtest.Window
 }
 
-func (ctx *rendertestDrawTestContext) GetTestBuilder() *testbuilder.GlTestBuilder {
-	return ctx.testBuilder
+func (ctx *rendertestDrawTestContext) GetTestWindow() systemtest.Window {
+	return ctx.testWindow
 }
 
 var _ DrawTestContext = (*rendertestDrawTestContext)(nil)
 
 func RunDrawingTest(c C, objectCreator func() Drawer, testid rendertest.TestDataReference, andThen ...func(DrawTestContext)) {
+	RunDrawingTestWithUiDriver(c, objectCreator, func(systemtest.Driver) {}, testid, andThen...)
+}
+
+func RunDrawingTestWithUiDriver(c C, objectCreator func() Drawer, driveFunc func(systemtest.Driver), testid rendertest.TestDataReference, andThen ...func(DrawTestContext)) {
 	windowRegion := gui.Region{
 		Point: gui.Point{X: 0, Y: 0},
 		Dims:  gui.Dims{Dx: 1024, Dy: 750},
 	}
 
-	testBuilder := testbuilder.New().WithSize(windowRegion.Dx, windowRegion.Dy)
-	testBuilder.WithQueue().Run(func(queue render.RenderQueueInterface) {
+	systemtest.WithTestWindow(windowRegion.Dx, windowRegion.Dy, func(w systemtest.Window) {
+		queue := w.GetQueue()
 		globals.SetRenderQueue(queue)
 		queue.Queue(func(st render.RenderQueueState) {
 			globals.SetRenderQueueState(st)
@@ -74,6 +78,8 @@ func RunDrawingTest(c C, objectCreator func() Drawer, testid rendertest.TestData
 		err := texture.BlockUntilIdle(deadlineContext)
 		c.So(err, ShouldBeNil)
 
+		driveFunc(w.NewDriver())
+
 		// Draw it again now that we know all the textures are loaded.
 		queue.Queue(func(st render.RenderQueueState) {
 			// First, blank the screen, though, because all UI expects to get a black
@@ -86,12 +92,12 @@ func RunDrawingTest(c C, objectCreator func() Drawer, testid rendertest.TestData
 		transparent := color.RGBA{}
 		c.Convey("should look like the expected screen", func() {
 			So(queue, rendertest.ShouldLookLikeFile, testid, rendertest.Threshold(8), rendertest.BackgroundColour(transparent))
-		})
 
-	})
-	for _, each := range andThen {
-		each(&rendertestDrawTestContext{
-			testBuilder: testBuilder,
+			for _, each := range andThen {
+				each(&rendertestDrawTestContext{
+					testWindow: w,
+				})
+			}
 		})
-	}
+	})
 }
