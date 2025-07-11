@@ -15,7 +15,7 @@ import (
 
 var _ gametest.Drawer = (*house.HouseViewer)(nil)
 
-func givenAHouseViewer() gametest.Drawer {
+func givenAHouseViewer() *house.HouseViewer {
 	ret := house.MakeHouseViewer(housetest.GivenAHouseDef(), 62)
 	ret.SetZoom(10)
 	return ret
@@ -26,7 +26,17 @@ func TestHouseViewer(t *testing.T) {
 		base.SetDatadir("../data")
 
 		Convey("can draw houseviewer", func(c C) {
-			gametest.RunDrawingTest(c, givenAHouseViewer, "house-viewer")
+			gametest.RunDrawingTest(c, func() gametest.Drawer {
+				return givenAHouseViewer()
+			}, "house-viewer")
+		})
+
+		Convey("can SetZoom on houseviewer", func(c C) {
+			gametest.RunDrawingTest(c, func() gametest.Drawer {
+				ret := givenAHouseViewer()
+				ret.SetZoom(ret.GetZoom() * 2)
+				return ret
+			}, "house-viewer-zoom")
 		})
 
 		Convey("has a useful stringification", func() {
