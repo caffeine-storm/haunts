@@ -1,4 +1,4 @@
-package app
+package cmd
 
 import (
 	"fmt"
@@ -12,9 +12,9 @@ import (
 	"runtime/pprof"
 	"time"
 
-	// note: if app/gen does not exist, you need to run 'go generate ./app'
-	"github.com/MobRulesGames/haunts/app/gen"
+	// note: if cmd/gen does not exist, you need to run 'go generate ./cmd'
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/cmd/gen"
 	"github.com/MobRulesGames/haunts/console"
 	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/game/actions"
@@ -81,10 +81,12 @@ type draggerZoomer interface {
 }
 
 func draggingAndZooming(ui *gui.Gui, sys system.System, dz draggerZoomer) {
+	fmt.Printf("enabled!\n")
 	if ui.FocusWidget() != nil {
 		dragging = false
 		zooming = false
 		sys.HideCursor(false)
+		fmt.Printf("there was focus\n")
 		return
 	}
 
@@ -197,7 +199,7 @@ func Main(argv []string) {
 		}
 	}()
 
-	// If 'gen.Version' isn't found, try running 'go generate ./app'
+	// If 'gen.Version' isn't found, try running 'go generate ./cmd'
 	logging.Info("version", "version", gen.Version())
 	sys.Startup()
 	sound.Init()

@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 
-	"github.com/MobRulesGames/haunts/app"
+	"github.com/MobRulesGames/haunts/cmd"
 )
 
 func main() {
-	app.Main(os.Args)
+	cmd.Main(os.Args)
 }

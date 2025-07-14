@@ -31,9 +31,9 @@ go: haunts ${DATADIR}
 lvl1: haunts ${DATADIR}
 	./haunts lvl1
 
-GENERATED_TARGETS=game/side_string.go app/gen
-app/gen: .git/HEAD
-	go generate ./app/
+GENERATED_TARGETS=game/side_string.go cmd/gen
+cmd/gen: .git/HEAD
+	go generate ./cmd/
 
 game/side_string.go:
 	go generate ./game/
