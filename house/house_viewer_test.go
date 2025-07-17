@@ -31,12 +31,20 @@ func TestHouseViewer(t *testing.T) {
 			}, "house-viewer")
 		})
 
-		Convey("can SetZoom on houseviewer", func(c C) {
+		Convey("can zoom in on houseviewer", func(c C) {
 			gametest.RunDrawingTest(c, func() gametest.Drawer {
 				ret := givenAHouseViewer()
 				ret.SetZoom(ret.GetZoom() * 2)
 				return ret
-			}, "house-viewer-zoom")
+			}, "house-viewer-zoom-in")
+		})
+
+		Convey("can zoom out on houseviewer", func(c C) {
+			gametest.RunDrawingTest(c, func() gametest.Drawer {
+				ret := givenAHouseViewer()
+				ret.SetZoom(ret.GetZoom() / 2)
+				return ret
+			}, "house-viewer-zoom-out")
 		})
 
 		Convey("has a useful stringification", func() {
