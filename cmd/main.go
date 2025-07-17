@@ -324,9 +324,6 @@ func (mode applicationMode) String() string {
 }
 
 func gameMode(ui *gui.Gui, sys system.System) {
-	if game_panel != nil && game_panel.Active() {
-		draggingAndZooming(ui, sys, game_panel.GetViewer())
-	}
 }
 
 func editMode(ui *gui.Gui, sys system.System) {

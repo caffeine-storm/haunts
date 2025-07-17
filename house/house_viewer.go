@@ -8,6 +8,7 @@ import (
 	"github.com/MobRulesGames/haunts/house/perspective"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/mathgl"
+	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/util/algorithm"
 )
@@ -79,7 +80,19 @@ func MakeHouseViewer(house *HouseDef, angle float32) *HouseViewer {
 	return &hv
 }
 
+type framePressTotaler interface {
+	FramePressTotal() float64
+}
+
 func (hv *HouseViewer) Respond(g *gui.Gui, group gui.EventGroup) bool {
+	if group.IsPressed(gin.AnyMouseWheelVertical) {
+		var wheelKey gin.Key = group.PrimaryEvent().Key
+		zoomDelta := wheelKey.FramePressTotal()
+		if zoomDelta != 0 {
+			hv.SetZoom(hv.GetZoom() + float32(zoomDelta))
+		}
+		return true
+	}
 	return false
 }
 
