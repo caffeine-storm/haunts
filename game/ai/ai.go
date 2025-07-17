@@ -10,10 +10,10 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/MobRulesGames/fsnotify"
 	"github.com/MobRulesGames/golua/lua"
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
+	"github.com/fsnotify/fsnotify"
 )
 
 // The Ai struct contains a glop.AiGraph object as well as a few channels for
@@ -106,7 +106,7 @@ func (a *Ai) setupLuaState() error {
 		return errors.New(fmt.Sprintf("Unable to load ai file %s: %v", a.path, err))
 	}
 	a.Prog = string(prog)
-	a.watcher.Watch(a.path)
+	a.watcher.Add(a.path)
 	a.L = lua.NewState()
 	a.L.OpenLibs()
 	switch a.kind {
@@ -165,7 +165,7 @@ func (a *Ai) setupLuaState() error {
 
 func (a *Ai) loadUtils(dir string) {
 	root := filepath.Join(filepath.Join(filepath.Dir(a.path), "utils", dir))
-	a.watcher.Watch(root)
+	a.watcher.Add(root)
 	filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
 		if err != nil || info.IsDir() {
 			return nil
@@ -263,7 +263,7 @@ func (a *Ai) Activate() {
 	reload := false
 	for {
 		select {
-		case <-a.watcher.Event:
+		case <-a.watcher.Events:
 			reload = true
 		default:
 			goto no_more_events
