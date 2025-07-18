@@ -100,9 +100,9 @@ func (kb KeyBinds) MakeKeyMap() KeyMap {
 				// The last kid is the main kid and the rest are modifiers
 				main := kids[len(kids)-1]
 				kids = kids[0 : len(kids)-1]
-				var down []bool
-				for range kids {
-					down = append(down, true)
+				down := make([]bool, len(kids))
+				for idx := range down {
+					down[idx] = true
 				}
 				binds = append(binds, gin.In().BindDerivedKey(fmt.Sprintf("%s:%d", keyName, i), gin.In().MakeBinding(main, kids, down)))
 			}
