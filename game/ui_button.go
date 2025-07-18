@@ -127,7 +127,7 @@ func (b *Button) Think(x, y, mx, my int, dt int64) {
 		sound.PlaySound("Haunts/SFX/UI/Tick", 0.75)
 	}
 	b.was_in = in
-	b.opacity = computeOpacity(b.opacity, in, dt)
+	b.SetOpacity(computeOpacity(b.opacity, in, dt))
 }
 
 func (b *Button) RenderAt(x, y int) {
