@@ -158,28 +158,21 @@ func (sm *StartMenu) Respond(g *gui.Gui, group gui.EventGroup) bool {
 		sm.mx, sm.my = mpos.X, mpos.Y
 	}
 
+	hit := false
 	if group.IsPressed(gin.AnyMouseLButton) {
-		hit := false
 		for _, button := range sm.buttons {
 			if button.handleClick(sm.mx, sm.my, nil) {
 				hit = true
 			}
 		}
-		if hit {
-			return true
-		}
 	} else {
-		hit := false
 		for _, button := range sm.buttons {
 			if button.Respond(group, nil) {
 				hit = true
 			}
 		}
-		if hit {
-			return true
-		}
 	}
-	return false
+	return hit
 }
 
 func (sm *StartMenu) Draw(region gui.Region, ctx gui.DrawingContext) {
