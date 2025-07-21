@@ -9,6 +9,8 @@ import (
 	"github.com/MobRulesGames/haunts/game/gametest"
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/house/housetest"
+	"github.com/runningwild/glop/gui"
+	"github.com/runningwild/glop/gui/guitest"
 	. "github.com/smartystreets/goconvey/convey"
 	"github.com/stretchr/testify/assert"
 )
@@ -54,6 +56,16 @@ func TestHouseViewer(t *testing.T) {
 
 			// Every house should have a set of 'floors'.
 			assert.Contains(t, asLower, "floors")
+		})
+
+		Convey("Respond()ing to mouse wheel down zooms out", func(c C) {
+			gametest.RunDrawingTest(c, func() gametest.Drawer {
+				houseViewer := givenAHouseViewer()
+				g := guitest.MakeStubbedGui(gui.Dims{Dx: 64, Dy: 64})
+				wheelDown := guitest.SynthesizeEvents().WheelDown(-5)
+				houseViewer.Respond(g, wheelDown)
+				return houseViewer
+			}, "house-viewer-zoom-out")
 		})
 	})
 }
