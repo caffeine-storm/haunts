@@ -3,26 +3,16 @@ all: haunts
 SHELL:=/bin/bash
 
 # Let go tooling decide if things are out-of-date
-.PHONY: haunts
-.PHONY: devhaunts
+.PHONY: haunts devhaunts
 .PHONY: it clean fmt lint
-.PHONY: devtest test-prereqs test test-fresh test-nocache test-report test-verbose
-.PHONY: dlv-devtest dlv-test
-.PHONY: clean_rejects list_rejects promote_rejects view_rejects
+.PHONY: devtest
 .PHONY: update-appveyor-image update-glop
 
 DATADIR:=data
-TEST_REPORT_TAR:=test-report.tar.gz
 PERF?=perf
 
-ifneq "${testrun}" ""
-testrunargs:=-run ${testrun}
-else
-testrunargs:=
-endif
-
 # On WSL, Xvfb thinks it can talk to hardware. Tell it not to.
-XVFB_RUN:=LIBGL_ALWAYS_SOFTWARE=true xvfb-run -a --server-args="-screen 0 1920x1080x24"
+testing_env:=LIBGL_ALWAYS_SOFTWARE=true
 
 it: haunts
 go: haunts ${DATADIR}
@@ -69,7 +59,6 @@ profile-dev-haunts: devhaunts ${DATADIR}
 	${PERF} record -g ./$^
 
 clean:
-	rm -f ${TEST_REPORT_TAR}
 	rm -f devhaunts haunts
 	find . \( \
 		-name 'perf.data' \
@@ -91,40 +80,10 @@ checkfmt:
 lint:
 	go run github.com/mgechev/revive@v1.5.1 --config revive.toml ./...
 
-test-prereqs: ${GENERATED_TARGETS}
-
-test:
-	${XVFB_RUN} go test ${testrunargs}                     -tags nosound ./...
-
-test-verbose:
-	${XVFB_RUN} go test ${testrunargs} -v                  -tags nosound ./...
-
-test-racy:
-	${XVFB_RUN} go test ${testrunargs} -count=1 -race      -tags nosound ./...
-
-test-racy-with-cache:
-	${XVFB_RUN} go test ${testrunargs}          -race      -tags nosound ./...
-
-test-nocache:
-	${XVFB_RUN} go test ${testrunargs} -count=1            -tags nosound ./...
-
-test-fresh: |clean_rejects
-test-fresh: test-nocache
-
-pkg?= -- set 'pkg' to the package under test --
-dlv-test: singlepackage=${pkg}
-dlv-test: ${DATADIR}
-# delve wants exactly one package at a time so "testrunargs" isn't what we
-# want here. We use a var specifically for pointing at a single directory.
-	[ -d "${singlepackage}" ] && \
-	${XVFB_RUN} dlv test --build-flags="-tags nosound" ${singlepackage} -- ${testrunargs}
-
-dlv-devtest: singlepackage=${pkg}
-dlv-devtest: ${DATADIR}
-# delve wants exactly one package at a time so "testrunargs" isn't what we
-# want here. We use a var specifically for pointing at a single directory.
-	[ -d "${singlepackage}" ] && \
-	${XVFB_RUN} dlv test --build-flags="-modfile dev.go.mod -tags nosound" ${singlepackage} -- ${testrunargs}
+testrunargs:=
+testbuildflags:=-tags nosound
+dlvbuildflags:=--build-flags="${testbuildflags}"
+include build/testing-env.mk
 
 .PRECIOUS: %/perftest
 %/perftest: %
@@ -135,35 +94,18 @@ dlv-devtest: ${DATADIR}
 	cd $(dir $^) && \
 	perf record -g -o perf.data ./perftest
 
-devtest: dev.go.mod dev.go.sum
-	${XVFB_RUN} go test ${testrunargs} -modfile dev.go.mod -tags nosound ./...
+test-dev: dev.go.mod dev.go.sum
+	${testing_env} go test ${testrunargs} -modfile dev.go.mod -tags nosound ./...
 
-list_rejects:
-	@find . -name testdata -type d | while read testdatadir ; do \
-		find "$$testdatadir" -name '*.rej.*' ; \
-	done
+test-dlvdev: dev.go.mod dev.go.sum
+# delve wants exactly one package at a time so "testrunpackages" isn't what we
+# want here. We use a var specifically for pointing at a single directory.
+	[ -d ${pkg} ] && \
+	${testing_env} dlv test ${pkg} --build-flags="${testbuildflags} -modfile dev.go.mod" -- ${newtestrunargs}
 
-# opens expected and rejected files in 'feh'
-view_rejects:
-	@find . -name testdata -type d | while read testdatadir ; do \
-		find "$$testdatadir" -name '*.rej.*' | while read rejfile ; do \
-			echo -e >&2 "$${rejfile/.rej}\n$$rejfile" ; \
-			echo "$${rejfile/.rej}" "$$rejfile" ; \
-		done ; \
-	done | xargs -r feh
+.PHONY: test-dev test-dlvdev
 
-clean_rejects:
-	find . -name testdata -type d | while read testdatadir ; do \
-		find "$$testdatadir" -name '*.rej.*' -exec rm "{}" + ; \
-	done
-
-promote_rejects:
-	@find . -name testdata -type d | while read testdatadir ; do \
-		find "$$testdatadir" -name '*.rej.*' | while read rejfile ; do \
-			echo mv "$$rejfile" "$${rejfile/.rej}" ; \
-			mv "$$rejfile" "$${rejfile/.rej}" ; \
-		done \
-	done
+include build/test-report.mk
 
 update-glop:
 	go -C tools/update-glop/ run cmd/main.go
@@ -179,24 +121,5 @@ update-appveyor-image:
 spawn-pprof-%: %/perf.data
 	pprof -http :8080 ./$^
 
-# Deliberately signal failure from this recipe so that CI notices failing tests
-# are red.
-appveyor-test-report-and-fail: test-report
-	appveyor PushArtifact ${TEST_REPORT_TAR} -DeploymentName "test report tarball"
-	false
-
-test-report: ${TEST_REPORT_TAR}
-
-${TEST_REPORT_TAR}:
-	tar \
-		--auto-compress \
-		--create \
-		--file $@ \
-		--files-from <(find  . -name '*.rej.*' | while read fname ; do \
-				echo $$fname ; \
-				echo $${fname/.rej} ; \
-			done \
-		)
-
 trace-house-test:
-	xvfb-run -a go test ${testrunargs} -exec ../tools/apitrace/trace-gl.sh -tags nosound ./house
+	${testing_env} go test ${testrunargs} -exec ../tools/apitrace/trace-gl.sh -tags nosound ./house
