@@ -4,6 +4,10 @@
 
 TEST_REPORT_TAR:=test-report.tar.gz
 
+.PHONY: ${TEST_REPORT_TAR}
+.PHONY: test-report test-report-clean
+.PHONY: appveyor-test-report-and-fail
+
 # Deliberately signal failure from this recipe so that CI notices failing tests
 # are red.
 appveyor-test-report-and-fail: test-report
@@ -29,7 +33,3 @@ test-report-clean:
 # Tell included makefiles that, if they've got a 'clean' recipe, it now depends
 # on cleaning the test-report tarball too.
 clean: test-report-clean
-
-.PHONY: ${TEST_REPORT_TAR}
-.PHONY: test-report test-report-clean
-.PHONY: appveyor-test-report-and-fail
