@@ -25,7 +25,7 @@ newtestrunargs:=$(subst -,-test.,${testrunargs})
 # /tmp/xvfb-run.PID/Xauthority for access control.
 # To interact with the Xvfb instance, you can set your XAUTHORITY and DISPLAY
 # environment vars accordingly.
-testing_with_xvfb=xvfb-run --server-args="-screen 0 1920x1080x24" --auto-servernum
+testing_with_xvfb=xvfb-run --server-args="-screen 0 1024x750x24" --auto-servernum
 
 ifeq "${testing_env}" ""
 testing_env:=${testing_with_xvfb}
