@@ -1,5 +1,7 @@
 package updatebuildlib
 
+import "bytes"
+
 type Tree struct {
 	data []byte
 }
@@ -11,5 +13,5 @@ func MakeTreeFromTarball(tarball []byte) *Tree {
 }
 
 func (t *Tree) Matches(other *Tree) bool {
-	return false
+	return bytes.Equal(t.data, other.data)
 }
