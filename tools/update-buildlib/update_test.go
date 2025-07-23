@@ -32,4 +32,13 @@ func TestCheckForUpstreamChanges(t *testing.T) {
 			t.Fatalf("the same tree should compare equal")
 		}
 	})
+
+	t.Run("'upstream' does not match 'local'", func(t *testing.T) {
+		tlocal := readTreeFromTestdata("rev1.tar.gz")
+		tremote := readTreeFromTestdata("rev2.tar.gz")
+
+		if tlocal.Matches(tremote) {
+			t.Fatalf("different trees should look different")
+		}
+	})
 }
