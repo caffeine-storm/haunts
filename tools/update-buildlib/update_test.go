@@ -1,9 +1,12 @@
 package updatebuildlib_test
 
 import (
+	"compress/gzip"
 	"fmt"
+	"io"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	updatebuildlib "github.com/MobRulesGames/haunts/tools/update-buildlib"
@@ -15,9 +18,24 @@ func testdataFile(key string) string {
 
 func readTreeFromTestdata(key string) *updatebuildlib.Tree {
 	path := testdataFile(key)
-	data, err := os.ReadFile(path)
+
+	var f io.ReadCloser
+	f, err := os.Open(path)
 	if err != nil {
-		panic(fmt.Errorf("couldn't os.ReadFile(%q): %w", path, err))
+		panic(fmt.Errorf("couldn't os.Open(%q): %w", path, err))
+	}
+	defer f.Close()
+
+	if strings.HasSuffix(path, ".gz") {
+		f, err = gzip.NewReader(f)
+		if err != nil {
+			panic(fmt.Errorf("couldn't gunzip(%q): %w", path, err))
+		}
+	}
+
+	data, err := io.ReadAll(f)
+	if err != nil {
+		panic(fmt.Errorf("couldn't io.ReadAll(%q): %w", path, err))
 	}
 
 	return updatebuildlib.MakeTreeFromTarball(data)
@@ -41,4 +59,15 @@ func TestCheckForUpstreamChanges(t *testing.T) {
 			t.Fatalf("different trees should look different")
 		}
 	})
+}
+
+func TestMakeFromDirectory(t *testing.T) {
+	dirpath := testdataFile("extracted")
+	tFromDir := updatebuildlib.MakeTreeFromDirectory(dirpath)
+	tFromFile := readTreeFromTestdata("rev1.tar.gz")
+
+	delta := tFromDir.Diff(tFromFile)
+	if delta != "" {
+		t.Fatalf("the 'extracted' directory should match the tarball it came from but got a diff: %q", delta)
+	}
 }
