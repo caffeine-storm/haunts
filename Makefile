@@ -110,6 +110,9 @@ include build/test-report.mk
 update-glop:
 	go -C tools/update-glop/ run cmd/main.go
 	go mod tidy
+	
+update-buildlib:
+	go run ./tools/update-buildlib/cmd/main.go
 
 update-appveyor-image:
 	go run tools/update-appveyor-image/main.go ./appveyor.yml
