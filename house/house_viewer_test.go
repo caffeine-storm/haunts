@@ -9,6 +9,7 @@ import (
 	"github.com/MobRulesGames/haunts/game/gametest"
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/house/housetest"
+	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/gui/guitest"
 	. "github.com/smartystreets/goconvey/convey"
@@ -21,6 +22,13 @@ func givenAHouseViewer() *house.HouseViewer {
 	ret := house.MakeHouseViewer(housetest.GivenAHouseDef(), 62)
 	ret.SetZoom(10)
 	return ret
+}
+
+func centreOf(region gui.Dims) gui.Point {
+	return gui.Point{
+		X: region.Dx / 2,
+		Y: region.Dy / 2,
+	}
 }
 
 func TestHouseViewer(t *testing.T) {
@@ -66,6 +74,28 @@ func TestHouseViewer(t *testing.T) {
 				houseViewer.Respond(g, wheelDown)
 				return houseViewer
 			}, "house-viewer-zoom-out")
+		})
+
+		Convey("Respond()ing to right-click drags pans around", func(c C) {
+			gametest.RunDrawingTest(c, func() gametest.Drawer {
+				houseViewer := givenAHouseViewer()
+				dimensions := gui.Dims{Dx: 64, Dy: 64}
+				g := guitest.MakeStubbedGui(dimensions)
+
+				fromPos := centreOf(dimensions)
+				toPos := fromPos
+				toPos.X += 2
+				toPos.Y -= 2
+
+				rightButtonId := gin.AnyMouseRButton
+				rightButtonId.Device.Index = 0
+
+				drag := guitest.SynthesizeEvents().DragGesture(rightButtonId, fromPos, toPos)
+				for _, ev := range drag {
+					houseViewer.Respond(g, ev)
+				}
+				return houseViewer
+			}, "house-viewer-panned")
 		})
 	})
 }
