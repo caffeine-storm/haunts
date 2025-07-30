@@ -26,7 +26,8 @@ type HouseViewerState struct {
 	floor, ifloor       mathgl.Mat4
 
 	// target[xy] are the values that f[xy] approach, this gives us a nice way
-	// to change what the camera is looking at
+	// to change what the camera is looking at. All such values are in 'board'
+	// units. That is, relative to a floor along the X-Y plane at Z=0.
 	targetx, targety float32
 	target_on        bool
 
@@ -36,6 +37,57 @@ type HouseViewerState struct {
 
 	// Need to keep track of time so we can measure time between thinks
 	last_timestamp int64
+
+	dragging dragState
+}
+
+type dragState struct {
+	on     bool
+	refpos gui.Point
+	focus  struct {
+		X, Y float32
+	}
+}
+
+func (st *HouseViewerState) dragToggle(group gui.EventGroup) {
+	if st.dragging.on {
+		if group.PrimaryEvent().IsPress() {
+			// continue dragging
+		} else {
+			// done dragging
+			st.dragging.on = false
+		}
+	} else {
+		if group.PrimaryEvent().IsPress() {
+			// start dragging
+			st.dragging.on = true
+			st.dragging.refpos = group.GetMousePosition()
+			st.dragging.focus.X = st.fx
+			st.dragging.focus.Y = st.fy
+			st.target_on = true
+		} else {
+			// still not dragging
+		}
+	}
+}
+
+func (st *HouseViewerState) dragUpdate(group gui.EventGroup) {
+	if !st.dragging.on {
+		return
+	}
+
+	screenMousePos := group.GetMousePosition()
+
+	// Move the focus so that the on-board drag-start position aligns with the
+	// current mouse location.
+	startx, starty, _ := st.modelviewToBoard(float32(st.dragging.refpos.X), float32(st.dragging.refpos.Y))
+	curx, cury, _ := st.modelviewToBoard(float32(screenMousePos.X), float32(screenMousePos.Y))
+
+	deltax := curx - startx
+	deltay := cury - starty
+
+	st.targetx = st.dragging.focus.X - deltax
+	st.targety = st.dragging.focus.Y - deltay
 }
 
 type HouseViewer struct {
@@ -93,6 +145,21 @@ func (hv *HouseViewer) Respond(g *gui.Gui, group gui.EventGroup) bool {
 		}
 		return true
 	}
+	rightButtonId := gin.KeyId{
+		Index: gin.MouseRButton,
+		Device: gin.DeviceId{
+			Index: gin.DeviceIndexAny,
+			Type:  gin.DeviceTypeMouse,
+		},
+	}
+	if rightButtonId.Contains(group.PrimaryEvent().Key.Id()) {
+		logging.Debug("going to press/release", "pos", group.GetMousePosition())
+		hv.HouseViewerState.dragToggle(group)
+	}
+	if group.IsMouseMove() {
+		logging.Debug("going to mousemove", "pos", group.GetMousePosition())
+		hv.HouseViewerState.dragUpdate(group)
+	}
 	return false
 }
 
@@ -103,7 +170,14 @@ func (hv *HouseViewer) Think(g *gui.Gui, t int64) {
 	}
 	hv.last_timestamp = t
 
+	if dt < 0 {
+		panic(fmt.Errorf("time travel!?"))
+	}
+
+	// as 'dt' grows, 'scale' approaches 1
 	scale := 1 - float32(math.Pow(0.005, float64(dt)/1000))
+
+	logging.Debug("Think", "hv.target_on", hv.target_on, "scale", scale, "target", []any{hv.targetx, hv.targety}, "pos", []any{hv.fx, hv.fy})
 
 	if hv.target_on {
 		f := mathgl.Vec2{X: hv.fx, Y: hv.fy}
@@ -113,6 +187,11 @@ func (hv *HouseViewer) Think(g *gui.Gui, t int64) {
 		f.Add(&v)
 		hv.fx = f.X
 		hv.fy = f.Y
+	}
+
+	if hv.fx == hv.targetx && hv.fy == hv.targety {
+		logging.Debug("no more target on")
+		hv.target_on = false
 	}
 
 	if hv.target_zoom_on {
@@ -125,6 +204,7 @@ func (hv *HouseViewer) Think(g *gui.Gui, t int64) {
 func (hv *HouseViewer) AddDrawable(d Drawable) {
 	hv.drawables = append(hv.drawables, d)
 }
+
 func (hv *HouseViewer) RemoveDrawable(d Drawable) {
 	algorithm.Choose(&hv.drawables, func(t Drawable) bool {
 		return t != d
@@ -144,14 +224,14 @@ func (hv *HouseViewer) RemoveFloorDrawable(fd RenderOnFloorer) {
 	})
 }
 
-func (hv *HouseViewer) modelviewToBoard(mx, my float32) (x, y, dist float32) {
+func (hv *HouseViewerState) modelviewToBoard(mx, my float32) (x, y, dist float32) {
 	mz := d2p(hv.floor, mathgl.Vec3{X: mx, Y: my, Z: 0}, mathgl.Vec3{X: 0, Y: 0, Z: 1})
 	v := mathgl.Vec4{X: mx, Y: my, Z: mz, W: 1}
 	v.Transform(&hv.ifloor)
 	return v.X, v.Y, mz
 }
 
-func (hv *HouseViewer) boardToModelview(mx, my float32) (x, y, z float32) {
+func (hv *HouseViewerState) boardToModelview(mx, my float32) (x, y, z float32) {
 	v := mathgl.Vec4{X: mx, Y: my, Z: 0, W: 1}
 	v.Transform(&hv.floor)
 	x, y, z = v.X, v.Y, v.Z
@@ -227,6 +307,7 @@ func (hv *HouseViewer) SetBounds() {
 	}
 }
 
+// TODO(tmckee:#34): drop this; we don't want to use it!
 func (hv *HouseViewer) Drag(dx, dy float64) {
 	v := mathgl.Vec3{X: hv.fx, Y: hv.fy}
 	vx := mathgl.Vec3{X: 1, Y: -1, Z: 0}

@@ -9,6 +9,7 @@ import (
 	"github.com/MobRulesGames/haunts/game/gametest"
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/house/housetest"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/gui/guitest"
@@ -76,24 +77,42 @@ func TestHouseViewer(t *testing.T) {
 			}, "house-viewer-zoom-out")
 		})
 
-		Convey("Respond()ing to right-click drags pans around", func(c C) {
+		Convey("Respond()ing to right-click drags will pan around", func(c C) {
 			gametest.RunDrawingTest(c, func() gametest.Drawer {
 				houseViewer := givenAHouseViewer()
+				// -_- this is a bug in the HouseViewer constructor; we ought to
+				// initialize the 'floor' matrix (and friends) instead of returning a
+				// malformed HouseViewer.
+				houseViewer.WindowToBoard(0, 0)
+
 				dimensions := gui.Dims{Dx: 64, Dy: 64}
 				g := guitest.MakeStubbedGui(dimensions)
 
-				fromPos := centreOf(dimensions)
+				fromPos := gui.Point{X: 32, Y: 32}
 				toPos := fromPos
-				toPos.X += 2
-				toPos.Y -= 2
+				toPos.X += 128
+				toPos.Y -= 128
 
 				rightButtonId := gin.AnyMouseRButton
 				rightButtonId.Device.Index = 0
 
-				drag := guitest.SynthesizeEvents().DragGesture(rightButtonId, fromPos, toPos)
-				for _, ev := range drag {
-					houseViewer.Respond(g, ev)
-				}
+				logging.DebugBracket(func() {
+					logging.Debug("before dragging", "houseViewer", houseViewer)
+
+					drag := guitest.SynthesizeEvents().DragGesture(rightButtonId, fromPos, toPos)
+					logging.Debug("drag gesture", "drag", drag)
+					for _, ev := range drag {
+						houseViewer.Respond(g, ev)
+					}
+
+					// Need to simulate a few frames going by to give the house viewer a
+					// chance to run its animations.
+					for i := int64(0); i < 20; i++ {
+						houseViewer.Think(g, (i+5)*500)
+					}
+
+					logging.Debug("after thinking", "houseViewer", houseViewer)
+				})
 				return houseViewer
 			}, "house-viewer-panned")
 		})
