@@ -60,9 +60,6 @@ type roomViewer struct {
 	// Focus, in map coordinates
 	fx, fy float32
 
-	// Mouse position, in board coordinates
-	mx, my int
-
 	// The viewing angle, 0 means the map is viewed head-on, 90 means the map is viewed
 	// on its edge (i.e. it would not be visible)
 	angle float32
@@ -873,9 +870,4 @@ func (rv *roomViewer) Think(*gui.Gui, int64) {
 		rv.size = rv.room.Size
 		rv.makeMat()
 	}
-	// TODO(tmckee): ask the gui for the cursor pos
-	// mx, my := rv.WindowToBoard(gin.In().GetCursor("Mouse").Point())
-	mx, my := 0, 0
-	rv.mx = int(mx)
-	rv.my = int(my)
 }
