@@ -130,7 +130,7 @@ func MakeHouseViewer(house *HouseDef, angle float32) *HouseViewer {
 		},
 	}
 
-	ret.angle = angle
+	ret.SetAngle(angle)
 	ret.SetZoom(10)
 	ret.SetBounds()
 
@@ -273,6 +273,14 @@ func (hv *HouseViewer) GetState() HouseViewerState {
 
 func (hv *HouseViewer) SetState(state HouseViewerState) {
 	hv.HouseViewerState = state
+}
+
+func (hv *HouseViewer) SetAngle(theta float32) {
+	hv.angle = theta
+}
+
+func (hv *HouseViewer) GetAngle() float32 {
+	return hv.angle
 }
 
 func (hv *HouseViewer) SetZoom(dz float32) {
