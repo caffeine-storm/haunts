@@ -14,6 +14,8 @@ type RoomSizey interface {
 	GetDy() int
 }
 
+// Container for helpful transformations to move back and forth between Board
+// and View co-ordinate systems.
 type RoomMats struct {
 	Floor, IFloor, Left, ILeft, Right, IRight mathgl.Mat4
 }

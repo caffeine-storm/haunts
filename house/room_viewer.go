@@ -117,20 +117,6 @@ func (rv *roomViewer) AdjAngle(ang float32) {
 	rv.makeMat()
 }
 
-func (rv *roomViewer) Drag(dx, dy float64) {
-	v := mathgl.Vec3{X: rv.fx, Y: rv.fy}
-	vx := mathgl.Vec3{X: 1, Y: -1, Z: 0}
-	vx.Normalize()
-	vy := mathgl.Vec3{X: 1, Y: 1, Z: 0}
-	vy.Normalize()
-	vx.Scale(float32(dx) / rv.zoom * 2)
-	vy.Scale(float32(dy) / rv.zoom * 2)
-	v.Add(&vx)
-	v.Add(&vy)
-	rv.fx, rv.fy = v.X, v.Y
-	rv.makeMat()
-}
-
 func (rv *roomViewer) makeMat() {
 	logging.Debug("roomViewer>makeMat", "rv", []any{
 		rv.room.Size, rv.Render_region, rv.fx, rv.fy, rv.angle, rv.zoom,

@@ -74,46 +74,6 @@ func openLogFile(datadir string) (*os.File, error) {
 	return f, nil
 }
 
-type draggerZoomer interface {
-	Drag(float64, float64)
-	SetZoom(float32)
-	GetZoom() float32
-}
-
-func draggingAndZooming(ui *gui.Gui, sys system.System, dz draggerZoomer) {
-	fmt.Printf("enabled!\n")
-	if ui.FocusWidget() != nil {
-		dragging = false
-		zooming = false
-		sys.HideCursor(false)
-		fmt.Printf("there was focus\n")
-		return
-	}
-
-	// TODO(#29): figure out the scale/style that makes sense here
-	var zoom float64 = float64(dz.GetZoom())
-	delta := key_map["zoom"].FramePressSum()
-	if delta != 0 {
-		dz.SetZoom(float32(zoom + delta))
-	}
-
-	if key_map["drag"].IsDown() != dragging {
-		dragging = !dragging
-	}
-	if dragging {
-		mx := gin.In().GetKeyById(gin.AnyMouseXAxis).FramePressAmt()
-		my := gin.In().GetKeyById(gin.AnyMouseYAxis).FramePressAmt()
-		if mx != 0 || my != 0 {
-			dz.Drag(-mx, my)
-		}
-	}
-
-	if (dragging || zooming) != hiding {
-		hiding = (dragging || zooming)
-		sys.HideCursor(hiding)
-	}
-}
-
 type lowerLeftTable struct {
 	*gui.AnchorBox
 }
@@ -330,7 +290,6 @@ func editMode(ui *gui.Gui, sys system.System) {
 	logging.TraceLogger().Trace("editMode entered")
 	defer logging.TraceLogger().Trace("editMode returning")
 
-	draggingAndZooming(ui, sys, editor.GetViewer())
 	if ui.FocusWidget() != nil {
 		return
 	}

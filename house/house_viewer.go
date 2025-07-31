@@ -314,27 +314,6 @@ func (hv *HouseViewer) SetBounds() {
 	}
 }
 
-// TODO(tmckee:#34): drop this; we don't want to use it!
-func (hv *HouseViewer) Drag(dx, dy float64) {
-	v := mathgl.Vec3{X: hv.fx, Y: hv.fy}
-	vx := mathgl.Vec3{X: 1, Y: -1, Z: 0}
-	vx.Normalize()
-	vy := mathgl.Vec3{X: 1, Y: 1, Z: 0}
-	vy.Normalize()
-	vx.Scale(float32(dx) / hv.zoom * 2)
-	vy.Scale(float32(dy) / hv.zoom * 2)
-	v.Add(&vx)
-	v.Add(&vy)
-	if hv.bounds.on {
-		hv.fx = clamp(v.X, hv.bounds.min.x, hv.bounds.max.x)
-		hv.fy = clamp(v.Y, hv.bounds.min.y, hv.bounds.max.y)
-	} else {
-		hv.fx, hv.fy = v.X, v.Y
-	}
-	hv.target_on = false
-	hv.target_zoom_on = false
-}
-
 func (hv *HouseViewer) Focus(bx, by float64) {
 	hv.targetx = float32(bx)
 	hv.targety = float32(by)
