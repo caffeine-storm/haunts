@@ -20,15 +20,7 @@ var _ gametest.Drawer = (*house.HouseViewer)(nil)
 
 func givenAHouseViewer() *house.HouseViewer {
 	ret := house.MakeHouseViewer(housetest.GivenAHouseDef(), 62)
-	ret.SetZoom(10)
 	return ret
-}
-
-func centreOf(region gui.Dims) gui.Point {
-	return gui.Point{
-		X: region.Dx / 2,
-		Y: region.Dy / 2,
-	}
 }
 
 func TestHouseViewer(t *testing.T) {
@@ -79,10 +71,6 @@ func TestHouseViewer(t *testing.T) {
 		Convey("Respond()ing to right-click drags will pan around", func(c C) {
 			gametest.RunDrawingTest(c, func() gametest.Drawer {
 				houseViewer := givenAHouseViewer()
-				// -_- this is a bug in the HouseViewer constructor; we ought to
-				// initialize the 'floor' matrix (and friends) instead of returning a
-				// malformed HouseViewer.
-				houseViewer.WindowToBoard(0, 0)
 
 				dimensions := gui.Dims{Dx: 64, Dy: 64}
 				g := guitest.MakeStubbedGui(dimensions)

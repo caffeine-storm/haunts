@@ -118,18 +118,28 @@ func (hv *HouseViewer) GetFloors() []*Floor {
 }
 
 func MakeHouseViewer(house *HouseDef, angle float32) *HouseViewer {
-	var hv HouseViewer
-	hv.Request_dims.Dx = 100
-	hv.Request_dims.Dy = 100
-	hv.Ex = true
-	hv.Ey = true
-	hv.house = house
-	hv.angle = angle
-	hv.SetZoom(10)
+	ret := &HouseViewer{
+		house: house,
+		BasicZone: gui.BasicZone{
+			Request_dims: gui.Dims{
+				Dx: 100,
+				Dy: 100,
+			},
+			Ex: true,
+			Ey: true,
+		},
+	}
 
-	hv.SetBounds()
+	ret.angle = angle
+	ret.SetZoom(10)
+	ret.SetBounds()
 
-	return &hv
+	// TODO(clean): the perspective package ought to support building _just_ the
+	// floor and its inverse so that we don't need "BlankRoomSize()" here.
+	mats := perspective.MakeRoomMats(BlankRoomSize(), ret.Render_region, ret.fx, ret.fy, ret.angle, ret.zoom)
+	ret.floor, ret.ifloor = mats.Floor, mats.IFloor
+
+	return ret
 }
 
 type framePressTotaler interface {
