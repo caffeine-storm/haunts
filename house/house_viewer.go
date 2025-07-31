@@ -134,10 +134,7 @@ func MakeHouseViewer(house *HouseDef, angle float32) *HouseViewer {
 	ret.SetZoom(10)
 	ret.SetBounds()
 
-	// TODO(clean): the perspective package ought to support building _just_ the
-	// floor and its inverse so that we don't need "BlankRoomSize()" here.
-	mats := perspective.MakeRoomMats(BlankRoomSize(), ret.Render_region, ret.fx, ret.fy, ret.angle, ret.zoom)
-	ret.floor, ret.ifloor = mats.Floor, mats.IFloor
+	ret.floor, ret.ifloor = perspective.MakeFloorTransforms(ret.Render_region, ret.fx, ret.fy, ret.angle, ret.zoom)
 
 	return ret
 }
@@ -246,22 +243,14 @@ func (hv *HouseViewerState) boardToModelview(mx, my float32) (x, y, z float32) {
 }
 
 func (hv *HouseViewer) WindowToBoard(wx, wy int) (float32, float32) {
-	// TODO(tmckee:clean): makeRoomMats does not need room size for just the
-	// floor/ifloor matrices; it would be cleaner to not need to generate some
-	// value that we end up ignoring!!!
-	mats := perspective.MakeRoomMats(BlankRoomSize(), hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
-	hv.floor, hv.ifloor = mats.Floor, mats.IFloor
+	hv.floor, hv.ifloor = perspective.MakeFloorTransforms(hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
 
 	fx, fy, _ := hv.modelviewToBoard(float32(wx), float32(wy))
 	return fx, fy
 }
 
 func (hv *HouseViewer) BoardToWindow(bx, by float32) (int, int) {
-	// TODO(tmckee:clean): makeRoomMats does not need room size for just the
-	// floor/ifloor matrices; it would be cleaner to not need to generate some
-	// value that we end up ignoring!!!
-	mats := perspective.MakeRoomMats(BlankRoomSize(), hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
-	hv.floor, hv.ifloor = mats.Floor, mats.IFloor
+	hv.floor, hv.ifloor = perspective.MakeFloorTransforms(hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
 
 	fx, fy, _ := hv.boardToModelview(bx, by)
 	return int(fx), int(fy)

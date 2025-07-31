@@ -5,7 +5,6 @@ import (
 	"math"
 	"testing"
 
-	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/house/housetest"
 	"github.com/MobRulesGames/haunts/house/perspective"
 	"github.com/MobRulesGames/haunts/logging"
@@ -50,14 +49,14 @@ func TestMath(t *testing.T) {
 	assert.Equal(pair(jankyOneOverRoot2, jankyOneOverRoot2), pair(s, c), "math.Pi/4")
 }
 
-func TestMakeRoomMats(t *testing.T) {
+func TestMakeFloorTransforms(t *testing.T) {
 	Convey("floor matrix properly smushes a floor image", t, func(c C) {
 		screen := image.Rect(0, 0, 400, 400)
 		cam := housetest.Camera().
 			ForSize(screen.Dx(), screen.Dy()).
 			AtAngle(0).
 			AtFocus(float32(screen.Dx())*housetest.JankyOneOverRoot2, 0)
-		floorMatrix := perspective.MakeRoomMats(house.BlankRoomSize(), cam.Region, cam.FocusX, cam.FocusY, cam.Angle, cam.Zoom).Floor
+		floorMatrix, _ := perspective.MakeFloorTransforms(cam.Region, cam.FocusX, cam.FocusY, cam.Angle, cam.Zoom)
 
 		testbuilder.New().WithSize(screen.Dx(), screen.Dy()).WithQueue().Run(func(queue render.RenderQueueInterface) {
 			queue.Queue(func(st render.RenderQueueState) {

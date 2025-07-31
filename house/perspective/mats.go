@@ -23,45 +23,12 @@ type RoomMats struct {
 // TODO(tmckee:clean): taking a size by interface is leading to a bunch of
 // deref/address-of noise; pick something that works and use it everywhere
 func MakeRoomMats(roomSize RoomSizey, region gui.Region, focusx, focusy, angle, zoom float32) (ret RoomMats) {
-	// Note: repeated matrix multiplication is equivalent to composing
-	// application of a series of transforms in reverse. So, we build up a
-	// transform by multiplying logical pieces but its easiest to see the overall
-	// transform by reading in the opposite order. Hence, we start at 'Step 5'.
+	ret.Floor, ret.IFloor = MakeFloorTransforms(region, focusx, focusy, angle, zoom)
+
+	// Also make the mats for the left and right walls based on the floor's
+	// transform.
 	var m mathgl.Mat4
 
-	// Step 5: translate the resulting (possibly-squished) diamond to the centre
-	// of a target region.
-	ret.Floor.Translation(float32(region.X+region.Dx/2), float32(region.Y+region.Dy/2), 0)
-
-	// Step 4: rotate about the z axis to put the bottom-left (and, from step3,
-	// most +'ve in z point) at the bottom, and the top-right at the top.
-	// NOTE: If we want to change 45 to *anything* else then we need to do the
-	// appropriate math for rendering quads for furniture
-	m.RotationZ(45 * math.Pi / 180)
-	ret.Floor.Multiply(&m)
-
-	// Step 3: rotate about an axis so as to "push back" the top-right and "pull
-	// forward" the bottom-left by a given angle.
-	m.RotationAxisAngle(mathgl.Vec3{X: -1, Y: 1}, -float32(angle)*math.Pi/180)
-	ret.Floor.Multiply(&m)
-
-	// Step 2: zoom in or out on the floor.
-	s := float32(zoom)
-	m.Scaling(s, s, s)
-	ret.Floor.Multiply(&m)
-
-	// Step 1: Move the viewer so that the focus is at the origin, and hence
-	// becomes centered in the window.
-	m.Translation(-focusx, -focusy, 0)
-	ret.Floor.Multiply(&m)
-
-	// Step 0: Assume an input floor from (x,y) to (x+dx, x+dy), rotated to match
-	// our natural co-ordinates.
-
-	ret.IFloor.Assign(&ret.Floor)
-	ret.IFloor.Inverse()
-
-	// Also make the mats for the left and right walls based on this mat
 	ret.Left.Assign(&ret.Floor)
 	m.RotationX(-math.Pi / 2)
 	ret.Left.Multiply(&m)
@@ -101,4 +68,48 @@ func MakeRoomMats(roomSize RoomSizey, region gui.Region, focusx, focusy, angle, 
 		"right", render.Showmat(ret.Right),
 	)
 	return
+}
+
+func MakeFloorTransforms(region gui.Region, focusx, focusy, angle, zoom float32) (mathgl.Mat4, mathgl.Mat4) {
+	// Note: repeated matrix multiplication is equivalent to composing
+	// application of a series of transforms in reverse. So, we build up a
+	// transform by multiplying logical pieces but its easiest to see the overall
+	// transform by reading in the opposite order. Hence, we start at 'Step 5'.
+	var m, ret mathgl.Mat4
+
+	// Step 5: translate the resulting (possibly-squished) diamond to the centre
+	// of a target region.
+	ret.Translation(float32(region.X+region.Dx/2), float32(region.Y+region.Dy/2), 0)
+
+	// Step 4: rotate about the z axis to put the bottom-left (and, from step3,
+	// most +'ve in z point) at the bottom, and the top-right at the top.
+	// NOTE: If we want to change 45 to *anything* else then we need to do the
+	// appropriate math for rendering quads for furniture
+	m.RotationZ(45 * math.Pi / 180)
+	ret.Multiply(&m)
+
+	// Step 3: rotate about an axis so as to "push back" the top-right and "pull
+	// forward" the bottom-left by a given angle.
+	m.RotationAxisAngle(mathgl.Vec3{X: -1, Y: 1}, -float32(angle)*math.Pi/180)
+	ret.Multiply(&m)
+
+	// Step 2: zoom in or out on the floor.
+	s := float32(zoom)
+	m.Scaling(s, s, s)
+	ret.Multiply(&m)
+
+	// Step 1: Move the viewer so that the focus is at the origin, and hence
+	// becomes centered in the window.
+	m.Translation(-focusx, -focusy, 0)
+	ret.Multiply(&m)
+
+	// Step 0: Assume an input floor from (x,y) to (x+dx, x+dy), rotated to match
+	// our natural co-ordinates.
+
+	// Also compute a viewspace->board transform.
+	inverse := mathgl.Mat4{}
+	inverse.Assign(&ret)
+	inverse.Inverse()
+
+	return ret, inverse
 }
