@@ -9,7 +9,6 @@ import (
 	"github.com/MobRulesGames/haunts/game/gametest"
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/house/housetest"
-	"github.com/MobRulesGames/haunts/logging"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/gui/guitest"
@@ -96,23 +95,17 @@ func TestHouseViewer(t *testing.T) {
 				rightButtonId := gin.AnyMouseRButton
 				rightButtonId.Device.Index = 0
 
-				logging.DebugBracket(func() {
-					logging.Debug("before dragging", "houseViewer", houseViewer)
+				drag := guitest.SynthesizeEvents().DragGesture(rightButtonId, fromPos, toPos)
+				for _, ev := range drag {
+					houseViewer.Respond(g, ev)
+				}
 
-					drag := guitest.SynthesizeEvents().DragGesture(rightButtonId, fromPos, toPos)
-					logging.Debug("drag gesture", "drag", drag)
-					for _, ev := range drag {
-						houseViewer.Respond(g, ev)
-					}
+				// Need to simulate a few frames going by to give the house viewer a
+				// chance to run its animations.
+				for i := int64(0); i < 20; i++ {
+					houseViewer.Think(g, (i+5)*500)
+				}
 
-					// Need to simulate a few frames going by to give the house viewer a
-					// chance to run its animations.
-					for i := int64(0); i < 20; i++ {
-						houseViewer.Think(g, (i+5)*500)
-					}
-
-					logging.Debug("after thinking", "houseViewer", houseViewer)
-				})
 				return houseViewer
 			}, "house-viewer-panned")
 		})

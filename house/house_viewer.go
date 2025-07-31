@@ -153,11 +153,9 @@ func (hv *HouseViewer) Respond(g *gui.Gui, group gui.EventGroup) bool {
 		},
 	}
 	if rightButtonId.Contains(group.PrimaryEvent().Key.Id()) {
-		logging.Debug("going to press/release", "pos", group.GetMousePosition())
 		hv.HouseViewerState.dragToggle(group)
 	}
 	if group.IsMouseMove() {
-		logging.Debug("going to mousemove", "pos", group.GetMousePosition())
 		hv.HouseViewerState.dragUpdate(group)
 	}
 	return false
@@ -190,7 +188,6 @@ func (hv *HouseViewer) Think(g *gui.Gui, t int64) {
 	}
 
 	if hv.fx == hv.targetx && hv.fy == hv.targety {
-		logging.Debug("no more target on")
 		hv.target_on = false
 	}
 
@@ -479,6 +476,5 @@ func (hv *HouseViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
 		hv.temp_floor_drawers = append(hv.temp_floor_drawers, fd)
 	}
 
-	logging.Debug("HouseViewer.Draw", "zoom", hv.zoom)
 	hv.house.Floors[0].render(region, hv.fx, hv.fy, hv.angle, hv.zoom, hv.drawables, hv.Los_tex, hv.temp_floor_drawers)
 }
