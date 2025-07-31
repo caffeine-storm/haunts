@@ -1,3 +1,6 @@
+- bug#45: when starting the first game, the first attempt to pan on the
+  unit-placement screen fails but subsequent ones succeed... dat's bad.
+
 - bug#44: when placing entities on spawn points, we should have better feedback
   when 'Done' is clickable. We brighten it a bit on hover-and-valid but there's
   no indication before hovering.
@@ -150,4 +153,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#45: <next>
+- bug#46: <next>
