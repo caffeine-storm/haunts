@@ -13,7 +13,7 @@ import (
 type GamePanel struct {
 	// TODO(tmckee:#38): hide this field from client code; too much coupling
 	// ensues when everyone is expected to manipulate this themselves.
-	*gui.AnchorBox
+	canvas *gui.AnchorBox
 
 	main_bar *MainBar
 
@@ -47,6 +47,44 @@ func MakeGamePanel(scenario Scenario, p *Player, data map[string]string, game_ke
 	return &gp
 }
 
+func (gp *GamePanel) ClearCanvas() {
+	gp.canvas = gui.MakeAnchorBox(gui.Dims{Dx: 1024, Dy: 768})
+}
+
+func (gp *GamePanel) AddChild(widget gui.Widget, anchor gui.Anchor) {
+	gp.canvas.AddChild(widget, anchor)
+}
+
+func (gp *GamePanel) RemoveChild(widget gui.Widget) {
+	gp.canvas.RemoveChild(widget)
+}
+
+func (gp *GamePanel) GetChildren() []gui.Widget {
+	return gp.canvas.GetChildren()
+}
+
+func (gp *GamePanel) DrawFocused(region gui.Region, ctx gui.DrawingContext) {
+	gp.canvas.DrawFocused(region, ctx)
+}
+
+func (gp *GamePanel) Expandable() (bool, bool) {
+	return gp.canvas.Expandable()
+}
+
+func (gp *GamePanel) Rendered() gui.Region {
+	return gp.canvas.Rendered()
+}
+
+func (gp *GamePanel) Requested() gui.Dims {
+	return gp.canvas.Requested()
+}
+
+func (gp *GamePanel) String() string {
+	return "game panel"
+}
+
+var _ gui.Widget = (*GamePanel)(nil)
+
 // Returns  true iff the game panel has an active game with a viewer already
 // installed.
 func (gp *GamePanel) Active() bool {
@@ -55,7 +93,7 @@ func (gp *GamePanel) Active() bool {
 
 func (gp *GamePanel) Think(ui *gui.Gui, t int64) {
 	gp.scriptThinkOnce()
-	gp.AnchorBox.Think(ui, t)
+	gp.canvas.Think(ui, t)
 	if !gp.Active() {
 		return
 	}
@@ -82,12 +120,12 @@ func (gp *GamePanel) Think(ui *gui.Gui, t int64) {
 func (gp *GamePanel) Draw(region gui.Region, ctx gui.DrawingContext) {
 	region.PushClipPlanes()
 	defer region.PopClipPlanes()
-	logging.Trace("GamePanel.Draw", "anchorbox.Children", strmanip.Show(gp.AnchorBox.GetChildren()))
-	gp.AnchorBox.Draw(region, ctx)
+	logging.Trace("GamePanel.Draw", "Children", strmanip.Show(gp.GetChildren()))
+	gp.canvas.Draw(region, ctx)
 }
 
 func (gp *GamePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
-	if gp.AnchorBox.Respond(ui, group) {
+	if gp.canvas.Respond(ui, group) {
 		return true
 	}
 	if !gp.Active() {

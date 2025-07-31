@@ -123,8 +123,7 @@ func makeNewLuaState(gp *GamePanel, player *Player, isOnline bool) *lua.State {
 func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[string]string, game_key mrgnet.GameKey) {
 	// Clear out the panel, now the script can do whatever it wants
 	player.Script_path = scenario.Script
-	// TODO(tmckee:#38): have a GamePanel.Clear() or smth
-	gp.AnchorBox = gui.MakeAnchorBox(gui.Dims{Dx: 1024, Dy: 768})
+	gp.ClearCanvas()
 	logging.Debug("startGameScript", "scenario", scenario)
 	if scenario.Script != "" && !filepath.IsAbs(scenario.Script) {
 		scenario.Script = filepath.Join(base.GetDataDir(), "scripts", filepath.FromSlash(scenario.Script))
@@ -262,9 +261,9 @@ func startGameScript(gp *GamePanel, scenario Scenario, player *Player, data map[
 			gp.game = makeGameTheWrongWay(scenario)
 			gameStartChan <- nil
 			gp.game.script = gp.script
-			gp.AnchorBox = gui.MakeAnchorBox(gui.Dims{Dx: 1024, Dy: 768})
-			gp.AnchorBox.AddChild(gp.game.viewer, gui.Anchor{Wx: 0.5, Wy: 0.5, Bx: 0.5, By: 0.5})
-			gp.AnchorBox.AddChild(MakeOverlay(gp.game), gui.Anchor{Wx: 0.5, Wy: 0.5, Bx: 0.5, By: 0.5})
+			gp.ClearCanvas()
+			gp.AddChild(gp.game.viewer, gui.Anchor{Wx: 0.5, Wy: 0.5, Bx: 0.5, By: 0.5})
+			gp.AddChild(MakeOverlay(gp.game), gui.Anchor{Wx: 0.5, Wy: 0.5, Bx: 0.5, By: 0.5})
 			if player.No_init {
 				gp.script.syncStart()
 				logging.Trace("startGameScript>[unnamed gr]>gp.game-is-nil>loadGameStateRaw")
@@ -527,13 +526,13 @@ func selectHouse(gp *GamePanel) lua.LuaGoFunction {
 			return 0
 		}
 		logging.Trace("selectHouse>abox-addchild>UiSelectMap")
-		gp.AnchorBox.AddChild(selector, gui.Anchor{0.5, 0.5, 0.5, 0.5})
+		gp.AddChild(selector, gui.Anchor{0.5, 0.5, 0.5, 0.5})
 		gp.script.syncEnd()
 
 		name := <-output
 		base.DeprecatedLog().Printf("Received '%s'", name)
 		gp.script.syncStart()
-		gp.AnchorBox.RemoveChild(selector)
+		gp.RemoveChild(selector)
 		base.DeprecatedLog().Printf("Removed seletor")
 		L.PushString(name)
 		return 1
@@ -628,13 +627,13 @@ func loadGameStateRaw(gp *GamePanel, L *lua.State, state string) {
 	}
 	L.SetGlobal("store")
 
-	gp.AnchorBox.RemoveChild(viewer)
+	gp.RemoveChild(viewer)
 	base.DeprecatedLog().Printf("LoadGameStateRaw: Turn = %d, Side = %d", gp.game.Turn, gp.game.Side)
 	gp.game.OnRound(false)
 
-	for _, child := range gp.AnchorBox.GetChildren() {
+	for _, child := range gp.GetChildren() {
 		if o, ok := child.(*Overlay); ok {
-			gp.AnchorBox.RemoveChild(o)
+			gp.RemoveChild(o)
 			break
 		}
 	}
@@ -642,8 +641,8 @@ func loadGameStateRaw(gp *GamePanel, L *lua.State, state string) {
 		gp.game.viewer.SetState(hv_state)
 	}
 	logging.Trace("loadGameStateRaw>abox-addchild>gameviewer+makeoverlay(game)")
-	gp.AnchorBox.AddChild(gp.game.viewer, gui.Anchor{0.5, 0.5, 0.5, 0.5})
-	gp.AnchorBox.AddChild(MakeOverlay(gp.game), gui.Anchor{0.5, 0.5, 0.5, 0.5})
+	gp.AddChild(gp.game.viewer, gui.Anchor{0.5, 0.5, 0.5, 0.5})
+	gp.AddChild(MakeOverlay(gp.game), gui.Anchor{0.5, 0.5, 0.5, 0.5})
 }
 
 func loadGameState(gp *GamePanel) lua.LuaGoFunction {
@@ -767,7 +766,7 @@ func chooserFromFile(gp *GamePanel) lua.LuaGoFunction {
 			return 0
 		}
 		logging.Trace("chooserFromFile>abox-addchild>chooser")
-		gp.AnchorBox.AddChild(chooser, gui.Anchor{0.5, 0.5, 0.5, 0.5})
+		gp.AddChild(chooser, gui.Anchor{0.5, 0.5, 0.5, 0.5})
 		gp.script.syncEnd()
 
 		res := <-done
@@ -778,7 +777,7 @@ func chooserFromFile(gp *GamePanel) lua.LuaGoFunction {
 			L.SetTable(-3)
 		}
 		gp.script.syncStart()
-		gp.AnchorBox.RemoveChild(chooser)
+		gp.RemoveChild(chooser)
 		return 1
 	}
 }
@@ -807,9 +806,9 @@ func loadHouse(gp *GamePanel) lua.LuaGoFunction {
 		gp.game.script = gp.script
 
 		logging.Trace("loadHouse>abox-addchild>gameviewer+makeoverlay(game)")
-		gp.AnchorBox = gui.MakeAnchorBox(gui.Dims{Dx: 1024, Dy: 768})
-		gp.AnchorBox.AddChild(gp.game.viewer, gui.Anchor{Wx: 0.5, Wy: 0.5, Bx: 0.5, By: 0.5})
-		gp.AnchorBox.AddChild(MakeOverlay(gp.game), gui.Anchor{Wx: 0.5, Wy: 0.5, Bx: 0.5, By: 0.5})
+		gp.ClearCanvas()
+		gp.AddChild(gp.game.viewer, gui.Anchor{Wx: 0.5, Wy: 0.5, Bx: 0.5, By: 0.5})
+		gp.AddChild(MakeOverlay(gp.game), gui.Anchor{Wx: 0.5, Wy: 0.5, Bx: 0.5, By: 0.5})
 
 		logging.Debug("done 'LouseHouse'")
 		return 0
@@ -826,9 +825,9 @@ func showMainBar(gp *GamePanel, player *Player) lua.LuaGoFunction {
 		show := L.ToBoolean(-1)
 
 		// Remove it regardless of whether or not we want to hide it
-		for _, child := range gp.AnchorBox.GetChildren() {
+		for _, child := range gp.GetChildren() {
 			if child == gp.main_bar {
-				gp.AnchorBox.RemoveChild(child)
+				gp.RemoveChild(child)
 				break
 			}
 		}
@@ -841,13 +840,13 @@ func showMainBar(gp *GamePanel, player *Player) lua.LuaGoFunction {
 				return 0
 			}
 			logging.Trace("showMainBar>abox-addchild>mainbar")
-			gp.AnchorBox.AddChild(gp.main_bar, gui.Anchor{0.5, 0, 0.5, 0})
+			gp.AddChild(gp.main_bar, gui.Anchor{0.5, 0, 0.5, 0})
 			system, err := MakeSystemMenu(gp, player)
 			if err != nil {
 				LuaDoError(L, err.Error())
 				return 0
 			}
-			gp.AnchorBox.AddChild(system, gui.Anchor{1, 1, 1, 1})
+			gp.AddChild(system, gui.Anchor{1, 1, 1, 1})
 		}
 		return 0
 	}
@@ -1013,8 +1012,8 @@ func placeEntities(gp *GamePanel) lua.LuaGoFunction {
 			return 0
 		}
 		logging.Trace("placeEntities>abox-addchild>entityPlacer")
-		gp.AnchorBox.AddChild(ep, gui.Anchor{})
-		for _, kid := range gp.AnchorBox.GetChildren() {
+		gp.AddChild(ep, gui.Anchor{})
+		for _, kid := range gp.GetChildren() {
 			logging.Trace("placeEntities", "kid", kid.String())
 		}
 		gp.script.syncEnd()
@@ -1026,7 +1025,7 @@ func placeEntities(gp *GamePanel) lua.LuaGoFunction {
 			L.SetTable(-3)
 		}
 		gp.script.syncStart()
-		gp.AnchorBox.RemoveChild(ep)
+		gp.RemoveChild(ep)
 		return 1
 	}
 }
@@ -1100,7 +1099,7 @@ func dialogBox(gp *GamePanel) lua.LuaGoFunction {
 			return 0
 		}
 		logging.Trace("dialogBox>abox-addchild>dialogBox")
-		gp.AnchorBox.AddChild(box, gui.Anchor{Wx: 0.5, Wy: 0.5, Bx: 0.5, By: 0.5})
+		gp.AddChild(box, gui.Anchor{Wx: 0.5, Wy: 0.5, Bx: 0.5, By: 0.5})
 		gp.script.syncEnd()
 
 		var choices []string
@@ -1110,7 +1109,7 @@ func dialogBox(gp *GamePanel) lua.LuaGoFunction {
 		logging.Debug("dialogBox", "choices", choices)
 
 		gp.script.syncStart()
-		gp.AnchorBox.RemoveChild(box)
+		gp.RemoveChild(box)
 		L.NewTable()
 		for i, choice := range choices {
 			L.PushInteger(int64(i) + 1)
