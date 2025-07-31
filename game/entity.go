@@ -10,6 +10,7 @@ import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game/status"
 	"github.com/MobRulesGames/haunts/house"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/sound"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/mathgl"
@@ -553,22 +554,25 @@ func (e *Entity) Render(pos mathgl.Vec2, width float32) {
 	e.last_render_width = width
 	gl.Enable(gl.TEXTURE_2D)
 	e.drawReticle(pos, rgba)
-	if e.sprite.sp != nil {
-		dxi, dyi := e.sprite.sp.Dims()
-		dx := float32(dxi)
-		dy := float32(dyi)
-		tx, ty, tx2, ty2 := e.sprite.sp.Bind()
-		gl.Begin(gl.QUADS)
-		gl.TexCoord2d(tx, -ty)
-		gl.Vertex2f(pos.X, pos.Y)
-		gl.TexCoord2d(tx, -ty2)
-		gl.Vertex2f(pos.X, pos.Y+dy*width/dx)
-		gl.TexCoord2d(tx2, -ty2)
-		gl.Vertex2f(pos.X+width, pos.Y+dy*width/dx)
-		gl.TexCoord2d(tx2, -ty)
-		gl.Vertex2f(pos.X+width, pos.Y)
-		gl.End()
+	if e.sprite.sp == nil {
+		logging.Info("got a nil entity sprite", "ent", *e)
+		return
 	}
+
+	dxi, dyi := e.sprite.sp.Dims()
+	dx := float32(dxi)
+	dy := float32(dyi)
+	tx, ty, tx2, ty2 := e.sprite.sp.Bind()
+	gl.Begin(gl.QUADS)
+	gl.TexCoord2d(tx, -ty)
+	gl.Vertex2f(pos.X, pos.Y)
+	gl.TexCoord2d(tx, -ty2)
+	gl.Vertex2f(pos.X, pos.Y+dy*width/dx)
+	gl.TexCoord2d(tx2, -ty2)
+	gl.Vertex2f(pos.X+width, pos.Y+dy*width/dx)
+	gl.TexCoord2d(tx2, -ty)
+	gl.Vertex2f(pos.X+width, pos.Y)
+	gl.End()
 }
 
 func facing(v mathgl.Vec2) int {
