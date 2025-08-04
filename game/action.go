@@ -14,11 +14,11 @@ import (
 var action_map map[string]func() Action
 
 func MakeAction(name string) Action {
-	f, ok := action_map[name]
-	if !ok {
-		base.DeprecatedLog().Error("Unable to find an Action", "name", name)
+	if f, ok := action_map[name]; ok {
+		return f()
 	}
-	return f()
+
+	panic(fmt.Errorf("couldn't find action name %q", name))
 }
 
 var action_makers []func() map[string]func() Action
