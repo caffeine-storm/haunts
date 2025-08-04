@@ -563,6 +563,7 @@ func (e *Entity) Render(pos mathgl.Vec2, width float32) {
 	dx := float32(dxi)
 	dy := float32(dyi)
 	tx, ty, tx2, ty2 := e.sprite.sp.Bind()
+	defer gl.Texture(0).Bind(gl.TEXTURE_2D)
 	gl.Begin(gl.QUADS)
 	gl.TexCoord2d(tx, -ty)
 	gl.Vertex2f(pos.X, pos.Y)
