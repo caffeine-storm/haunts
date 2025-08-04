@@ -38,7 +38,9 @@ func SetDatadir(_datadir string) {
 }
 
 func GetDataDir() string {
-	// TODO(tmckee): panic if not initialized!!!
+	if datadir == "" {
+		panic(fmt.Errorf("datadir not initialized"))
+	}
 	return datadir
 }
 
