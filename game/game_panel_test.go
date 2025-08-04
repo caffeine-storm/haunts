@@ -13,7 +13,7 @@ import (
 
 var _ gametest.Drawer = (*game.GamePanel)(nil)
 
-func givenAGamePanel() gametest.Drawer {
+func givenAGamePanel() *game.GamePanel {
 	scenario := givenAScenario()
 	player := givenAPlayer()
 	noSpecialData := map[string]string{}
@@ -32,7 +32,9 @@ func TestGamePanel(t *testing.T) {
 	Convey("GamePanelSpecs", t, func() {
 		base.SetDatadir("../data")
 		Convey("can draw game panel", func(c C) {
-			gametest.RunDrawingTest(c, givenAGamePanel, "game-panel")
+			gametest.RunDrawingTest(c, func() gametest.Drawer {
+				return givenAGamePanel()
+			}, "game-panel")
 		})
 	})
 }

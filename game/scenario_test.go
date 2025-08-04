@@ -7,6 +7,8 @@ import (
 )
 
 func givenAScript() string {
+	// TODO(tmckee): we should prefer an in-memory []byte instead of reading the
+	// file in game.startGameScript
 	return filepath.Join("versus", "basic.lua")
 }
 

@@ -224,6 +224,10 @@ func (gp *GamePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 	return false
 }
 
+func (gp *GamePanel) GetGame() *Game {
+	return gp.game
+}
+
 func (gp *GamePanel) GetViewer() house.Viewer {
 	return gp.game.viewer
 }
