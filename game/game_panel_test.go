@@ -14,8 +14,8 @@ import (
 var _ gametest.Drawer = (*game.GamePanel)(nil)
 
 func givenAGamePanel() *game.GamePanel {
-	scenario := givenAScenario()
-	player := givenAPlayer()
+	scenario := gametest.GivenAScenario()
+	player := gametest.GivenAPlayer()
 	noSpecialData := map[string]string{}
 	noGameKey := mrgnet.GameKey("")
 	ret := game.MakeGamePanel(scenario, player, noSpecialData, noGameKey)

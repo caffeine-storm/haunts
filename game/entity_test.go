@@ -13,25 +13,15 @@ import (
 	. "github.com/smartystreets/goconvey/convey"
 )
 
-func GivenAGame() *game.Game {
-	panel := givenAGamePanel()
-
-	return panel.GetGame()
-}
-
-func givenAnEntity() *game.Entity {
-	g := GivenAGame()
-	return game.MakeEntity("Bosch's Ghost", g)
-}
-
 func TestEntity(t *testing.T) {
 	Convey("EntitySpecs", t, func() {
 		base.SetDatadir("../data")
 		registry.LoadAllRegistries()
 		game.LoadAllEntities()
+
 		Convey("can draw an entity", func(c C) {
 			gametest.RunDrawingTest(c, func() gametest.Drawer {
-				ent := givenAnEntity()
+				ent := gametest.GivenAnEntity()
 				return gametest.DrawerAdapter(func(region gui.Region, _ gui.DrawingContext) {
 					x := float32(region.Dx) / 2
 					y := float32(region.Dy) / 2
