@@ -6,9 +6,14 @@ import (
 	"testing"
 
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/game"
+
+	// TODO(tmckee): T_T T_T BLECH!! THIS IS SOOOO BAD!!!
+	_ "github.com/MobRulesGames/haunts/game/actions"
 	"github.com/MobRulesGames/haunts/game/gametest"
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/house/housetest"
+	"github.com/MobRulesGames/haunts/registry"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/gui/guitest"
@@ -30,6 +35,22 @@ func TestHouseViewer(t *testing.T) {
 		Convey("can draw houseviewer", func(c C) {
 			gametest.RunDrawingTest(c, func() gametest.Drawer {
 				return givenAHouseViewer()
+			}, "house-viewer")
+		})
+
+		Convey("can draw houseviewer including an entity", func(c C) {
+			registry.LoadAllRegistries()
+			game.LoadAllEntities()
+
+			// TODO(tmckee): BLECH!
+			var hv *house.HouseViewer
+			gametest.RunDrawingTest(c, func() gametest.Drawer {
+				if hv == nil {
+					hv = givenAHouseViewer()
+					ent := gametest.GivenAnEntity()
+					hv.AddDrawable(ent)
+				}
+				return hv
 			}, "house-viewer")
 		})
 
