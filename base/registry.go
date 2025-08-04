@@ -110,39 +110,39 @@ func RegisterObject(registry_name string, object interface{}) {
 	reg.SetMapIndex(reflect.ValueOf(object_name), obj_val)
 }
 
-// Loads an object using the specified registry. object should have a field
+// Loads an object using the specified registry. outParam should have a field
 // called Defname of type string. This name will be used to find the def in the
 // registry. The object should also embed a field of this type which the value
 // in the registry will be assigned to.
-func GetObject(registry_name string, object interface{}) {
-	reg, ok := registry_registry[registry_name]
+func GetObject(registryName string, outParam interface{}) {
+	reg, ok := registry_registry[registryName]
 	if !ok {
-		logging.Error("Load from an unknown registry", "registry_name", registry_name)
+		panic(fmt.Errorf("unknown registry %q", registryName))
 	}
 
-	object_val := reflect.ValueOf(object)
-	if object_val.Kind() != reflect.Pointer {
-		logging.Error("Tried to load into a value that was not a pointer", "actualkind", object_val.Kind())
+	outValue := reflect.ValueOf(outParam)
+	if outValue.Kind() != reflect.Pointer {
+		panic(fmt.Errorf("GetObject requires a pointer for its 'outParam' but got %v", outValue.Kind()))
 	}
 
-	object_name := object_val.Elem().FieldByName("Defname")
-	if !object_name.IsValid() || object_name.Kind() != reflect.String {
-		logging.Error("Missing Defname field")
+	outputDefname := outValue.Elem().FieldByName("Defname")
+	if !outputDefname.IsValid() || outputDefname.Kind() != reflect.String {
+		panic(fmt.Errorf("no 'Defname' field defined for outParam of type %v", outValue.Elem().Type()))
 	}
 
-	cur_val := reg.MapIndex(object_name)
-	if !cur_val.IsValid() {
-		logging.Error("No object with name", "object_name", object_name.String(), "registry_name", registry_name)
+	registeredValue := reg.MapIndex(outputDefname)
+	if !registeredValue.IsValid() {
+		panic(fmt.Errorf("no entry for Defname %q in registry %q", outputDefname, registryName))
 	}
-	fieldName := cur_val.Elem().Type().Name()
-	field := object_val.Elem().FieldByName(fieldName)
-	if !field.IsValid() {
-		logging.Error("Expected embedded field", "containertype", object_val.Elem().Type(), "missingtype", cur_val.Type())
+	fieldName := registeredValue.Elem().Type().Name()
+	outputField := outValue.Elem().FieldByName(fieldName)
+	if !outputField.IsValid() {
+		panic(fmt.Errorf("found registry value with type %q but couldn't find corresponding target in %v", fieldName, outValue.Elem().Type()))
 	}
-	if !field.CanSet() {
+	if !outputField.CanSet() {
 		panic(fmt.Errorf("can't set value through field named %q", fieldName))
 	}
-	field.Set(cur_val)
+	outputField.Set(registeredValue)
 }
 
 // Returns a sorted list of all names in the specified registry.
