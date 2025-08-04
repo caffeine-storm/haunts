@@ -21,8 +21,8 @@ go: haunts ${DATADIR}
 lvl1: haunts ${DATADIR}
 	./haunts lvl1
 
-GENERATED_TARGETS=game/side_string.go cmd/gen
-cmd/gen: .git/HEAD
+GENERATED_TARGETS=game/side_string.go cmd/gen/version.go
+cmd/gen/version.go: .git/HEAD
 	go generate ./cmd/
 
 game/side_string.go:
@@ -81,6 +81,7 @@ lint:
 	go run github.com/mgechev/revive@v1.5.1 --config revive.toml ./...
 
 testrunargs:=
+testdeps:=${GENERATED_TARGETS}
 testbuildflags:=-tags nosound
 dlvbuildflags:=--build-flags="${testbuildflags}"
 include build/testing-env.mk

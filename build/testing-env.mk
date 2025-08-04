@@ -11,6 +11,8 @@ include build/rejectfiles.mk
 	test-dlv \
 	test-fresh
 
+testdeps?=
+
 testrunpackages:=./...
 ifneq "${testrun}" ""
 testrunargs:=${testrunargs} -run ${testrun}
@@ -33,25 +35,25 @@ else
 testing_env:=${testing_env} ${testing_with_xvfb}
 endif
 
-test:
+test: ${testdeps}
 	${testing_env} go test                 ${testbuildflags} ${testrunargs} ${testrunpackages}
 
-test-verbose:
+test-verbose: ${testdeps}
 	${testing_env} go test -v              ${testbuildflags} ${testrunargs} ${testrunpackages}
 
-test-racy:
+test-racy: ${testdeps}
 	${testing_env} go test -count=1 -race  ${testbuildflags} ${testrunargs} ${testrunpackages}
 
-test-racy-with-cache:
+test-racy-with-cache: ${testdeps}
 	${testing_env} go test          -race  ${testbuildflags} ${testrunargs} ${testrunpackages}
 
-test-spec:
+test-spec: ${testdeps}
 	${testing_env} go test -run ".*Specs"  ${testbuildflags} ${testrunargs} ${testrunpackages}
 
-test-nocache:
+test-nocache: ${testdeps}
 	${testing_env} go test -count=1        ${testbuildflags} ${testrunargs} ${testrunpackages}
 
-test-dlv:
+test-dlv: ${testdeps}
 # delve wants exactly one package at a time so "testrunpackages" isn't what we
 # want here. We use a var specifically for pointing at a single directory.
 	[ -d ${pkg} ] && \
