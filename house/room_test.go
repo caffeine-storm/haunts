@@ -7,11 +7,15 @@ import (
 	"testing"
 
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/game"
+	_ "github.com/MobRulesGames/haunts/game/actions"
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/house/housetest"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
+	"github.com/MobRulesGames/mathgl"
+	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
 	"github.com/runningwild/glop/render/rendertest/testbuilder"
@@ -73,6 +77,34 @@ func loadRoom(roomName string, queue render.RenderQueueInterface) *house.Room {
 var transparent = color.RGBA{}
 var black = color.RGBA{A: 255}
 
+type stubDraw struct {
+}
+
+func (*stubDraw) Dims() (int, int) {
+	return 20, 20
+}
+
+func (*stubDraw) Pos() (int, int) {
+	return 0, 0
+}
+
+func (*stubDraw) FPos() (float64, float64) {
+	return 0.0, 0.0
+}
+
+func (*stubDraw) Render(pos mathgl.Vec2, width float32) {
+	gl.Begin(gl.TRIANGLES)
+	gl.Vertex3d(-0.5, -0.5, 0)
+	gl.Vertex3d(-0.5, +0.5, 0)
+	gl.Vertex3d(+0.5, +0.5, 0)
+	gl.End()
+}
+
+func (*stubDraw) Color() (r, g, b, a byte) {
+	r, g, b, a = 255, 255, 0, 255
+	return
+}
+
 func TestRoom(t *testing.T) {
 	Convey("house.Room", t, func(c C) {
 		base.SetDatadir("../data")
@@ -85,9 +117,14 @@ func TestRoom(t *testing.T) {
 		testbuilder.WithSize(dx, dy, func(queue render.RenderQueueInterface) {
 			c.Convey("--stubbed-context--", func() {
 				registry.LoadAllRegistries()
+				game.RegisterActions()
 				base.InitShaders(queue)
 				texture.Init(queue)
 				var losTexture *house.LosTexture = nil
+				theDrawables := []house.Drawable{}
+				expectation := func(s string) string {
+					return s
+				}
 
 				doRoomTest := func(roomid string) {
 					fmt.Printf("TestRoom: losTexture: %v\n", losTexture)
@@ -97,14 +134,13 @@ func TestRoom(t *testing.T) {
 					}
 					allMats := housetest.MakeRoomMatsForCamera(room.Size, camera)
 
-					noDrawables := []house.Drawable{}
 					noFloorDrawers := []house.RenderOnFloorer{}
 					queue.Queue(func(render.RenderQueueState) {
-						room.Render(allMats, camera.Zoom, opaquealpha, noDrawables, losTexture, noFloorDrawers)
+						room.Render(allMats, camera.Zoom, opaquealpha, theDrawables, losTexture, noFloorDrawers)
 					})
 					queue.Purge()
 
-					So(queue, rendertest.ShouldLookLikeFile, roomid, rendertest.Threshold(13), rendertest.BackgroundColour(black))
+					So(queue, rendertest.ShouldLookLikeFile, expectation(roomid), rendertest.Threshold(13), rendertest.BackgroundColour(black))
 				}
 
 				Convey("loading from registry", func() {
@@ -144,6 +180,16 @@ func TestRoom(t *testing.T) {
 						losTexture = canSeeEverything()
 						doRoomTest("tutorial-entry")
 					})
+				})
+
+				Convey("drawing wrapped drawables", func() {
+					theDrawables = []house.Drawable{
+						&stubDraw{},
+					}
+					expectation = func(string) string {
+						return "restest-with-drawable"
+					}
+					doRoomTest("restest")
 				})
 			})
 		})
