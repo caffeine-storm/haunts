@@ -174,7 +174,10 @@ func TestRoom(t *testing.T) {
 					})
 				})
 
-				Convey("drawing tutorial-entry", func() {
+				// TODO(#10): don't skip once fixed
+				// TODO(#46): to fix, we need a way to tell 'Drawable's to pre-load
+				// their textures.
+				SkipConvey("drawing tutorial-entry", func() {
 					doRoomTest("tutorial-entry")
 					Convey("with non-nil LosTexture", func() {
 						losTexture = canSeeEverything()

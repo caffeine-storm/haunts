@@ -1,3 +1,10 @@
+- bug#46: now that we don't render furniture a million miles away from the
+  house, we need a way for tests to wait for furniture (really, Drawables) to
+  finish loading their textures. Ought to be enough to add a 'GetPath() string'
+  or 'LoadAndWaitForTexturesForTest()' to the game.Drawable interface. Until
+  then, there's going to be a flaky test in room_test.go; it's marked as
+  "skipped" for now.
+
 - bug#45: when starting the first game, the first attempt to pan on the
   unit-placement screen fails but subsequent ones succeed... dat's bad.
 
@@ -153,4 +160,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#46: <next>
+- bug#47: <next>
