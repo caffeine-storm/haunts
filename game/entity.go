@@ -310,9 +310,7 @@ func (ei *EntityDef) Side() Side {
 }
 func (ei *EntityDef) Dims() (int, int) {
 	if ei.Dx <= 0 || ei.Dy <= 0 {
-		base.DeprecatedError().Printf("Entity '%s' didn't have its Dims set properly", ei.Name)
-		ei.Dx = 1
-		ei.Dy = 1
+		panic(fmt.Errorf("entity %q didn't have its Dims set properly", ei.Name))
 	}
 	return ei.Dx, ei.Dy
 }
