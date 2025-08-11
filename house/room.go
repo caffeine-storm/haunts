@@ -229,9 +229,8 @@ func visibilityOfObject(xoff, yoff int, ro RectObject, los_tex *LosTexture) byte
 	return byte(v)
 }
 
-// TODO(tmckee:#34): ummm... this renders renderables... not just furniture
-func (room *Room) renderFurniture(floor mathgl.Mat4, base_alpha byte, drawables []Drawable, los_tex *LosTexture) {
-	logging.Debug("renderFurniture called", "drawables", drawables)
+func (room *Room) renderDrawables(base_alpha byte, drawables []Drawable, los_tex *LosTexture) {
+	logging.Debug("renderDrawables called", "drawables", drawables)
 
 	var all []RectObject
 	for _, d := range drawables {
@@ -725,7 +724,7 @@ func (room *Room) Render(roomMats perspective.RoomMats, zoom float32, base_alpha
 		do_color(255, 255, 255, 255)
 		gl.Disable(gl.STENCIL_TEST)
 		gl.Disable(gl.TEXTURE_2D)
-		room.renderFurniture(roomMats.Floor, 255, drawables, los_tex)
+		room.renderDrawables(255, drawables, los_tex)
 
 		gl.ClientActiveTexture(gl.TEXTURE1)
 		gl.Disable(gl.TEXTURE_2D)
