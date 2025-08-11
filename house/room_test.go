@@ -14,8 +14,6 @@ import (
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/MobRulesGames/mathgl"
-	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
 	"github.com/runningwild/glop/render/rendertest/testbuilder"
@@ -76,34 +74,6 @@ func loadRoom(roomName string, queue render.RenderQueueInterface) *house.Room {
 
 var transparent = color.RGBA{}
 var black = color.RGBA{A: 255}
-
-type stubDraw struct {
-}
-
-func (*stubDraw) Dims() (int, int) {
-	return 20, 20
-}
-
-func (*stubDraw) Pos() (int, int) {
-	return 0, 0
-}
-
-func (*stubDraw) FPos() (float64, float64) {
-	return 0.0, 0.0
-}
-
-func (*stubDraw) Render(pos mathgl.Vec2, width float32) {
-	gl.Begin(gl.TRIANGLES)
-	gl.Vertex3d(-0.5, -0.5, 0)
-	gl.Vertex3d(-0.5, +0.5, 0)
-	gl.Vertex3d(+0.5, +0.5, 0)
-	gl.End()
-}
-
-func (*stubDraw) Color() (r, g, b, a byte) {
-	r, g, b, a = 255, 255, 0, 255
-	return
-}
 
 func TestRoom(t *testing.T) {
 	Convey("house.Room", t, func(c C) {
@@ -187,7 +157,10 @@ func TestRoom(t *testing.T) {
 
 				Convey("drawing wrapped drawables", func() {
 					theDrawables = []house.Drawable{
-						&stubDraw{},
+						&housetest.StubDraw{
+							X: 5, Y: 5,
+							Dx: 10, Dy: 10,
+						},
 					}
 					expectation = func(string) string {
 						return "restest-with-drawable"
