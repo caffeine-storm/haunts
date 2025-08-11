@@ -1,0 +1,19 @@
+{
+    "Floors": [
+        {
+            "Rooms": [
+                {
+                    "Defname": "restest",
+                    "Doors": [],
+                    "X": 0,
+                    "Y": 0
+                }
+            ],
+            "Spawns": []
+        }
+    ],
+    "Icon": {
+        "Path": "houses/icons"
+    },
+    "Name": "restest"
+}

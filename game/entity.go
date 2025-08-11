@@ -15,6 +15,7 @@ import (
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/mathgl"
 	"github.com/go-gl-legacy/gl"
+	"github.com/runningwild/glop/debug"
 	"github.com/runningwild/glop/sprite"
 	"github.com/runningwild/glop/util/algorithm"
 )
@@ -546,7 +547,12 @@ func (e *Entity) drawReticle(pos mathgl.Vec2, rgba [4]float64) {
 func (e *Entity) Color() (r, g, b, a byte) {
 	return 255, 255, 255, 255
 }
+
+// Takes a position at which to render this entity. The rendering will scale to
+// cover 'width' units. The co-ordinates and width are from a space that is
+// assumed to be valid input to the current matrix stack.
 func (e *Entity) Render(pos mathgl.Vec2, width float32) {
+	logging.Debug("Entity.Render", "pos", pos, "width", width, "glstate", debug.GetGlState())
 	var rgba [4]float64
 	gl.GetDoublev(gl.CURRENT_COLOR, rgba[:])
 	e.last_render_width = width
@@ -561,7 +567,9 @@ func (e *Entity) Render(pos mathgl.Vec2, width float32) {
 	dx := float32(dxi)
 	dy := float32(dyi)
 	tx, ty, tx2, ty2 := e.sprite.sp.Bind()
+
 	defer gl.Texture(0).Bind(gl.TEXTURE_2D)
+
 	gl.Begin(gl.QUADS)
 	gl.TexCoord2d(tx, -ty)
 	gl.Vertex2f(pos.X, pos.Y)

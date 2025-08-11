@@ -7,6 +7,7 @@ import (
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
+	"github.com/MobRulesGames/haunts/logging"
 
 	// TODO(tmckee): T_T T_T BLECH!! THIS IS SOOOO BAD!!!
 	_ "github.com/MobRulesGames/haunts/game/actions"
@@ -38,20 +39,54 @@ func TestHouseViewer(t *testing.T) {
 			}, "house-viewer")
 		})
 
-		Convey("can draw houseviewer including an entity", func(c C) {
+		Convey("can draw houseviewer including drawables", func(c C) {
 			registry.LoadAllRegistries()
 			game.LoadAllEntities()
 
-			// TODO(tmckee): BLECH!
-			var hv *house.HouseViewer
-			gametest.RunDrawingTest(c, func() gametest.Drawer {
-				if hv == nil {
-					hv = givenAHouseViewer()
-					ent := gametest.GivenAnEntity()
-					hv.AddDrawable(ent)
-				}
-				return hv
-			}, "house-viewer")
+			Convey("use a stub drawable as a drawable", func(c C) {
+				// TODO(tmckee): BLECH!
+				var hv *house.HouseViewer
+				logging.DebugBracket(func() {
+					gametest.RunDrawingTest(c, func() gametest.Drawer {
+						if hv == nil {
+							restestHouseDef := house.MakeHouseFromName("restest")
+							hv = house.MakeHouseViewer(restestHouseDef, 62)
+							hv.AddDrawable(&housetest.StubDraw{
+								X: 5, Y: 5,
+								Dx: 10, Dy: 10,
+							})
+						}
+						return hv
+					}, "house-viewer-with-stubdraw")
+				})
+			})
+
+			Convey("use an entity as a drawable", func(c C) {
+				// TODO(tmckee): BLECH!
+				var hv *house.HouseViewer
+				logging.DebugBracket(func() {
+					gametest.RunDrawingTest(c, func() gametest.Drawer {
+						if hv == nil {
+							restestHouseDef := house.MakeHouseFromName("restest")
+							hv = house.MakeHouseViewer(restestHouseDef, 62)
+							hv.Think(nil, 5)
+							hv.SetZoom(100)
+							hv.Focus(5, 5)
+							hv.Think(nil, 5000)
+							ent := gametest.GivenAnEntity()
+							ent.X = 5
+							ent.Y = 5
+							stub := &housetest.StubDraw{
+								X: 5, Y: 5,
+								Dx: 10, Dy: 10,
+							}
+							hv.AddDrawable(stub)
+							hv.AddDrawable(ent)
+						}
+						return hv
+					}, "house-viewer-with-entity")
+				})
+			})
 		})
 
 		Convey("can zoom in on houseviewer", func(c C) {

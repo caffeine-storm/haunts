@@ -229,17 +229,14 @@ func visibilityOfObject(xoff, yoff int, ro RectObject, los_tex *LosTexture) byte
 	return byte(v)
 }
 
+// TODO(tmckee:#34): ummm... this renders renderables... not just furniture
 func (room *Room) renderFurniture(floor mathgl.Mat4, base_alpha byte, drawables []Drawable, los_tex *LosTexture) {
-	board_to_window := func(mx, my float32) (x, y float32) {
-		v := mathgl.Vec4{X: mx, Y: my, W: 1}
-		v.Transform(&floor)
-		x, y = v.X, v.Y
-		return
-	}
+	logging.Debug("renderFurniture called", "drawables", drawables)
 
 	var all []RectObject
 	for _, d := range drawables {
 		x, y := d.Pos()
+		logging.Debug("cull-check", "pos", []any{x, y}, "room", []any{room.X, room.Y, room.Size.Dx, room.Size.Dy})
 		if x < room.X {
 			continue
 		}
@@ -255,6 +252,8 @@ func (room *Room) renderFurniture(floor mathgl.Mat4, base_alpha byte, drawables 
 		all = append(all, offsetDrawable{d, -room.X, -room.Y})
 	}
 
+	logging.Debug("after culling by room dims", "all-rect-objects", all)
+
 	// Do not include temporary objects in the ordering, since they will likely
 	// overlap with other objects and make it difficult to determine the proper
 	// ordering.  Just draw the temporary ones last.
@@ -266,20 +265,18 @@ func (room *Room) renderFurniture(floor mathgl.Mat4, base_alpha byte, drawables 
 			all = append(all, f)
 		}
 	}
+	logging.Debug("after collecting furniture", "all", all, "temps", temps)
 	all = OrderRectObjects(all)
 	for i := range all {
 		temps = append(temps, all[i])
 	}
 
+	logging.Debug("after reordering", "all", all, "temps", temps, "glstate", debug.GetGlState())
+
 	for i := len(temps) - 1; i >= 0; i-- {
 		d := temps[i].(Drawable)
 		fx, fy := d.FPos()
 		near_x, near_y := float32(fx), float32(fy)
-		idx, idy := d.Dims()
-		dx, dy := float32(idx), float32(idy)
-		leftx, _ := board_to_window(near_x, near_y+dy)
-		rightx, _ := board_to_window(near_x+dx, near_y)
-		_, boty := board_to_window(near_x, near_y)
 		vis := visibilityOfObject(room.X, room.Y, d, los_tex)
 		r, g, b, a := d.Color()
 		r = alphaMult(r, vis)
@@ -288,7 +285,9 @@ func (room *Room) renderFurniture(floor mathgl.Mat4, base_alpha byte, drawables 
 		a = alphaMult(a, vis)
 		a = alphaMult(a, base_alpha)
 		gl.Color4ub(r, g, b, a)
-		d.Render(mathgl.Vec2{X: leftx, Y: boty}, rightx-leftx)
+		dx, _ := d.Dims()
+		logging.Debug("going to render", "near_x,near_y,dims", []any{near_x, near_y, dx})
+		d.Render(mathgl.Vec2{X: near_x, Y: near_y}, float32(dx))
 	}
 }
 
@@ -720,11 +719,12 @@ func (room *Room) Render(roomMats perspective.RoomMats, zoom float32, base_alpha
 					fd.RenderOnFloor()
 				}
 			}
+
 		})
 
 		do_color(255, 255, 255, 255)
-		gl.LoadIdentity()
 		gl.Disable(gl.STENCIL_TEST)
+		gl.Disable(gl.TEXTURE_2D)
 		room.renderFurniture(roomMats.Floor, 255, drawables, los_tex)
 
 		gl.ClientActiveTexture(gl.TEXTURE1)

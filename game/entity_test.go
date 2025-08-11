@@ -23,9 +23,12 @@ func TestEntity(t *testing.T) {
 			gametest.RunDrawingTest(c, func() gametest.Drawer {
 				ent := gametest.GivenAnEntity()
 				return gametest.DrawerAdapter(func(region gui.Region, _ gui.DrawingContext) {
-					x := float32(region.Dx) / 2
-					y := float32(region.Dy) / 2
-					ent.Render(mathgl.Vec2{X: x, Y: y}, float32(region.Dx)/5)
+					// Render takes 'pre-image' co-ordinates so, for this test, we'll
+					// compute a position and width based on the screen size given in
+					// 'region'.
+					leftx := float32(region.Dx) / 2
+					bottomy := float32(region.Dy) / 2
+					ent.Render(mathgl.Vec2{X: leftx, Y: bottomy}, float32(region.Dx)/5)
 				})()
 			}, "bosch-ghost")
 		})

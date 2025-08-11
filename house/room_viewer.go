@@ -734,6 +734,8 @@ func drawFurniture(roomx, roomy int, mat mathgl.Mat4, zoom float32, furniture []
 			idx, idy := f.Dims()
 			dx = float32(idx)
 			dy = float32(idy)
+			// TODO(tmckee:#34): ... ummm ... Furniture is-a Drawable ... why do we
+			// bother to special case??
 			switch d := f.(type) {
 			case *Furniture:
 				ix, iy := d.Pos()
