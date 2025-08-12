@@ -500,7 +500,7 @@ func WithRoomRenderGlSettings(modelView mathgl.Mat4, fn func()) {
 
 // Need floor, right wall, and left wall matrices to draw the details
 func (room *Room) Render(roomMats perspective.RoomMats, zoom float32, base_alpha byte, drawables []Drawable, los_tex *LosTexture, floor_drawers []RenderOnFloorer) {
-	debug.LogAndClearGlErrors(logging.InfoLogger())
+	render.LogAndClearGlErrors(logging.InfoLogger())
 
 	logging.Trace("Room.Render called", "base_alpha", base_alpha, "glstate", debug.GetGlState(), "floor", roomMats.Floor)
 
@@ -606,7 +606,7 @@ func (room *Room) Render(roomMats perspective.RoomMats, zoom float32, base_alpha
 				do_color(255, 255, 255, 255)
 			}
 
-			debug.LogAndClearGlErrors(logging.InfoLogger())
+			render.LogAndClearGlErrors(logging.InfoLogger())
 
 			gl.ClientActiveTexture(gl.TEXTURE0)
 			room.glData.vBuffer.Bind(gl.ARRAY_BUFFER)

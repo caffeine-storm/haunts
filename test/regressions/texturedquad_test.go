@@ -5,7 +5,6 @@ import (
 	"testing"
 
 	"github.com/MobRulesGames/haunts/logging"
-	"github.com/runningwild/glop/debug"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
 	"github.com/runningwild/glop/render/rendertest/testbuilder"
@@ -19,7 +18,7 @@ func TestTexturedQuadRegr(t *testing.T) {
 		screen := image.Rect(0, 0, 50, 50)
 		testbuilder.New().WithSize(screen.Dx(), screen.Dy()).WithQueue().Run(func(queue render.RenderQueueInterface) {
 			queue.Queue(func(st render.RenderQueueState) {
-				debug.LogAndClearGlErrors(logging.ErrorLogger())
+				render.LogAndClearGlErrors(logging.ErrorLogger())
 				tex := rendertest.GivenATexture("images/red.png")
 
 				rendertest.DrawTexturedQuad(screen, tex, st.Shaders())

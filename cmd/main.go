@@ -374,8 +374,6 @@ func runGameLoop(queue render.RenderQueueInterface, ui *gui.Gui, sys system.Syst
 
 	var tickCount int64
 	for {
-		glopdebug.LogAndClearGlErrors(logging.WarnLogger())
-
 		if key_map["quit"].FramePressCount() != 0 {
 			break
 		}

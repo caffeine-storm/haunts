@@ -2,6 +2,9 @@ package actions
 
 import (
 	"encoding/gob"
+	"math"
+	"path/filepath"
+
 	"github.com/MobRulesGames/golua/lua"
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
@@ -12,8 +15,6 @@ import (
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/util/algorithm"
-	"math"
-	"path/filepath"
 )
 
 func registerMoves() map[string]func() game.Action {
@@ -296,7 +297,11 @@ func (a *Move) RenderOnFloor() {
 	}
 	if path_tex == nil {
 		path_tex = house.MakeLosTexture()
+		// We can't count on the path_tex being ready so don't render anything this
+		// time. TODO: this sucks
+		return
 	}
+
 	path_tex.Remap()
 	path_tex.Bind()
 	gl.Color4ub(255, 255, 255, 128)

@@ -838,20 +838,20 @@ func (rv *roomViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
 			rv.cstack.Push(1, 1, 1, 1)
 			defer rv.cstack.Pop()
 
-			debug.LogAndClearGlErrors(logging.DebugLogger())
+			render.LogAndClearGlErrors(logging.DebugLogger())
 
 			drawPrep()
 
-			debug.LogAndClearGlErrors(logging.DebugLogger())
+			render.LogAndClearGlErrors(logging.DebugLogger())
 
 			drawWall(rv.room, rv.roomMats.Floor, rv.roomMats.Left, rv.roomMats.Right, rv.Temp.WallTexture, doorInfo{}, rv.cstack, nil, 1.0)
 
-			debug.LogAndClearGlErrors(logging.DebugLogger())
+			render.LogAndClearGlErrors(logging.DebugLogger())
 
 			drawFloor(rv.room, rv.roomMats.Floor, rv.Temp.WallTexture, rv.cstack, nil, 1.0, nil)
 			rv.drawFloor()
 
-			debug.LogAndClearGlErrors(logging.DebugLogger())
+			render.LogAndClearGlErrors(logging.DebugLogger())
 
 			if rv.edit_mode == editCells {
 				rv.cstack.Pop()
@@ -862,7 +862,7 @@ func (rv *roomViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
 			}
 			drawFurniture(0, 0, rv.roomMats.Floor, rv.zoom, rv.room.Furniture, rv.Temp.Furniture, nil, rv.cstack, nil, 1.0)
 
-			debug.LogAndClearGlErrors(logging.DebugLogger())
+			render.LogAndClearGlErrors(logging.DebugLogger())
 		})
 	*/
 }

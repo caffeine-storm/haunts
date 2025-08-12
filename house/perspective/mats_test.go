@@ -9,7 +9,6 @@ import (
 	"github.com/MobRulesGames/haunts/house/perspective"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/mathgl"
-	"github.com/runningwild/glop/debug"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
 	"github.com/runningwild/glop/render/rendertest/testbuilder"
@@ -60,7 +59,7 @@ func TestMakeFloorTransforms(t *testing.T) {
 
 		testbuilder.New().WithSize(screen.Dx(), screen.Dy()).WithQueue().Run(func(queue render.RenderQueueInterface) {
 			queue.Queue(func(st render.RenderQueueState) {
-				debug.LogAndClearGlErrors(logging.ErrorLogger())
+				render.LogAndClearGlErrors(logging.ErrorLogger())
 				tex := rendertest.GivenATexture("mahogany/input.png")
 				render.WithMultMatrixInMode(&floorMatrix, render.MatrixModeModelView, func() {
 					rendertest.DrawTexturedQuad(screen, tex, st.Shaders())

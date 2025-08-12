@@ -118,7 +118,10 @@ func (lt *LosTexture) Remap() {
 	renderQueue.Queue(func(render.RenderQueueState) {
 		gl.Enable(gl.TEXTURE_2D)
 		lt.gltex.Bind(gl.TEXTURE_2D)
-		gl.TexSubImage2D(gl.TEXTURE_2D, 0, 0, 0, dim, dim, gl.ALPHA, gl.UNSIGNED_BYTE, texelData)
+		levelOfDetail := int(0)
+		internalFormat := gl.ALPHA
+		noBorder := int(0)
+		gl.TexImage2D(gl.TEXTURE_2D, levelOfDetail, internalFormat, dim, dim, noBorder, gl.ALPHA, gl.UNSIGNED_BYTE, texelData)
 	})
 }
 
