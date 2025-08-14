@@ -179,6 +179,10 @@ func TestRoom(t *testing.T) {
 					}
 					doRoomTest("restest")
 				})
+
+				Convey("drawing the dread-chamber", func() {
+					doRoomTest("tutorial-dread-chamber")
+				})
 			})
 		})
 	})
