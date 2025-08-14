@@ -470,6 +470,7 @@ func handleLoadRequest(req loadRequest) {
 		}
 		memory.FreeBlock(pix)
 		if manual_unlock {
+			// TODO(tmckee): why set to zero? Shouldn't it be "-= len(pix)" ?
 			manager.load.count = 0
 			manager.load.mutex.Unlock()
 		}
