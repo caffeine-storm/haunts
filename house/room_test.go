@@ -1,10 +1,12 @@
 package house_test
 
 import (
+	"context"
 	"fmt"
 	"image/color"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
@@ -110,6 +112,19 @@ func TestRoom(t *testing.T) {
 					})
 					queue.Purge()
 
+					deadline, cancel := context.WithTimeout(context.Background(), time.Second*5)
+					defer cancel()
+					err := texture.BlockUntilIdle(deadline)
+					if err != nil {
+						panic(fmt.Errorf("texture.BlockUntilIdle failed: %w", err))
+					}
+
+					queue.Queue(func(render.RenderQueueState) {
+						rendertest.ClearScreen()
+						room.Render(allMats, camera.Zoom, opaquealpha, theDrawables, losTexture, noFloorDrawers)
+					})
+					queue.Purge()
+
 					So(queue, rendertest.ShouldLookLikeFile, expectation(roomid), rendertest.Threshold(13), rendertest.BackgroundColour(black))
 				}
 
@@ -144,10 +159,7 @@ func TestRoom(t *testing.T) {
 					})
 				})
 
-				// TODO(#10): don't skip once fixed
-				// TODO(#46): to fix, we need a way to tell 'Drawable's to pre-load
-				// their textures.
-				SkipConvey("drawing tutorial-entry", func() {
+				Convey("drawing tutorial-entry", func() {
 					doRoomTest("tutorial-entry")
 					Convey("with non-nil LosTexture", func() {
 						losTexture = canSeeEverything()
