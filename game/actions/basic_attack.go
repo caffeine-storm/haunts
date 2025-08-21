@@ -156,8 +156,7 @@ func GetBasicAttackResult(e game.ActionExec) *BasicAttackResult {
 	return &res
 }
 
-// TODO(tmckee#47): use BoardSpaceUnit here too
-func dist(x, y, x2, y2 int) int {
+func dist(x, y, x2, y2 house.BoardSpaceUnit) house.BoardSpaceUnit {
 	dx := x - x2
 	if dx < 0 {
 		dx = -dx
@@ -198,7 +197,7 @@ func (a *BasicAttack) validTarget(source, target *game.Entity) bool {
 	}
 	x2, y2 := target.FloorPos()
 	dx, dy := target.Dims()
-	if !source.HasLos(int(x2), int(y2), int(dx), int(dy)) {
+	if !source.HasLos(x2, y2, dx, dy) {
 		return false
 	}
 	if target.Stats.HpCur() <= 0 {
@@ -300,8 +299,8 @@ func (a *BasicAttack) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.
 	if a.ent.Sprite().State() == "ready" && a.target.Sprite().State() == "ready" {
 		entx, enty := a.ent.FloorPos()
 		targx, targy := a.target.FloorPos()
-		a.target.TurnToFace(int(entx), int(enty))
-		a.ent.TurnToFace(int(targx), int(targy))
+		a.target.TurnToFace(entx, enty)
+		a.ent.TurnToFace(targx, targy)
 		if a.Current_ammo > 0 {
 			a.Current_ammo--
 		}

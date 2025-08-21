@@ -361,7 +361,7 @@ func (a *Move) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Mainten
 	}
 	// Do stuff
 	factor := float32(math.Pow(2, a.ent.Walking_speed))
-	dist := a.ent.DoAdvance(factor*float32(dt)/200, int(a.path[0][0]), int(a.path[0][1]))
+	dist := a.ent.DoAdvance(factor*float32(dt)/200, a.path[0][0], a.path[0][1])
 	for dist > 0 {
 		if len(a.path) == 1 {
 			a.ent.DoAdvance(0, 0, 0)
@@ -371,7 +371,7 @@ func (a *Move) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Mainten
 		}
 		a.path = a.path[1:]
 		a.ent.Info.RoomsExplored[a.ent.CurrentRoom()] = true
-		dist = a.ent.DoAdvance(dist, int(a.path[0][0]), int(a.path[0][1]))
+		dist = a.ent.DoAdvance(dist, a.path[0][0], a.path[0][1])
 	}
 	return game.InProgress
 }

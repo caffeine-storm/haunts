@@ -119,10 +119,10 @@ func AllPathablePointsFunc(a *Ai) lua.LuaGoFunction {
 		if !game.LuaCheckParamsOk(L, "AllPathablePoints", game.LuaPoint, game.LuaPoint, game.LuaInteger, game.LuaInteger) {
 			return 0
 		}
-		min := L.ToInteger(-2)
-		max := L.ToInteger(-1)
-		x1, y1 := game.LuaToPoint(L, -4)
-		x2, y2 := game.LuaToPoint(L, -3)
+		min := house.BoardSpaceUnit(L.ToInteger(-2))
+		max := house.BoardSpaceUnit(L.ToInteger(-1))
+		x1, y1 := house.BoardSpaceUnitPair(game.LuaToPoint(L, -4))
+		x2, y2 := house.BoardSpaceUnitPair(game.LuaToPoint(L, -3))
 
 		a.ent.Game().DetermineLos(x2, y2, max, grid)
 		var dst []int
@@ -131,13 +131,13 @@ func AllPathablePointsFunc(a *Ai) lua.LuaGoFunction {
 				if x > x2-min && x < x2+min && y > y2-min && y < y2+min {
 					continue
 				}
-				if x < 0 || y < 0 || x >= len(grid) || y >= len(grid[0]) {
+				if x < 0 || y < 0 || int(x) >= len(grid) || int(y) >= len(grid[0]) {
 					continue
 				}
 				if !grid[x][y] {
 					continue
 				}
-				dst = append(dst, a.ent.Game().ToVertex(house.BoardSpaceUnitPair(x, y)))
+				dst = append(dst, a.ent.Game().ToVertex(x, y))
 			}
 		}
 		vis := 0
@@ -150,7 +150,7 @@ func AllPathablePointsFunc(a *Ai) lua.LuaGoFunction {
 		}
 		base.DeprecatedLog().Printf("Visible: %d", vis)
 		graph := a.ent.Game().Graph(a.ent.Side(), true, nil)
-		src := []int{a.ent.Game().ToVertex(house.BoardSpaceUnitPair(x1, y1))}
+		src := []int{a.ent.Game().ToVertex(x1, y1)}
 		reachable := algorithm.ReachableDestinations(graph, src, dst)
 		L.NewTable()
 		base.DeprecatedLog().Printf("%d/%d reachable from (%d, %d) -> (%d, %d)", len(reachable), len(dst), x1, y1, x2, y2)
@@ -248,7 +248,7 @@ func DoAoeAttackFunc(a *Ai) lua.LuaGoFunction {
 			game.LuaDoError(L, fmt.Sprintf("Action '%s' is not an aoe attack.", name))
 			return 0
 		}
-		tx, ty := game.LuaToPoint(L, -1)
+		tx, ty := house.BoardSpaceUnitPair(game.LuaToPoint(L, -1))
 		exec := attack.AiAttackPosition(me, tx, ty)
 		if exec != nil {
 			a.execs <- exec
@@ -304,8 +304,8 @@ func BestAoeAttackPosFunc(a *Ai) lua.LuaGoFunction {
 			game.LuaDoError(L, fmt.Sprintf("'%s' is not a valid value of spec for BestAoeAttackPos().", L.ToString(-1)))
 			return 0
 		}
-		x, y, hits := attack.AiBestTarget(me, L.ToInteger(-2), spec)
-		game.LuaPushPoint(L, x, y)
+		x, y, hits := attack.AiBestTarget(me, house.BoardSpaceUnit(L.ToInteger(-2)), spec)
+		game.LuaPushPoint(L, int(x), int(y))
 		L.NewTable()
 		for i := range hits {
 			L.PushInteger(int64(i) + 1)
@@ -457,7 +457,7 @@ func RangedDistBetweenEntitiesFunc(a *Ai) lua.LuaGoFunction {
 			}
 			x, y := e.FloorPos()
 			dx, dy := e.Dims()
-			if !a.ent.HasLos(int(x), int(y), int(dx), int(dy)) {
+			if !a.ent.HasLos(x, y, dx, dy) {
 				L.PushNil()
 				return 1
 			}

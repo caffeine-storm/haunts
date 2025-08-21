@@ -5,6 +5,8 @@ import (
 	"encoding/gob"
 	"encoding/json"
 	"fmt"
+
+	"github.com/MobRulesGames/haunts/house"
 	"github.com/runningwild/glop/util/algorithm"
 )
 
@@ -81,7 +83,7 @@ type Base struct {
 	Hp_max int
 	Corpus int
 	Ego    int
-	Sight  int
+	Sight  int // TODO(tmckee#47): use BoardSpaceUnit here too
 	Attack int
 }
 
@@ -173,8 +175,8 @@ func (s Inst) AttackBonusWith(kind Kind) int {
 	return attack
 }
 
-func (s Inst) Sight() int {
-	sight := s.modifiedBase(Unspecified).Sight
+func (s Inst) Sight() house.BoardSpaceUnit {
+	sight := house.BoardSpaceUnit(s.modifiedBase(Unspecified).Sight)
 	if sight < 0 {
 		return 0
 	}

@@ -860,7 +860,7 @@ func spawnEntityAtPosition(gp *GamePanel) lua.LuaGoFunction {
 		gp.script.syncStart()
 		defer gp.script.syncEnd()
 		name := L.ToString(-2)
-		x, y := LuaToPoint(L, -1)
+		x, y := house.BoardSpaceUnitPair(LuaToPoint(L, -1))
 		ent := MakeEntity(name, gp.game)
 		if gp.game.SpawnEntity(ent, x, y) {
 			LuaPushEntity(L, ent)
@@ -910,8 +910,7 @@ func spawnEntitySomewhereInSpawnPoints(gp *GamePanel) lua.LuaGoFunction {
 		hidden := L.ToBoolean(-1)
 		L.Pop(1)
 
-		// TODO(tmckee#47): make these BoardSpaceUnit too
-		var tx, ty int
+		var tx, ty house.BoardSpaceUnit
 
 		var count int64 = 0
 		L.PushNil()
@@ -933,7 +932,7 @@ func spawnEntitySomewhereInSpawnPoints(gp *GamePanel) lua.LuaGoFunction {
 			sdx, sdy := sp.Dims()
 			for x := sx; x < sx+sdx; x++ {
 				for y := sy; y < sy+sdy; y++ {
-					if gp.game.IsCellOccupied(int(x), int(y)) {
+					if gp.game.IsCellOccupied(x, y) {
 						continue
 					}
 					if hidden && ent.game.TeamLos(side, x, y, 1, 1) {
@@ -943,8 +942,8 @@ func spawnEntitySomewhereInSpawnPoints(gp *GamePanel) lua.LuaGoFunction {
 					// all positions an equal chance of being chosen.
 					count++
 					if gp.game.Rand.Int63()%count == 0 {
-						tx = int(x)
-						ty = int(y)
+						tx = x
+						ty = y
 					}
 				}
 			}

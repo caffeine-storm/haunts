@@ -464,13 +464,12 @@ func (e *Entity) Sprite() *sprite.Sprite {
 	return e.sprite.sp
 }
 
-// TODO(tmckee#47): use BoardSpaceUnit here too
-func (e *Entity) HasLos(x, y, dx, dy int) bool {
+func (e *Entity) HasLos(x, y, dx, dy house.BoardSpaceUnit) bool {
 	if e.los == nil {
 		return false
 	}
-	for i := x; i < x+dx; i++ {
-		for j := y; j < y+dy; j++ {
+	for i := int(x); i < int(x+dx); i++ {
+		for j := int(y); j < int(y+dy); j++ {
 			if i < 0 || j < 0 || i >= len(e.los.grid) || j >= len(e.los.grid[0]) {
 				continue
 			}
@@ -611,8 +610,7 @@ func facing(v mathgl.Vec2) int {
 	return ret
 }
 
-// TODO(tmckee#47): use BoardSpaceUnit here too
-func (e *Entity) TurnToFace(x, y int) {
+func (e *Entity) TurnToFace(x, y house.BoardSpaceUnit) {
 	target := mathgl.Vec2{float32(x), float32(y)}
 	source := mathgl.Vec2{float32(e.X), float32(e.Y)}
 	var seg mathgl.Vec2
@@ -638,8 +636,7 @@ func (e *Entity) TurnToFace(x, y int) {
 
 // Advances ent up to dist towards the target cell.  Returns the distance
 // traveled.
-// TODO(tmckee#47): use BoardSpaceUnit here too
-func (e *Entity) DoAdvance(dist float32, x, y int) float32 {
+func (e *Entity) DoAdvance(dist float32, x, y house.BoardSpaceUnit) float32 {
 	if dist <= 0 {
 		e.sprite.sp.Command("stop")
 		return 0

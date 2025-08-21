@@ -646,9 +646,7 @@ func connected(r, r2 *house.Room, x, y, x2, y2 house.BoardSpaceUnit) bool {
 	return false
 }
 
-// TODO(tmckee:#47): use BoardSpaceUnit as input too
-func (g *Game) IsCellOccupied(inx, iny int) bool {
-	x, y := house.BoardSpaceUnitPair(inx, iny)
+func (g *Game) IsCellOccupied(x, y house.BoardSpaceUnit) bool {
 	r := roomAt(g.House.Floors[0], x, y)
 	if r == nil {
 		return true
@@ -1499,9 +1497,7 @@ func (g *Game) mergeLos(side Side) {
 // make any attempts at doing so.  Eventually this should be replaced with
 // something more sensible and faster, so everyone needs to use this so that
 // everything stays in sync.
-func (g *Game) DetermineLos(xx, yy, los_dist_int int, grid [][]bool) {
-	x, y := house.BoardSpaceUnitPair(xx, yy)
-	los_dist := house.BoardSpaceUnit(los_dist_int)
+func (g *Game) DetermineLos(x, y, los_dist house.BoardSpaceUnit, grid [][]bool) {
 	for i := range grid {
 		for j := range grid[i] {
 			grid[i][j] = false
@@ -1542,7 +1538,7 @@ func (g *Game) UpdateEntLos(ent *Entity, force bool) {
 	ent.los.x = int(ex)
 	ent.los.y = int(ey)
 
-	g.DetermineLos(int(ex), int(ey), ent.Stats.Sight(), ent.los.grid)
+	g.DetermineLos(ex, ey, ent.Stats.Sight(), ent.los.grid)
 
 	ent.los.minx = len(ent.los.grid)
 	ent.los.miny = len(ent.los.grid)

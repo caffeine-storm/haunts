@@ -57,8 +57,8 @@ type AoeAttackDef struct {
 	Ap         int
 	Ammo       int // 0 = infinity
 	Strength   int
-	Range      int
-	Diameter   int // TODO(tmckee#47): use BoardSpaceUnit here
+	Range      house.BoardSpaceUnit
+	Diameter   house.BoardSpaceUnit
 	Damage     int
 	Animation  string
 	Conditions []string
@@ -70,8 +70,7 @@ type aoeAttackTempData struct {
 
 	// position of the target cell - in the case of an even diameter this will be
 	// the lower-left of the center
-	// TODO(tmckee#47): use BoardSpaceUnit here too
-	tx, ty int
+	tx, ty house.BoardSpaceUnit
 
 	// All entities in the blast radius - could include the acting entity
 	targets []*game.Entity
@@ -80,7 +79,7 @@ type aoeAttackTempData struct {
 }
 type aoeExec struct {
 	game.BasicActionExec
-	X, Y int
+	X, Y house.BoardSpaceUnit
 }
 
 func (exec aoeExec) Push(L *lua.State, g *game.Game) {
@@ -89,7 +88,7 @@ func (exec aoeExec) Push(L *lua.State, g *game.Game) {
 		return
 	}
 	L.PushString("Pos")
-	game.LuaPushPoint(L, exec.X, exec.Y)
+	game.LuaPushPoint(L, int(exec.X), int(exec.Y))
 	L.SetTable(-3)
 }
 
@@ -133,10 +132,10 @@ func (a *AoeAttack) AP() int {
 	return a.Ap
 }
 func (a *AoeAttack) FloorPos() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
-	return house.BoardSpaceUnitPair(a.tx, a.ty)
+	return a.tx, a.ty
 }
 func (a *AoeAttack) Dims() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
-	return house.BoardSpaceUnitPair(a.Diameter, a.Diameter)
+	return a.Diameter, a.Diameter
 }
 func (a *AoeAttack) String() string {
 	return a.Name
@@ -160,19 +159,17 @@ func (a *AoeAttack) Prep(ent *game.Entity, g *game.Game) bool {
 	// bx, by := g.GetViewer().WindowToBoard(gin.In().GetCursor("Mouse").Point())
 	mx, my := 0, 0
 	bx, by := g.GetViewer().WindowToBoard(mx, my)
-	a.tx = int(bx)
-	a.ty = int(by)
+	a.tx, a.ty = house.BoardSpaceUnitPair(bx, by)
 	return true
 }
 func (a *AoeAttack) HandleInput(ctx gui.EventHandlingContext, group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
 	if mpos, ok := ctx.UseMousePosition(group); ok {
 		bx, by := g.GetViewer().WindowToBoard(mpos.X, mpos.Y)
-		a.tx = int(bx)
-		a.ty = int(by)
+		a.tx, a.ty = house.BoardSpaceUnitPair(bx, by)
 	}
 	if group.IsPressed(gin.AnyMouseLButton) {
 		ex, ey := a.ent.FloorPos()
-		if dist(int(ex), int(ey), a.tx, a.ty) <= a.Range && a.ent.HasLos(a.tx, a.ty, 1, 1) {
+		if dist(ex, ey, a.tx, a.ty) <= a.Range && a.ent.HasLos(a.tx, a.ty, 1, 1) {
 			var exec aoeExec
 			exec.SetBasicData(a.ent, a)
 			exec.X, exec.Y = a.tx, a.ty
@@ -190,7 +187,7 @@ func (a *AoeAttack) RenderOnFloor() {
 		return
 	}
 	ex, ey := a.ent.FloorPos()
-	if dist(int(ex), int(ey), a.tx, a.ty) <= a.Range && a.ent.HasLos(a.tx, a.ty, 1, 1) {
+	if dist(ex, ey, a.tx, a.ty) <= a.Range && a.ent.HasLos(a.tx, a.ty, 1, 1) {
 		gl.Color4ub(255, 255, 255, 200)
 	} else {
 		gl.Color4ub(255, 64, 64, 200)
@@ -216,14 +213,12 @@ const (
 	AiAoeHitNoAllies
 )
 
-func (a *AoeAttack) AiBestTarget(ent *game.Entity, extra_dist int, spec AiAoeTarget) (x, y int, targets []*game.Entity) {
-	bsuex, bsuey := ent.FloorPos()
-	// TODO(tmckee#47): use BoardSpaceUnit here too
-	ex, ey := int(bsuex), int(bsuey)
+func (a *AoeAttack) AiBestTarget(ent *game.Entity, extra_dist house.BoardSpaceUnit, spec AiAoeTarget) (x, y house.BoardSpaceUnit, targets []*game.Entity) {
+	ex, ey := ent.FloorPos()
 	max := 0
-	best_dist := 10000
-	var bx, by int
-	var radius int
+	best_dist := house.BoardSpaceUnit(10000)
+	var bx, by house.BoardSpaceUnit
+	var radius house.BoardSpaceUnit
 	if a.Range > 0 {
 		radius += a.Range
 	}
@@ -270,7 +265,8 @@ func (a *AoeAttack) AiBestTarget(ent *game.Entity, extra_dist int, spec AiAoeTar
 	}
 	return bx, by, a.getTargetsAt(ent.Game(), bx, by)
 }
-func (a *AoeAttack) AiAttackPosition(ent *game.Entity, x, y int) game.ActionExec {
+
+func (a *AoeAttack) AiAttackPosition(ent *game.Entity, x, y house.BoardSpaceUnit) game.ActionExec {
 	if !ent.HasLos(x, y, 1, 1) {
 		base.DeprecatedLog().Printf("Don't have los")
 		return nil
@@ -305,8 +301,7 @@ func init() {
 	}
 }
 
-func (a *AoeAttack) getTargetsAt(g *game.Game, tx, ty int) []*game.Entity {
-	// TODO(tmckee#47): use BoardSpaceUnit here too
+func (a *AoeAttack) getTargetsAt(g *game.Game, tx, ty house.BoardSpaceUnit) []*game.Entity {
 	x := tx - (a.Diameter+1)/2
 	y := ty - (a.Diameter+1)/2
 	x2 := tx + a.Diameter/2
@@ -323,7 +318,7 @@ func (a *AoeAttack) getTargetsAt(g *game.Game, tx, ty int) []*game.Entity {
 	for i := 0; i < num_centers; i++ {
 		// If num_centers is 4 then this will calculate the los for all four
 		// positions around the center
-		g.DetermineLos(tx+i%2, ty+i/2, a.Diameter, grid[i])
+		g.DetermineLos(tx+house.BoardSpaceUnit(i%2), ty+house.BoardSpaceUnit(i/2), a.Diameter, grid[i])
 	}
 	for _, ent := range g.Ents {
 		entx, enty := ent.FloorPos()
@@ -331,7 +326,7 @@ func (a *AoeAttack) getTargetsAt(g *game.Game, tx, ty int) []*game.Entity {
 		for i := 0; i < num_centers; i++ {
 			has_los = has_los || grid[i][entx][enty]
 		}
-		if has_los && int(entx) >= x && int(entx) < x2 && int(enty) >= y && int(enty) < y2 {
+		if has_los && entx >= x && entx < x2 && enty >= y && enty < y2 {
 			targets = append(targets, ent)
 		}
 	}
@@ -380,7 +375,7 @@ func (a *AoeAttack) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Ma
 	a.ent.TurnToFace(a.exec.X, a.exec.Y)
 	for _, target := range a.targets {
 		x, y := a.ent.FloorPos()
-		target.TurnToFace(int(x), int(y))
+		target.TurnToFace(x, y)
 	}
 	a.ent.Sprite().Command(a.Animation)
 	for _, target := range a.targets {

@@ -8,11 +8,10 @@ import (
 	"github.com/MobRulesGames/haunts/logging"
 )
 
-// TODO(tmckee#47): make x/y be BoardSpaceUnit instead.
-func (g *Game) SpawnEntity(spawn *Entity, x, y int) bool {
+func (g *Game) SpawnEntity(spawn *Entity, x, y house.BoardSpaceUnit) bool {
 	for i := range g.Ents {
 		cx, cy := g.Ents[i].FloorPos()
-		if int(cx) == x && int(cy) == y {
+		if cx == x && cy == y {
 			logging.Warn("Can't spawn entity", "pos", []any{x, y}, "blockedby", g.Ents[i].Name)
 			return false
 		}

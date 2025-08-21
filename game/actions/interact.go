@@ -253,7 +253,7 @@ func (a *Interact) AiInteractWithObject(ent, object *game.Entity) game.ActionExe
 	}
 	x, y := object.FloorPos()
 	dx, dy := object.Dims()
-	if !ent.HasLos(int(x), int(y), int(dx), int(dy)) {
+	if !ent.HasLos(x, y, dx, dy) {
 		return nil
 	}
 	var exec interactExec
@@ -312,7 +312,7 @@ func (a *Interact) findTargets(ent *game.Entity, g *game.Game) []*game.Entity {
 		if distBetweenEnts(e, ent) > a.Range {
 			continue
 		}
-		if !ent.HasLos(int(x), int(y), int(dx), int(dy)) {
+		if !ent.HasLos(x, y, dx, dy) {
 			continue
 		}
 
@@ -431,7 +431,7 @@ func (a *Interact) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Mai
 			}
 			x, y := target.FloorPos()
 			dx, dy := target.Dims()
-			if !a.ent.HasLos(int(x), int(y), int(dx), int(dy)) {
+			if !a.ent.HasLos(x, y, dx, dy) {
 				base.DeprecatedError().Printf("Tried to interact with an object without having los: %v", exec)
 				return game.Complete
 			}

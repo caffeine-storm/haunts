@@ -57,7 +57,7 @@ type SummonActionDef struct {
 	Personal_los bool
 	Ap           int
 	Ammo         int // 0 = infinity
-	Range        int
+	Range        int // TODO(tmckee#47): use BoardSpaceUnit here too
 	Ent_name     string
 	Animation    string
 	Conditions   []string
@@ -65,9 +65,8 @@ type SummonActionDef struct {
 	Sounds       map[string]string
 }
 type summonActionTempData struct {
-	ent *game.Entity
-	// TODO(tmckee#47): use BoardSpaceUnit here too
-	cx, cy int
+	ent    *game.Entity
+	cx, cy house.BoardSpaceUnit
 	spawn  *game.Entity
 }
 type summonExec struct {
@@ -124,7 +123,7 @@ func (a *SummonAction) AP() int {
 	return a.Ap
 }
 func (a *SummonAction) FloorPos() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
-	return house.BoardSpaceUnitPair(a.cx, a.cy)
+	return a.cx, a.cy
 }
 func (a *SummonAction) Dims() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return 1, 1
@@ -159,8 +158,7 @@ func (a *SummonAction) HandleInput(ctx gui.EventHandlingContext, group gui.Event
 		if by < 0 {
 			by--
 		}
-		a.cx = int(bx)
-		a.cy = int(by)
+		a.cx, a.cy = house.BoardSpaceUnitPair(bx, by)
 	}
 
 	if group.IsPressed(gin.AnyMouseLButton) {
@@ -173,7 +171,7 @@ func (a *SummonAction) HandleInput(ctx gui.EventHandlingContext, group gui.Event
 		if a.ent.Stats.ApCur() >= a.Ap {
 			var exec summonExec
 			exec.SetBasicData(a.ent, a)
-			exec.Pos = a.ent.Game().ToVertex(house.BoardSpaceUnitPair(a.cx, a.cy))
+			exec.Pos = a.ent.Game().ToVertex(a.cx, a.cy)
 			return true, &exec
 		}
 		return true, nil
@@ -185,7 +183,7 @@ func (a *SummonAction) RenderOnFloor() {
 		return
 	}
 	ex, ey := a.ent.FloorPos()
-	if dist(int(ex), int(ey), a.cx, a.cy) <= a.Range && a.ent.HasLos(a.cx, a.cy, 1, 1) {
+	if dist(ex, ey, a.cx, a.cy) <= house.BoardSpaceUnit(a.Range) && a.ent.HasLos(a.cx, a.cy, 1, 1) {
 		gl.Color4ub(255, 255, 255, 200)
 	} else {
 		gl.Color4ub(255, 64, 64, 200)
@@ -209,8 +207,7 @@ func (a *SummonAction) Maintain(dt int64, g *game.Game, ae game.ActionExec) game
 			return game.Complete
 		}
 		a.ent = ent
-		_, bsucx, bsucy := a.ent.Game().FromVertex(exec.Pos)
-		a.cx, a.cy = int(bsucx), int(bsucy)
+		_, a.cx, a.cy = a.ent.Game().FromVertex(exec.Pos)
 		a.ent.Stats.ApplyDamage(-a.Ap, 0, status.Unspecified)
 		a.spawn = game.MakeEntity(a.Ent_name, a.ent.Game())
 		if a.Current_ammo > 0 {
