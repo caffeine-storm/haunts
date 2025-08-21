@@ -258,7 +258,7 @@ func (room *Room) renderDrawables(base_alpha byte, drawables []Drawable, los_tex
 		if y >= room.Y+room.Size.Dy {
 			continue
 		}
-		all = append(all, offsetDrawable{d, -room.X, -room.Y})
+		all = append(all, offsetDrawable{d, BoardSpaceUnit(-room.X), BoardSpaceUnit(-room.Y)})
 	}
 
 	logging.Debug("after culling by room dims", "all-rect-objects", all)
@@ -286,7 +286,7 @@ func (room *Room) renderDrawables(base_alpha byte, drawables []Drawable, los_tex
 		d := temps[i]
 		fx, fy := d.FPos()
 		near_x, near_y := float32(fx), float32(fy)
-		vis := visibilityOfObject(room.X, room.Y, d, los_tex)
+		vis := visibilityOfObject(BoardSpaceUnit(room.X), BoardSpaceUnit(room.Y), d, los_tex)
 		r, g, b, a := d.Color()
 		r = alphaMult(r, vis)
 		g = alphaMult(g, vis)
