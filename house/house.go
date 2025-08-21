@@ -130,12 +130,9 @@ func (f *Floor) removeInvalidDoors() {
 	}
 }
 
-// TODO(tmckee#47): this should take BoardSpaceUnits as input.
-// TODO(tmckee:clean): this should be named "GetAllTheThingsThatAreAtPos" or
+// TODO(tmckee#34): this should be named "GetAllTheThingsThatAreAtPos" or
 // something.
-func (f *Floor) RoomFurnSpawnAtPos(intx, inty int) (room *Room, furn *Furniture, spawn *SpawnPoint) {
-	x := BoardSpaceUnit(intx)
-	y := BoardSpaceUnit(inty)
+func (f *Floor) RoomFurnSpawnAtPos(x, y BoardSpaceUnit) (room *Room, furn *Furniture, spawn *SpawnPoint) {
 	for _, croom := range f.Rooms {
 		rx, ry := croom.FloorPos()
 		rdx, rdy := croom.Dims()
@@ -747,9 +744,9 @@ func (hdt *houseRelicsTab) markTempSpawnValidity() {
 	floor := hdt.house.Floors[0]
 	var room *Room
 	x, y := hdt.temp_relic.FloorPos()
-	for ix := 0; ix < int(hdt.temp_relic.Dx); ix++ {
-		for iy := 0; iy < int(hdt.temp_relic.Dy); iy++ {
-			room_at, furn_at, _ := floor.RoomFurnSpawnAtPos(int(x)+ix, int(y)+iy)
+	for ix := BoardSpaceUnit(0); ix < hdt.temp_relic.Dx; ix++ {
+		for iy := BoardSpaceUnit(0); iy < hdt.temp_relic.Dy; iy++ {
+			room_at, furn_at, _ := floor.RoomFurnSpawnAtPos(x+ix, y+iy)
 			if room == nil {
 				room = room_at
 			}
@@ -790,7 +787,8 @@ func (hdt *houseRelicsTab) Think(ui *gui.Gui, t int64) {
 		}
 		hdt.markTempSpawnValidity()
 	} else {
-		_, _, spawn_at := hdt.house.Floors[0].RoomFurnSpawnAtPos(roundDown(rbx), roundDown(rby))
+		intx, inty := roundDown(rbx), roundDown(rby)
+		_, _, spawn_at := hdt.house.Floors[0].RoomFurnSpawnAtPos(BoardSpaceUnitPair(intx, inty))
 		if spawn_at != nil {
 			hdt.spawn_name.SetText(spawn_at.Name)
 		} else if hdt.spawn_name.IsBeingEdited() {
@@ -845,7 +843,7 @@ func (hdt *houseRelicsTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 			} else {
 				for _, sp := range floor.Spawns {
 					fbx, fby := hdt.viewer.WindowToBoard(mpos.X, mpos.Y)
-					bx, by := BoardSpaceUnit(roundDown(fbx)), BoardSpaceUnit(roundDown(fby))
+					bx, by := BoardSpaceUnitPair(roundDown(fbx), roundDown(fby))
 					x, y := sp.FloorPos()
 					dx, dy := sp.Dims()
 					if bx >= x && bx < x+dx && by >= y && by < y+dy {

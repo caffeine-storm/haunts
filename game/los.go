@@ -79,11 +79,13 @@ type Waypoint struct {
 }
 
 func (wp *Waypoint) Dims() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
-	return house.BoardSpaceUnit(2 * wp.Radius), house.BoardSpaceUnit(2 * wp.Radius)
+	return house.BoardSpaceUnitPair(2*wp.Radius, 2*wp.Radius)
 }
+
 func (wp *Waypoint) FloorPos() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
-	return house.BoardSpaceUnit(wp.X), house.BoardSpaceUnit(wp.Y)
+	return house.BoardSpaceUnitPair(wp.X, wp.Y)
 }
+
 func (wp *Waypoint) RenderOnFloor() {
 	if !wp.Active {
 		return
@@ -563,7 +565,7 @@ func (g *Game) FromVertex(v int) (room *house.Room, x, y int) {
 // TODO(tmckee#47): use BoardSpaceUnit here too
 func (g *Game) ToVertex(xx, yy int) int {
 	v := house.BoardSpaceUnit(0)
-	x, y := house.BoardSpaceUnit(xx), house.BoardSpaceUnit(yy)
+	x, y := house.BoardSpaceUnitPair(xx, yy)
 	for _, room := range g.House.Floors[0].Rooms {
 		if x >= room.X && y >= room.Y && x < room.X+room.Size.Dx && y < room.Y+room.Size.Dy {
 			x -= room.X
@@ -647,12 +649,12 @@ func connected(r, r2 *house.Room, x, y, x2, y2 house.BoardSpaceUnit) bool {
 
 // TODO(tmckee:#47): use BoardSpaceUnit as input too
 func (g *Game) IsCellOccupied(inx, iny int) bool {
-	x, y := house.BoardSpaceUnit(inx), house.BoardSpaceUnit(iny)
+	x, y := house.BoardSpaceUnitPair(inx, iny)
 	r := roomAt(g.House.Floors[0], x, y)
 	if r == nil {
 		return true
 	}
-	f := furnitureAt(r, x-house.BoardSpaceUnit(r.X), y-house.BoardSpaceUnit(r.Y))
+	f := furnitureAt(r, x-r.X, y-r.Y)
 	if f != nil {
 		return true
 	}
@@ -730,7 +732,7 @@ func (g *Game) Graph(side Side, los bool, exclude []*Entity) algorithm.Graph {
 // here.
 func (g *Game) adjacent(v int, los bool, side Side, ex map[*Entity]bool) ([]int, []float64) {
 	room, x, y := g.FromVertex(v)
-	bsx, bsy := house.BoardSpaceUnit(x), house.BoardSpaceUnit(y)
+	bsx, bsy := house.BoardSpaceUnitPair(x, y)
 	var adj []int
 	var weight []float64
 	var moves [3][3]float64
@@ -768,7 +770,7 @@ func (g *Game) adjacent(v int, los bool, side Side, ex map[*Entity]bool) ([]int,
 			}
 			tx := x + dx
 			ty := y + dy
-			bstx, bsty := house.BoardSpaceUnit(tx), house.BoardSpaceUnit(ty)
+			bstx, bsty := house.BoardSpaceUnitPair(tx, ty)
 			if ent_occupied[[2]house.BoardSpaceUnit{bstx, bsty}] {
 				continue
 			}
@@ -799,7 +801,7 @@ func (g *Game) adjacent(v int, los bool, side Side, ex map[*Entity]bool) ([]int,
 			}
 			tx := x + dx
 			ty := y + dy
-			bstx, bsty := house.BoardSpaceUnit(tx), house.BoardSpaceUnit(ty)
+			bstx, bsty := house.BoardSpaceUnitPair(tx, ty)
 			if ent_occupied[[2]house.BoardSpaceUnit{bstx, bsty}] {
 				continue
 			}
@@ -1393,7 +1395,7 @@ func (g *Game) doLos(dist house.BoardSpaceUnit, line [][2]house.BoardSpaceUnit, 
 				return
 			}
 		}
-		furn := furnitureAt(room, x-house.BoardSpaceUnit(room.X), y-house.BoardSpaceUnit(room.Y))
+		furn := furnitureAt(room, x-room.X, y-room.Y)
 		if furn != nil && furn.Blocks_los {
 			return
 		}
@@ -1504,7 +1506,7 @@ func (g *Game) mergeLos(side Side) {
 // something more sensible and faster, so everyone needs to use this so that
 // everything stays in sync.
 func (g *Game) DetermineLos(xx, yy, los_dist_int int, grid [][]bool) {
-	x, y := house.BoardSpaceUnit(xx), house.BoardSpaceUnit(yy)
+	x, y := house.BoardSpaceUnitPair(xx, yy)
 	los_dist := house.BoardSpaceUnit(los_dist_int)
 	for i := range grid {
 		for j := range grid[i] {

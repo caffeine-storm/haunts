@@ -52,11 +52,11 @@ type SpawnPoint struct {
 }
 
 func (sp *SpawnPoint) Dims() (BoardSpaceUnit, BoardSpaceUnit) {
-	return BoardSpaceUnit(sp.Dx), BoardSpaceUnit(sp.Dy)
+	return sp.Dx, sp.Dy
 }
 
 func (sp *SpawnPoint) FloorPos() (BoardSpaceUnit, BoardSpaceUnit) {
-	return BoardSpaceUnit(sp.X), BoardSpaceUnit(sp.Y)
+	return sp.X, sp.Y
 }
 
 func (sp *SpawnPoint) FPos() (float64, float64) {

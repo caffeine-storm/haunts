@@ -1039,15 +1039,15 @@ func roomAtPos(gp *GamePanel) lua.LuaGoFunction {
 		}
 		gp.script.syncStart()
 		defer gp.script.syncEnd()
-		x, y := LuaToPoint(L, -1)
-		room, _, _ := gp.game.House.Floors[0].RoomFurnSpawnAtPos(x, y)
+		intx, inty := LuaToPoint(L, -1)
+		room, _, _ := gp.game.House.Floors[0].RoomFurnSpawnAtPos(house.BoardSpaceUnitPair(intx, inty))
 		for i, r := range gp.game.House.Floors[0].Rooms {
 			if r == room {
 				L.PushInteger(int64(i))
 				return 1
 			}
 		}
-		LuaDoError(L, fmt.Sprintf("Tried to get the room at position (%d,%d), but there is no room there.", x, y))
+		LuaDoError(L, fmt.Sprintf("Tried to get the room at position (%d,%d), but there is no room there.", intx, inty))
 		return 0
 	}
 }

@@ -133,10 +133,10 @@ func (a *AoeAttack) AP() int {
 	return a.Ap
 }
 func (a *AoeAttack) FloorPos() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
-	return house.BoardSpaceUnit(a.tx), house.BoardSpaceUnit(a.ty)
+	return house.BoardSpaceUnitPair(a.tx, a.ty)
 }
 func (a *AoeAttack) Dims() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
-	return house.BoardSpaceUnit(a.Diameter), house.BoardSpaceUnit(a.Diameter)
+	return house.BoardSpaceUnitPair(a.Diameter, a.Diameter)
 }
 func (a *AoeAttack) String() string {
 	return a.Name

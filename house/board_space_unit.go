@@ -5,6 +5,11 @@ import "image"
 // TODO(tmckee): does this belong in the 'perspective' package?
 type BoardSpaceUnit int
 
+// Helper to convert pairs of values to pairs of BoardSpaceUnit
+func BoardSpaceUnitPair[T int | float32 | float64](x, y T) (BoardSpaceUnit, BoardSpaceUnit) {
+	return BoardSpaceUnit(x), BoardSpaceUnit(y)
+}
+
 type RoomSizey interface {
 	GetDx() BoardSpaceUnit
 	GetDy() BoardSpaceUnit

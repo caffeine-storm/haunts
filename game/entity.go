@@ -82,9 +82,9 @@ func (g *Game) placeEntity(pattern string) bool {
 		return false
 	}
 	g.new_ent.Info.RoomsExplored[g.new_ent.CurrentRoom()] = true
-	ix, iy := house.BoardSpaceUnit(g.new_ent.X), house.BoardSpaceUnit(g.new_ent.Y)
+	ix, iy := house.BoardSpaceUnitPair(g.new_ent.X, g.new_ent.Y)
 	idx, idy := g.new_ent.Dims()
-	r, f, _ := g.House.Floors[0].RoomFurnSpawnAtPos(int(ix), int(iy))
+	r, f, _ := g.House.Floors[0].RoomFurnSpawnAtPos(ix, iy)
 
 	if r == nil || f != nil {
 		return false
@@ -314,7 +314,7 @@ func (ei *EntityDef) Dims() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	if ei.Dx <= 0 || ei.Dy <= 0 {
 		panic(fmt.Errorf("entity %q didn't have its Dims set properly", ei.Name))
 	}
-	return house.BoardSpaceUnit(ei.Dx), house.BoardSpaceUnit(ei.Dy)
+	return house.BoardSpaceUnitPair(ei.Dx, ei.Dy)
 }
 
 type HauntEnt struct {
@@ -499,8 +499,7 @@ func DiscretizePoint64(x, y float64) (int, int) {
 	return int(x), int(y)
 }
 func (ei *EntityInst) FloorPos() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
-	ix, iy := DiscretizePoint64(ei.X, ei.Y)
-	return house.BoardSpaceUnit(ix), house.BoardSpaceUnit(iy)
+	return house.BoardSpaceUnitPair(DiscretizePoint64(ei.X, ei.Y))
 }
 
 func (ei *EntityInst) FPos() (float64, float64) {

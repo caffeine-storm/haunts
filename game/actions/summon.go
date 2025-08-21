@@ -124,7 +124,7 @@ func (a *SummonAction) AP() int {
 	return a.Ap
 }
 func (a *SummonAction) FloorPos() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
-	return house.BoardSpaceUnit(a.cx), house.BoardSpaceUnit(a.cy)
+	return house.BoardSpaceUnitPair(a.cx, a.cy)
 }
 func (a *SummonAction) Dims() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return 1, 1

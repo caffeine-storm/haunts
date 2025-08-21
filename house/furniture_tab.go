@@ -150,18 +150,18 @@ func (w *FurniturePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 		if group.IsPressed(gin.AnyMouseLButton) {
 			if mpos, ok := ui.UseMousePosition(group); ok {
 				mx, my := mpos.X, mpos.Y
-				bx, by := w.RoomViewer.WindowToBoard(mx, my)
+				bx, by := BoardSpaceUnitPair(w.RoomViewer.WindowToBoard(mx, my))
 				for i := range w.Room.Furniture {
 					x, y := w.Room.Furniture[i].FloorPos()
 					dx, dy := w.Room.Furniture[i].Dims()
-					if BoardSpaceUnit(bx) >= x && BoardSpaceUnit(bx) < x+dx && BoardSpaceUnit(by) >= y && BoardSpaceUnit(by) < y+dy {
+					if bx >= x && bx < x+dx && by >= y && by < y+dy {
 						w.furniture = w.Room.Furniture[i]
 						w.prev_object = new(Furniture)
 						*w.prev_object = *w.furniture
 						w.furniture.temporary = true
 						px, py := w.furniture.FloorPos()
-						w.drag_anchor.x = bx - float32(px)
-						w.drag_anchor.y = by - float32(py)
+						w.drag_anchor.x = float32(bx - px)
+						w.drag_anchor.y = float32(by - py)
 						break
 					}
 				}
