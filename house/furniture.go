@@ -71,9 +71,8 @@ func (f *Furniture) RotateRight() {
 	f.Rotation = (f.Rotation - 1 + len(f.Orientations)) % len(f.Orientations)
 }
 
-// TODO(tmckee#47): use BoardSpaceUnit here too
 type furnitureOrientation struct {
-	Dx, Dy  int
+	Dx, Dy  BoardSpaceUnit
 	Texture texture.Object `registry:"autoload"`
 }
 
@@ -94,9 +93,9 @@ type FurnitureDef struct {
 func (f *Furniture) Dims() (BoardSpaceUnit, BoardSpaceUnit) {
 	orientation := f.Orientations[f.Rotation]
 	if f.Flip {
-		return BoardSpaceUnitPair(orientation.Dy, orientation.Dx)
+		return orientation.Dy, orientation.Dx
 	}
-	return BoardSpaceUnitPair(orientation.Dx, orientation.Dy)
+	return orientation.Dx, orientation.Dy
 }
 
 func (f *Furniture) Color() (r, g, b, a byte) {

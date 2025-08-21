@@ -289,7 +289,6 @@ func MakeHouseDef() *HouseDef {
 
 // Shifts the rooms in all floors such that the coordinates of all rooms are as
 // low on each axis as possible without being zero or negative.
-// TODO(tmckee#47): a Room.SetFloorPos would help clean some of this up
 func (h *HouseDef) Normalize() {
 	for i := range h.Floors {
 		if len(h.Floors[i].Rooms) == 0 {
