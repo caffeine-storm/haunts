@@ -43,20 +43,20 @@ func topSpawnRegexp() *regexp.Regexp {
 
 type SpawnPoint struct {
 	Name   string
-	Dx, Dy int
-	X, Y   int
+	Dx, Dy BoardSpaceUnit
+	X, Y   BoardSpaceUnit
 	Tex    texture.Object
 
 	// just for the shader
 	temporary, invalid bool
 }
 
-func (sp *SpawnPoint) Dims() (int, int) {
-	return sp.Dx, sp.Dy
+func (sp *SpawnPoint) Dims() (BoardSpaceUnit, BoardSpaceUnit) {
+	return BoardSpaceUnit(sp.Dx), BoardSpaceUnit(sp.Dy)
 }
 
-func (sp *SpawnPoint) Pos() (int, int) {
-	return sp.X, sp.Y
+func (sp *SpawnPoint) FloorPos() (BoardSpaceUnit, BoardSpaceUnit) {
+	return BoardSpaceUnit(sp.X), BoardSpaceUnit(sp.Y)
 }
 
 func (sp *SpawnPoint) FPos() (float64, float64) {

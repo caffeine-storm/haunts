@@ -2,15 +2,17 @@ package actions
 
 import (
 	"encoding/gob"
+	"path/filepath"
+
 	"github.com/MobRulesGames/golua/lua"
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/game/status"
+	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
-	"path/filepath"
 )
 
 func registerSummonActions() map[string]func() game.Action {
@@ -63,7 +65,8 @@ type SummonActionDef struct {
 	Sounds       map[string]string
 }
 type summonActionTempData struct {
-	ent    *game.Entity
+	ent *game.Entity
+	// TODO(tmckee#47): use BoardSpaceUnit here too
 	cx, cy int
 	spawn  *game.Entity
 }
@@ -120,10 +123,10 @@ func (a *SummonAction) Push(L *lua.State) {
 func (a *SummonAction) AP() int {
 	return a.Ap
 }
-func (a *SummonAction) Pos() (int, int) {
-	return a.cx, a.cy
+func (a *SummonAction) FloorPos() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
+	return house.BoardSpaceUnit(a.cx), house.BoardSpaceUnit(a.cy)
 }
-func (a *SummonAction) Dims() (int, int) {
+func (a *SummonAction) Dims() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return 1, 1
 }
 func (a *SummonAction) String() string {
@@ -181,8 +184,8 @@ func (a *SummonAction) RenderOnFloor() {
 	if a.ent == nil {
 		return
 	}
-	ex, ey := a.ent.Pos()
-	if dist(ex, ey, a.cx, a.cy) <= a.Range && a.ent.HasLos(a.cx, a.cy, 1, 1) {
+	ex, ey := a.ent.FloorPos()
+	if dist(int(ex), int(ey), a.cx, a.cy) <= a.Range && a.ent.HasLos(a.cx, a.cy, 1, 1) {
 		gl.Color4ub(255, 255, 255, 200)
 	} else {
 		gl.Color4ub(255, 64, 64, 200)

@@ -372,8 +372,8 @@ func DoMoveFunc(a *Ai) lua.LuaGoFunction {
 			a.execs <- exec
 			<-a.pause
 			// TODO: Need to get a resolution
-			x, y := me.Pos()
-			v := me.Game().ToVertex(x, y)
+			x, y := me.FloorPos()
+			v := me.Game().ToVertex(int(x), int(y))
 			complete := false
 			for i := range dsts {
 				if v == dsts[i] {
@@ -382,7 +382,7 @@ func DoMoveFunc(a *Ai) lua.LuaGoFunction {
 				}
 			}
 			L.PushBoolean(complete)
-			game.LuaPushPoint(L, x, y)
+			game.LuaPushPoint(L, int(x), int(y))
 			base.DeprecatedLog().Printf("Finished move")
 		} else {
 			base.DeprecatedLog().Printf("Didn't bother moving")
@@ -454,9 +454,9 @@ func RangedDistBetweenEntitiesFunc(a *Ai) lua.LuaGoFunction {
 				L.PushNil()
 				return 1
 			}
-			x, y := e.Pos()
+			x, y := e.FloorPos()
 			dx, dy := e.Dims()
-			if !a.ent.HasLos(x, y, dx, dy) {
+			if !a.ent.HasLos(int(x), int(y), int(dx), int(dy)) {
 				L.PushNil()
 				return 1
 			}
@@ -564,7 +564,7 @@ func NearestNEntitiesFunc(me *game.Entity) lua.LuaGoFunction {
 					continue
 				}
 			}
-			x, y := ent.Pos()
+			x, y := ent.FloorPos()
 			dx, dy := ent.Dims()
 			if !me.HasTeamLos(x, y, dx, dy) {
 				continue
@@ -768,7 +768,7 @@ func RoomContainingFunc(a *Ai) lua.LuaGoFunction {
 		}
 		ent := game.LuaToEntity(L, a.ent.Game(), -1)
 		side := a.ent.Side()
-		x, y := a.ent.Pos()
+		x, y := a.ent.FloorPos()
 		dx, dy := a.ent.Dims()
 		if ent == nil || (ent.Side() != side && !a.ent.Game().TeamLos(side, x, y, dx, dy)) {
 			L.PushNil()
@@ -894,7 +894,7 @@ func DoorPositionsFunc(a *Ai) lua.LuaGoFunction {
 			return 0
 		}
 
-		var x, y, dx, dy int
+		var x, y, dx, dy house.BoardSpaceUnit
 		switch door.Facing {
 		case house.FarLeft:
 			x = door.Pos
@@ -917,12 +917,12 @@ func DoorPositionsFunc(a *Ai) lua.LuaGoFunction {
 		}
 		L.NewTable()
 		count := 1
-		for i := 0; i < door.Width; i++ {
+		for i := house.BoardSpaceUnit(0); i < door.Width; i++ {
 			L.PushInteger(int64(count*2) - 1)
-			game.LuaPushPoint(L, room.X+x+dx*i, room.Y+y+dy*i)
+			game.LuaPushPoint(L, int(room.X+x+dx*i), int(room.Y+y+dy*i))
 			L.SetTable(-3)
 			L.PushInteger(int64(count) * 2)
-			game.LuaPushPoint(L, room.X+x+dx*i+dy, room.Y+y+dy*i+dx)
+			game.LuaPushPoint(L, int(room.X+x+dx*i+dy), int(room.Y+y+dy*i+dx))
 			L.SetTable(-3)
 			count++
 		}
@@ -1060,7 +1060,7 @@ func RoomPositionsFunc(a *Ai) lua.LuaGoFunction {
 			for y := room.Y; y < room.Y+room.Size.Dy; y++ {
 				L.PushInteger(int64(count))
 				count++
-				game.LuaPushPoint(L, x, y)
+				game.LuaPushPoint(L, int(x), int(y))
 				L.SetTable(-3)
 			}
 		}

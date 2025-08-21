@@ -2,16 +2,18 @@ package actions
 
 import (
 	"encoding/gob"
+	"path/filepath"
+
 	"github.com/MobRulesGames/golua/lua"
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/game/status"
+	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/sprite"
-	"path/filepath"
 )
 
 func registerBasicAttacks() map[string]func() game.Action {
@@ -154,6 +156,7 @@ func GetBasicAttackResult(e game.ActionExec) *BasicAttackResult {
 	return &res
 }
 
+// TODO(tmckee#47): use BoardSpaceUnit here too
 func dist(x, y, x2, y2 int) int {
 	dx := x - x2
 	if dx < 0 {
@@ -171,10 +174,10 @@ func dist(x, y, x2, y2 int) int {
 func (a *BasicAttack) AP() int {
 	return a.Ap
 }
-func (a *BasicAttack) Pos() (int, int) {
+func (a *BasicAttack) FloorPos() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return 0, 0
 }
-func (a *BasicAttack) Dims() (int, int) {
+func (a *BasicAttack) Dims() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return 0, 0
 }
 func (a *BasicAttack) String() string {
@@ -193,9 +196,9 @@ func (a *BasicAttack) validTarget(source, target *game.Entity) bool {
 	if distBetweenEnts(source, target) > a.Range {
 		return false
 	}
-	x2, y2 := target.Pos()
+	x2, y2 := target.FloorPos()
 	dx, dy := target.Dims()
-	if !source.HasLos(x2, y2, dx, dy) {
+	if !source.HasLos(int(x2), int(y2), int(dx), int(dy)) {
 		return false
 	}
 	if target.Stats.HpCur() <= 0 {
@@ -258,7 +261,7 @@ func (a *BasicAttack) RenderOnFloor() {
 	gl.Begin(gl.QUADS)
 	gl.Color4d(1.0, 0.2, 0.2, 0.8)
 	for _, ent := range a.targets {
-		ix, iy := ent.Pos()
+		ix, iy := ent.FloorPos()
 		x := float64(ix)
 		y := float64(iy)
 		gl.Vertex2d(x+0, y+0)
@@ -295,8 +298,10 @@ func (a *BasicAttack) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.
 		}
 	}
 	if a.ent.Sprite().State() == "ready" && a.target.Sprite().State() == "ready" {
-		a.target.TurnToFace(a.ent.Pos())
-		a.ent.TurnToFace(a.target.Pos())
+		entx, enty := a.ent.FloorPos()
+		targx, targy := a.target.FloorPos()
+		a.target.TurnToFace(int(entx), int(enty))
+		a.ent.TurnToFace(int(targx), int(targy))
 		if a.Current_ammo > 0 {
 			a.Current_ammo--
 		}

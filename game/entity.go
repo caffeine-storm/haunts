@@ -82,18 +82,18 @@ func (g *Game) placeEntity(pattern string) bool {
 		return false
 	}
 	g.new_ent.Info.RoomsExplored[g.new_ent.CurrentRoom()] = true
-	ix, iy := int(g.new_ent.X), int(g.new_ent.Y)
+	ix, iy := house.BoardSpaceUnit(g.new_ent.X), house.BoardSpaceUnit(g.new_ent.Y)
 	idx, idy := g.new_ent.Dims()
-	r, f, _ := g.House.Floors[0].RoomFurnSpawnAtPos(ix, iy)
+	r, f, _ := g.House.Floors[0].RoomFurnSpawnAtPos(int(ix), int(iy))
 
 	if r == nil || f != nil {
 		return false
 	}
 	for _, e := range g.Ents {
-		x, y := e.Pos()
+		x, y := e.FloorPos()
 		dx, dy := e.Dims()
-		r1 := image.Rect(x, y, x+dx, y+dy)
-		r2 := image.Rect(ix, iy, ix+idx, iy+idy)
+		r1 := image.Rect(int(x), int(y), int(x+dx), int(y+dy))
+		r2 := image.Rect(int(ix), int(iy), int(ix+idx), int(iy+idy))
 		if r1.Overlaps(r2) {
 			return false
 		}
@@ -104,7 +104,7 @@ func (g *Game) placeEntity(pattern string) bool {
 		if !re.MatchString(spawn.Name) {
 			continue
 		}
-		x, y := spawn.Pos()
+		x, y := spawn.FloorPos()
 		dx, dy := spawn.Dims()
 		if ix < x || ix+idx > x+dx {
 			continue
@@ -143,7 +143,7 @@ func (e *Entity) LoadAi() {
 func (e *Entity) Load(g *Game) {
 	e.sprite.Load(e.Sprite_path.String(), g.GetSpriteManager())
 	e.Sprite().SetTriggerFunc(func(s *sprite.Sprite, name string) {
-		x, y := e.Pos()
+		x, y := e.FloorPos()
 		dx, dy := e.Dims()
 		volume := 1.0
 		if e.Side() == SideExplorers || e.Side() == SideHaunt {
@@ -237,7 +237,8 @@ const (
 )
 
 type EntityDef struct {
-	Name        string
+	Name string
+	// TODO(tmckee#47): house.BoardSpaceUnit plz
 	Dx, Dy      int
 	Sprite_path base.Path
 
@@ -309,11 +310,11 @@ func (ei *EntityDef) Side() Side {
 
 	return SideNone
 }
-func (ei *EntityDef) Dims() (int, int) {
+func (ei *EntityDef) Dims() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	if ei.Dx <= 0 || ei.Dy <= 0 {
 		panic(fmt.Errorf("entity %q didn't have its Dims set properly", ei.Name))
 	}
-	return ei.Dx, ei.Dy
+	return house.BoardSpaceUnit(ei.Dx), house.BoardSpaceUnit(ei.Dy)
 }
 
 type HauntEnt struct {
@@ -370,6 +371,7 @@ type losData struct {
 
 	// Floor coordinates of the last position los was determined from, so that
 	// we don't need to recalculate it more than we need to as an ent is moving.
+	// TODO(tmckee#47): house.BoardSpaceUnit plz
 	x, y int
 
 	// Range of vision - all true values in grid are contained within these
@@ -461,6 +463,8 @@ func (e *Entity) Game() *Game {
 func (e *Entity) Sprite() *sprite.Sprite {
 	return e.sprite.sp
 }
+
+// TODO(tmckee#47): use BoardSpaceUnit here too
 func (e *Entity) HasLos(x, y, dx, dy int) bool {
 	if e.los == nil {
 		return false
@@ -477,7 +481,7 @@ func (e *Entity) HasLos(x, y, dx, dy int) bool {
 	}
 	return false
 }
-func (e *Entity) HasTeamLos(x, y, dx, dy int) bool {
+func (e *Entity) HasTeamLos(x, y, dx, dy house.BoardSpaceUnit) bool {
 	return e.game.TeamLos(e.Side(), x, y, dx, dy)
 }
 func DiscretizePoint32(x, y float32) (int, int) {
@@ -494,14 +498,17 @@ func DiscretizePoint64(x, y float64) (int, int) {
 	}
 	return int(x), int(y)
 }
-func (ei *EntityInst) Pos() (int, int) {
-	return DiscretizePoint64(ei.X, ei.Y)
+func (ei *EntityInst) FloorPos() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
+	ix, iy := DiscretizePoint64(ei.X, ei.Y)
+	return house.BoardSpaceUnit(ix), house.BoardSpaceUnit(iy)
 }
+
 func (ei *EntityInst) FPos() (float64, float64) {
 	return ei.X, ei.Y
 }
+
 func (ei *EntityInst) CurrentRoom() int {
-	x, y := ei.Pos()
+	x, y := ei.FloorPos()
 	room := roomAt(ei.game.House.Floors[0], x, y)
 	for i := range ei.game.House.Floors[0].Rooms {
 		if ei.game.House.Floors[0].Rooms[i] == room {
@@ -605,6 +612,7 @@ func facing(v mathgl.Vec2) int {
 	return ret
 }
 
+// TODO(tmckee#47): use BoardSpaceUnit here too
 func (e *Entity) TurnToFace(x, y int) {
 	target := mathgl.Vec2{float32(x), float32(y)}
 	source := mathgl.Vec2{float32(e.X), float32(e.Y)}

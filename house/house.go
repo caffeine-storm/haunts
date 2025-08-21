@@ -1,7 +1,6 @@
 package house
 
 import (
-	"image"
 	"math"
 	"path/filepath"
 
@@ -131,9 +130,14 @@ func (f *Floor) removeInvalidDoors() {
 	}
 }
 
-func (f *Floor) RoomFurnSpawnAtPos(x, y int) (room *Room, furn *Furniture, spawn *SpawnPoint) {
+// TODO(tmckee#47): this should take BoardSpaceUnits as input.
+// TODO(tmckee:clean): this should be named "GetAllTheThingsThatAreAtPos" or
+// something.
+func (f *Floor) RoomFurnSpawnAtPos(intx, inty int) (room *Room, furn *Furniture, spawn *SpawnPoint) {
+	x := BoardSpaceUnit(intx)
+	y := BoardSpaceUnit(inty)
 	for _, croom := range f.Rooms {
-		rx, ry := croom.Pos()
+		rx, ry := croom.FloorPos()
 		rdx, rdy := croom.Dims()
 		if x < rx || y < ry || x >= rx+rdx || y >= ry+rdy {
 			continue
@@ -142,7 +146,7 @@ func (f *Floor) RoomFurnSpawnAtPos(x, y int) (room *Room, furn *Furniture, spawn
 		for _, furniture := range room.Furniture {
 			tx := x - rx
 			ty := y - ry
-			fx, fy := furniture.Pos()
+			fx, fy := furniture.FloorPos()
 			fdx, fdy := furniture.Dims()
 			if tx < fx || ty < fy || tx >= fx+fdx || ty >= fy+fdy {
 				continue
@@ -228,8 +232,8 @@ func (f *Floor) render(region gui.Region, focusx, focusy, angle, zoom float32, d
 				continue
 			}
 			left, right := r2.getNearWallAlpha(los_tex)
-			r1_rect := image.Rect(r1.X, r1.Y+r1.Size.Dy, r1.X+r1.Size.Dx, r1.Y+r1.Size.Dy+1)
-			r2_rect := image.Rect(r2.X, r2.Y, r2.X+r2.Size.Dx, r2.Y+r2.Size.Dy)
+			r1_rect := ImageRect(r1.X, r1.Y+r1.Size.Dy, r1.X+r1.Size.Dx, r1.Y+r1.Size.Dy+1)
+			r2_rect := ImageRect(r2.X, r2.Y, r2.X+r2.Size.Dx, r2.Y+r2.Size.Dy)
 			if r1_rect.Overlaps(r2_rect) {
 				// If there is an open door between the two then we'll tone down the
 				// alpha, otherwise we won't treat it any differently
@@ -241,7 +245,7 @@ func (f *Floor) render(region gui.Region, focusx, focusy, angle, zoom float32, d
 					}
 				}
 			}
-			r1_rect = image.Rect(r1.X+r1.Size.Dx, r1.Y, r1.X+r1.Size.Dx+1, r1.Y+r1.Size.Dy)
+			r1_rect = ImageRect(r1.X+r1.Size.Dx, r1.Y, r1.X+r1.Size.Dx+1, r1.Y+r1.Size.Dy)
 			if r1_rect.Overlaps(r2_rect) {
 				for _, d1 := range r1.Doors {
 					for _, d2 := range r2.Doors {
@@ -263,7 +267,7 @@ func (f *Floor) render(region gui.Region, focusx, focusy, angle, zoom float32, d
 		room := roomsToDraw[i]
 		fx := focusx - float32(room.X)
 		fy := focusy - float32(room.Y)
-		matrices := perspective.MakeRoomMats(&room.Size, region, fx, fy, angle, zoom)
+		matrices := perspective.MakeRoomMats(int(room.Size.GetDx()), int(room.Size.GetDy()), region, fx, fy, angle, zoom)
 		v := alpha_map[room]
 		if los_map[room] > 5 {
 			room.Render(matrices, zoom, v, drawables, los_tex, floor_drawers)
@@ -286,17 +290,18 @@ func MakeHouseDef() *HouseDef {
 	return &h
 }
 
-// Shifts the rooms in all floors such that the coordinates of all rooms are
-// as low on each axis as possible without being zero or negative.
+// Shifts the rooms in all floors such that the coordinates of all rooms are as
+// low on each axis as possible without being zero or negative.
+// TODO(tmckee#47): a Room.SetFloorPos would help clean some of this up
 func (h *HouseDef) Normalize() {
 	for i := range h.Floors {
 		if len(h.Floors[i].Rooms) == 0 {
 			continue
 		}
-		var minx, miny int
-		minx, miny = h.Floors[i].Rooms[0].Pos()
+		var minx, miny BoardSpaceUnit
+		minx, miny = h.Floors[i].Rooms[0].FloorPos()
 		for j := range h.Floors[i].Rooms {
-			x, y := h.Floors[i].Rooms[j].Pos()
+			x, y := h.Floors[i].Rooms[j].FloorPos()
 			if x < minx {
 				minx = x
 			}
@@ -405,9 +410,9 @@ func (hdt *houseDataTab) Think(ui *gui.Gui, t int64) {
 		// mx, my := gin.In().GetCursor("Mouse").Point()
 		mx, my := 0, 0
 		bx, by := hdt.viewer.WindowToBoard(mx, my)
-		cx, cy := hdt.temp_room.Pos()
-		hdt.temp_room.X = int(bx - hdt.drag_anchor.x)
-		hdt.temp_room.Y = int(by - hdt.drag_anchor.y)
+		cx, cy := hdt.temp_room.FloorPos()
+		hdt.temp_room.X = BoardSpaceUnit(bx - hdt.drag_anchor.x)
+		hdt.temp_room.Y = BoardSpaceUnit(by - hdt.drag_anchor.y)
 		dx := hdt.temp_room.X - cx
 		dy := hdt.temp_room.Y - cy
 		for i := range hdt.temp_spawns {
@@ -492,9 +497,9 @@ func (hdt *houseDataTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 				cx, cy := mpos.X, mpos.Y
 				bx, by := hdt.viewer.WindowToBoard(cx, cy)
 				for i := range floor.Rooms {
-					x, y := floor.Rooms[i].Pos()
+					x, y := floor.Rooms[i].FloorPos()
 					dx, dy := floor.Rooms[i].Dims()
-					if int(bx) >= x && int(bx) < x+dx && int(by) >= y && int(by) < y+dy {
+					if int(bx) >= int(x) && int(bx) < int(x+dx) && int(by) >= int(y) && int(by) < int(y+dy) {
 						hdt.temp_room = floor.Rooms[i]
 						hdt.prev_room = new(Room)
 						*hdt.prev_room = *hdt.temp_room
@@ -508,8 +513,8 @@ func (hdt *houseDataTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 			if hdt.temp_room != nil {
 				hdt.temp_spawns = hdt.temp_spawns[0:0]
 				for _, sp := range hdt.house.Floors[0].Spawns {
-					x, y := sp.Pos()
-					rx, ry := hdt.temp_room.Pos()
+					x, y := sp.FloorPos()
+					rx, ry := hdt.temp_room.FloorPos()
 					rdx, rdy := hdt.temp_room.Dims()
 					if x >= rx && x < rx+rdx && y >= ry && y < ry+rdy {
 						hdt.temp_spawns = append(hdt.temp_spawns, sp)
@@ -692,6 +697,8 @@ type houseRelicsTab struct {
 	drag_anchor struct{ x, y float32 }
 }
 
+// TODO(tmckee#34): 'hdt' seems to be an artifact of copy-pasting
+// 'houseDoorTab'? -_-
 func (hdt *houseRelicsTab) newSpawn() {
 	hdt.temp_relic = new(SpawnPoint)
 	hdt.temp_relic.Name = hdt.spawn_name.GetText()
@@ -739,10 +746,10 @@ func (hdt *houseRelicsTab) markTempSpawnValidity() {
 	hdt.temp_relic.invalid = false
 	floor := hdt.house.Floors[0]
 	var room *Room
-	x, y := hdt.temp_relic.Pos()
-	for ix := 0; ix < hdt.temp_relic.Dx; ix++ {
-		for iy := 0; iy < hdt.temp_relic.Dy; iy++ {
-			room_at, furn_at, _ := floor.RoomFurnSpawnAtPos(x+ix, y+iy)
+	x, y := hdt.temp_relic.FloorPos()
+	for ix := 0; ix < int(hdt.temp_relic.Dx); ix++ {
+		for iy := 0; iy < int(hdt.temp_relic.Dy); iy++ {
+			room_at, furn_at, _ := floor.RoomFurnSpawnAtPos(int(x)+ix, int(y)+iy)
 			if room == nil {
 				room = room_at
 			}
@@ -760,21 +767,21 @@ func (hdt *houseRelicsTab) Think(ui *gui.Gui, t int64) {
 	// mx, my := gin.In().GetCursor("Mouse").Point()
 	mx, my := 0, 0
 	rbx, rby := hdt.viewer.WindowToBoard(mx, my)
-	bx := roundDown(rbx - hdt.drag_anchor.x + 0.5)
-	by := roundDown(rby - hdt.drag_anchor.y + 0.5)
+	bx := BoardSpaceUnit(roundDown(rbx - hdt.drag_anchor.x + 0.5))
+	by := BoardSpaceUnit(roundDown(rby - hdt.drag_anchor.y + 0.5))
 	if hdt.temp_relic != nil {
 		hdt.temp_relic.X = bx
 		hdt.temp_relic.Y = by
-		hdt.temp_relic.Dx += gin.In().GetKeyById(gin.AnyRight).FramePressCount()
-		hdt.temp_relic.Dx -= gin.In().GetKeyById(gin.AnyLeft).FramePressCount()
+		deltaX := gin.In().GetKeyById(gin.AnyRight).FramePressCount() - gin.In().GetKeyById(gin.AnyLeft).FramePressCount()
+		hdt.temp_relic.Dx += BoardSpaceUnit(deltaX)
 		if hdt.temp_relic.Dx < 1 {
 			hdt.temp_relic.Dx = 1
 		}
 		if hdt.temp_relic.Dx > 10 {
 			hdt.temp_relic.Dx = 10
 		}
-		hdt.temp_relic.Dy += gin.In().GetKeyById(gin.AnyUp).FramePressCount()
-		hdt.temp_relic.Dy -= gin.In().GetKeyById(gin.AnyDown).FramePressCount()
+		deltaY := gin.In().GetKeyById(gin.AnyUp).FramePressCount() - gin.In().GetKeyById(gin.AnyDown).FramePressCount()
+		hdt.temp_relic.Dy += BoardSpaceUnit(deltaY)
 		if hdt.temp_relic.Dy < 1 {
 			hdt.temp_relic.Dy = 1
 		}
@@ -838,8 +845,8 @@ func (hdt *houseRelicsTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 			} else {
 				for _, sp := range floor.Spawns {
 					fbx, fby := hdt.viewer.WindowToBoard(mpos.X, mpos.Y)
-					bx, by := roundDown(fbx), roundDown(fby)
-					x, y := sp.Pos()
+					bx, by := BoardSpaceUnit(roundDown(fbx)), BoardSpaceUnit(roundDown(fby))
+					x, y := sp.FloorPos()
 					dx, dy := sp.Dims()
 					if bx >= x && bx < x+dx && by >= y && by < y+dy {
 						hdt.temp_relic = sp

@@ -298,8 +298,8 @@ func (a *Ai) GobEncode() ([]byte, error) {
 }
 
 func rangedDistBetween(e1, e2 *game.Entity) int {
-	e1x, e1y := e1.Pos()
-	e2x, e2y := e2.Pos()
+	e1x, e1y := e1.FloorPos()
+	e2x, e2y := e2.FloorPos()
 	dx := e1x - e2x
 	dy := e1y - e2y
 	if dx < 0 {
@@ -309,7 +309,7 @@ func rangedDistBetween(e1, e2 *game.Entity) int {
 		dy = -dy
 	}
 	if dx > dy {
-		return dx
+		return int(dx)
 	}
-	return dy
+	return int(dy)
 }

@@ -12,18 +12,18 @@ type endpoint struct {
 	first bool
 }
 
-func firstPoint(r RectObject) (int, int) {
-	x, y := r.Pos()
+func firstPoint(r RectObject) (BoardSpaceUnit, BoardSpaceUnit) {
+	x, y := r.FloorPos()
 	_, dy := r.Dims()
 	return x, y + dy
 }
-func lastPoint(r RectObject) (int, int) {
-	x, y := r.Pos()
+func lastPoint(r RectObject) (BoardSpaceUnit, BoardSpaceUnit) {
+	x, y := r.FloorPos()
 	dx, _ := r.Dims()
 	return x + dx, y
 }
-func firstAndLastPoints(r RectObject) (x1, y1, x2, y2 int) {
-	x, y := r.Pos()
+func firstAndLastPoints(r RectObject) (x1, y1, x2, y2 BoardSpaceUnit) {
+	x, y := r.FloorPos()
 	dx, dy := r.Dims()
 	return x, y + dy, x + dx, y
 }
@@ -34,7 +34,7 @@ func (e endpointArray) Len() int {
 	return len(e)
 }
 func (e endpointArray) Less(i, j int) bool {
-	var ix, iy, jx, jy int
+	var ix, iy, jx, jy BoardSpaceUnit
 	if e[i].first {
 		ix, iy = firstPoint(e[i])
 	} else {
@@ -54,13 +54,10 @@ func (e endpointArray) Swap(i, j int) {
 	e[i], e[j] = e[j], e[i]
 }
 
-func dist(x, y int) int {
-	return x*x + y*y
-}
-func width(dx, dy int) int {
+func width(dx, dy BoardSpaceUnit) BoardSpaceUnit {
 	return dx + dy
 }
-func pos(x, y int) int {
+func pos(x, y BoardSpaceUnit) BoardSpaceUnit {
 	return x - y
 }
 
@@ -86,9 +83,9 @@ func OrderRectObjects[T RectObject](ra []T) []T {
 }
 
 func order[T RectObject](input []T) []int {
-	var minx, miny int
+	var minx, miny BoardSpaceUnit
 	for _, r := range input {
-		x, y := r.Pos()
+		x, y := r.FloorPos()
 		if x < minx {
 			minx = x
 		}
@@ -99,7 +96,7 @@ func order[T RectObject](input []T) []int {
 
 	ra := make([]RectObject, len(input))
 	for i, r := range input {
-		x, y := r.Pos()
+		x, y := r.FloorPos()
 		dx, dy := r.Dims()
 		ra[i] = arog{x - minx + 1, y - miny + 1, dx, dy}
 	}
@@ -114,7 +111,7 @@ func order[T RectObject](input []T) []int {
 		e = append(e, endpoint{RectObject: ra[i], first: true})
 	}
 	sort.Sort(e)
-	var sweep_pos int
+	var sweep_pos BoardSpaceUnit
 	less_func := func(_a, _b interface{}) bool {
 		a := _a.(RectObject)
 		b := _b.(RectObject)
@@ -156,8 +153,8 @@ func order[T RectObject](input []T) []int {
 }
 
 type arog struct {
-	x, y, dx, dy int
+	x, y, dx, dy BoardSpaceUnit
 }
 
-func (a arog) Pos() (int, int)  { return a.x, a.y }
-func (a arog) Dims() (int, int) { return a.dx, a.dy }
+func (a arog) FloorPos() (BoardSpaceUnit, BoardSpaceUnit) { return a.x, a.y }
+func (a arog) Dims() (BoardSpaceUnit, BoardSpaceUnit)     { return a.dx, a.dy }

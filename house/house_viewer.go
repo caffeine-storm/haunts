@@ -134,7 +134,7 @@ func MakeHouseViewer(house *HouseDef, angle float32) *HouseViewer {
 	ret.SetZoom(10)
 	ret.SetBounds()
 
-	ret.floor, ret.ifloor = perspective.MakeFloorTransforms(ret.Render_region, ret.fx, ret.fy, ret.angle, ret.zoom)
+	ret.floor, ret.ifloor, _, _ = perspective.MakeFloorTransforms(ret.Render_region, ret.fx, ret.fy, ret.angle, ret.zoom)
 
 	return ret
 }
@@ -242,15 +242,17 @@ func (hv *HouseViewerState) boardToModelview(mx, my float32) (x, y, z float32) {
 	return
 }
 
+// TODO(tmckee#47): this and its compatriots ought to be using BoardSpaceUnit
+// where appropriate. Introducing a 'ScreenSpaceUnit' would also be helpful.
 func (hv *HouseViewer) WindowToBoard(wx, wy int) (float32, float32) {
-	hv.floor, hv.ifloor = perspective.MakeFloorTransforms(hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
+	hv.floor, hv.ifloor, _, _ = perspective.MakeFloorTransforms(hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
 
 	fx, fy, _ := hv.modelviewToBoard(float32(wx), float32(wy))
 	return fx, fy
 }
 
 func (hv *HouseViewer) BoardToWindow(bx, by float32) (int, int) {
-	hv.floor, hv.ifloor = perspective.MakeFloorTransforms(hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
+	hv.floor, hv.ifloor, _, _ = perspective.MakeFloorTransforms(hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
 
 	fx, fy, _ := hv.boardToModelview(bx, by)
 	return int(fx), int(fy)
@@ -362,14 +364,9 @@ func (hv *HouseViewer) FindClosestDoorPos(door *Door, bx, by float32) *Room {
 	best := 1.0e9 // If this is unsafe then the house is larger than earth
 	var best_room *Room
 
-	clamp_int := func(n, min, max int) int {
-		if n < min {
-			return min
-		}
-		if n > max {
-			return max
-		}
-		return n
+	clampToBoardSpace := func(nf float32, low, high BoardSpaceUnit) BoardSpaceUnit {
+		n := BoardSpaceUnit(nf)
+		return max(min(n, high), low)
 	}
 	for _, room := range hv.house.Floors[current_floor].Rooms {
 		fl := math.Abs(float64(by) - float64(room.Y+room.Size.Dy))
@@ -394,13 +391,13 @@ func (hv *HouseViewer) FindClosestDoorPos(door *Door, bx, by float32) *Room {
 		case fl < fr:
 			best = fl
 			door.Facing = FarLeft
-			door.Pos = clamp_int(int(bx-float32(room.X)-float32(door.Width)/2), 0, room.Size.Dx-door.Width)
+			door.Pos = clampToBoardSpace(bx-float32(room.X)-float32(door.Width)/2, 0, room.Size.Dx-door.Width)
 
 			//      case fr < fl:  this case must be true, so we just call it default here
 		default:
 			best = fr
 			door.Facing = FarRight
-			door.Pos = clamp_int(int(by-float32(room.Y)-float32(door.Width)/2), 0, room.Size.Dy-door.Width)
+			door.Pos = clampToBoardSpace(by-float32(room.Y)-float32(door.Width)/2, 0, room.Size.Dy-door.Width)
 		}
 	}
 	return best_room
@@ -433,15 +430,15 @@ func (hv *HouseViewer) FindClosestExistingDoor(bx, by float32) (*Room, *Door) {
 
 type offsetDrawable struct {
 	Drawable
-	dx, dy int
+	dx, dy BoardSpaceUnit
 }
 
 func (o offsetDrawable) FPos() (float64, float64) {
 	x, y := o.Drawable.FPos()
 	return x + float64(o.dx), y + float64(o.dy)
 }
-func (o offsetDrawable) Pos() (int, int) {
-	x, y := o.Drawable.Pos()
+func (o offsetDrawable) FloorPos() (BoardSpaceUnit, BoardSpaceUnit) {
+	x, y := o.Drawable.FloorPos()
 	return x + o.dx, y + o.dy
 }
 

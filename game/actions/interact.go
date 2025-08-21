@@ -136,10 +136,10 @@ func (a *Interact) Push(L *lua.State) {
 func (a *Interact) AP() int {
 	return a.Ap
 }
-func (a *Interact) Pos() (int, int) {
+func (a *Interact) FloorPos() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return 0, 0
 }
-func (a *Interact) Dims() (int, int) {
+func (a *Interact) Dims() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return 0, 0
 }
 func (a *Interact) String() string {
@@ -151,13 +151,15 @@ func (a *Interact) Icon() *texture.Object {
 func (a *Interact) Readyable() bool {
 	return false
 }
+
+// TODO(tmckee#47): use BoardSpaceUnit here too
 func distBetweenEnts(e1, e2 *game.Entity) int {
-	x1, y1 := e1.Pos()
+	x1, y1 := e1.FloorPos()
 	dx1, dy1 := e1.Dims()
-	x2, y2 := e2.Pos()
+	x2, y2 := e2.FloorPos()
 	dx2, dy2 := e2.Dims()
 
-	var xdist int
+	var xdist house.BoardSpaceUnit
 	switch {
 	case x1 >= x2+dx2:
 		xdist = x1 - (x2 + dx2)
@@ -167,7 +169,7 @@ func distBetweenEnts(e1, e2 *game.Entity) int {
 		xdist = 0
 	}
 
-	var ydist int
+	var ydist house.BoardSpaceUnit
 	switch {
 	case y1 >= y2+dy2:
 		ydist = y1 - (y2 + dy2)
@@ -178,16 +180,16 @@ func distBetweenEnts(e1, e2 *game.Entity) int {
 	}
 
 	if xdist > ydist {
-		return xdist
+		return int(xdist)
 	}
-	return ydist
+	return int(ydist)
 }
 
 type frect struct {
 	x, y, x2, y2 float64
 }
 
-func makeIntFrect(x, y, x2, y2 int) frect {
+func makeIntFrect(x, y, x2, y2 house.BoardSpaceUnit) frect {
 	return frect{float64(x), float64(y), float64(x2), float64(y2)}
 }
 func (f frect) overlapX(f2 frect) bool {
@@ -249,9 +251,9 @@ func (a *Interact) AiInteractWithObject(ent, object *game.Entity) game.ActionExe
 	if distBetweenEnts(ent, object) > a.Range {
 		return nil
 	}
-	x, y := object.Pos()
+	x, y := object.FloorPos()
 	dx, dy := object.Dims()
-	if !ent.HasLos(x, y, dx, dy) {
+	if !ent.HasLos(int(x), int(y), int(dx), int(dy)) {
 		return nil
 	}
 	var exec interactExec
@@ -279,7 +281,7 @@ func (a *Interact) AiToggleDoor(ent *game.Entity, door *house.Door) game.ActionE
 func (a *Interact) findDoors(ent *game.Entity, g *game.Game) []*house.Door {
 	room_num := ent.CurrentRoom()
 	room := g.House.Floors[0].Rooms[room_num]
-	x, y := ent.Pos()
+	x, y := ent.FloorPos()
 	dx, dy := ent.Dims()
 	ent_rect := makeIntFrect(x, y, x+dx, y+dy)
 	var valid []*house.Door
@@ -296,7 +298,7 @@ func (a *Interact) findDoors(ent *game.Entity, g *game.Game) []*house.Door {
 func (a *Interact) findTargets(ent *game.Entity, g *game.Game) []*game.Entity {
 	var targets []*game.Entity
 	for _, e := range g.Ents {
-		x, y := e.Pos()
+		x, y := e.FloorPos()
 		dx, dy := e.Dims()
 		if e == ent {
 			continue
@@ -310,7 +312,7 @@ func (a *Interact) findTargets(ent *game.Entity, g *game.Game) []*game.Entity {
 		if distBetweenEnts(e, ent) > a.Range {
 			continue
 		}
-		if !ent.HasLos(x, y, dx, dy) {
+		if !ent.HasLos(int(x), int(y), int(dx), int(dy)) {
 			continue
 		}
 
@@ -427,9 +429,9 @@ func (a *Interact) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Mai
 				base.DeprecatedError().Printf("Tried to interact with an object that was out of range: %v", exec)
 				return game.Complete
 			}
-			x, y := target.Pos()
+			x, y := target.FloorPos()
 			dx, dy := target.Dims()
-			if !a.ent.HasLos(x, y, dx, dy) {
+			if !a.ent.HasLos(int(x), int(y), int(dx), int(dy)) {
 				base.DeprecatedError().Printf("Tried to interact with an object without having los: %v", exec)
 				return game.Complete
 			}
@@ -454,7 +456,7 @@ func (a *Interact) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Mai
 			}
 			door := room.Doors[exec.Door]
 
-			x, y := a.ent.Pos()
+			x, y := a.ent.FloorPos()
 			dx, dy := a.ent.Dims()
 			ent_rect := makeIntFrect(x, y, x+dx, y+dy)
 			if !ent_rect.Overlaps(makeRectForDoor(room, door)) {

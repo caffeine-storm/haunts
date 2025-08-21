@@ -69,7 +69,7 @@ type decalState struct {
 	x, y, rot float32
 	flip      bool
 	room      struct {
-		x, y, dx, dy int
+		x, y, dx, dy BoardSpaceUnit
 	}
 }
 
@@ -113,7 +113,7 @@ func (decal *Decal) Render() {
 	data.RenderAdvanced(float64(decal.X), float64(decal.Y), float64(dx), float64(dy), float64(decal.Rot), decal.Flip)
 }
 
-func (decal *Decal) setupGlStuff(roomX, roomY, roomDx, roomDy int, glIDs *decalGlIDs) {
+func (decal *Decal) setupGlStuff(roomX, roomY, roomDx, roomDy BoardSpaceUnit, glIDs *decalGlIDs) {
 	glIDs.Reset()
 
 	// If we panic, don't leak GL resources

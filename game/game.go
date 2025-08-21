@@ -8,10 +8,11 @@ import (
 	"github.com/MobRulesGames/haunts/logging"
 )
 
+// TODO(tmckee#47): make x/y be BoardSpaceUnit instead.
 func (g *Game) SpawnEntity(spawn *Entity, x, y int) bool {
 	for i := range g.Ents {
-		cx, cy := g.Ents[i].Pos()
-		if cx == x && cy == y {
+		cx, cy := g.Ents[i].FloorPos()
+		if int(cx) == x && int(cy) == y {
 			logging.Warn("Can't spawn entity", "pos", []any{x, y}, "blockedby", g.Ents[i].Name)
 			return false
 		}
@@ -121,7 +122,7 @@ func spawnEnts(g *Game, ents []*Entity, spawns []*house.SpawnPoint) {
 				if used_spawns[spawn] {
 					continue
 				}
-				if spawn.Dx < ent.Dx || spawn.Dy < ent.Dy {
+				if int(spawn.Dx) < ent.Dx || int(spawn.Dy) < ent.Dy {
 					continue
 				}
 				used_spawns[spawn] = true
@@ -139,8 +140,8 @@ func spawnEnts(g *Game, ents []*Entity, spawns []*house.SpawnPoint) {
 		logging.Warn("Out of sanity while placing objects", "placed", len(places), "requested", len(spawns))
 	}
 	for _, place := range places {
-		place.ent.X = float64(place.spawn.X + rand.Intn(place.spawn.Dx-place.ent.Dx+1))
-		place.ent.Y = float64(place.spawn.Y + rand.Intn(place.spawn.Dy-place.ent.Dy+1))
+		place.ent.X = float64(int(place.spawn.X) + rand.Intn(int(place.spawn.Dx)-place.ent.Dx+1))
+		place.ent.Y = float64(int(place.spawn.Y) + rand.Intn(int(place.spawn.Dy)-place.ent.Dy+1))
 		g.viewer.AddDrawable(place.ent)
 		g.Ents = append(g.Ents, place.ent)
 		logging.Debug("placing", "object", place.ent.Name, "pos", []any{place.ent.X, place.ent.Y})

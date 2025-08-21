@@ -3,7 +3,6 @@ package house
 import (
 	"context"
 	"fmt"
-	"image"
 	"math"
 	"path/filepath"
 	"strings"
@@ -48,14 +47,14 @@ func loadTags() error {
 
 type RoomSize struct {
 	Name   string
-	Dx, Dy int
+	Dx, Dy BoardSpaceUnit
 }
 
-func (r *RoomSize) GetDx() int {
+func (r *RoomSize) GetDx() BoardSpaceUnit {
 	return r.Dx
 }
 
-func (r *RoomSize) GetDy() int {
+func (r *RoomSize) GetDy() BoardSpaceUnit {
 	return r.Dy
 }
 
@@ -105,7 +104,7 @@ type Room struct {
 	Doors []*Door `registry:"loadfrom-doors"`
 
 	// The offset of this room on this floor
-	X, Y int
+	X, Y BoardSpaceUnit
 
 	temporary, invalid bool
 
@@ -135,8 +134,8 @@ type Room struct {
 	// We only need to rebuild 'glData' if there was a change to one of the
 	// relevant inputs.
 	glDataInputs struct {
-		x, y, dx, dy       int
-		decal_dx, decal_dy int
+		x, y, dx, dy       BoardSpaceUnit
+		decal_dx, decal_dy BoardSpaceUnit
 	}
 
 	decal_gl_map    map[*Decal]decalGlIDs
@@ -190,35 +189,46 @@ type plane struct {
 	mat     *mathgl.Mat4
 }
 
-func visibilityOfObject(xoff, yoff int, ro RectObject, los_tex *LosTexture) byte {
+func visibilityOfObject(xoff, yoff BoardSpaceUnit, ro RectObject, los_tex *LosTexture) byte {
 	if los_tex == nil {
 		return 255
 	}
-	x, y := ro.Pos()
+	x, y := ro.FloorPos()
 	x += xoff
 	y += yoff
 	dx, dy := ro.Dims()
 	count := 0
 	pix := los_tex.Pix()
-	for i := x; i < x+dx; i++ {
+	for i := x; i < x+dx; i++ { // foreach column
+		// check for visibilty below the rect
 		if y-1 >= 0 && pix[i][y-1] > LosVisibilityThreshold {
 			count++
 		}
+		// check for visibilty above the rect
 		if y+dy+1 < LosTextureSize && pix[i][y+dy+1] > LosVisibilityThreshold {
 			count++
 		}
 	}
-	for j := y; j < y+dy; j++ {
+	for j := y; j < y+dy; j++ { // foreach row
+		// check for visibilty left of the rect
 		if x-1 > 0 && pix[x-1][j] > LosVisibilityThreshold {
 			count++
 		}
+		// check for visibilty right of the rect
 		if x+dx+1 < LosTextureSize && pix[x+dx+1][j] > LosVisibilityThreshold {
 			count++
 		}
 	}
-	if count >= dx+dy {
+
+	// If half or more of the 'perimiter' is visible, the whole thing is
+	// fully visible(?).
+	// TODO(tmckee): isn't this case redundant?
+	if count >= int(dx+dy) {
 		return 255
 	}
+
+	// Scale the visibility of the object by how much of its 'perimiter' is
+	// visible.
 	v := 256 * float64(count) / float64(dx+dy)
 	if v < 0 {
 		v = 0
@@ -232,10 +242,10 @@ func visibilityOfObject(xoff, yoff int, ro RectObject, los_tex *LosTexture) byte
 func (room *Room) renderDrawables(base_alpha byte, drawables []Drawable, los_tex *LosTexture) {
 	logging.Debug("renderDrawables called", "drawables", drawables)
 
-	var all []RectObject
+	var all []Drawable
 	for _, d := range drawables {
-		x, y := d.Pos()
-		logging.Debug("cull-check", "pos", []any{x, y}, "room", []any{room.X, room.Y, room.Size.Dx, room.Size.Dy})
+		x, y := d.FloorPos()
+		logging.Debug("cull-check", "floorpos", []any{x, y}, "room", []any{room.X, room.Y, room.Size.Dx, room.Size.Dy})
 		if x < room.X {
 			continue
 		}
@@ -256,7 +266,7 @@ func (room *Room) renderDrawables(base_alpha byte, drawables []Drawable, los_tex
 	// Do not include temporary objects in the ordering, since they will likely
 	// overlap with other objects and make it difficult to determine the proper
 	// ordering.  Just draw the temporary ones last.
-	var temps []RectObject
+	var temps []Drawable
 	for _, f := range room.Furniture {
 		if f.temporary {
 			temps = append(temps, f)
@@ -273,7 +283,7 @@ func (room *Room) renderDrawables(base_alpha byte, drawables []Drawable, los_tex
 	logging.Debug("after reordering", "all", all, "temps", temps, "glstate", debug.GetGlState())
 
 	for i := len(temps) - 1; i >= 0; i-- {
-		d := temps[i].(Drawable)
+		d := temps[i]
 		fx, fy := d.FPos()
 		near_x, near_y := float32(fx), float32(fy)
 		vis := visibilityOfObject(room.X, room.Y, d, los_tex)
@@ -285,6 +295,7 @@ func (room *Room) renderDrawables(base_alpha byte, drawables []Drawable, los_tex
 		a = alphaMult(a, base_alpha)
 		gl.Color4ub(r, g, b, a)
 		dx, _ := d.Dims()
+
 		logging.Debug("going to render", "near_x,near_y,dims", []any{near_x, near_y, dx})
 		d.Render(mathgl.Vec2{X: near_x, Y: near_y}, float32(dx))
 	}
@@ -295,7 +306,7 @@ func (room *Room) getNearWallAlpha(los_tex *LosTexture) (left, right byte) {
 		return 255, 255
 	}
 	pix := los_tex.Pix()
-	v1, v2 := 0, 0
+	var v1, v2 BoardSpaceUnit
 	for y := room.Y; y < room.Y+room.Size.Dy; y++ {
 		if pix[room.X][y] > LosVisibilityThreshold {
 			v1++
@@ -710,15 +721,14 @@ func (room *Room) Render(roomMats perspective.RoomMats, zoom float32, base_alpha
 		render.WithMultMatrixInMode(&mul, render.MatrixModeModelView, func() {
 			gl.StencilFunc(gl.EQUAL, 2, 3)
 			gl.StencilOp(gl.KEEP, gl.KEEP, gl.KEEP)
-			room_rect := image.Rect(room.X, room.Y, room.X+room.Size.Dx, room.Y+room.Size.Dy)
+			room_rect := ImageRect(room.X, room.Y, room.X+room.Size.Dx, room.Y+room.Size.Dy)
 			for _, fd := range floor_drawers {
-				x, y := fd.Pos()
+				x, y := fd.FloorPos()
 				dx, dy := fd.Dims()
-				if room_rect.Overlaps(image.Rect(x, y, x+dx, y+dy)) {
+				if room_rect.Overlaps(ImageRect(x, y, x+dx, y+dy)) {
 					fd.RenderOnFloor()
 				}
 			}
-
 		})
 
 		do_color(255, 255, 255, 255)
@@ -757,8 +767,8 @@ func (room *Room) glDataInputsDiffer() bool {
 		room.Y == room.glDataInputs.y &&
 		room.Size.Dx == room.glDataInputs.dx &&
 		room.Size.Dy == room.glDataInputs.dy &&
-		room.Wall.Data().Dx() == room.glDataInputs.decal_dx &&
-		room.Wall.Data().Dy() == room.glDataInputs.decal_dy
+		room.Wall.Data().Dx() == int(room.glDataInputs.decal_dx) &&
+		room.Wall.Data().Dy() == int(room.glDataInputs.decal_dy)
 }
 
 func (room *Room) resetGlDataInputs() {
@@ -766,8 +776,8 @@ func (room *Room) resetGlDataInputs() {
 	room.glDataInputs.y = room.Y
 	room.glDataInputs.dx = room.Size.Dx
 	room.glDataInputs.dy = room.Size.Dy
-	room.glDataInputs.decal_dx = room.Wall.Data().Dx()
-	room.glDataInputs.decal_dy = room.Wall.Data().Dy()
+	room.glDataInputs.decal_dx = BoardSpaceUnit(room.Wall.Data().Dx())
+	room.glDataInputs.decal_dy = BoardSpaceUnit(room.Wall.Data().Dy())
 }
 
 func (room *Room) resetGlData() {
@@ -798,7 +808,7 @@ func (room *Room) SetupGlStuff(glProxy RoomSetupGlProxy) {
 	dy := float32(room.Size.Dy)
 	var dz float32
 	if room.Wall.Data().Dx() > 0 {
-		dz = -float32(room.Wall.Data().Dy()*(room.Size.Dx+room.Size.Dy)) / float32(room.Wall.Data().Dx())
+		dz = -float32(room.Wall.Data().Dy()*int(room.Size.Dx+room.Size.Dy)) / float32(room.Wall.Data().Dx())
 	}
 
 	// Conveniently casted values
@@ -916,7 +926,7 @@ func (room *Room) SetupGlStuff(glProxy RoomSetupGlProxy) {
 	room.glData.floorICount = len(is)
 }
 
-func (room *RoomDef) Dims() (dx, dy int) {
+func (room *RoomDef) Dims() (dx, dy BoardSpaceUnit) {
 	return room.Size.Dx, room.Size.Dy
 }
 
@@ -924,7 +934,7 @@ func (r *RoomDef) Resize(size RoomSize) {
 	r.Size = size
 }
 
-func (r *Room) Pos() (x, y int) {
+func (r *Room) FloorPos() (x, y BoardSpaceUnit) {
 	return r.X, r.Y
 }
 

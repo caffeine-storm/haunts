@@ -78,12 +78,13 @@ func (exec *moveExec) measureCost(ent *game.Entity, g *game.Game) int {
 		base.DeprecatedError().Printf("Zero length path")
 		return -1
 	}
-	if g.ToVertex(ent.Pos()) != exec.Path[0] {
-		base.DeprecatedError().Printf("Path doesn't begin at ent's position, %d != %d", g.ToVertex(ent.Pos()), exec.Path[0])
+	entx, enty := ent.FloorPos()
+	v := g.ToVertex(int(entx), int(enty))
+	if v != exec.Path[0] {
+		base.DeprecatedError().Printf("Path doesn't begin at ent's position, %d != %d", v, exec.Path[0])
 		return -1
 	}
 	graph := g.Graph(ent.Side(), true, nil)
-	v := g.ToVertex(ent.Pos())
 	cost := 0
 	for _, step := range exec.Path[1:] {
 		dsts, costs := graph.Adjacent(v)
@@ -142,10 +143,10 @@ func (a *Move) Push(L *lua.State) {
 func (a *Move) AP() int {
 	return a.cost
 }
-func (a *Move) Pos() (int, int) {
+func (a *Move) FloorPos() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return 0, 0
 }
-func (a *Move) Dims() (int, int) {
+func (a *Move) Dims() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return house.LosTextureSize, house.LosTextureSize
 }
 func (a *Move) String() string {
@@ -186,10 +187,11 @@ func limitPath(ent *game.Entity, start int, path []int, max int) []int {
 func (a *Move) AiMoveToPos(ent *game.Entity, dst []int, max_ap int) game.ActionExec {
 	base.DeprecatedLog().Printf("PATH: Request move to %v", dst)
 	graph := ent.Game().Graph(ent.Side(), false, nil)
-	src := []int{ent.Game().ToVertex(ent.Pos())}
+	ex, ey := ent.FloorPos()
+	src := []int{ent.Game().ToVertex(int(ex), int(ey))}
 	_, path := algorithm.Dijkstra(graph, src, dst)
 	base.DeprecatedLog().Printf("PATH: Found path of length %d", len(path))
-	ppx, ppy := ent.Pos()
+	ppx, ppy := ent.FloorPos()
 	if path == nil {
 		return nil
 	}
@@ -235,13 +237,15 @@ func (a *Move) drawPath(ent *game.Entity, g *game.Game, graph algorithm.Graph, s
 	}
 }
 
+// TODO(tmckee#47): use BoardSpaceUnit here too
 func (a *Move) findPath(ent *game.Entity, x, y int) {
 	g := ent.Game()
 	dst := g.ToVertex(x, y)
 	if dst != a.dst || !a.calculated {
 		a.dst = dst
 		a.calculated = true
-		src := g.ToVertex(a.ent.Pos())
+		ex, ey := a.ent.FloorPos()
+		src := g.ToVertex(int(ex), int(ey))
 		graph := g.Graph(ent.Side(), true, nil)
 		cost, path := algorithm.Dijkstra(graph, []int{src}, []int{dst})
 		if len(path) <= 1 {
@@ -336,8 +340,8 @@ func (a *Move) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Mainten
 			if a.ent == nil {
 				base.DeprecatedError().Printf("ENT was Nil!")
 			} else {
-				x, y := a.ent.Pos()
-				v := g.ToVertex(x, y)
+				x, y := a.ent.FloorPos()
+				v := g.ToVertex(int(x), int(y))
 				base.DeprecatedError().Printf("Ent pos: (%d, %d) -> (%d)", x, y, v)
 			}
 			return game.Complete
@@ -348,7 +352,8 @@ func (a *Move) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Mainten
 		})
 		base.DeprecatedLog().Printf("Path Validated: %v", exec)
 		a.ent.Stats.ApplyDamage(-a.cost, 0, status.Unspecified)
-		src := g.ToVertex(a.ent.Pos())
+		ex, ey := a.ent.FloorPos()
+		src := g.ToVertex(int(ex), int(ey))
 		graph := g.Graph(a.ent.Side(), true, nil)
 		a.drawPath(a.ent, g, graph, src)
 	}

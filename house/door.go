@@ -58,7 +58,7 @@ type DoorDef struct {
 	Name string
 
 	// Number of cells wide the door is
-	Width int
+	Width BoardSpaceUnit
 
 	// If true then this door is always open, cannot be interacted with, and
 	// never draws a threshold.
@@ -79,7 +79,7 @@ type Door struct {
 	Facing WallFacing
 
 	// How far along this wall the door is located
-	Pos int
+	Pos BoardSpaceUnit
 
 	// Whether or not the door is opened - determines what texture to use
 	Opened bool
@@ -113,9 +113,9 @@ func (d *Door) HighlightThreshold(v bool) {
 type doorState struct {
 	// for tracking whether the buffers are dirty
 	facing WallFacing
-	pos    int
+	pos    BoardSpaceUnit
 	room   struct {
-		x, y, dx, dy int
+		x, y, dx, dy BoardSpaceUnit
 	}
 }
 
@@ -204,7 +204,7 @@ func (d *Door) setupGlStuff(room *Room) {
 	} else {
 		panic(fmt.Errorf("can't orient door by facing: %s", d.Facing))
 	}
-	dz := -float32(d.Width*d.TextureData().Dy()) / float32(d.TextureData().Dx())
+	dz := -float32(int(d.Width)*d.TextureData().Dy()) / float32(d.TextureData().Dx())
 	if d.Facing == FarRight {
 		x := float32(room.Size.Dx)
 		y1 := float32(d.Pos + d.Width)

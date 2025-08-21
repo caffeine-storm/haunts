@@ -78,11 +78,11 @@ type Waypoint struct {
 	// Color, maybe?
 }
 
-func (wp *Waypoint) Dims() (int, int) {
-	return int(2 * wp.Radius), int(2 * wp.Radius)
+func (wp *Waypoint) Dims() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
+	return house.BoardSpaceUnit(2 * wp.Radius), house.BoardSpaceUnit(2 * wp.Radius)
 }
-func (wp *Waypoint) Pos() (int, int) {
-	return int(wp.X), int(wp.Y)
+func (wp *Waypoint) FloorPos() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
+	return house.BoardSpaceUnit(wp.X), house.BoardSpaceUnit(wp.Y)
 }
 func (wp *Waypoint) RenderOnFloor() {
 	if !wp.Active {
@@ -544,23 +544,26 @@ func (g *Game) GetViewer() *house.HouseViewer {
 func (g *Game) numVertex() int {
 	total := 0
 	for _, room := range g.House.Floors[0].Rooms {
-		total += room.Size.Dx * room.Size.Dy
+		total += int(room.Size.Dx) * int(room.Size.Dy)
 	}
 	return total
 }
 func (g *Game) FromVertex(v int) (room *house.Room, x, y int) {
 	for _, room := range g.House.Floors[0].Rooms {
-		size := room.Size.Dx * room.Size.Dy
+		size := int(room.Size.Dx * room.Size.Dy)
 		if v >= size {
 			v -= size
 			continue
 		}
-		return room, room.X + (v % room.Size.Dx), room.Y + (v / room.Size.Dx)
+		return room, int(room.X) + (v % int(room.Size.Dx)), int(room.Y) + (v / int(room.Size.Dx))
 	}
 	return nil, 0, 0
 }
-func (g *Game) ToVertex(x, y int) int {
-	v := 0
+
+// TODO(tmckee#47): use BoardSpaceUnit here too
+func (g *Game) ToVertex(xx, yy int) int {
+	v := house.BoardSpaceUnit(0)
+	x, y := house.BoardSpaceUnit(xx), house.BoardSpaceUnit(yy)
 	for _, room := range g.House.Floors[0].Rooms {
 		if x >= room.X && y >= room.Y && x < room.X+room.Size.Dx && y < room.Y+room.Size.Dy {
 			x -= room.X
@@ -570,13 +573,13 @@ func (g *Game) ToVertex(x, y int) int {
 		}
 		v += room.Size.Dx * room.Size.Dy
 	}
-	return v
+	return int(v)
 }
 
 // x and y are given in room coordinates
-func furnitureAt(room *house.Room, x, y int) *house.Furniture {
+func furnitureAt(room *house.Room, x, y house.BoardSpaceUnit) *house.Furniture {
 	for _, f := range room.Furniture {
-		fx, fy := f.Pos()
+		fx, fy := f.FloorPos()
 		fdx, fdy := f.Dims()
 		if x >= fx && x < fx+fdx && y >= fy && y < fy+fdy {
 			return f
@@ -586,9 +589,9 @@ func furnitureAt(room *house.Room, x, y int) *house.Furniture {
 }
 
 // x and y are given in floor coordinates
-func roomAt(floor *house.Floor, x, y int) *house.Room {
+func roomAt(floor *house.Floor, x, y house.BoardSpaceUnit) *house.Room {
 	for _, room := range floor.Rooms {
-		rx, ry := room.Pos()
+		rx, ry := room.FloorPos()
 		rdx, rdy := room.Dims()
 		if x >= rx && x < rx+rdx && y >= ry && y < ry+rdy {
 			return room
@@ -597,14 +600,14 @@ func roomAt(floor *house.Floor, x, y int) *house.Room {
 	return nil
 }
 
-func connected(r, r2 *house.Room, x, y, x2, y2 int) bool {
+func connected(r, r2 *house.Room, x, y, x2, y2 house.BoardSpaceUnit) bool {
 	if r == r2 {
 		return true
 	}
-	x -= r.X
-	y -= r.Y
-	x2 -= r2.X
-	y2 -= r2.Y
+	x -= house.BoardSpaceUnit(r.X)
+	y -= house.BoardSpaceUnit(r.Y)
+	x2 -= house.BoardSpaceUnit(r2.X)
+	y2 -= house.BoardSpaceUnit(r2.Y)
 	var facing house.WallFacing
 	if x == 0 && x2 != 0 {
 		facing = house.NearLeft
@@ -623,7 +626,7 @@ func connected(r, r2 *house.Room, x, y, x2, y2 int) bool {
 		if door.Facing != facing {
 			continue
 		}
-		var pos int
+		var pos house.BoardSpaceUnit
 		switch facing {
 		case house.NearLeft:
 			fallthrough
@@ -642,17 +645,19 @@ func connected(r, r2 *house.Room, x, y, x2, y2 int) bool {
 	return false
 }
 
-func (g *Game) IsCellOccupied(x, y int) bool {
+// TODO(tmckee:#47): use BoardSpaceUnit as input too
+func (g *Game) IsCellOccupied(inx, iny int) bool {
+	x, y := house.BoardSpaceUnit(inx), house.BoardSpaceUnit(iny)
 	r := roomAt(g.House.Floors[0], x, y)
 	if r == nil {
 		return true
 	}
-	f := furnitureAt(r, x-r.X, y-r.Y)
+	f := furnitureAt(r, x-house.BoardSpaceUnit(r.X), y-house.BoardSpaceUnit(r.Y))
 	if f != nil {
 		return true
 	}
 	for _, ent := range g.Ents {
-		ex, ey := ent.Pos()
+		ex, ey := ent.FloorPos()
 		if x == ex && y == ey {
 			return true
 		}
@@ -721,21 +726,25 @@ func (g *Game) Graph(side Side, los bool, exclude []*Entity) algorithm.Graph {
 	return &exclusionGraph{side, los, ex, g}
 }
 
+// TODO(tmckee:#47): ... BLECH! int <=> board-space-unit is hurting my soul
+// here.
 func (g *Game) adjacent(v int, los bool, side Side, ex map[*Entity]bool) ([]int, []float64) {
 	room, x, y := g.FromVertex(v)
+	bsx, bsy := house.BoardSpaceUnit(x), house.BoardSpaceUnit(y)
 	var adj []int
 	var weight []float64
 	var moves [3][3]float64
-	ent_occupied := make(map[[2]int]bool)
+	// TODO(tmckee#34): use closures-over-state instead of a raw map-over-array
+	ent_occupied := make(map[[2]house.BoardSpaceUnit]bool)
 	for _, ent := range g.Ents {
 		if ex[ent] {
 			continue
 		}
-		x, y := ent.Pos()
+		x, y := ent.FloorPos()
 		dx, dy := ent.Dims()
 		for i := x; i < x+dx; i++ {
 			for j := y; j < y+dy; j++ {
-				ent_occupied[[2]int{i, j}] = true
+				ent_occupied[[2]house.BoardSpaceUnit{i, j}] = true
 			}
 		}
 	}
@@ -759,7 +768,8 @@ func (g *Game) adjacent(v int, los bool, side Side, ex map[*Entity]bool) ([]int,
 			}
 			tx := x + dx
 			ty := y + dy
-			if ent_occupied[[2]int{tx, ty}] {
+			bstx, bsty := house.BoardSpaceUnit(tx), house.BoardSpaceUnit(ty)
+			if ent_occupied[[2]house.BoardSpaceUnit{bstx, bsty}] {
 				continue
 			}
 			if data != nil && data.tex.Pix()[tx][ty] < house.LosVisibilityThreshold {
@@ -770,10 +780,10 @@ func (g *Game) adjacent(v int, los bool, side Side, ex map[*Entity]bool) ([]int,
 			if troom == nil {
 				continue
 			}
-			if furnitureAt(troom, tx-troom.X, ty-troom.Y) != nil {
+			if furnitureAt(troom, bstx-troom.X, bsty-troom.Y) != nil {
 				continue
 			}
-			if !connected(room, troom, x, y, tx, ty) {
+			if !connected(room, troom, bsx, bsy, bstx, bsty) {
 				continue
 			}
 			adj = append(adj, g.ToVertex(tx, ty))
@@ -789,7 +799,8 @@ func (g *Game) adjacent(v int, los bool, side Side, ex map[*Entity]bool) ([]int,
 			}
 			tx := x + dx
 			ty := y + dy
-			if ent_occupied[[2]int{tx, ty}] {
+			bstx, bsty := house.BoardSpaceUnit(tx), house.BoardSpaceUnit(ty)
+			if ent_occupied[[2]house.BoardSpaceUnit{bstx, bsty}] {
 				continue
 			}
 			if data != nil && data.tex.Pix()[tx][ty] < house.LosVisibilityThreshold {
@@ -800,13 +811,13 @@ func (g *Game) adjacent(v int, los bool, side Side, ex map[*Entity]bool) ([]int,
 			if troom == nil {
 				continue
 			}
-			if furnitureAt(troom, tx-troom.X, ty-troom.Y) != nil {
+			if furnitureAt(troom, bstx-troom.X, bsty-troom.Y) != nil {
 				continue
 			}
-			if !connected(room, troom, x, y, tx, ty) {
+			if !connected(room, troom, bsx, bsy, bstx, bsty) {
 				continue
 			}
-			if !connected(troom, room, tx, ty, x, y) {
+			if !connected(troom, room, bstx, bsty, bsx, bsy) {
 				continue
 			}
 			if moves[dx+1][1] == 0 || moves[1][dy+1] == 0 {
@@ -974,7 +985,7 @@ func (g *Game) SetLosMode(side Side, mode LosMode, rooms []*house.Room) {
 		for _, room := range rooms {
 			for x := room.X; x < room.X+room.Size.Dx; x++ {
 				for y := room.Y; y < room.Y+room.Size.Dy; y++ {
-					in_room[g.ToVertex(x, y)] = true
+					in_room[g.ToVertex(int(x), int(y))] = true
 				}
 			}
 		}
@@ -1023,20 +1034,21 @@ func (g *Game) Think(dt int64) {
 				if !furn.Blocks_los {
 					continue
 				}
-				rx, ry := room.Pos()
-				x, y2 := furn.Pos()
+				rx, ry := room.FloorPos()
+				x, y2 := furn.FloorPos()
 				x += rx
 				y2 += ry
 				dx, dy := furn.Dims()
 				x2 := x + dx
 				y := y2 + dy
 				tex := furn.Orientations[furn.Rotation].Texture.Data()
-				tex_dy := 2 * (tex.Dy() * ((x2 - y2) - (x - y))) / tex.Dx()
+				// TODO(tmckee#34): wut?
+				tex_dy := 2 * (house.BoardSpaceUnit(tex.Dy()) * ((x2 - y2) - (x - y))) / house.BoardSpaceUnit(tex.Dx())
 				v1 := y - x
 				v2 := y2 - x2
 				hit := false
 				for _, ent := range g.Ents {
-					ex, ey2 := ent.Pos()
+					ex, ey2 := ent.FloorPos()
 					edx, edy := ent.Dims()
 					ex2 := ex + edx
 					ey := ey2 + edy
@@ -1233,7 +1245,7 @@ func (g *Game) Think(dt int64) {
 			if !los.r.MatchString(spawn.Name) {
 				continue
 			}
-			sx, sy := spawn.Pos()
+			sx, sy := spawn.FloorPos()
 			dx, dy := spawn.Dims()
 			for x := sx; x < sx+dx; x++ {
 				for y := sy; y < sy+dy; y++ {
@@ -1340,11 +1352,11 @@ func (g *Game) Think(dt int64) {
 	}
 }
 
-func (g *Game) doLos(dist int, line [][2]int, los [][]bool) {
-	var x0, y0, x, y int
+func (g *Game) doLos(dist house.BoardSpaceUnit, line [][2]house.BoardSpaceUnit, los [][]bool) {
+	var x0, y0, x, y house.BoardSpaceUnit
 	var room0, room *house.Room
 	x, y = line[0][0], line[0][1]
-	if x < 0 || y < 0 || x >= len(los) || y >= len(los[x]) {
+	if x < 0 || y < 0 || int(x) >= len(los) || int(y) >= len(los[x]) {
 		return
 	}
 	los[x][y] = true
@@ -1352,7 +1364,7 @@ func (g *Game) doLos(dist int, line [][2]int, los [][]bool) {
 	for _, p := range line[1:] {
 		x0, y0 = x, y
 		x, y = p[0], p[1]
-		if x < 0 || y < 0 || x >= len(los) || y >= len(los[x]) {
+		if x < 0 || y < 0 || int(x) >= len(los) || int(y) >= len(los[x]) {
 			return
 		}
 		room0 = room
@@ -1381,7 +1393,7 @@ func (g *Game) doLos(dist int, line [][2]int, los [][]bool) {
 				return
 			}
 		}
-		furn := furnitureAt(room, x-room.X, y-room.Y)
+		furn := furnitureAt(room, x-house.BoardSpaceUnit(room.X), y-house.BoardSpaceUnit(room.Y))
 		if furn != nil && furn.Blocks_los {
 			return
 		}
@@ -1393,7 +1405,7 @@ func (g *Game) doLos(dist int, line [][2]int, los [][]bool) {
 	}
 }
 
-func (g *Game) TeamLos(side Side, x, y, dx, dy int) bool {
+func (g *Game) TeamLos(side Side, x, y, dx, dy house.BoardSpaceUnit) bool {
 	var team_los [][]byte
 	if side == SideExplorers {
 		team_los = g.los.intruders.tex.Pix()
@@ -1408,7 +1420,7 @@ func (g *Game) TeamLos(side Side, x, y, dx, dy int) bool {
 	}
 	for i := x; i < x+dx; i++ {
 		for j := y; j < y+dy; j++ {
-			if i < 0 || j < 0 || i >= len(team_los) || j >= len(team_los[0]) {
+			if i < 0 || j < 0 || int(i) >= len(team_los) || int(j) >= len(team_los[0]) {
 				continue
 			}
 			if team_los[i][j] >= house.LosVisibilityThreshold {
@@ -1419,14 +1431,14 @@ func (g *Game) TeamLos(side Side, x, y, dx, dy int) bool {
 	return false
 }
 
-func (g *Game) ViewFrac(x, y, dx, dy int) float64 {
+func (g *Game) ViewFrac(x, y, dx, dy house.BoardSpaceUnit) float64 {
 	if g == nil {
 		return 1.0
 	}
 	team_los := g.viewer.Los_tex.Pix()
 	for i := x; i < x+dx; i++ {
 		for j := y; j < y+dy; j++ {
-			if i < 0 || j < 0 || i >= len(team_los) || j >= len(team_los[0]) {
+			if i < 0 || j < 0 || int(i) >= len(team_los) || int(j) >= len(team_los[0]) {
 				continue
 			}
 			if team_los[i][j] >= house.LosVisibilityThreshold {
@@ -1491,7 +1503,9 @@ func (g *Game) mergeLos(side Side) {
 // make any attempts at doing so.  Eventually this should be replaced with
 // something more sensible and faster, so everyone needs to use this so that
 // everything stays in sync.
-func (g *Game) DetermineLos(x, y, los_dist int, grid [][]bool) {
+func (g *Game) DetermineLos(xx, yy, los_dist_int int, grid [][]bool) {
+	x, y := house.BoardSpaceUnit(xx), house.BoardSpaceUnit(yy)
+	los_dist := house.BoardSpaceUnit(los_dist_int)
 	for i := range grid {
 		for j := range grid[i] {
 			grid[i][j] = false
@@ -1501,7 +1515,7 @@ func (g *Game) DetermineLos(x, y, los_dist int, grid [][]bool) {
 	miny := y - los_dist
 	maxx := x + los_dist
 	maxy := y + los_dist
-	line := make([][2]int, los_dist)
+	line := make([][2]house.BoardSpaceUnit, los_dist)
 	for vx := minx; vx <= maxx; vx++ {
 		line = line[0:0]
 		bresenham(x, y, vx, miny, &line)
@@ -1524,15 +1538,15 @@ func (g *Game) UpdateEntLos(ent *Entity, force bool) {
 	if ent.los == nil || ent.Stats == nil {
 		return
 	}
-	ex, ey := ent.Pos()
-	if !force && ex == ent.los.x && ey == ent.los.y {
+	ex, ey := ent.FloorPos()
+	if !force && int(ex) == ent.los.x && int(ey) == ent.los.y {
 		return
 	}
 	base.DeprecatedLog().Printf("UpdateEntLos(%s): %t (%d, %d) -> (%d, %d)", ent.Name, force, ent.los.x, ent.los.y, ex, ey)
-	ent.los.x = ex
-	ent.los.y = ey
+	ent.los.x = int(ex)
+	ent.los.y = int(ey)
 
-	g.DetermineLos(ex, ey, ent.Stats.Sight(), ent.los.grid)
+	g.DetermineLos(int(ex), int(ey), ent.Stats.Sight(), ent.los.grid)
 
 	ent.los.minx = len(ent.los.grid)
 	ent.los.miny = len(ent.los.grid)
@@ -1560,7 +1574,7 @@ func (g *Game) UpdateEntLos(ent *Entity, force bool) {
 
 // Uses Bresenham's alogirthm to determine the points to rasterize a line from
 // x,y to x2,y2.
-func bresenham(x, y, x2, y2 int, res *[][2]int) {
+func bresenham(x, y, x2, y2 house.BoardSpaceUnit, res *[][2]house.BoardSpaceUnit) {
 	dx := x2 - x
 	if dx < 0 {
 		dx = -dx
@@ -1580,19 +1594,19 @@ func bresenham(x, y, x2, y2 int, res *[][2]int) {
 	err := dx >> 1
 	cy := y
 
-	xstep := 1
+	xstep := house.BoardSpaceUnit(1)
 	if x2 < x {
 		xstep = -1
 	}
-	ystep := 1
+	ystep := house.BoardSpaceUnit(1)
 	if y2 < y {
 		ystep = -1
 	}
 	for cx := x; cx != x2; cx += xstep {
 		if !steep {
-			*res = append(*res, [2]int{cx, cy})
+			*res = append(*res, [2]house.BoardSpaceUnit{cx, cy})
 		} else {
-			*res = append(*res, [2]int{cy, cx})
+			*res = append(*res, [2]house.BoardSpaceUnit{cy, cx})
 		}
 		err -= dy
 		if err < 0 {
@@ -1601,8 +1615,8 @@ func bresenham(x, y, x2, y2 int, res *[][2]int) {
 		}
 	}
 	if !steep {
-		*res = append(*res, [2]int{x2, cy})
+		*res = append(*res, [2]house.BoardSpaceUnit{x2, cy})
 	} else {
-		*res = append(*res, [2]int{cy, x2})
+		*res = append(*res, [2]house.BoardSpaceUnit{cy, x2})
 	}
 }

@@ -13,11 +13,11 @@ import (
 )
 
 type RectObject interface {
-	// Position in board coordinates
-	Pos() (int, int)
+	// Position in board space relative to the entire floor.
+	FloorPos() (BoardSpaceUnit, BoardSpaceUnit)
 
-	// Dimensions in board coordinates
-	Dims() (int, int)
+	// Dimensions in board space.
+	Dims() (BoardSpaceUnit, BoardSpaceUnit)
 }
 
 type RenderOnFloorer interface {
@@ -118,10 +118,11 @@ func (rv *roomViewer) makeMat() {
 	logging.Debug("roomViewer>makeMat", "rv", []any{
 		rv.room.Size, rv.Render_region, rv.fx, rv.fy, rv.angle, rv.zoom,
 	})
-	rv.roomMats = perspective.MakeRoomMats(&rv.room.Size, rv.Render_region, rv.fx, rv.fy, rv.angle, rv.zoom)
+	rv.roomMats = perspective.MakeRoomMats(int(rv.room.Size.GetDx()), int(rv.room.Size.GetDy()), rv.Render_region, rv.fx, rv.fy, rv.angle, rv.zoom)
 }
 
 // Transforms a cursor position in window coordinates to board coordinates.
+// TODO(tmckee): this should be returning BoardSpaceUnits, not float32s.
 func (rv *roomViewer) WindowToBoard(wx, wy int) (float32, float32) {
 	return rv.WindowToBoardf(float32(wx), float32(wy))
 }
@@ -285,13 +286,14 @@ var g_stuff []RectObject
 // temp: an additional texture to render along with the other detail textures
 // specified in room
 // left,right: the xy planes of the left and right walls
+// TODO(tmckee): this doesn't seem to be used :(
 func drawWall(room *Room, floor, left, right mathgl.Mat4, temp_tex *Decal, temp_door doorInfo, cstack base.ColorStack, los_tex *LosTexture, los_alpha float64) {
 	gl.Enable(gl.STENCIL_TEST)
 	defer gl.Disable(gl.STENCIL_TEST)
 
 	var dz int
 	if room.Wall.Data().Dx() > 0 {
-		dz = room.Wall.Data().Dy() * (room.Size.Dx + room.Size.Dy) / room.Wall.Data().Dx()
+		dz = room.Wall.Data().Dy() * int(room.Size.Dx+room.Size.Dy) / room.Wall.Data().Dx()
 	}
 	corner := float32(room.Size.Dx) / float32(room.Size.Dx+room.Size.Dy)
 
@@ -306,13 +308,13 @@ func drawWall(room *Room, floor, left, right mathgl.Mat4, temp_tex *Decal, temp_
 	do_right_wall := func() {
 		gl.Begin(gl.QUADS)
 		gl.TexCoord2f(1, 0)
-		gl.Vertex3i(room.Size.Dx, 0, 0)
+		gl.Vertex3i(int(room.Size.Dx), 0, 0)
 		gl.TexCoord2f(1, -1)
-		gl.Vertex3i(room.Size.Dx, 0, -dz)
+		gl.Vertex3i(int(room.Size.Dx), 0, -dz)
 		gl.TexCoord2f(corner, -1)
-		gl.Vertex3i(room.Size.Dx, room.Size.Dy, -dz)
+		gl.Vertex3i(int(room.Size.Dx), int(room.Size.Dy), -dz)
 		gl.TexCoord2f(corner, 0)
-		gl.Vertex3i(room.Size.Dx, room.Size.Dy, 0)
+		gl.Vertex3i(int(room.Size.Dx), int(room.Size.Dy), 0)
 		gl.End()
 	}
 
@@ -343,7 +345,7 @@ func drawWall(room *Room, floor, left, right mathgl.Mat4, temp_tex *Decal, temp_
 				}
 			}
 			cstack.ApplyWithAlpha(alpha * los_alpha)
-			height := float64(door.Width*door.TextureData().Dy()) / float64(door.TextureData().Dx())
+			height := float64(int(door.Width)*door.TextureData().Dy()) / float64(door.TextureData().Dx())
 			gl.Begin(gl.QUADS)
 			gl.TexCoord2f(1, 0)
 			gl.Vertex3d(float64(room.Size.Dx), float64(door.Pos), 0)
@@ -432,13 +434,13 @@ func drawWall(room *Room, floor, left, right mathgl.Mat4, temp_tex *Decal, temp_
 		ty2 := (float64(room.Y+room.Size.Dy) - 0.5) / float64(los_tex.Size())
 		gl.Begin(gl.QUADS)
 		gl.TexCoord2d(ty, tx)
-		gl.Vertex3i(room.Size.Dx, 0, 0)
+		gl.Vertex3i(int(room.Size.Dx), 0, 0)
 		gl.TexCoord2d(ty, tx)
-		gl.Vertex3i(room.Size.Dx, 0, -dz)
+		gl.Vertex3i(int(room.Size.Dx), 0, -dz)
 		gl.TexCoord2d(ty2, tx)
-		gl.Vertex3i(room.Size.Dx, room.Size.Dy, -dz)
+		gl.Vertex3i(int(room.Size.Dx), int(room.Size.Dy), -dz)
 		gl.TexCoord2d(ty2, tx)
-		gl.Vertex3i(room.Size.Dx, room.Size.Dy, 0)
+		gl.Vertex3i(int(room.Size.Dx), int(room.Size.Dy), 0)
 		gl.End()
 		gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 	}
@@ -446,13 +448,13 @@ func drawWall(room *Room, floor, left, right mathgl.Mat4, temp_tex *Decal, temp_
 	do_left_wall := func() {
 		gl.Begin(gl.QUADS)
 		gl.TexCoord2f(corner, 0)
-		gl.Vertex3i(room.Size.Dx, room.Size.Dy, 0)
+		gl.Vertex3i(int(room.Size.Dx), int(room.Size.Dy), 0)
 		gl.TexCoord2f(corner, -1)
-		gl.Vertex3i(room.Size.Dx, room.Size.Dy, -dz)
+		gl.Vertex3i(int(room.Size.Dx), int(room.Size.Dy), -dz)
 		gl.TexCoord2f(0, -1)
-		gl.Vertex3i(0, room.Size.Dy, -dz)
+		gl.Vertex3i(0, int(room.Size.Dy), -dz)
 		gl.TexCoord2f(0, 0)
-		gl.Vertex3i(0, room.Size.Dy, 0)
+		gl.Vertex3i(0, int(room.Size.Dy), 0)
 		gl.End()
 	}
 
@@ -473,7 +475,7 @@ func drawWall(room *Room, floor, left, right mathgl.Mat4, temp_tex *Decal, temp_
 				}
 			}
 			cstack.ApplyWithAlpha(alpha * los_alpha)
-			height := float64(door.Width*door.TextureData().Dy()) / float64(door.TextureData().Dx())
+			height := float64(int(door.Width)*door.TextureData().Dy()) / float64(door.TextureData().Dx())
 			gl.Begin(gl.QUADS)
 			gl.TexCoord2f(0, 0)
 			gl.Vertex3d(float64(door.Pos), float64(room.Size.Dy), 0)
@@ -557,13 +559,13 @@ func drawWall(room *Room, floor, left, right mathgl.Mat4, temp_tex *Decal, temp_
 		tx2 := (float64(room.X+room.Size.Dx) - 0.5) / float64(los_tex.Size())
 		gl.Begin(gl.QUADS)
 		gl.TexCoord2d(ty, tx)
-		gl.Vertex3i(0, room.Size.Dy, 0)
+		gl.Vertex3i(0, int(room.Size.Dy), 0)
 		gl.TexCoord2d(ty, tx)
-		gl.Vertex3i(0, room.Size.Dy, -dz)
+		gl.Vertex3i(0, int(room.Size.Dy), -dz)
 		gl.TexCoord2d(ty, tx2)
-		gl.Vertex3i(room.Size.Dx, room.Size.Dy, -dz)
+		gl.Vertex3i(int(room.Size.Dx), int(room.Size.Dy), -dz)
 		gl.TexCoord2d(ty, tx2)
-		gl.Vertex3i(room.Size.Dx, room.Size.Dy, 0)
+		gl.Vertex3i(int(room.Size.Dx), int(room.Size.Dy), 0)
 		gl.End()
 		gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 	}
@@ -580,9 +582,9 @@ func drawFloor(room *Room, floor mathgl.Mat4, temp *Decal, cstack base.ColorStac
 		gl.Disable(gl.TEXTURE_2D)
 		gl.Begin(gl.QUADS)
 		gl.Vertex2i(0, 0)
-		gl.Vertex2i(0, room.Size.Dy)
-		gl.Vertex2i(room.Size.Dx, room.Size.Dy)
-		gl.Vertex2i(room.Size.Dx, 0)
+		gl.Vertex2i(0, int(room.Size.Dy))
+		gl.Vertex2i(int(room.Size.Dx), int(room.Size.Dy))
+		gl.Vertex2i(int(room.Size.Dx), 0)
 		gl.End()
 		gl.StencilFunc(gl.EQUAL, 4, 15)
 		gl.StencilOp(gl.KEEP, gl.KEEP, gl.KEEP)
@@ -598,13 +600,13 @@ func drawFloor(room *Room, floor mathgl.Mat4, temp *Decal, cstack base.ColorStac
 			gl.Color4d(0, 0, 0, 1)
 			gl.Begin(gl.QUADS)
 			gl.TexCoord2i(0, 0)
-			gl.Vertex2i(-room.X, -room.Y)
+			gl.Vertex2i(int(-room.X), int(-room.Y))
 			gl.TexCoord2i(1, 0)
-			gl.Vertex2i(-room.X, los_tex.Size()-room.Y)
+			gl.Vertex2i(int(-room.X), los_tex.Size()-int(room.Y))
 			gl.TexCoord2i(1, 1)
-			gl.Vertex2i(los_tex.Size()-room.X, los_tex.Size()-room.Y)
+			gl.Vertex2i(los_tex.Size()-int(room.X), los_tex.Size()-int(room.Y))
 			gl.TexCoord2i(0, 1)
-			gl.Vertex2i(los_tex.Size()-room.X, -room.Y)
+			gl.Vertex2i(los_tex.Size()-int(room.X), int(-room.Y))
 			gl.End()
 			gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
 		}
@@ -645,9 +647,9 @@ func drawFloor(room *Room, floor mathgl.Mat4, temp *Decal, cstack base.ColorStac
 		gl.Color4d(0, 0, 0, 0) // Alpha == 0 ?
 		gl.Begin(gl.QUADS)
 		gl.Vertex2i(0, 0)
-		gl.Vertex2i(0, room.Size.Dy)
-		gl.Vertex2i(room.Size.Dx, room.Size.Dy)
-		gl.Vertex2i(room.Size.Dx, 0)
+		gl.Vertex2i(0, int(room.Size.Dy))
+		gl.Vertex2i(int(room.Size.Dx), int(room.Size.Dy))
+		gl.Vertex2i(int(room.Size.Dx), 0)
 		gl.End()
 	})
 }
@@ -679,8 +681,10 @@ func (rv *roomViewer) drawFloor() {
 			gl.LineWidth(0.05 * rv.zoom)
 			gl.Begin(gl.LINES)
 			for _, f := range rv.room.Furniture {
-				x, y := f.Pos()
-				dx, dy := f.Dims()
+				bsx, bsy := f.FloorPos()
+				bsdx, bsdy := f.Dims()
+				x, y := int(bsx), int(bsy)
+				dx, dy := int(bsdx), int(bsdy)
 				gl.Vertex2i(x, y)
 				gl.Vertex2i(x, y+dy)
 
@@ -700,119 +704,6 @@ func (rv *roomViewer) drawFloor() {
 	})
 }
 
-func drawFurniture(roomx, roomy int, mat mathgl.Mat4, zoom float32, furniture []*Furniture, temp_furniture *Furniture, extras []Drawable, cstack base.ColorStack, los_tex *LosTexture, los_alpha float64) {
-	render.WithMatrixMode(render.MatrixModeModelView, func() {
-		gl.LoadIdentity()
-
-		gl.Enable(gl.TEXTURE_2D)
-		gl.Color4d(1, 1, 1, los_alpha)
-
-		board_to_window := func(mx, my float32) (x, y float32) {
-			v := mathgl.Vec4{X: mx, Y: my, W: 1}
-			v.Transform(&mat)
-			x, y = v.X, v.Y
-			return
-		}
-
-		g_stuff = g_stuff[0:0]
-		for i := range furniture {
-			g_stuff = append(g_stuff, furniture[i])
-		}
-		if temp_furniture != nil {
-			g_stuff = append(g_stuff, temp_furniture)
-		}
-		for i := range extras {
-			g_stuff = append(g_stuff, extras[i])
-		}
-		logging.Trace("roomViewer>drawFurniture", "len(g_stuff)", len(g_stuff))
-		g_stuff = OrderRectObjects(g_stuff)
-
-		for i := len(g_stuff) - 1; i >= 0; i-- {
-			f := g_stuff[i]
-			var near_x, near_y, dx, dy float32
-
-			idx, idy := f.Dims()
-			dx = float32(idx)
-			dy = float32(idy)
-			// TODO(tmckee:#34): ... ummm ... Furniture is-a Drawable ... why do we
-			// bother to special case??
-			switch d := f.(type) {
-			case *Furniture:
-				ix, iy := d.Pos()
-				near_x = float32(ix)
-				near_y = float32(iy)
-
-			case Drawable:
-				fx, fy := d.FPos()
-				near_x = float32(fx)
-				near_y = float32(fy)
-			}
-
-			vis_tot := 1.0
-			if los_tex != nil {
-				vis_tot = 0.0
-
-				// If we're looking at a piece of furniture that blocks Los then we
-				// can't expect to have Los to all of it, so we will check the squares
-				// around it.  Full visibility will mean that half of the surrounding
-				// cells are visible.
-				blocks_los := false
-				// Also need to check if it is an enemy unit
-				if _, ok := f.(*Furniture); ok {
-					blocks_los = true
-				}
-
-				if blocks_los {
-					for x := near_x - 1; x < near_x+dx+1; x++ {
-						vis_tot += float64(los_tex.Pix()[int(x)+roomx][int(near_y-1)+roomy])
-						vis_tot += float64(los_tex.Pix()[int(x)+roomx][int(near_y+dy+1)+roomy])
-					}
-					for y := near_y; y < near_y+dy; y++ {
-						vis_tot += float64(los_tex.Pix()[int(near_x-1)+roomx][int(y)+roomy])
-						vis_tot += float64(los_tex.Pix()[int(near_x+dx+1)+roomx][int(y)+roomy])
-					}
-					vis_tot /= float64((dx*2 + dy*2 + 4) * 255 / 2)
-					if vis_tot > 1 {
-						vis_tot = 1
-					}
-				} else {
-					for x := near_x; x < near_x+dx; x++ {
-						for y := near_y; y < near_y+dy; y++ {
-							vis_tot += float64(los_tex.Pix()[int(x)+roomx][int(y)+roomy])
-						}
-					}
-					vis_tot /= float64(dx * dy * 255)
-				}
-			}
-
-			leftx, _ := board_to_window(near_x, near_y+dy)
-			rightx, _ := board_to_window(near_x+dx, near_y)
-			_, boty := board_to_window(near_x, near_y)
-			if f == temp_furniture {
-				cstack.Push(1, 0, 0, 0.4)
-			} else {
-				bot := (LosMinVisibility / 255.0)
-				vis := (vis_tot - bot) / (1 - bot)
-				vis = vis * vis
-				vis = vis*(1-bot) + bot
-				vis = vis * vis
-				cstack.Push(vis, vis, vis, 1)
-			}
-			cstack.ApplyWithAlpha(los_alpha)
-			cstack.Pop()
-			switch d := f.(type) {
-			case *Furniture:
-				d.Render(mathgl.Vec2{X: leftx, Y: boty}, rightx-leftx)
-
-			case Drawable:
-				gl.Enable(gl.TEXTURE_2D)
-				x := (leftx + rightx) / 2
-				d.Render(mathgl.Vec2{X: x, Y: boty}, rightx-leftx)
-			}
-		}
-	})
-}
-
 func (rv *roomViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
 	region.PushClipPlanes()
 	defer region.PopClipPlanes()
@@ -827,44 +718,6 @@ func (rv *roomViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
 	rv.room.SetupGlStuff(&RoomRealGl{})
 	rv.room.SetWallTransparency(false)
 	rv.room.Render(rv.roomMats, rv.zoom, 255, nil, nil, nil)
-
-	return
-
-	/*
-		* TODO(tmckee): why was this stuff here? doesn't rv.room.Render draw the room? why should we have to drawWall, drawaFloor, etc?
-		render.WithMultMatrixInMode(&rv.roomMats.Floor, render.MatrixModeModelView, func() {
-			logging.Trace("pre-drawrect", "glstate", debug.GetGlState())
-
-			rv.cstack.Push(1, 1, 1, 1)
-			defer rv.cstack.Pop()
-
-			render.LogAndClearGlErrors(logging.DebugLogger())
-
-			drawPrep()
-
-			render.LogAndClearGlErrors(logging.DebugLogger())
-
-			drawWall(rv.room, rv.roomMats.Floor, rv.roomMats.Left, rv.roomMats.Right, rv.Temp.WallTexture, doorInfo{}, rv.cstack, nil, 1.0)
-
-			render.LogAndClearGlErrors(logging.DebugLogger())
-
-			drawFloor(rv.room, rv.roomMats.Floor, rv.Temp.WallTexture, rv.cstack, nil, 1.0, nil)
-			rv.drawFloor()
-
-			render.LogAndClearGlErrors(logging.DebugLogger())
-
-			if rv.edit_mode == editCells {
-				rv.cstack.Pop()
-				rv.cstack.Push(1, 1, 1, 0.1)
-			} else {
-				rv.cstack.Push(1, 1, 1, 1)
-				defer rv.cstack.Pop()
-			}
-			drawFurniture(0, 0, rv.roomMats.Floor, rv.zoom, rv.room.Furniture, rv.Temp.Furniture, nil, rv.cstack, nil, 1.0)
-
-			render.LogAndClearGlErrors(logging.DebugLogger())
-		})
-	*/
 }
 
 func (rv *roomViewer) Think(*gui.Gui, int64) {

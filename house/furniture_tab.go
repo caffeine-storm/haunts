@@ -1,8 +1,6 @@
 package house
 
 import (
-	"image"
-
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/runningwild/glop/gin"
@@ -154,14 +152,14 @@ func (w *FurniturePanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 				mx, my := mpos.X, mpos.Y
 				bx, by := w.RoomViewer.WindowToBoard(mx, my)
 				for i := range w.Room.Furniture {
-					x, y := w.Room.Furniture[i].Pos()
+					x, y := w.Room.Furniture[i].FloorPos()
 					dx, dy := w.Room.Furniture[i].Dims()
-					if int(bx) >= x && int(bx) < x+dx && int(by) >= y && int(by) < y+dy {
+					if BoardSpaceUnit(bx) >= x && BoardSpaceUnit(bx) < x+dx && BoardSpaceUnit(by) >= y && BoardSpaceUnit(by) < y+dy {
 						w.furniture = w.Room.Furniture[i]
 						w.prev_object = new(Furniture)
 						*w.prev_object = *w.furniture
 						w.furniture.temporary = true
-						px, py := w.furniture.Pos()
+						px, py := w.furniture.FloorPos()
 						w.drag_anchor.x = bx - float32(px)
 						w.drag_anchor.y = by - float32(py)
 						break
@@ -200,8 +198,8 @@ func (w *FurniturePanel) Think(ui *gui.Gui, t int64) {
 		mx, my := 0, 0
 		bx, by := w.RoomViewer.WindowToBoard(mx, my)
 		f := w.furniture
-		f.X = roundDown(bx - w.drag_anchor.x + 0.5)
-		f.Y = roundDown(by - w.drag_anchor.y + 0.5)
+		f.X = BoardSpaceUnit(roundDown(bx - w.drag_anchor.x + 0.5))
+		f.Y = BoardSpaceUnit(roundDown(by - w.drag_anchor.y + 0.5))
 		fdx, fdy := f.Dims()
 		f.invalid = false
 		if f.X < 0 {
@@ -221,8 +219,8 @@ func (w *FurniturePanel) Think(ui *gui.Gui, t int64) {
 				continue
 			}
 			tdx, tdy := t.Dims()
-			r1 := image.Rect(t.X, t.Y, t.X+tdx, t.Y+tdy)
-			r2 := image.Rect(f.X, f.Y, f.X+fdx, f.Y+fdy)
+			r1 := ImageRect(t.X, t.Y, t.X+tdx, t.Y+tdy)
+			r2 := ImageRect(f.X, f.Y, f.X+fdx, f.Y+fdy)
 			if r1.Overlaps(r2) {
 				f.invalid = true
 			}

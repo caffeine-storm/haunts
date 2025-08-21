@@ -27,7 +27,7 @@ type Furniture struct {
 	*FurnitureDef
 
 	// Position of this object in board coordinates.
-	X, Y int
+	X, Y BoardSpaceUnit
 
 	// Index into furnitureDef.Texture_paths
 	Rotation int
@@ -55,20 +55,8 @@ func (f *Furniture) Alpha() float64 {
 	return f.alpha
 }
 
-// Changes the position of this object such that it fits within the specified
-// dimensions, if possible
-func (f *Furniture) Constrain(dx, dy int) {
-	cdx, cdy := f.Dims()
-	if f.X+cdx > dx {
-		f.X += dx - f.X + cdx
-	}
-	if f.Y+cdy > dy {
-		f.Y += dy - f.Y + cdy
-	}
-}
-
-func (f *Furniture) Pos() (int, int) {
-	return f.X, f.Y
+func (f *Furniture) FloorPos() (BoardSpaceUnit, BoardSpaceUnit) {
+	return BoardSpaceUnit(f.X), BoardSpaceUnit(f.Y)
 }
 
 func (f *Furniture) FPos() (float64, float64) {
@@ -102,12 +90,12 @@ type FurnitureDef struct {
 	Blocks_los bool
 }
 
-func (f *Furniture) Dims() (int, int) {
+func (f *Furniture) Dims() (BoardSpaceUnit, BoardSpaceUnit) {
 	orientation := f.Orientations[f.Rotation]
 	if f.Flip {
-		return orientation.Dy, orientation.Dx
+		return BoardSpaceUnit(orientation.Dy), BoardSpaceUnit(orientation.Dx)
 	}
-	return orientation.Dx, orientation.Dy
+	return BoardSpaceUnit(orientation.Dx), BoardSpaceUnit(orientation.Dy)
 }
 
 func (f *Furniture) Color() (r, g, b, a byte) {

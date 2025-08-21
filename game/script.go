@@ -666,7 +666,7 @@ func doExec(gp *GamePanel) lua.LuaGoFunction {
 		base.DeprecatedLog().Printf("DEBUG: Listing Entities named 'Teen'...")
 		for _, ent := range gp.game.Ents {
 			if ent.Name == "Teen" {
-				x, y := ent.Pos()
+				x, y := ent.FloorPos()
 				base.DeprecatedLog().Printf("DEBUG: %p: (%d, %d)", ent, x, y)
 			}
 		}
@@ -910,7 +910,9 @@ func spawnEntitySomewhereInSpawnPoints(gp *GamePanel) lua.LuaGoFunction {
 		hidden := L.ToBoolean(-1)
 		L.Pop(1)
 
+		// TODO(tmckee#47): make these BoardSpaceUnit too
 		var tx, ty int
+
 		var count int64 = 0
 		L.PushNil()
 		ent := MakeEntity(name, gp.game)
@@ -927,11 +929,11 @@ func spawnEntitySomewhereInSpawnPoints(gp *GamePanel) lua.LuaGoFunction {
 			if sp == nil {
 				continue
 			}
-			sx, sy := sp.Pos()
+			sx, sy := sp.FloorPos()
 			sdx, sdy := sp.Dims()
 			for x := sx; x < sx+sdx; x++ {
 				for y := sy; y < sy+sdy; y++ {
-					if gp.game.IsCellOccupied(x, y) {
+					if gp.game.IsCellOccupied(int(x), int(y)) {
 						continue
 					}
 					if hidden && ent.game.TeamLos(side, x, y, 1, 1) {
@@ -941,8 +943,8 @@ func spawnEntitySomewhereInSpawnPoints(gp *GamePanel) lua.LuaGoFunction {
 					// all positions an equal chance of being chosen.
 					count++
 					if gp.game.Rand.Int63()%count == 0 {
-						tx = x
-						ty = y
+						tx = int(x)
+						ty = int(y)
 					}
 				}
 			}

@@ -8,17 +8,17 @@ import (
 )
 
 type StubDraw struct {
-	X, Y   int
-	Dx, Dy float64
+	X, Y   house.BoardSpaceUnit
+	Dx, Dy house.BoardSpaceUnit
 }
 
 var _ house.Drawable = (*StubDraw)(nil)
 
-func (s *StubDraw) Dims() (int, int) {
-	return int(s.Dx), int(s.Dy)
+func (s *StubDraw) Dims() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
+	return s.Dx, s.Dy
 }
 
-func (s *StubDraw) Pos() (int, int) {
+func (s *StubDraw) FloorPos() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return s.X, s.Y
 }
 
@@ -30,9 +30,9 @@ func (s *StubDraw) Render(pos mathgl.Vec2, width float32) {
 	logging.Debug("StubDraw.Render", "pos", pos, "width", width)
 
 	gl.Begin(gl.TRIANGLES)
-	gl.Vertex3d(-(s.Dx * 0.5), -(s.Dy * 0.5), 0)
-	gl.Vertex3d(-(s.Dx * 0.5), +(s.Dy * 0.5), 0)
-	gl.Vertex3d(+(s.Dx * 0.5), +(s.Dx * 0.5), 0)
+	gl.Vertex3d(-(float64(s.Dx) * 0.5), -(float64(s.Dy) * 0.5), 0)
+	gl.Vertex3d(-(float64(s.Dx) * 0.5), +(float64(s.Dy) * 0.5), 0)
+	gl.Vertex3d(+(float64(s.Dx) * 0.5), +(float64(s.Dx) * 0.5), 0)
 	gl.End()
 }
 
