@@ -730,7 +730,11 @@ func (room *Room) Render(roomMats perspective.RoomMats, zoom float32, base_alpha
 				}
 			}
 		})
+	})
 
+	render.WithMultMatrixInMode(&roomMats.Standup, render.MatrixModeModelView, func() {
+		gl.PushAttrib(gl.CURRENT_BIT)
+		defer gl.PopAttrib()
 		do_color(255, 255, 255, 255)
 		gl.Disable(gl.STENCIL_TEST)
 		gl.Disable(gl.TEXTURE_2D)
