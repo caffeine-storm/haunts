@@ -638,6 +638,7 @@ func (e *Entity) TurnToFace(x, y int) {
 
 // Advances ent up to dist towards the target cell.  Returns the distance
 // traveled.
+// TODO(tmckee#47): use BoardSpaceUnit here too
 func (e *Entity) DoAdvance(dist float32, x, y int) float32 {
 	if dist <= 0 {
 		e.sprite.sp.Command("stop")

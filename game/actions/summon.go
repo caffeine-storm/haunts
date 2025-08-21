@@ -82,7 +82,7 @@ func (exec summonExec) Push(L *lua.State, g *game.Game) {
 	}
 	_, x, y := g.FromVertex(exec.Pos)
 	L.PushString("Pos")
-	game.LuaPushPoint(L, x, y)
+	game.LuaPushPoint(L, int(x), int(y))
 	L.SetTable(-3)
 }
 
@@ -173,7 +173,7 @@ func (a *SummonAction) HandleInput(ctx gui.EventHandlingContext, group gui.Event
 		if a.ent.Stats.ApCur() >= a.Ap {
 			var exec summonExec
 			exec.SetBasicData(a.ent, a)
-			exec.Pos = a.ent.Game().ToVertex(a.cx, a.cy)
+			exec.Pos = a.ent.Game().ToVertex(house.BoardSpaceUnitPair(a.cx, a.cy))
 			return true, &exec
 		}
 		return true, nil
@@ -209,7 +209,8 @@ func (a *SummonAction) Maintain(dt int64, g *game.Game, ae game.ActionExec) game
 			return game.Complete
 		}
 		a.ent = ent
-		_, a.cx, a.cy = a.ent.Game().FromVertex(exec.Pos)
+		_, bsucx, bsucy := a.ent.Game().FromVertex(exec.Pos)
+		a.cx, a.cy = int(bsucx), int(bsucy)
 		a.ent.Stats.ApplyDamage(-a.Ap, 0, status.Unspecified)
 		a.spawn = game.MakeEntity(a.Ent_name, a.ent.Game())
 		if a.Current_ammo > 0 {

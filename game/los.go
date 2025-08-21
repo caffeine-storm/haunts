@@ -550,22 +550,21 @@ func (g *Game) numVertex() int {
 	}
 	return total
 }
-func (g *Game) FromVertex(v int) (room *house.Room, x, y int) {
+func (g *Game) FromVertex(vv int) (room *house.Room, x, y house.BoardSpaceUnit) {
+	v := house.BoardSpaceUnit(vv)
 	for _, room := range g.House.Floors[0].Rooms {
-		size := int(room.Size.Dx * room.Size.Dy)
+		size := room.Size.Dx * room.Size.Dy
 		if v >= size {
 			v -= size
 			continue
 		}
-		return room, int(room.X) + (v % int(room.Size.Dx)), int(room.Y) + (v / int(room.Size.Dx))
+		return room, room.X + (v % room.Size.Dx), room.Y + (v / room.Size.Dx)
 	}
 	return nil, 0, 0
 }
 
-// TODO(tmckee#47): use BoardSpaceUnit here too
-func (g *Game) ToVertex(xx, yy int) int {
+func (g *Game) ToVertex(x, y house.BoardSpaceUnit) int {
 	v := house.BoardSpaceUnit(0)
-	x, y := house.BoardSpaceUnitPair(xx, yy)
 	for _, room := range g.House.Floors[0].Rooms {
 		if x >= room.X && y >= room.Y && x < room.X+room.Size.Dx && y < room.Y+room.Size.Dy {
 			x -= room.X
@@ -728,11 +727,8 @@ func (g *Game) Graph(side Side, los bool, exclude []*Entity) algorithm.Graph {
 	return &exclusionGraph{side, los, ex, g}
 }
 
-// TODO(tmckee:#47): ... BLECH! int <=> board-space-unit is hurting my soul
-// here.
 func (g *Game) adjacent(v int, los bool, side Side, ex map[*Entity]bool) ([]int, []float64) {
 	room, x, y := g.FromVertex(v)
-	bsx, bsy := house.BoardSpaceUnitPair(x, y)
 	var adj []int
 	var weight []float64
 	var moves [3][3]float64
@@ -762,16 +758,15 @@ func (g *Game) adjacent(v int, los bool, side Side, ex map[*Entity]bool) ([]int,
 			return nil, nil
 		}
 	}
-	for dx := -1; dx <= 1; dx++ {
-		for dy := -1; dy <= 1; dy++ {
+	for dx := house.BoardSpaceUnit(-1); dx <= 1; dx++ {
+		for dy := house.BoardSpaceUnit(-1); dy <= 1; dy++ {
 			// Only run this loop if exactly one of dx and dy is non-zero
 			if (dx == 0) == (dy == 0) {
 				continue
 			}
 			tx := x + dx
 			ty := y + dy
-			bstx, bsty := house.BoardSpaceUnitPair(tx, ty)
-			if ent_occupied[[2]house.BoardSpaceUnit{bstx, bsty}] {
+			if ent_occupied[[2]house.BoardSpaceUnit{tx, ty}] {
 				continue
 			}
 			if data != nil && data.tex.Pix()[tx][ty] < house.LosVisibilityThreshold {
@@ -782,10 +777,10 @@ func (g *Game) adjacent(v int, los bool, side Side, ex map[*Entity]bool) ([]int,
 			if troom == nil {
 				continue
 			}
-			if furnitureAt(troom, bstx-troom.X, bsty-troom.Y) != nil {
+			if furnitureAt(troom, tx-troom.X, ty-troom.Y) != nil {
 				continue
 			}
-			if !connected(room, troom, bsx, bsy, bstx, bsty) {
+			if !connected(room, troom, x, y, tx, ty) {
 				continue
 			}
 			adj = append(adj, g.ToVertex(tx, ty))
@@ -793,16 +788,15 @@ func (g *Game) adjacent(v int, los bool, side Side, ex map[*Entity]bool) ([]int,
 			weight = append(weight, 1)
 		}
 	}
-	for dx := -1; dx <= 1; dx++ {
-		for dy := -1; dy <= 1; dy++ {
+	for dx := house.BoardSpaceUnit(-1); dx <= 1; dx++ {
+		for dy := house.BoardSpaceUnit(-1); dy <= 1; dy++ {
 			// Only run this loop if both dx and dy are non-zero (moving diagonal)
 			if (dx == 0) != (dy == 0) {
 				continue
 			}
 			tx := x + dx
 			ty := y + dy
-			bstx, bsty := house.BoardSpaceUnitPair(tx, ty)
-			if ent_occupied[[2]house.BoardSpaceUnit{bstx, bsty}] {
+			if ent_occupied[[2]house.BoardSpaceUnit{tx, ty}] {
 				continue
 			}
 			if data != nil && data.tex.Pix()[tx][ty] < house.LosVisibilityThreshold {
@@ -813,13 +807,13 @@ func (g *Game) adjacent(v int, los bool, side Side, ex map[*Entity]bool) ([]int,
 			if troom == nil {
 				continue
 			}
-			if furnitureAt(troom, bstx-troom.X, bsty-troom.Y) != nil {
+			if furnitureAt(troom, tx-troom.X, ty-troom.Y) != nil {
 				continue
 			}
-			if !connected(room, troom, bsx, bsy, bstx, bsty) {
+			if !connected(room, troom, x, y, tx, ty) {
 				continue
 			}
-			if !connected(troom, room, bstx, bsty, bsx, bsy) {
+			if !connected(troom, room, tx, ty, x, y) {
 				continue
 			}
 			if moves[dx+1][1] == 0 || moves[1][dy+1] == 0 {
@@ -987,13 +981,13 @@ func (g *Game) SetLosMode(side Side, mode LosMode, rooms []*house.Room) {
 		for _, room := range rooms {
 			for x := room.X; x < room.X+room.Size.Dx; x++ {
 				for y := room.Y; y < room.Y+room.Size.Dy; y++ {
-					in_room[g.ToVertex(int(x), int(y))] = true
+					in_room[g.ToVertex(x, y)] = true
 				}
 			}
 		}
 		for i := range pix {
 			for j := range pix[i] {
-				if in_room[g.ToVertex(i, j)] {
+				if in_room[g.ToVertex(house.BoardSpaceUnitPair(i, j))] {
 					if pix[i][j] < house.LosVisibilityThreshold {
 						pix[i][j] = house.LosVisibilityThreshold
 					}

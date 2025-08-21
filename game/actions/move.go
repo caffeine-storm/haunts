@@ -57,7 +57,7 @@ type Move struct {
 	// pathing if we don't need to.
 	calculated bool
 
-	path [][2]int
+	path [][2]house.BoardSpaceUnit
 	cost int
 
 	// Ap remaining before the ability was used
@@ -79,7 +79,7 @@ func (exec *moveExec) measureCost(ent *game.Entity, g *game.Game) int {
 		return -1
 	}
 	entx, enty := ent.FloorPos()
-	v := g.ToVertex(int(entx), int(enty))
+	v := g.ToVertex(entx, enty)
 	if v != exec.Path[0] {
 		base.DeprecatedError().Printf("Path doesn't begin at ent's position, %d != %d", v, exec.Path[0])
 		return -1
@@ -117,7 +117,7 @@ func (exec *moveExec) Push(L *lua.State, g *game.Game) {
 	for i := range exec.Path {
 		L.PushInteger(int64(i) + 1)
 		_, x, y := g.FromVertex(exec.Path[i])
-		game.LuaPushPoint(L, x, y)
+		game.LuaPushPoint(L, int(x), int(y))
 		L.SetTable(-3)
 	}
 	L.SetTable(-3)
@@ -188,7 +188,7 @@ func (a *Move) AiMoveToPos(ent *game.Entity, dst []int, max_ap int) game.ActionE
 	base.DeprecatedLog().Printf("PATH: Request move to %v", dst)
 	graph := ent.Game().Graph(ent.Side(), false, nil)
 	ex, ey := ent.FloorPos()
-	src := []int{ent.Game().ToVertex(int(ex), int(ey))}
+	src := []int{ent.Game().ToVertex(ex, ey)}
 	_, path := algorithm.Dijkstra(graph, src, dst)
 	base.DeprecatedLog().Printf("PATH: Found path of length %d", len(path))
 	ppx, ppy := ent.FloorPos()
@@ -213,39 +213,41 @@ func (a *Move) AiMoveToPos(ent *game.Entity, dst []int, max_ap int) game.ActionE
 }
 
 func (a *Move) drawPath(ent *game.Entity, g *game.Game, graph algorithm.Graph, src int) {
-	if path_tex != nil {
-		pix := path_tex.Pix()
-		for i := range pix {
-			for j := range pix[i] {
-				pix[i][j] = 0
-			}
-		}
-		current := 0.0
-		for i := 1; i < len(a.path); i++ {
-			src := g.ToVertex(a.path[i-1][0], a.path[i-1][1])
-			dst := g.ToVertex(a.path[i][0], a.path[i][1])
-			v, cost := graph.Adjacent(src)
-			for j := range v {
-				if v[j] == dst {
-					current += cost[j]
-					break
-				}
-			}
-			pix[a.path[i][1]][a.path[i][0]] += byte(current)
-		}
-		path_tex.Remap()
+	if path_tex == nil {
+		return
 	}
+
+	pix := path_tex.Pix()
+	for i := range pix {
+		for j := range pix[i] {
+			pix[i][j] = 0
+		}
+	}
+	current := 0.0
+	for i := 1; i < len(a.path); i++ {
+		src := g.ToVertex(a.path[i-1][0], a.path[i-1][1])
+		dst := g.ToVertex(a.path[i][0], a.path[i][1])
+		v, cost := graph.Adjacent(src)
+		for j := range v {
+			if v[j] == dst {
+				current += cost[j]
+				break
+			}
+		}
+		pix[a.path[i][1]][a.path[i][0]] += byte(current)
+	}
+	path_tex.Remap()
 }
 
 // TODO(tmckee#47): use BoardSpaceUnit here too
-func (a *Move) findPath(ent *game.Entity, x, y int) {
+func (a *Move) findPath(ent *game.Entity, x, y house.BoardSpaceUnit) {
 	g := ent.Game()
 	dst := g.ToVertex(x, y)
 	if dst != a.dst || !a.calculated {
 		a.dst = dst
 		a.calculated = true
 		ex, ey := a.ent.FloorPos()
-		src := g.ToVertex(int(ex), int(ey))
+		src := g.ToVertex(ex, ey)
 		graph := g.Graph(ent.Side(), true, nil)
 		cost, path := algorithm.Dijkstra(graph, []int{src}, []int{dst})
 		if len(path) <= 1 {
@@ -268,22 +270,22 @@ func (a *Move) Prep(ent *game.Entity, g *game.Game) bool {
 	// TODO(tmckee): need to ask the gui for a cursor pos
 	// fx, fy := g.GetViewer().WindowToBoard(gin.In().GetCursor("Mouse").Point())
 	mx, my := 0, 0
-	fx, fy := g.GetViewer().WindowToBoard(mx, my)
-	a.findPath(ent, int(fx), int(fy))
+	fx, fy := house.BoardSpaceUnitPair(g.GetViewer().WindowToBoard(mx, my))
+	a.findPath(ent, fx, fy)
 	a.threshold = a.ent.Stats.ApCur()
 	return true
 }
 func (a *Move) HandleInput(ctx gui.EventHandlingContext, group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
 	if mpos, ok := ctx.UseMousePosition(group); ok {
-		fx, fy := g.GetViewer().WindowToBoard(mpos.X, mpos.Y)
-		a.findPath(a.ent, int(fx), int(fy))
+		fx, fy := house.BoardSpaceUnitPair(g.GetViewer().WindowToBoard(mpos.X, mpos.Y))
+		a.findPath(a.ent, fx, fy)
 	}
 	if group.IsPressed(gin.AnyMouseLButton) {
 		if len(a.path) > 0 {
 			if a.cost <= a.ent.Stats.ApCur() {
 				var exec moveExec
 				exec.SetBasicData(a.ent, a)
-				algorithm.Map(a.path, &exec.Path, func(v [2]int) int {
+				algorithm.Map(a.path, &exec.Path, func(v [2]house.BoardSpaceUnit) int {
 					return g.ToVertex(v[0], v[1])
 				})
 				return true, &exec
@@ -341,25 +343,25 @@ func (a *Move) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Mainten
 				base.DeprecatedError().Printf("ENT was Nil!")
 			} else {
 				x, y := a.ent.FloorPos()
-				v := g.ToVertex(int(x), int(y))
+				v := g.ToVertex(x, y)
 				base.DeprecatedError().Printf("Ent pos: (%d, %d) -> (%d)", x, y, v)
 			}
 			return game.Complete
 		}
-		algorithm.Map(exec.Path, &a.path, func(v int) [2]int {
+		algorithm.Map(exec.Path, &a.path, func(v int) [2]house.BoardSpaceUnit {
 			_, x, y := g.FromVertex(v)
-			return [2]int{x, y}
+			return [2]house.BoardSpaceUnit{x, y}
 		})
 		base.DeprecatedLog().Printf("Path Validated: %v", exec)
 		a.ent.Stats.ApplyDamage(-a.cost, 0, status.Unspecified)
 		ex, ey := a.ent.FloorPos()
-		src := g.ToVertex(int(ex), int(ey))
+		src := g.ToVertex(ex, ey)
 		graph := g.Graph(a.ent.Side(), true, nil)
 		a.drawPath(a.ent, g, graph, src)
 	}
 	// Do stuff
 	factor := float32(math.Pow(2, a.ent.Walking_speed))
-	dist := a.ent.DoAdvance(factor*float32(dt)/200, a.path[0][0], a.path[0][1])
+	dist := a.ent.DoAdvance(factor*float32(dt)/200, int(a.path[0][0]), int(a.path[0][1]))
 	for dist > 0 {
 		if len(a.path) == 1 {
 			a.ent.DoAdvance(0, 0, 0)
@@ -369,7 +371,7 @@ func (a *Move) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Mainten
 		}
 		a.path = a.path[1:]
 		a.ent.Info.RoomsExplored[a.ent.CurrentRoom()] = true
-		dist = a.ent.DoAdvance(dist, a.path[0][0], a.path[0][1])
+		dist = a.ent.DoAdvance(dist, int(a.path[0][0]), int(a.path[0][1]))
 	}
 	return game.InProgress
 }

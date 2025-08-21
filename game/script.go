@@ -406,7 +406,7 @@ func (gs *gameScript) OnRound(g *Game) {
 				for i := range vpath {
 					gs.L.PushInteger(int64(i) + 1)
 					_, x, y := g.FromVertex(vpath[i])
-					LuaPushPoint(gs.L, x, y)
+					LuaPushPoint(gs.L, int(x), int(y))
 					gs.L.SetTable(-3)
 				}
 				logging.Debug("got exec path", "pathlength", len(vpath))

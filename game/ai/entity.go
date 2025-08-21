@@ -137,7 +137,7 @@ func AllPathablePointsFunc(a *Ai) lua.LuaGoFunction {
 				if !grid[x][y] {
 					continue
 				}
-				dst = append(dst, a.ent.Game().ToVertex(x, y))
+				dst = append(dst, a.ent.Game().ToVertex(house.BoardSpaceUnitPair(x, y)))
 			}
 		}
 		vis := 0
@@ -150,12 +150,13 @@ func AllPathablePointsFunc(a *Ai) lua.LuaGoFunction {
 		}
 		base.DeprecatedLog().Printf("Visible: %d", vis)
 		graph := a.ent.Game().Graph(a.ent.Side(), true, nil)
-		src := []int{a.ent.Game().ToVertex(x1, y1)}
+		src := []int{a.ent.Game().ToVertex(house.BoardSpaceUnitPair(x1, y1))}
 		reachable := algorithm.ReachableDestinations(graph, src, dst)
 		L.NewTable()
 		base.DeprecatedLog().Printf("%d/%d reachable from (%d, %d) -> (%d, %d)", len(reachable), len(dst), x1, y1, x2, y2)
 		for i, v := range reachable {
-			_, x, y := a.ent.Game().FromVertex(v)
+			_, bsux, bsuy := a.ent.Game().FromVertex(v)
+			x, y := int(bsux), int(bsuy)
 			L.PushInteger(int64(i) + 1)
 			game.LuaPushPoint(L, x, y)
 			L.SetTable(-3)
@@ -350,7 +351,7 @@ func DoMoveFunc(a *Ai) lua.LuaGoFunction {
 			L.PushInteger(int64(i))
 			L.GetTable(-2)
 			x, y := game.LuaToPoint(L, -1)
-			dsts = append(dsts, me.Game().ToVertex(x, y))
+			dsts = append(dsts, me.Game().ToVertex(house.BoardSpaceUnitPair(x, y)))
 			L.Pop(1)
 		}
 		var move *actions.Move
@@ -373,7 +374,7 @@ func DoMoveFunc(a *Ai) lua.LuaGoFunction {
 			<-a.pause
 			// TODO: Need to get a resolution
 			x, y := me.FloorPos()
-			v := me.Game().ToVertex(int(x), int(y))
+			v := me.Game().ToVertex(x, y)
 			complete := false
 			for i := range dsts {
 				if v == dsts[i] {
