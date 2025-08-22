@@ -3,7 +3,6 @@ package game
 import (
 	"encoding/gob"
 	"fmt"
-	"image"
 	"path/filepath"
 	"regexp"
 
@@ -92,8 +91,8 @@ func (g *Game) placeEntity(pattern string) bool {
 	for _, e := range g.Ents {
 		x, y := e.FloorPos()
 		dx, dy := e.Dims()
-		r1 := image.Rect(int(x), int(y), int(x+dx), int(y+dy))
-		r2 := image.Rect(int(ix), int(iy), int(ix+idx), int(iy+idy))
+		r1 := house.ImageRect(x, y, x+dx, y+dy)
+		r2 := house.ImageRect(ix, iy, ix+idx, iy+idy)
 		if r1.Overlaps(r2) {
 			return false
 		}
@@ -237,9 +236,8 @@ const (
 )
 
 type EntityDef struct {
-	Name string
-	// TODO(tmckee#47): house.BoardSpaceUnit plz
-	Dx, Dy      int
+	Name        string
+	Dx, Dy      house.BoardSpaceUnit
 	Sprite_path base.Path
 
 	Walking_speed float64
@@ -314,7 +312,7 @@ func (ei *EntityDef) Dims() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	if ei.Dx <= 0 || ei.Dy <= 0 {
 		panic(fmt.Errorf("entity %q didn't have its Dims set properly", ei.Name))
 	}
-	return house.BoardSpaceUnitPair(ei.Dx, ei.Dy)
+	return ei.Dx, ei.Dy
 }
 
 type HauntEnt struct {
@@ -371,8 +369,7 @@ type losData struct {
 
 	// Floor coordinates of the last position los was determined from, so that
 	// we don't need to recalculate it more than we need to as an ent is moving.
-	// TODO(tmckee#47): house.BoardSpaceUnit plz
-	x, y int
+	x, y house.BoardSpaceUnit
 
 	// Range of vision - all true values in grid are contained within these
 	// bounds.

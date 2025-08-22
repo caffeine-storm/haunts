@@ -121,7 +121,7 @@ func spawnEnts(g *Game, ents []*Entity, spawns []*house.SpawnPoint) {
 				if used_spawns[spawn] {
 					continue
 				}
-				if int(spawn.Dx) < ent.Dx || int(spawn.Dy) < ent.Dy {
+				if spawn.Dx < ent.Dx || spawn.Dy < ent.Dy {
 					continue
 				}
 				used_spawns[spawn] = true
@@ -139,8 +139,8 @@ func spawnEnts(g *Game, ents []*Entity, spawns []*house.SpawnPoint) {
 		logging.Warn("Out of sanity while placing objects", "placed", len(places), "requested", len(spawns))
 	}
 	for _, place := range places {
-		place.ent.X = float64(int(place.spawn.X) + rand.Intn(int(place.spawn.Dx)-place.ent.Dx+1))
-		place.ent.Y = float64(int(place.spawn.Y) + rand.Intn(int(place.spawn.Dy)-place.ent.Dy+1))
+		place.ent.X = float64(int(place.spawn.X) + rand.Intn(int(place.spawn.Dx-place.ent.Dx+1)))
+		place.ent.Y = float64(int(place.spawn.Y) + rand.Intn(int(place.spawn.Dy-place.ent.Dy+1)))
 		g.viewer.AddDrawable(place.ent)
 		g.Ents = append(g.Ents, place.ent)
 		logging.Debug("placing", "object", place.ent.Name, "pos", []any{place.ent.X, place.ent.Y})

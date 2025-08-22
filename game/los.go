@@ -1531,12 +1531,12 @@ func (g *Game) UpdateEntLos(ent *Entity, force bool) {
 		return
 	}
 	ex, ey := ent.FloorPos()
-	if !force && int(ex) == ent.los.x && int(ey) == ent.los.y {
+	if !force && ex == ent.los.x && ey == ent.los.y {
 		return
 	}
 	base.DeprecatedLog().Printf("UpdateEntLos(%s): %t (%d, %d) -> (%d, %d)", ent.Name, force, ent.los.x, ent.los.y, ex, ey)
-	ent.los.x = int(ex)
-	ent.los.y = int(ey)
+	ent.los.x = ex
+	ent.los.y = ey
 
 	g.DetermineLos(ex, ey, ent.Stats.Sight(), ent.los.grid)
 
