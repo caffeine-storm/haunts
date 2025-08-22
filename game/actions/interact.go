@@ -45,7 +45,7 @@ type InteractDef struct {
 	Name         string // "Relic", "Mystery", or "Cleanse"
 	Display_name string // The string actually displayed to the user
 	Ap           int
-	Range        int
+	Range        house.BoardSpaceUnit
 	Animation    string
 	Texture      texture.Object
 }
@@ -152,8 +152,7 @@ func (a *Interact) Readyable() bool {
 	return false
 }
 
-// TODO(tmckee#47): use BoardSpaceUnit here too
-func distBetweenEnts(e1, e2 *game.Entity) int {
+func distBetweenEnts(e1, e2 *game.Entity) house.BoardSpaceUnit {
 	x1, y1 := e1.FloorPos()
 	dx1, dy1 := e1.Dims()
 	x2, y2 := e2.FloorPos()
@@ -179,10 +178,7 @@ func distBetweenEnts(e1, e2 *game.Entity) int {
 		ydist = 0
 	}
 
-	if xdist > ydist {
-		return int(xdist)
-	}
-	return int(ydist)
+	return max(xdist, ydist)
 }
 
 type frect struct {

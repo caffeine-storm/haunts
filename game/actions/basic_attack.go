@@ -61,7 +61,7 @@ type BasicAttackDef struct {
 	Ap             int
 	Ammo           int // 0 = infinity
 	Strength       int
-	Range          int
+	Range          house.BoardSpaceUnit
 	Damage         int
 	Target_allies  bool
 	Target_enemies bool
