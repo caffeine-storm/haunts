@@ -57,7 +57,7 @@ type SummonActionDef struct {
 	Personal_los bool
 	Ap           int
 	Ammo         int // 0 = infinity
-	Range        int // TODO(tmckee#47): use BoardSpaceUnit here too
+	Range        house.BoardSpaceUnit
 	Ent_name     string
 	Animation    string
 	Conditions   []string
@@ -183,7 +183,7 @@ func (a *SummonAction) RenderOnFloor() {
 		return
 	}
 	ex, ey := a.ent.FloorPos()
-	if dist(ex, ey, a.cx, a.cy) <= house.BoardSpaceUnit(a.Range) && a.ent.HasLos(a.cx, a.cy, 1, 1) {
+	if dist(ex, ey, a.cx, a.cy) <= a.Range && a.ent.HasLos(a.cx, a.cy, 1, 1) {
 		gl.Color4ub(255, 255, 255, 200)
 	} else {
 		gl.Color4ub(255, 64, 64, 200)

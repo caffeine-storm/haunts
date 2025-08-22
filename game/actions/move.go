@@ -239,7 +239,6 @@ func (a *Move) drawPath(ent *game.Entity, g *game.Game, graph algorithm.Graph, s
 	path_tex.Remap()
 }
 
-// TODO(tmckee#47): use BoardSpaceUnit here too
 func (a *Move) findPath(ent *game.Entity, x, y house.BoardSpaceUnit) {
 	g := ent.Game()
 	dst := g.ToVertex(x, y)

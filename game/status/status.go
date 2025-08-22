@@ -83,7 +83,7 @@ type Base struct {
 	Hp_max int
 	Corpus int
 	Ego    int
-	Sight  int // TODO(tmckee#47): use BoardSpaceUnit here too
+	Sight  house.BoardSpaceUnit
 	Attack int
 }
 
@@ -176,11 +176,8 @@ func (s Inst) AttackBonusWith(kind Kind) int {
 }
 
 func (s Inst) Sight() house.BoardSpaceUnit {
-	sight := house.BoardSpaceUnit(s.modifiedBase(Unspecified).Sight)
-	if sight < 0 {
-		return 0
-	}
-	return sight
+	sight := s.modifiedBase(Unspecified).Sight
+	return max(0, sight)
 }
 
 // Returns a list of the names of the conditions this status object currently
