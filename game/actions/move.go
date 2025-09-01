@@ -252,9 +252,9 @@ func (a *Move) findPath(ent *game.Entity, x, y house.BoardSpaceUnit) {
 		if len(path) <= 1 {
 			return
 		}
-		algorithm.Map(path, &a.path, func(a int) [2]int {
+		algorithm.Map(path, &a.path, func(a int) [2]house.BoardSpaceUnit {
 			_, x, y := g.FromVertex(a)
-			return [2]int{int(x), int(y)}
+			return [2]house.BoardSpaceUnit{x, y}
 		})
 		a.cost = int(cost)
 		a.drawPath(ent, g, graph, src)
