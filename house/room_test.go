@@ -160,10 +160,12 @@ func TestRoom(t *testing.T) {
 				})
 
 				Convey("drawing tutorial-entry", func() {
-					doRoomTest("tutorial-entry")
-					Convey("with non-nil LosTexture", func() {
-						losTexture = canSeeEverything()
+					logging.DebugBracket(func() {
 						doRoomTest("tutorial-entry")
+						Convey("with non-nil LosTexture", func() {
+							losTexture = canSeeEverything()
+							doRoomTest("tutorial-entry")
+						})
 					})
 				})
 

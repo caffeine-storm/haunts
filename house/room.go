@@ -239,7 +239,7 @@ func visibilityOfObject(xoff, yoff BoardSpaceUnit, ro RectObject, los_tex *LosTe
 	return byte(v)
 }
 
-func (room *Room) renderDrawables(base_alpha byte, drawables []Drawable, los_tex *LosTexture) {
+func (room *Room) renderDrawables(base_alpha byte, drawables []Drawable, los_tex *LosTexture, roomMats *perspective.RoomMats) {
 	logging.Debug("renderDrawables called", "drawables", drawables)
 
 	var all []Drawable
@@ -258,7 +258,7 @@ func (room *Room) renderDrawables(base_alpha byte, drawables []Drawable, los_tex
 		if y >= room.Y+room.Size.Dy {
 			continue
 		}
-		all = append(all, offsetDrawable{d, BoardSpaceUnit(-room.X), BoardSpaceUnit(-room.Y)})
+		all = append(all, offsetDrawable{d, -room.X, -room.Y})
 	}
 
 	logging.Debug("after culling by room dims", "all-rect-objects", all)
@@ -284,9 +284,9 @@ func (room *Room) renderDrawables(base_alpha byte, drawables []Drawable, los_tex
 
 	for i := len(temps) - 1; i >= 0; i-- {
 		d := temps[i]
-		fx, fy := d.FPos()
-		near_x, near_y := float32(fx), float32(fy)
-		vis := visibilityOfObject(BoardSpaceUnit(room.X), BoardSpaceUnit(room.Y), d, los_tex)
+		xInRoom, yInRoom := d.FPos()
+		near_x, near_y := float32(xInRoom), float32(yInRoom)
+		vis := visibilityOfObject(room.X, room.Y, d, los_tex)
 		r, g, b, a := d.Color()
 		r = alphaMult(r, vis)
 		g = alphaMult(g, vis)
@@ -738,7 +738,7 @@ func (room *Room) Render(roomMats perspective.RoomMats, zoom float32, base_alpha
 		do_color(255, 255, 255, 255)
 		gl.Disable(gl.STENCIL_TEST)
 		gl.Disable(gl.TEXTURE_2D)
-		room.renderDrawables(255, drawables, los_tex)
+		room.renderDrawables(255, drawables, los_tex, &roomMats)
 
 		gl.ClientActiveTexture(gl.TEXTURE1)
 		gl.Disable(gl.TEXTURE_2D)
