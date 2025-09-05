@@ -297,7 +297,32 @@ func (room *Room) renderDrawables(base_alpha byte, drawables []Drawable, los_tex
 		dx, _ := d.Dims()
 
 		logging.Debug("going to render", "near_x,near_y,dims", []any{near_x, near_y, dx})
-		d.Render(mathgl.Vec2{X: near_x, Y: near_y}, float32(dx))
+
+		step := &mathgl.Mat4{}
+		fixup := &mathgl.Mat4{}
+		fixup.Identity()
+
+		// Step 4, undo the initial translation
+		step.Translation(near_x, near_y, 0)
+		fixup.Multiply(step)
+
+		// Step 3, rotate about (-1, 1, 0) to undo the floor's "tilt" rotation.
+		axis := mathgl.Vec3{X: -1, Y: 1, Z: 0}
+		step.RotationAxisAngle(axis, 62*math.Pi/180)
+		fixup.Multiply(step)
+
+		// Step 2, rotate about Z to undo the floor's Z rotation.
+		step.RotationZ(-math.Pi / 4.0)
+		fixup.Multiply(step)
+
+		// Step 1, translate the viewer to move the target object to (0, 0).
+		step.Translation(-near_x, -near_y, 0)
+		fixup.Multiply(step)
+
+		render.WithMultMatrixInMode(fixup, render.MatrixModeModelView, func() {
+			logging.Debug("glstate", "this", debug.GetGlState())
+			d.Render(mathgl.Vec2{X: near_x, Y: near_y}, float32(dx))
+		})
 	}
 }
 
@@ -732,7 +757,7 @@ func (room *Room) Render(roomMats perspective.RoomMats, zoom float32, base_alpha
 		})
 	})
 
-	render.WithMultMatrixInMode(&roomMats.Standup, render.MatrixModeModelView, func() {
+	render.WithMultMatrixInMode(&roomMats.Floor, render.MatrixModeModelView, func() {
 		gl.PushAttrib(gl.CURRENT_BIT)
 		defer gl.PopAttrib()
 		do_color(255, 255, 255, 255)
