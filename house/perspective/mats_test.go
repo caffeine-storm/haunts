@@ -55,7 +55,7 @@ func TestMakeFloorTransforms(t *testing.T) {
 			ForSize(screen.Dx(), screen.Dy()).
 			AtAngle(0).
 			AtFocus(float32(screen.Dx())*housetest.JankyOneOverRoot2, 0)
-		floorMatrix, _, _, _ := perspective.MakeFloorTransforms(cam.Region, cam.FocusX, cam.FocusY, cam.Angle, cam.Zoom)
+		floorMatrix, _ := perspective.MakeFloorTransforms(cam.Region, cam.FocusX, cam.FocusY, cam.Angle, cam.Zoom)
 
 		testbuilder.New().WithSize(screen.Dx(), screen.Dy()).WithQueue().Run(func(queue render.RenderQueueInterface) {
 			queue.Queue(func(st render.RenderQueueState) {

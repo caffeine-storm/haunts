@@ -134,7 +134,7 @@ func MakeHouseViewer(house *HouseDef, angle float32) *HouseViewer {
 	ret.SetZoom(10)
 	ret.SetBounds()
 
-	ret.floor, ret.ifloor, _, _ = perspective.MakeFloorTransforms(ret.Render_region, ret.fx, ret.fy, ret.angle, ret.zoom)
+	ret.floor, ret.ifloor = perspective.MakeFloorTransforms(ret.Render_region, ret.fx, ret.fy, ret.angle, ret.zoom)
 
 	return ret
 }
@@ -246,14 +246,14 @@ func (hv *HouseViewerState) boardToModelview(mx, my float32) (x, y, z float32) {
 // where appropriate. Introducing a 'ScreenSpaceUnit' would also be helpful.
 // Returning a float32 here is also barftastic.
 func (hv *HouseViewer) WindowToBoard(wx, wy int) (float32, float32) {
-	hv.floor, hv.ifloor, _, _ = perspective.MakeFloorTransforms(hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
+	hv.floor, hv.ifloor = perspective.MakeFloorTransforms(hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
 
 	fx, fy, _ := hv.modelviewToBoard(float32(wx), float32(wy))
 	return fx, fy
 }
 
 func (hv *HouseViewer) BoardToWindow(bx, by float32) (int, int) {
-	hv.floor, hv.ifloor, _, _ = perspective.MakeFloorTransforms(hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
+	hv.floor, hv.ifloor = perspective.MakeFloorTransforms(hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
 
 	fx, fy, _ := hv.boardToModelview(bx, by)
 	return int(fx), int(fy)
