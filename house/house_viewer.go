@@ -21,6 +21,7 @@ type doorInfo struct {
 	Valid bool
 }
 
+// TODO(tmckee#34): make these float32s into float64s for less recasting
 type HouseViewerState struct {
 	zoom, angle, fx, fy float32
 	floor, ifloor       mathgl.Mat4
@@ -133,6 +134,7 @@ func MakeHouseViewer(house *HouseDef, angle float32) *HouseViewer {
 	ret.SetAngle(angle)
 	ret.SetZoom(10)
 	ret.SetBounds()
+	ret.Focus(0, 0)
 
 	ret.floor, ret.ifloor = perspective.MakeFloorTransforms(ret.Render_region, ret.fx, ret.fy, ret.angle, ret.zoom)
 
@@ -146,9 +148,15 @@ type framePressTotaler interface {
 func (hv *HouseViewer) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	if group.IsPressed(gin.AnyMouseWheelVertical) {
 		var wheelKey gin.Key = group.PrimaryEvent().Key
-		zoomDelta := wheelKey.FramePressTotal()
+		zoomDelta := wheelKey.CurPressTotal()
 		if zoomDelta != 0 {
-			hv.SetZoom(hv.GetZoom() + float32(zoomDelta))
+			// TODO(tmckee): don't change targetzoom linearly; should be
+			// percent-change I think?
+			hv.HouseViewerState.targetzoom += float32(zoomDelta)
+			if hv.HouseViewerState.targetzoom <= 0 {
+				hv.HouseViewerState.targetzoom = 0.0001
+			}
+			hv.HouseViewerState.target_zoom_on = true
 		}
 		return true
 	}
@@ -159,13 +167,16 @@ func (hv *HouseViewer) Respond(g *gui.Gui, group gui.EventGroup) bool {
 			Type:  gin.DeviceTypeMouse,
 		},
 	}
+	ret := false
 	if rightButtonId.Contains(group.PrimaryEvent().Key.Id()) {
 		hv.HouseViewerState.dragToggle(group)
+		ret = true
 	}
 	if group.IsMouseMove() {
 		hv.HouseViewerState.dragUpdate(group)
+		ret = true
 	}
-	return false
+	return ret
 }
 
 func (hv *HouseViewer) Think(g *gui.Gui, t int64) {
@@ -176,7 +187,7 @@ func (hv *HouseViewer) Think(g *gui.Gui, t int64) {
 	hv.last_timestamp = t
 
 	if dt < 0 {
-		panic(fmt.Errorf("time travel!?"))
+		panic(fmt.Errorf("time travel!? dt: %v", dt))
 	}
 
 	// as 'dt' grows, 'scale' approaches 1
@@ -198,10 +209,14 @@ func (hv *HouseViewer) Think(g *gui.Gui, t int64) {
 		hv.target_on = false
 	}
 
+	logging.Info("zoomzoomzoom", "zoom", hv.zoom)
 	if hv.target_zoom_on {
 		exp := math.Log(float64(hv.zoom))
-		exp += (float64(hv.targetzoom) - exp) * float64(scale)
+		exp += (math.Log(float64(hv.targetzoom)) - exp) * float64(scale)
 		hv.zoom = float32(math.Exp(exp))
+		if math.Abs(float64(hv.zoom-hv.targetzoom)) < 0.001 {
+			hv.target_zoom_on = false
+		}
 	}
 }
 
@@ -280,6 +295,7 @@ func (hv *HouseViewer) SetZoom(dz float32) {
 		panic(fmt.Errorf("you don't want 0 zoom; it means don't draw anything!"))
 	}
 	hv.zoom = dz
+	hv.targetzoom = hv.zoom
 	hv.target_zoom_on = false
 }
 

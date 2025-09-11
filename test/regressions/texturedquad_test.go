@@ -19,7 +19,8 @@ func TestTexturedQuadRegr(t *testing.T) {
 		testbuilder.New().WithSize(screen.Dx(), screen.Dy()).WithQueue().Run(func(queue render.RenderQueueInterface) {
 			queue.Queue(func(st render.RenderQueueState) {
 				render.LogAndClearGlErrors(logging.ErrorLogger())
-				tex := rendertest.GivenATexture("images/red.png")
+				tex, cleanup := rendertest.GivenATexture("images/red.png")
+				defer cleanup()
 
 				rendertest.DrawTexturedQuad(screen, tex, st.Shaders())
 			})

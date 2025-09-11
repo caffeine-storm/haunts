@@ -118,8 +118,9 @@ func TestHouseViewer(t *testing.T) {
 			gametest.RunDrawingTest(c, func() gametest.Drawer {
 				houseViewer := givenAHouseViewer()
 				g := guitest.MakeStubbedGui(gui.Dims{Dx: 64, Dy: 64})
-				wheelDown := guitest.SynthesizeEvents().WheelDown(-5)
-				houseViewer.Respond(g, wheelDown)
+				houseViewer.Think(g, 18)
+				guitest.SynthesizeEvents(houseViewer).WheelDown(-5)
+				houseViewer.Think(g, 42000)
 				return houseViewer
 			}, "house-viewer-zoom-out")
 		})

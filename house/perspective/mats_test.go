@@ -60,7 +60,8 @@ func TestMakeFloorTransforms(t *testing.T) {
 		testbuilder.New().WithSize(screen.Dx(), screen.Dy()).WithQueue().Run(func(queue render.RenderQueueInterface) {
 			queue.Queue(func(st render.RenderQueueState) {
 				render.LogAndClearGlErrors(logging.ErrorLogger())
-				tex := rendertest.GivenATexture("mahogany/input.png")
+				tex, cleanup := rendertest.GivenATexture("mahogany/input.png")
+				defer cleanup()
 				render.WithMultMatrixInMode(&floorMatrix, render.MatrixModeModelView, func() {
 					rendertest.DrawTexturedQuad(screen, tex, st.Shaders())
 				})

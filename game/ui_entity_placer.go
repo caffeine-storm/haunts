@@ -194,14 +194,14 @@ func (ep *EntityPlacer) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	}
 
 	if group.IsPressed(gin.AnyMouseLButton) {
+		// Did they click a button?
 		for _, button := range ep.buttons {
 			if button.handleClick(ep.mx, ep.my, nil) {
 				return true
 			}
 		}
-	}
 
-	if group.IsPressed(gin.AnyMouseLButton) {
+		// Did they click inside our region?
 		if pointInsideRect(ep.mx, ep.my, ep.region.X, ep.region.Y, ep.region.Dx, ep.region.Dy) {
 			return true
 		}
