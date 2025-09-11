@@ -140,16 +140,12 @@ func TestHouseViewer(t *testing.T) {
 				rightButtonId := gin.AnyMouseRButton
 				rightButtonId.Device.Index = 0
 
-				drag := guitest.SynthesizeEvents().DragGesture(rightButtonId, fromPos, toPos)
-				for _, ev := range drag {
-					houseViewer.Respond(g, ev)
-				}
+				houseViewer.Think(g, 18)
+				guitest.SynthesizeEvents(houseViewer).DragGesture(rightButtonId, fromPos, toPos)
 
 				// Need to simulate a few frames going by to give the house viewer a
 				// chance to run its animations.
-				for i := int64(0); i < 20; i++ {
-					houseViewer.Think(g, (i+5)*500)
-				}
+				houseViewer.Think(g, 42000)
 
 				return houseViewer
 			}, "house-viewer-panned")
