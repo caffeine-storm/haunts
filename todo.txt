@@ -1,3 +1,12 @@
+- bug#29: zooming in house_viewer.go is ignoring _most_ scroll inputs ... but
+  not all. We should zoom more responsively.
+		- during 'Respond', the incoming events are to be aggregated over and
+		  associated to a 'current frame'; wheelAggregator.cur_total is available
+		  during this phase.
+		- after _everything_ is processed through 'Responds', each key/aggregator
+		  is updated to assign their current accumulation to the "whole" frame
+		- then each gui widget gets a "Think" callback
+
 - bug#47: BoardSpaceUnit cleanups; more things should be explicit and
   consistent about what space a value is defined in.
 
@@ -59,10 +68,6 @@
 
 - bug#30: while trying to load the intruders tutorial, we panicked in some
   sprite things; need to investigate
-
-- bug#29: the way house viewer was zooming didn't seem correct; need to figure
-  out what it should be in main.go. Also, how do we zoom when running the game?
-  Does it work?
 
 - bug#28: texture package has package-level state to reference a Manager
   instance. Leads to data-races when running multiple tests that want to
