@@ -240,12 +240,12 @@ func visibilityOfObject(xoff, yoff BoardSpaceUnit, ro RectObject, los_tex *LosTe
 }
 
 func (room *Room) renderDrawables(base_alpha byte, drawables []Drawable, los_tex *LosTexture, roomMats *perspective.RoomMats) {
-	logging.Debug("renderDrawables called", "drawables", drawables)
+	logging.Trace("renderDrawables called", "drawables", drawables)
 
 	var all []Drawable
 	for _, d := range drawables {
 		x, y := d.FloorPos()
-		logging.Debug("cull-check", "floorpos", []any{x, y}, "room", []any{room.X, room.Y, room.Size.Dx, room.Size.Dy})
+		logging.Trace("cull-check", "floorpos", []any{x, y}, "room", []any{room.X, room.Y, room.Size.Dx, room.Size.Dy})
 		if x < room.X {
 			continue
 		}
@@ -261,7 +261,7 @@ func (room *Room) renderDrawables(base_alpha byte, drawables []Drawable, los_tex
 		all = append(all, offsetDrawable{d, -room.X, -room.Y})
 	}
 
-	logging.Debug("after culling by room dims", "all-rect-objects", all)
+	logging.Trace("after culling by room dims", "all-rect-objects", all)
 
 	// Do not include temporary objects in the ordering, since they will likely
 	// overlap with other objects and make it difficult to determine the proper
@@ -274,13 +274,13 @@ func (room *Room) renderDrawables(base_alpha byte, drawables []Drawable, los_tex
 			all = append(all, f)
 		}
 	}
-	logging.Debug("after collecting furniture", "all", all, "temps", temps)
+	logging.Trace("after collecting furniture", "all", all, "temps", temps)
 	all = OrderRectObjects(all)
 	for i := range all {
 		temps = append(temps, all[i])
 	}
 
-	logging.Debug("after reordering", "all", all, "temps", temps, "glstate", debug.GetGlState())
+	logging.Trace("after reordering", "all", all, "temps", temps, "glstate", debug.GetGlState())
 
 	for i := len(temps) - 1; i >= 0; i-- {
 		objectToDraw := temps[i]
@@ -295,7 +295,7 @@ func (room *Room) renderDrawables(base_alpha byte, drawables []Drawable, los_tex
 		gl.Color4ub(r, g, b, a)
 		dx, _ := objectToDraw.Dims()
 
-		logging.Debug("going to render", "xInRoom,yInRoom,dims", []any{xInRoom, yInRoom, dx})
+		logging.Trace("going to render", "xInRoom,yInRoom,dims", []any{xInRoom, yInRoom, dx})
 
 		standup := perspective.MakeStandupTransform(roomMats, int(xInRoom), int(yInRoom))
 		render.WithMultMatrixInMode(standup, render.MatrixModeModelView, func() {
