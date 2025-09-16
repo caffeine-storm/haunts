@@ -82,16 +82,16 @@ func MakeFloorTransforms(region gui.Region, focusx, focusy, angle, zoom float32)
 	// of a target region.
 	ret.Translation(float32(region.X+region.Dx/2), float32(region.Y+region.Dy/2), 0)
 
-	// Step 4: rotate about the z axis to put the bottom-left (and, from step3,
-	// most +'ve in z point) at the bottom, and the top-right at the top.
+	// Step 4: rotate about the x-axis so as to "push back" the top and "pull
+	// forward" the bottom by a given angle.
+	m.RotationX(angle * math.Pi / 180)
+	ret.Multiply(&m)
+
+	// Step 3: rotate counter-clockwise about the z axis to put the bottom-left
+	// corner at the bottom, and the top-right corner at the top.
 	// NOTE: If we want to change 45 to *anything* else then we need to do the
 	// appropriate math for rendering quads for furniture
 	m.RotationZ(45 * math.Pi / 180)
-	ret.Multiply(&m)
-
-	// Step 3: rotate about an axis so as to "push back" the top-right and "pull
-	// forward" the bottom-left by a given angle.
-	m.RotationAxisAngle(mathgl.Vec3{X: -1, Y: 1}, -float32(angle)*math.Pi/180)
 	ret.Multiply(&m)
 
 	// Step 2: zoom in or out on the floor.

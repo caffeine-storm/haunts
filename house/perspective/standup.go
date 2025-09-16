@@ -22,13 +22,12 @@ func MakeStandupTransform(mats *RoomMats, roomX, roomY int) *mathgl.Mat4 {
 	step.Translation(near_x, near_y, 0)
 	standup.Multiply(step)
 
-	// Step 3, rotate about (-1, 1, 0) to undo the floor's "tilt" rotation.
-	axis := mathgl.Vec3{X: -1, Y: 1, Z: 0}
-	step.RotationAxisAngle(axis, mats.angle*math.Pi/180)
+	// Step 3, rotate about Z to undo the floor's Z rotation.
+	step.RotationZ(-math.Pi / 4.0)
 	standup.Multiply(step)
 
-	// Step 2, rotate about Z to undo the floor's Z rotation.
-	step.RotationZ(-math.Pi / 4.0)
+	// Step 2, rotate about (1, 0, 0) to undo the floor's "tilt" rotation.
+	step.RotationX(-mats.angle * math.Pi / 180)
 	standup.Multiply(step)
 
 	// Step 1, translate the viewer to move the target object to (0, 0).
