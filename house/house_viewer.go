@@ -181,9 +181,6 @@ func (hv *HouseViewer) Respond(g *gui.Gui, group gui.EventGroup) bool {
 
 func (hv *HouseViewer) Think(g *gui.Gui, t int64) {
 	dt := t - hv.last_timestamp
-	if hv.last_timestamp == 0 {
-		dt = 0
-	}
 	hv.last_timestamp = t
 
 	if dt < 0 {

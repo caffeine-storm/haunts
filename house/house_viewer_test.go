@@ -118,7 +118,6 @@ func TestHouseViewer(t *testing.T) {
 			gametest.RunDrawingTest(c, func() gametest.Drawer {
 				houseViewer := givenAHouseViewer()
 				g := guitest.MakeStubbedGui(gui.Dims{Dx: 64, Dy: 64})
-				houseViewer.Think(g, 18)
 				guitest.SynthesizeEvents(houseViewer).WheelDown(-5)
 				houseViewer.Think(g, 42000)
 				return houseViewer
@@ -140,7 +139,6 @@ func TestHouseViewer(t *testing.T) {
 				rightButtonId := gin.AnyMouseRButton
 				rightButtonId.Device.Index = 0
 
-				houseViewer.Think(g, 18)
 				guitest.SynthesizeEvents(houseViewer).DragGesture(rightButtonId, fromPos, toPos)
 
 				// Need to simulate a few frames going by to give the house viewer a
