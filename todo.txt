@@ -1,12 +1,3 @@
-- bug#29: zooming in house_viewer.go is ignoring _most_ scroll inputs ... but
-  not all. We should zoom more responsively.
-		- during 'Respond', the incoming events are to be aggregated over and
-		  associated to a 'current frame'; wheelAggregator.cur_total is available
-		  during this phase.
-		- after _everything_ is processed through 'Responds', each key/aggregator
-		  is updated to assign their current accumulation to the "whole" frame
-		- then each gui widget gets a "Think" callback
-
 - bug#47: BoardSpaceUnit cleanups; more things should be explicit and
   consistent about what space a value is defined in.
 
