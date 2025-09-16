@@ -13,13 +13,18 @@ import (
 // and View co-ordinate systems.
 type RoomMats struct {
 	Floor, IFloor, Left, ILeft, Right, IRight mathgl.Mat4
+
+	// Angle through which the floor is "tipped back". The tipping is done about
+	// the (-1,1,0) axis.
+	angle float32
 }
 
 // roomWidth and roomHeight ought to be of type BoardSpaceUnit but that would
 // cause an import cycle.
 // TODO(tmckee#47): move BoardSpaceUnit to perspective package?
 func MakeRoomMats(roomWidth, roomHeight int, region gui.Region, focusx, focusy, angle, zoom float32) (ret RoomMats) {
-	ret.Floor, ret.IFloor = MakeFloorTransforms(region, focusx, focusy, angle, zoom)
+	ret.angle = angle
+	ret.Floor, ret.IFloor = MakeFloorTransforms(region, focusx, focusy, ret.angle, zoom)
 
 	// Also make the mats for the left and right walls based on the floor's
 	// transform.

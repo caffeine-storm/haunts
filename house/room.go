@@ -297,7 +297,7 @@ func (room *Room) renderDrawables(base_alpha byte, drawables []Drawable, los_tex
 
 		logging.Debug("going to render", "xInRoom,yInRoom,dims", []any{xInRoom, yInRoom, dx})
 
-		standup := perspective.MakeStandupTransform(int(xInRoom), int(yInRoom))
+		standup := perspective.MakeStandupTransform(roomMats, int(xInRoom), int(yInRoom))
 		render.WithMultMatrixInMode(standup, render.MatrixModeModelView, func() {
 			objectToDraw.Render(mathgl.Vec2{X: float32(xInRoom), Y: float32(yInRoom)}, float32(dx))
 		})
