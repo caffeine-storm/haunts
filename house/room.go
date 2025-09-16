@@ -283,45 +283,23 @@ func (room *Room) renderDrawables(base_alpha byte, drawables []Drawable, los_tex
 	logging.Debug("after reordering", "all", all, "temps", temps, "glstate", debug.GetGlState())
 
 	for i := len(temps) - 1; i >= 0; i-- {
-		d := temps[i]
-		xInRoom, yInRoom := d.FPos()
-		near_x, near_y := float32(xInRoom), float32(yInRoom)
-		vis := visibilityOfObject(room.X, room.Y, d, los_tex)
-		r, g, b, a := d.Color()
+		objectToDraw := temps[i]
+		xInRoom, yInRoom := objectToDraw.FloorPos()
+		vis := visibilityOfObject(room.X, room.Y, objectToDraw, los_tex)
+		r, g, b, a := objectToDraw.Color()
 		r = alphaMult(r, vis)
 		g = alphaMult(g, vis)
 		b = alphaMult(b, vis)
 		a = alphaMult(a, vis)
 		a = alphaMult(a, base_alpha)
 		gl.Color4ub(r, g, b, a)
-		dx, _ := d.Dims()
+		dx, _ := objectToDraw.Dims()
 
-		logging.Debug("going to render", "near_x,near_y,dims", []any{near_x, near_y, dx})
+		logging.Debug("going to render", "xInRoom,yInRoom,dims", []any{xInRoom, yInRoom, dx})
 
-		step := &mathgl.Mat4{}
-		fixup := &mathgl.Mat4{}
-		fixup.Identity()
-
-		// Step 4, undo the initial translation
-		step.Translation(near_x, near_y, 0)
-		fixup.Multiply(step)
-
-		// Step 3, rotate about (-1, 1, 0) to undo the floor's "tilt" rotation.
-		axis := mathgl.Vec3{X: -1, Y: 1, Z: 0}
-		step.RotationAxisAngle(axis, 62*math.Pi/180)
-		fixup.Multiply(step)
-
-		// Step 2, rotate about Z to undo the floor's Z rotation.
-		step.RotationZ(-math.Pi / 4.0)
-		fixup.Multiply(step)
-
-		// Step 1, translate the viewer to move the target object to (0, 0).
-		step.Translation(-near_x, -near_y, 0)
-		fixup.Multiply(step)
-
-		render.WithMultMatrixInMode(fixup, render.MatrixModeModelView, func() {
-			logging.Debug("glstate", "this", debug.GetGlState())
-			d.Render(mathgl.Vec2{X: near_x, Y: near_y}, float32(dx))
+		standup := perspective.MakeStandupTransform(int(xInRoom), int(yInRoom))
+		render.WithMultMatrixInMode(standup, render.MatrixModeModelView, func() {
+			objectToDraw.Render(mathgl.Vec2{X: float32(xInRoom), Y: float32(yInRoom)}, float32(dx))
 		})
 	}
 }
