@@ -13,11 +13,6 @@ func BoardSpaceUnitPair[T int | float32 | float64](x, y T) (BoardSpaceUnit, Boar
 	return BoardSpaceUnit(x), BoardSpaceUnit(y)
 }
 
-type RoomSizey interface {
-	GetDx() BoardSpaceUnit
-	GetDy() BoardSpaceUnit
-}
-
 func ImageRect(x1, y1, x2, y2 BoardSpaceUnit) image.Rectangle {
 	return image.Rect(int(x1), int(y1), int(x2), int(y2))
 }
