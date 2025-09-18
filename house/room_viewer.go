@@ -118,7 +118,7 @@ func (rv *roomViewer) makeMat() {
 	logging.Debug("roomViewer>makeMat", "rv", []any{
 		rv.room.Size, rv.Render_region, rv.fx, rv.fy, rv.angle, rv.zoom,
 	})
-	rv.roomMats = perspective.MakeRoomMats(int(rv.room.Size.GetDx()), int(rv.room.Size.GetDy()), rv.Render_region, rv.fx, rv.fy, rv.angle, rv.zoom)
+	rv.roomMats = perspective.MakeRoomMats(rv.room.Size.GetDx(), rv.room.Size.GetDy(), rv.Render_region, rv.fx, rv.fy, rv.angle, rv.zoom)
 }
 
 // Transforms a cursor position in window coordinates to board coordinates.
@@ -195,6 +195,10 @@ func (rv *roomViewer) rightWallToModelview(bx, by float32) (x, y, z float32) {
 }
 
 // Distance to Plane(Point?)?  WTF IS THIS!?
+// This is used to measure the distance from the given point to the plane
+// defined by 'xfrmMtrix' whilst travelling along the given ray.
+// e.g. you can find 'z' co-ordinate of the world-space point clicked on by a
+// user if you pass the screen-space x/y point clicked and the z unit-vector.
 func d2p(xfrmMatrix mathgl.Mat4, point, ray mathgl.Vec3) float32 {
 	// Pull out the vector that encodes the 'translation' part of the xfrm.
 	worldSpaceOrigin := mathgl.Vec3{

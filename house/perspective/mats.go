@@ -19,10 +19,7 @@ type RoomMats struct {
 	angle float32
 }
 
-// roomWidth and roomHeight ought to be of type BoardSpaceUnit but that would
-// cause an import cycle.
-// TODO(tmckee#47): move BoardSpaceUnit to perspective package?
-func MakeRoomMats(roomWidth, roomHeight int, region gui.Region, focusx, focusy, angle, zoom float32) (ret RoomMats) {
+func MakeRoomMats(roomWidth, roomHeight BoardSpaceUnit, region gui.Region, focusx, focusy, angle, zoom float32) (ret RoomMats) {
 	ret.angle = angle
 	ret.Floor, ret.IFloor = MakeFloorTransforms(region, focusx, focusy, ret.angle, zoom)
 
@@ -58,7 +55,7 @@ func MakeRoomMats(roomWidth, roomHeight int, region gui.Region, focusx, focusy, 
 	ret.IRight.Inverse()
 
 	logging.Trace("makeRoomMats returning",
-		"roomsize", []int{roomWidth, roomHeight},
+		"roomsize", []BoardSpaceUnit{roomWidth, roomHeight},
 		"region", region,
 		"focusx", focusx,
 		"focusy", focusy,

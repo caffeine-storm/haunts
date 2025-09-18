@@ -9,10 +9,7 @@ import (
 // Returns a matrix to transform entities from "floor space" to one that is
 // coplanar with the screen. In effect, to "stand up" entities that are "lying
 // down".
-//
-// TODO(tmckee#47): the x/y parameters should be of type house.BoardSpaceUnit
-// (but that would cause a circular import r.n.)
-func MakeStandupTransform(mats *RoomMats, roomX, roomY int) *mathgl.Mat4 {
+func MakeStandupTransform(mats *RoomMats, roomX, roomY BoardSpaceUnit) *mathgl.Mat4 {
 	near_x, near_y := float32(roomX), float32(roomY)
 	step := &mathgl.Mat4{}
 	standup := &mathgl.Mat4{}

@@ -1,9 +1,12 @@
 package house
 
-import "image"
+import (
+	"image"
 
-// TODO(tmckee): does this belong in the 'perspective' package?
-type BoardSpaceUnit int
+	"github.com/MobRulesGames/haunts/house/perspective"
+)
+
+type BoardSpaceUnit = perspective.BoardSpaceUnit
 
 // Helper to convert pairs of values to pairs of BoardSpaceUnit
 func BoardSpaceUnitPair[T int | float32 | float64](x, y T) (BoardSpaceUnit, BoardSpaceUnit) {

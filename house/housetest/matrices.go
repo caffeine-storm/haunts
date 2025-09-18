@@ -23,7 +23,7 @@ func MatsAreEqual(lhs, rhs mathgl.Mat4) bool {
 }
 
 func MakeRoomMatsForCamera(roomSize house.RoomSize, cam CameraConfig) perspective.RoomMats {
-	return perspective.MakeRoomMats(int(roomSize.GetDx()), int(roomSize.GetDy()), cam.Region, cam.FocusX, cam.FocusY, cam.Angle, cam.Zoom)
+	return perspective.MakeRoomMats(roomSize.GetDx(), roomSize.GetDy(), cam.Region, cam.FocusX, cam.FocusY, cam.Angle, cam.Zoom)
 }
 
 type CameraConfig struct {
