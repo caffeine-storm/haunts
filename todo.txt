@@ -1,5 +1,9 @@
-- bug#47: BoardSpaceUnit cleanups; more things should be explicit and
-  consistent about what space a value is defined in.
+- bug#48: `make lvl1` draws some bookcases rotated compared to running the game
+  normally. Perhaps there's a race condition that `make lvl1` tends to lose?
+
+- bug#47: BoardSpaceUnit is great but we can do better
+	- use a type for real-valued BoardSpaceUnit distances; right now its a mix of float32 and float64
+  - use a type for screen-space distances; right now its just ints
 
 - bug#45: when starting the first game, the first attempt to pan on the
   unit-placement screen fails but subsequent ones succeed... dat's bad.

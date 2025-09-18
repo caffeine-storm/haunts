@@ -256,7 +256,8 @@ func (hv *HouseViewerState) boardToModelview(mx, my float32) (x, y, z float32) {
 
 // TODO(tmckee#47): this and its compatriots ought to be using BoardSpaceUnit
 // where appropriate. Introducing a 'ScreenSpaceUnit' would also be helpful.
-// Returning a float32 here is also barftastic.
+// Returning a float32 here is also barftastic but nescessary to support
+// sub-tile resolution when clicking.
 func (hv *HouseViewer) WindowToBoard(wx, wy int) (float32, float32) {
 	hv.floor, hv.ifloor = perspective.MakeFloorTransforms(hv.Render_region, hv.fx, hv.fy, hv.angle, hv.zoom)
 
