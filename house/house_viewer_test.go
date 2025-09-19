@@ -71,7 +71,7 @@ func TestHouseViewer(t *testing.T) {
 							hv = house.MakeHouseViewer(restestHouseDef, 62)
 							hv.Think(nil, 5)
 							hv.SetZoom(100)
-							hv.Focus(5, 5)
+							hv.SetFocusTarget(5, 5)
 							hv.Think(nil, 5000)
 							ent := gametest.GivenAnEntity()
 							ent.X = 5

@@ -735,7 +735,7 @@ func focusPos(gp *GamePanel) lua.LuaGoFunction {
 		gp.script.syncStart()
 		defer gp.script.syncEnd()
 		x, y := LuaToPoint(L, -1)
-		gp.game.viewer.Focus(float64(x), float64(y))
+		gp.game.viewer.SetFocusTarget(float64(x), float64(y))
 		return 0
 	}
 }
@@ -747,7 +747,7 @@ func focusZoom(gp *GamePanel) lua.LuaGoFunction {
 		}
 		gp.script.syncStart()
 		defer gp.script.syncEnd()
-		gp.game.viewer.FocusZoom(L.ToNumber(-1))
+		gp.game.viewer.SetZoomTarget(L.ToNumber(-1))
 		return 0
 	}
 }

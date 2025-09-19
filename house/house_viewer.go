@@ -42,53 +42,8 @@ type HouseViewerState struct {
 	dragging dragState
 }
 
-type dragState struct {
-	on     bool
-	refpos gui.Point
-	focus  struct {
-		X, Y float32
-	}
-}
-
-func (st *HouseViewerState) dragToggle(group gui.EventGroup) {
-	if st.dragging.on {
-		if group.PrimaryEvent().IsPress() {
-			// continue dragging
-		} else {
-			// done dragging
-			st.dragging.on = false
-		}
-	} else {
-		if group.PrimaryEvent().IsPress() {
-			// start dragging
-			st.dragging.on = true
-			st.dragging.refpos = group.GetMousePosition()
-			st.dragging.focus.X = st.fx
-			st.dragging.focus.Y = st.fy
-			st.target_on = true
-		} else {
-			// still not dragging
-		}
-	}
-}
-
-func (st *HouseViewerState) dragUpdate(group gui.EventGroup) {
-	if !st.dragging.on {
-		return
-	}
-
-	screenMousePos := group.GetMousePosition()
-
-	// Move the focus so that the on-board drag-start position aligns with the
-	// current mouse location.
-	startx, starty, _ := st.modelviewToBoard(float32(st.dragging.refpos.X), float32(st.dragging.refpos.Y))
-	curx, cury, _ := st.modelviewToBoard(float32(screenMousePos.X), float32(screenMousePos.Y))
-
-	deltax := curx - startx
-	deltay := cury - starty
-
-	st.targetx = st.dragging.focus.X - deltax
-	st.targety = st.dragging.focus.Y - deltay
+func (st *HouseViewerState) GetFocus() (float32, float32) {
+	return st.fx, st.fy
 }
 
 type HouseViewer struct {
@@ -134,7 +89,7 @@ func MakeHouseViewer(house *HouseDef, angle float32) *HouseViewer {
 	ret.SetAngle(angle)
 	ret.SetZoom(10)
 	ret.SetBounds()
-	ret.Focus(0, 0)
+	ret.SetFocusTarget(0, 0)
 
 	ret.floor, ret.ifloor = perspective.MakeFloorTransforms(ret.Render_region, ret.fx, ret.fy, ret.angle, ret.zoom)
 
@@ -160,23 +115,7 @@ func (hv *HouseViewer) Respond(g *gui.Gui, group gui.EventGroup) bool {
 		}
 		return true
 	}
-	rightButtonId := gin.KeyId{
-		Index: gin.MouseRButton,
-		Device: gin.DeviceId{
-			Index: gin.DeviceIndexAny,
-			Type:  gin.DeviceTypeMouse,
-		},
-	}
-	ret := false
-	if rightButtonId.Contains(group.PrimaryEvent().Key.Id()) {
-		hv.HouseViewerState.dragToggle(group)
-		ret = true
-	}
-	if group.IsMouseMove() {
-		hv.HouseViewerState.dragUpdate(group)
-		ret = true
-	}
-	return ret
+	return hv.HouseViewerState.dragging.HandleEventGroup(hv, group)
 }
 
 func (hv *HouseViewer) Think(g *gui.Gui, t int64) {
@@ -328,13 +267,13 @@ func (hv *HouseViewer) SetBounds() {
 	}
 }
 
-func (hv *HouseViewer) Focus(bx, by float64) {
+func (hv *HouseViewer) SetFocusTarget(bx, by float64) {
 	hv.targetx = float32(bx)
 	hv.targety = float32(by)
 	hv.target_on = true
 }
 
-func (hv *HouseViewer) FocusZoom(z float64) {
+func (hv *HouseViewer) SetZoomTarget(z float64) {
 	z = float64(clamp(float32(z), 0, 1))
 	max := 4.25759904621048
 	min := 2.87130468509059
