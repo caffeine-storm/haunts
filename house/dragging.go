@@ -15,7 +15,7 @@ type dragState struct {
 
 type draggable interface {
 	GetFocus() (float32, float32)
-	SetFocusTarget(float64, float64)
+	SetFocusTarget(float32, float32)
 	modelviewToBoard(float32, float32) (x, y, dist float32)
 }
 
@@ -54,7 +54,7 @@ func (ds *dragState) dragUpdate(drag draggable, group gui.EventGroup) {
 	deltax := curx - startx
 	deltay := cury - starty
 
-	drag.SetFocusTarget(float64(ds.focus.X-deltax), float64(ds.focus.Y-deltay))
+	drag.SetFocusTarget(ds.focus.X-deltax, ds.focus.Y-deltay)
 }
 
 func (ds *dragState) HandleEventGroup(drag draggable, group gui.EventGroup) bool {

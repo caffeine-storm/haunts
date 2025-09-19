@@ -8,6 +8,7 @@ import (
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/mathgl"
 	"github.com/go-gl-legacy/gl"
+	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
 )
@@ -17,7 +18,6 @@ type roomViewer struct {
 	gui.EmbeddedWidget
 	gui.BasicZone
 	gui.StubDrawFocuseder
-	gui.StubDoResponder
 	gui.StubDoThinker
 
 	room *Room
@@ -697,4 +697,20 @@ func (rv *roomViewer) Think(*gui.Gui, int64) {
 		rv.size = rv.room.Size
 		rv.makeMat()
 	}
+}
+
+func (rv *roomViewer) DoRespond(gui gui.EventHandlingContext, group gui.EventGroup) (consume, change_focus bool) {
+	rightButtonId := gin.KeyId{
+		Index: gin.MouseRButton,
+		Device: gin.DeviceId{
+			Index: gin.DeviceIndexAny,
+			Type:  gin.DeviceTypeMouse,
+		},
+	}
+	if _, ok := gui.UseMousePosition(group); ok {
+		if rightButtonId.Contains(group.PrimaryEvent().Key.Id()) {
+			// TODO(tmckee): update 'focus' position like we do for the HouseViewer
+		}
+	}
+	return false, false
 }

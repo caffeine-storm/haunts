@@ -375,7 +375,9 @@ func (g *Game) SelectEnt(ent *Entity) bool {
 	if g.selected_ent != nil {
 		g.selected_ent.selected = true
 	}
-	g.viewer.SetFocusTarget(ent.FPos())
+
+	fx, fy := ent.FPos()
+	g.viewer.SetFocusTarget(float32(fx), float32(fy))
 	return true
 }
 

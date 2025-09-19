@@ -24,6 +24,7 @@ type RoomEditorPanel struct {
 // Manually pass all events to the tabs, regardless of location, since the tabs
 // need to know where the user clicks.
 func (w *RoomEditorPanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
+	w.viewer.Respond(ui, group)
 	return w.widgets[w.tab.SelectedTab()].Respond(ui, group)
 }
 

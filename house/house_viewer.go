@@ -267,9 +267,9 @@ func (hv *HouseViewer) SetBounds() {
 	}
 }
 
-func (hv *HouseViewer) SetFocusTarget(bx, by float64) {
-	hv.targetx = float32(bx)
-	hv.targety = float32(by)
+func (hv *HouseViewer) SetFocusTarget(bx, by float32) {
+	hv.targetx = bx
+	hv.targety = by
 	hv.target_on = true
 }
 
