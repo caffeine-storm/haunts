@@ -7,8 +7,6 @@ import (
 	"github.com/runningwild/glop/util/algorithm"
 )
 
-// TODO(tmckee:#34): rename this file to 'wall_panel.go'
-
 type WallPanel struct {
 	*gui.VerticalTable
 	room   *Room
