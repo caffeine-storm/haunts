@@ -12,38 +12,6 @@ import (
 	"github.com/runningwild/glop/render"
 )
 
-type RectObject interface {
-	// Position in board space relative to the entire floor.
-	FloorPos() (BoardSpaceUnit, BoardSpaceUnit)
-
-	// Dimensions in board space.
-	Dims() (BoardSpaceUnit, BoardSpaceUnit)
-}
-
-type RenderOnFloorer interface {
-	// Draws stuff on the floor.  This will be called after the floor and all
-	// textures on it have been drawn, but before furniture has been drawn.
-	RenderOnFloor()
-
-	RectObject
-}
-
-type Drawable interface {
-	RectObject
-	FPos() (float64, float64)
-	Render(pos mathgl.Vec2, width float32)
-	Color() (r, g, b, a byte)
-}
-
-type editMode int
-
-const (
-	editNothing editMode = iota
-	editFurniture
-	editDecals
-	editCells
-)
-
 type roomViewer struct {
 	gui.Childless
 	gui.EmbeddedWidget
