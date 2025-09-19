@@ -1,7 +1,6 @@
 package house
 
 import (
-	"fmt"
 	"path/filepath"
 
 	"github.com/MobRulesGames/haunts/base"
@@ -30,7 +29,7 @@ func (w *RoomEditorPanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 
 func (w *RoomEditorPanel) SelectTab(n int) {
 	if n < 0 || n >= len(w.widgets) {
-		panic(fmt.Errorf("bad tab index: %d expected: [0:%d)", n, len(w.widgets)))
+		return
 	}
 	if n != w.tab.SelectedTab() {
 		w.widgets[w.tab.SelectedTab()].Collapse()
