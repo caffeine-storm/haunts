@@ -8,7 +8,6 @@ import (
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/mathgl"
 	"github.com/go-gl-legacy/gl"
-	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
 )
@@ -49,6 +48,8 @@ type roomViewer struct {
 
 	// Keeping some things here to avoid unnecessary allocations elsewhere
 	cstack base.ColorStack
+
+	dragging dragState
 }
 
 func (rv *roomViewer) SetEditMode(mode editMode) {
@@ -202,6 +203,17 @@ func (rv *roomViewer) boardToModelview(mx, my float32) (x, y, z float32) {
 	v.Transform(&rv.roomMats.Floor)
 	x, y, z = v.X, v.Y, v.Z
 	return
+}
+
+func (rv *roomViewer) GetFocus() (float32, float32) {
+	return rv.fx, rv.fy
+}
+
+func (rv *roomViewer) SetFocusTarget(x, y float32) {
+	// TODO(tmckee:clean): also 'approach' (x,y) like in HouseViewer for smoother
+	// panning animation.
+	rv.fx, rv.fy = x, y
+	rv.makeMat()
 }
 
 func clamp(f, min, max float32) float32 {
@@ -700,17 +712,6 @@ func (rv *roomViewer) Think(*gui.Gui, int64) {
 }
 
 func (rv *roomViewer) DoRespond(gui gui.EventHandlingContext, group gui.EventGroup) (consume, change_focus bool) {
-	rightButtonId := gin.KeyId{
-		Index: gin.MouseRButton,
-		Device: gin.DeviceId{
-			Index: gin.DeviceIndexAny,
-			Type:  gin.DeviceTypeMouse,
-		},
-	}
-	if _, ok := gui.UseMousePosition(group); ok {
-		if rightButtonId.Contains(group.PrimaryEvent().Key.Id()) {
-			// TODO(tmckee): update 'focus' position like we do for the HouseViewer
-		}
-	}
-	return false, false
+	consume = rv.dragging.HandleDragEventGroup(rv, group)
+	return
 }
