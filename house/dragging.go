@@ -57,7 +57,7 @@ func (ds *dragState) dragUpdate(drag draggable, group gui.EventGroup) {
 	drag.SetFocusTarget(ds.focus.X-deltax, ds.focus.Y-deltay)
 }
 
-func (ds *dragState) HandleEventGroup(drag draggable, group gui.EventGroup) bool {
+func (ds *dragState) HandleDragEventGroup(drag draggable, group gui.EventGroup) bool {
 	rightButtonId := gin.KeyId{
 		Index: gin.MouseRButton,
 		Device: gin.DeviceId{

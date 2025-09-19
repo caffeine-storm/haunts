@@ -115,7 +115,7 @@ func (hv *HouseViewer) Respond(g *gui.Gui, group gui.EventGroup) bool {
 		}
 		return true
 	}
-	return hv.HouseViewerState.dragging.HandleEventGroup(hv, group)
+	return hv.HouseViewerState.dragging.HandleDragEventGroup(hv, group)
 }
 
 func (hv *HouseViewer) Think(g *gui.Gui, t int64) {
