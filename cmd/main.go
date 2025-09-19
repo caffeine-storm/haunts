@@ -39,15 +39,14 @@ import (
 //go:generate go run github.com/MobRulesGames/haunts/tools/genversion/cmd ../.git/HEAD ./gen/version.go
 
 var (
-	key_map                   base.KeyMap
-	editors                   map[string]house.Editor
-	editor                    house.Editor
-	editor_name               string
-	anchor                    *gui.AnchorBox
-	chooser                   *gui.FileChooser
-	game_box                  *lowerLeftTable
-	game_panel                *game.GamePanel
-	zooming, dragging, hiding bool
+	key_map     base.KeyMap
+	editors     map[string]house.Editor
+	editor      house.Editor
+	editor_name string
+	anchor      *gui.AnchorBox
+	chooser     *gui.FileChooser
+	game_box    *lowerLeftTable
+	game_panel  *game.GamePanel
 )
 
 const (
