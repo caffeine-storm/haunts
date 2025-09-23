@@ -1,3 +1,6 @@
+- bug#49: there's a bunch of .house data files that use an 'Icon' path of
+  "houses/icons" which is a directory but it needs to be a .png.
+
 - bug#48: `make lvl1` draws some bookcases rotated compared to running the game
   normally. Perhaps there's a race condition that `make lvl1` tends to lose?
 
@@ -156,4 +159,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#48: <next>
+- bug#50: <next>
