@@ -3,6 +3,7 @@ package logging
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"log"
 	"log/slog"
@@ -26,7 +27,7 @@ type hauntsLogger struct {
 }
 
 func (log *hauntsLogger) Printf(msg string, args ...interface{}) {
-	doLog(log, slog.LevelInfo, msg, args...)
+	doLog(log, slog.LevelInfo, fmt.Sprintf(msg, args...))
 }
 
 var _ Logger = (*hauntsLogger)(nil)
