@@ -145,7 +145,6 @@ func (hv *HouseViewer) Think(g *gui.Gui, t int64) {
 		hv.target_on = false
 	}
 
-	logging.Info("zoomzoomzoom", "zoom", hv.zoom)
 	if hv.target_zoom_on {
 		exp := math.Log(float64(hv.zoom))
 		exp += (math.Log(float64(hv.targetzoom)) - exp) * float64(scale)
