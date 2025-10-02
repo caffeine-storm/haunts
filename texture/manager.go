@@ -396,7 +396,7 @@ func handleLoadRequest(req loadRequest) {
 	defer f.Close()
 	im, _, err := image.Decode(f)
 	if err != nil {
-		logging.Error("texture manager couldn't image.Decode", "err", err)
+		logging.Error("texture manager couldn't image.Decode", "path", req.path, "err", err)
 		manager.signalLoad(req.path, false)
 		return
 	}
@@ -439,6 +439,7 @@ func handleLoadRequest(req loadRequest) {
 		canvas = imgmanip.NewInvertedCanvas(rgbaImage)
 	}
 	draw.Draw(canvas, im.Bounds(), im, image.Point{}, draw.Src)
+
 	manager.load.mutex.Lock()
 	manager.load.count += len(pix)
 	manual_unlock := false
@@ -463,10 +464,16 @@ func handleLoadRequest(req loadRequest) {
 			gl.TexParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT)
 			gl.TexParameterf(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT)
 		}
+
+		var mipmapResult int
+		logging.Debug("on-render queue texture manip", "path", req.path, "gray", gray)
 		if gray {
-			glu.Build2DMipmaps(gl.TEXTURE_2D, gl.LUMINANCE_ALPHA, req.data.dx, req.data.dy, gl.LUMINANCE_ALPHA, gl.UNSIGNED_BYTE, pix)
+			mipmapResult = glu.Build2DMipmaps(gl.TEXTURE_2D, gl.LUMINANCE_ALPHA, req.data.dx, req.data.dy, gl.LUMINANCE_ALPHA, gl.UNSIGNED_BYTE, pix)
 		} else {
-			glu.Build2DMipmaps(gl.TEXTURE_2D, gl.RGBA, req.data.dx, req.data.dy, gl.RGBA, gl.UNSIGNED_BYTE, pix)
+			mipmapResult = glu.Build2DMipmaps(gl.TEXTURE_2D, gl.RGBA, req.data.dx, req.data.dy, gl.RGBA, gl.UNSIGNED_BYTE, pix)
+		}
+		if mipmapResult != 0 {
+			logging.Error("failed to mipmap texture", "imgpath", req.path)
 		}
 		memory.FreeBlock(pix)
 		if manual_unlock {
