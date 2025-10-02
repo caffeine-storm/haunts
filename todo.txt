@@ -1,3 +1,11 @@
+- bug#50: some textures get rendered as white squares, others as the image with
+  a white, opaque background while others render just fine. White squares seem
+  to be possible whether the textures were loaded through ./texture/manager.go or
+  through glop's sprite handling.
+
+- bug#51: when selecting the 'move' action, every tile is displayed as a
+  possiblity, including tiles that don't have floor!
+
 - bug#49: there's a bunch of .house data files that use an 'Icon' path of
   "houses/icons" which is a directory but it needs to be a .png.
 
@@ -159,4 +167,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#50: <next>
+- bug#52: <next>
