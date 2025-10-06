@@ -113,6 +113,8 @@ func (sp *SpawnPoint) RenderOnFloor() {
 	colour.A = uint8(hs % 256)
 	// gl.Color4ub(, uint8((hs/256)%256), uint8((hs/(256*256))%256), uint8(255*rgba[3]))
 
+	// TODO(tmckee:#52): this is choosing a red square right now but we should
+	// use the 'box' shader instead.
 	gl.Color4ub(255, 0, 0, 255)
 	logging.Trace("glstate", "glstate", debug.GetGlState(), "colour", colour, "for now", "red")
 
