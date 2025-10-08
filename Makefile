@@ -93,7 +93,7 @@ include build/testing-env.mk
 .PRECIOUS: %/perf.data
 %/perf.data: %/perftest
 	cd $(dir $^) && \
-	perf record -g -o perf.data ./perftest
+	${PERF} record -g -o perf.data ./perftest
 
 test-dev: dev.go.mod dev.go.sum
 	${testing_env} go test ${testrunargs} -modfile dev.go.mod -tags nosound ./...
