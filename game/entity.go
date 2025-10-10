@@ -523,18 +523,17 @@ func (e *Entity) drawReticle(pos mathgl.Vec2, rgba [4]float64) {
 	if !e.hovered && !e.selected && !e.controlled {
 		return
 	}
+
 	gl.PushAttrib(gl.CURRENT_BIT)
-	r := uint8(rgba[0] * 255)
-	g := uint8(rgba[1] * 255)
-	b := uint8(rgba[2] * 255)
-	a := uint8(rgba[3] * 255)
+	defer gl.PopAttrib()
+
 	switch {
 	case e.controlled:
-		gl.Color4ub(0, 0, r, a)
+		gl.Color4d(0, 0, rgba[0], rgba[3])
 	case e.selected:
-		gl.Color4ub(r, g, b, a)
+		gl.Color4d(rgba[0], rgba[1], rgba[2], rgba[3])
 	default:
-		gl.Color4ub(r, g, b, uint8((int(a)*200)>>8))
+		gl.Color4d(rgba[0], rgba[1], rgba[2], rgba[3]*0.8)
 	}
 	glow, err := texture.LoadFromPath(filepath.Join(base.GetDataDir(), "ui", "glow.png"))
 	if err != nil {
@@ -543,7 +542,6 @@ func (e *Entity) drawReticle(pos mathgl.Vec2, rgba [4]float64) {
 	dx := float64(e.last_render_width + 0.5)
 	dy := float64(e.last_render_width * 150 / 100)
 	glow.Render(float64(pos.X), float64(pos.Y), dx, dy)
-	gl.PopAttrib()
 }
 
 func (e *Entity) Color() (r, g, b, a byte) {
