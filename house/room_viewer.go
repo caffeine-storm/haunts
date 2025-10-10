@@ -6,9 +6,7 @@ import (
 	"github.com/MobRulesGames/haunts/house/perspective"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/mathgl"
-	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/gui"
-	"github.com/runningwild/glop/render"
 )
 
 type roomViewer struct {
@@ -238,66 +236,6 @@ func (rv *roomViewer) SetZoom(dz float32) {
 
 func (rv *roomViewer) GetZoom() float32 {
 	return rv.zoom
-}
-
-func drawPrep() {
-	gl.Disable(gl.DEPTH_TEST)
-	gl.Disable(gl.TEXTURE_2D)
-	gl.PolygonMode(gl.FRONT_AND_BACK, gl.FILL)
-	gl.Enable(gl.BLEND)
-	gl.BlendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
-	gl.ClearStencil(0)
-	gl.Clear(gl.STENCIL_BUFFER_BIT)
-}
-
-func (rv *roomViewer) drawFloor() {
-	// TODO(tmckee): this probably needs to be WithMultMatrix...
-	render.WithMatrixInMode(&rv.roomMats.Floor, render.MatrixModeModelView, func() {
-		gl.Disable(gl.TEXTURE_2D)
-		gl.Color4f(1, 0, 1, 0.9)
-		if rv.edit_mode == editCells {
-			gl.LineWidth(0.02 * rv.zoom)
-		} else {
-			gl.LineWidth(0.05 * rv.zoom)
-		}
-		gl.Begin(gl.LINES)
-		for i := float32(0); i < float32(rv.room.Size.Dx); i += 1.0 {
-			gl.Vertex2f(i, 0)
-			gl.Vertex2f(i, float32(rv.room.Size.Dy))
-		}
-		for j := float32(0); j < float32(rv.room.Size.Dy); j += 1.0 {
-			gl.Vertex2f(0, j)
-			gl.Vertex2f(float32(rv.room.Size.Dx), j)
-		}
-		gl.End()
-
-		if rv.edit_mode == editCells {
-			gl.Disable(gl.TEXTURE_2D)
-			gl.Color4d(1, 0, 0, 1)
-			gl.LineWidth(0.05 * rv.zoom)
-			gl.Begin(gl.LINES)
-			for _, f := range rv.room.Furniture {
-				bsx, bsy := f.FloorPos()
-				bsdx, bsdy := f.Dims()
-				x, y := int(bsx), int(bsy)
-				dx, dy := int(bsdx), int(bsdy)
-				gl.Vertex2i(x, y)
-				gl.Vertex2i(x, y+dy)
-
-				gl.Vertex2i(x, y+dy)
-				gl.Vertex2i(x+dx, y+dy)
-
-				gl.Vertex2i(x+dx, y+dy)
-				gl.Vertex2i(x+dx, y)
-
-				gl.Vertex2i(x+dx, y)
-				gl.Vertex2i(x, y)
-			}
-			gl.End()
-		}
-
-		gl.Disable(gl.STENCIL_TEST)
-	})
 }
 
 func (rv *roomViewer) Draw(region gui.Region, ctx gui.DrawingContext) {
