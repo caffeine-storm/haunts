@@ -523,20 +523,20 @@ func (e *Entity) drawReticle(pos mathgl.Vec2) {
 	if !e.hovered && !e.selected && !e.controlled {
 		return
 	}
-	var rgba [4]float64
-	gl.GetDoublev(gl.CURRENT_COLOR, rgba[:])
+	r, g, b, a := gl.GetDouble4(gl.CURRENT_COLOR)
 
 	gl.PushAttrib(gl.CURRENT_BIT)
 	defer gl.PopAttrib()
 
 	switch {
 	case e.controlled:
-		gl.Color4d(0, 0, rgba[0], rgba[3])
+		gl.Color4d(0, 0, r, a)
 	case e.selected:
-		gl.Color4d(rgba[0], rgba[1], rgba[2], rgba[3])
+		gl.Color4d(r, g, b, a)
 	default:
-		gl.Color4d(rgba[0], rgba[1], rgba[2], rgba[3]*0.8)
+		gl.Color4d(r, g, b, a*0.8)
 	}
+
 	glow, err := texture.LoadFromPath(filepath.Join(base.GetDataDir(), "ui", "glow.png"))
 	if err != nil {
 		panic(fmt.Errorf("glow texture loading failed: %w", err))
