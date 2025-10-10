@@ -3,7 +3,6 @@ package house
 import (
 	"math"
 
-	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/house/perspective"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/mathgl"
@@ -45,9 +44,6 @@ type roomViewer struct {
 
 	// This tells us what to highlight based on the mouse position
 	edit_mode editMode
-
-	// Keeping some things here to avoid unnecessary allocations elsewhere
-	cstack base.ColorStack
 
 	dragging dragState
 }
