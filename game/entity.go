@@ -519,10 +519,12 @@ type Entity struct {
 	EntityInst
 }
 
-func (e *Entity) drawReticle(pos mathgl.Vec2, rgba [4]float64) {
+func (e *Entity) drawReticle(pos mathgl.Vec2) {
 	if !e.hovered && !e.selected && !e.controlled {
 		return
 	}
+	var rgba [4]float64
+	gl.GetDoublev(gl.CURRENT_COLOR, rgba[:])
 
 	gl.PushAttrib(gl.CURRENT_BIT)
 	defer gl.PopAttrib()
@@ -553,11 +555,9 @@ func (e *Entity) Color() (r, g, b, a byte) {
 // assumed to be valid input to the current matrix stack.
 func (e *Entity) Render(pos mathgl.Vec2, width float32) {
 	logging.Debug("Entity.Render", "pos", pos, "width", width, "glstate", debug.GetGlState())
-	var rgba [4]float64
-	gl.GetDoublev(gl.CURRENT_COLOR, rgba[:])
 	e.last_render_width = width
 	gl.Enable(gl.TEXTURE_2D)
-	e.drawReticle(pos, rgba)
+	e.drawReticle(pos)
 	if e.sprite.sp == nil {
 		logging.Info("got a nil entity sprite", "ent", *e)
 		return
