@@ -422,22 +422,7 @@ func (m *MainBar) Respond(g *gui.Gui, group gui.EventGroup) bool {
 func (m *MainBar) Draw(region gui.Region, ctx gui.DrawingContext) {
 	shaderBank := globals.RenderQueueState().Shaders()
 	m.region = region
-	gl.Enable(gl.TEXTURE_2D)
-	m.layout.Background.Data().Bind()
-	gl.Color4d(1, 1, 1, 1)
-	gl.Begin(gl.QUADS)
-	gl.TexCoord2d(0, 0)
-	gl.Vertex2i(region.X, region.Y)
-
-	gl.TexCoord2d(0, -1)
-	gl.Vertex2i(region.X, region.Y+region.Dy)
-
-	gl.TexCoord2d(1, -1)
-	gl.Vertex2i(region.X+region.Dx, region.Y+region.Dy)
-
-	gl.TexCoord2d(1, 0)
-	gl.Vertex2i(region.X+region.Dx, region.Y)
-	gl.End()
+	m.layout.Background.Data().Render(float64(region.X), float64(region.Y), float64(region.Dx), float64(region.Dy))
 
 	buttons := m.no_actions_buttons
 	if m.ent != nil && len(m.ent.Actions) > m.layout.Actions.Count {
