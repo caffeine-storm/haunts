@@ -15,6 +15,7 @@ import (
 	"github.com/MobRulesGames/mathgl"
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/debug"
+	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/sprite"
 	"github.com/runningwild/glop/util/algorithm"
 )
@@ -523,27 +524,26 @@ func (e *Entity) drawReticle(pos mathgl.Vec2) {
 	if !e.hovered && !e.selected && !e.controlled {
 		return
 	}
-	r, g, b, a := gl.GetDouble4(gl.CURRENT_COLOR)
-
-	gl.PushAttrib(gl.CURRENT_BIT)
-	defer gl.PopAttrib()
+	r, g, b, a := gl.GetFloat4(gl.CURRENT_COLOR)
 
 	switch {
 	case e.controlled:
-		gl.Color4d(0, 0, r, a)
+		r, g, b = 0, 0, r
 	case e.selected:
-		gl.Color4d(r, g, b, a)
+		break
 	default:
-		gl.Color4d(r, g, b, a*0.8)
+		a = a * 0.8
 	}
 
-	glow, err := texture.LoadFromPath(filepath.Join(base.GetDataDir(), "ui", "glow.png"))
-	if err != nil {
-		panic(fmt.Errorf("glow texture loading failed: %w", err))
-	}
-	dx := float64(e.last_render_width + 0.5)
-	dy := float64(e.last_render_width * 150 / 100)
-	glow.Render(float64(pos.X), float64(pos.Y), dx, dy)
+	render.WithColour(r, g, b, a, func() {
+		glow, err := texture.LoadFromPath(filepath.Join(base.GetDataDir(), "ui", "glow.png"))
+		if err != nil {
+			panic(fmt.Errorf("glow texture loading failed: %w", err))
+		}
+		dx := float64(e.last_render_width + 0.5)
+		dy := float64(e.last_render_width * 150 / 100)
+		glow.Render(float64(pos.X), float64(pos.Y), dx, dy)
+	})
 }
 
 func (e *Entity) Color() (r, g, b, a byte) {
