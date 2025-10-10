@@ -88,6 +88,7 @@ func (sp *SpawnPoint) RenderOnFloor() {
 	var rgba [4]float64
 	gl.GetDoublev(gl.CURRENT_COLOR, rgba[:])
 	gl.PushAttrib(gl.CURRENT_BIT)
+	defer gl.PopAttrib()
 	gl.Disable(gl.TEXTURE_2D)
 
 	// This just creates a color that is consistent among all spawn points whose
@@ -134,5 +135,4 @@ func (sp *SpawnPoint) RenderOnFloor() {
 	sp.Tex.ResetPath(base.Path(path.Join(base.GetDataDir(), "textures/pentagram_04_large_red.png")))
 	sp.Tex.Data().Render(float64(sp.X), float64(sp.Y), float64(sp.Dx), float64(sp.Dy))
 	//base.EnableShader("")
-	gl.PopAttrib()
 }

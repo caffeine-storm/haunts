@@ -10,6 +10,7 @@ import (
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
+	"github.com/runningwild/glop/render"
 )
 
 const maxLines = 25
@@ -92,46 +93,48 @@ func (c *Console) Draw(region gui.Region, ctx gui.DrawingContext) {
 func (c *Console) DrawFocused(region gui.Region, ctx gui.DrawingContext) {
 	// TODO(tmckee): is 'standard_18' correct here?
 	dict := ctx.GetDictionary("standard_18")
-	gl.Color4d(0.2, 0, 0.3, 0.8)
-	gl.Disable(gl.TEXTURE_2D)
-	gl.Begin(gl.QUADS)
-	gl.Vertex2i(region.X, region.Y)
-	gl.Vertex2i(region.X, region.Y+region.Dy)
-	gl.Vertex2i(region.X+region.Dx, region.Y+region.Dy)
-	gl.Vertex2i(region.X+region.Dx, region.Y)
-	gl.End()
-	gl.Color4d(1, 1, 1, 1)
-	y := region.Y + len(c.lines)*dict.MaxHeight()
-	do_color := func(line string) {
-		if strings.HasPrefix(line, "LOG") {
-			gl.Color4d(1, 1, 1, 1)
+	render.WithColour(0.2, 0, 0.3, 0.8, func() {
+		gl.Color4d(0.2, 0, 0.3, 0.8)
+		gl.Disable(gl.TEXTURE_2D)
+		gl.Begin(gl.QUADS)
+		gl.Vertex2i(region.X, region.Y)
+		gl.Vertex2i(region.X, region.Y+region.Dy)
+		gl.Vertex2i(region.X+region.Dx, region.Y+region.Dy)
+		gl.Vertex2i(region.X+region.Dx, region.Y)
+		gl.End()
+		gl.Color4d(1, 1, 1, 1)
+		y := region.Y + len(c.lines)*dict.MaxHeight()
+		do_color := func(line string) {
+			if strings.HasPrefix(line, "LOG") {
+				gl.Color4d(1, 1, 1, 1)
+			}
+			if strings.HasPrefix(line, "WARN") {
+				gl.Color4d(1, 1, 0, 1)
+			}
+			if strings.HasPrefix(line, "ERROR") {
+				gl.Color4d(1, 0, 0, 1)
+			}
 		}
-		if strings.HasPrefix(line, "WARN") {
-			gl.Color4d(1, 1, 0, 1)
+		// TODO(tmckee): expose the glop.font shader id instead of hardcoding here.
+		shaderBank := ctx.GetShaders("glop.font")
+		if c.start > c.end {
+			for i := c.start; i < len(c.lines); i++ {
+				do_color(c.lines[i])
+				dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, dict.MaxHeight(), gui.Left, shaderBank)
+				y -= dict.MaxHeight()
+			}
+			for i := 0; i < c.end; i++ {
+				do_color(c.lines[i])
+				dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, dict.MaxHeight(), gui.Left, shaderBank)
+				y -= dict.MaxHeight()
+			}
+		} else {
+			for i := c.start; i < c.end && i < len(c.lines); i++ {
+				do_color(c.lines[i])
+				dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, dict.MaxHeight(), gui.Left, shaderBank)
+				y -= dict.MaxHeight()
+			}
 		}
-		if strings.HasPrefix(line, "ERROR") {
-			gl.Color4d(1, 0, 0, 1)
-		}
-	}
-	// TODO(tmckee): expose the glop.font shader id instead of hardcoding here.
-	shaderBank := ctx.GetShaders("glop.font")
-	if c.start > c.end {
-		for i := c.start; i < len(c.lines); i++ {
-			do_color(c.lines[i])
-			dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, dict.MaxHeight(), gui.Left, shaderBank)
-			y -= dict.MaxHeight()
-		}
-		for i := 0; i < c.end; i++ {
-			do_color(c.lines[i])
-			dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, dict.MaxHeight(), gui.Left, shaderBank)
-			y -= dict.MaxHeight()
-		}
-	} else {
-		for i := c.start; i < c.end && i < len(c.lines); i++ {
-			do_color(c.lines[i])
-			dict.RenderString(c.lines[i], gui.Point{X: c.xscroll, Y: y}, dict.MaxHeight(), gui.Left, shaderBank)
-			y -= dict.MaxHeight()
-		}
-	}
-	dict.RenderString(string(c.cmd), gui.Point{X: c.xscroll, Y: y}, dict.MaxHeight(), gui.Left, shaderBank)
+		dict.RenderString(string(c.cmd), gui.Point{X: c.xscroll, Y: y}, dict.MaxHeight(), gui.Left, shaderBank)
+	})
 }
