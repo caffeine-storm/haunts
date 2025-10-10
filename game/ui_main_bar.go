@@ -437,25 +437,12 @@ func (m *MainBar) Draw(region gui.Region, ctx gui.DrawingContext) {
 		ent = m.ent
 	}
 	if ent != nil && ent.Stats != nil {
-		gl.Color4d(1, 1, 1, 1)
-		ent.Still.Data().Bind()
 		tdx := ent.Still.Data().Dx()
 		tdy := ent.Still.Data().Dy()
 		cx := region.X + m.layout.CenterStillFrame.X
 		cy := region.Y + m.layout.CenterStillFrame.Y
-		gl.Begin(gl.QUADS)
-		gl.TexCoord2d(0, 0)
-		gl.Vertex2i(cx-tdx/2, cy-tdy/2)
 
-		gl.TexCoord2d(0, -1)
-		gl.Vertex2i(cx-tdx/2, cy+tdy/2)
-
-		gl.TexCoord2d(1, -1)
-		gl.Vertex2i(cx+tdx/2, cy+tdy/2)
-
-		gl.TexCoord2d(1, 0)
-		gl.Vertex2i(cx+tdx/2, cy-tdy/2)
-		gl.End()
+		ent.Still.Data().Render(float64(cx-tdx/2), float64(cy-tdy/2), float64(tdx), float64(tdy))
 
 		m.layout.Name.RenderString(ent.Name)
 		m.layout.Ap.RenderString(fmt.Sprintf("Ap:%d", ent.Stats.ApCur()))
@@ -463,25 +450,11 @@ func (m *MainBar) Draw(region gui.Region, ctx gui.DrawingContext) {
 		m.layout.Corpus.RenderString(fmt.Sprintf("Corpus:%d", ent.Stats.Corpus()))
 		m.layout.Ego.RenderString(fmt.Sprintf("Ego:%d", ent.Stats.Ego()))
 
-		gl.Color4d(1, 1, 1, 1)
-		m.layout.Divider.Data().Bind()
 		tdx = m.layout.Divider.Data().Dx()
 		tdy = m.layout.Divider.Data().Dy()
 		cx = region.X + m.layout.Name.X
 		cy = region.Y + m.layout.Name.Y - 5
-		gl.Begin(gl.QUADS)
-		gl.TexCoord2d(0, 0)
-		gl.Vertex2i(cx-tdx/2, cy-tdy/2)
-
-		gl.TexCoord2d(0, -1)
-		gl.Vertex2i(cx-tdx/2, cy+(tdy+1)/2)
-
-		gl.TexCoord2d(1, -1)
-		gl.Vertex2i(cx+(tdx+1)/2, cy+(tdy+1)/2)
-
-		gl.TexCoord2d(1, 0)
-		gl.Vertex2i(cx+(tdx+1)/2, cy-tdy/2)
-		gl.End()
+		m.layout.Divider.Data().Render(float64(cx-tdx/2), float64(cy-tdy/2), float64(tdx), float64(tdy))
 	}
 	if m.ent != nil && m.ent.Stats != nil {
 		// Actions
@@ -505,7 +478,6 @@ func (m *MainBar) Draw(region gui.Region, ctx gui.DrawingContext) {
 			r.Dy = int(m.layout.Actions.Icon_size + float64(d.MaxHeight()))
 			r.PushClipPlanes()
 
-			gl.Color4d(1, 1, 1, 1)
 			for i, action := range m.ent.Actions {
 
 				// Highlight the selected action
@@ -519,27 +491,12 @@ func (m *MainBar) Draw(region gui.Region, ctx gui.DrawingContext) {
 					gl.Vertex3d(xpos+s+2, m.layout.Actions.Y-2, 0)
 					gl.End()
 				}
-				gl.Enable(gl.TEXTURE_2D)
-				action.Icon().Data().Bind()
 				if action.Preppable(m.ent, m.game) {
 					gl.Color4d(1, 1, 1, 1)
 				} else {
 					gl.Color4d(0.5, 0.5, 0.5, 1)
 				}
-				gl.Begin(gl.QUADS)
-				gl.TexCoord2d(0, 0)
-				gl.Vertex3d(xpos, m.layout.Actions.Y, 0)
-
-				gl.TexCoord2d(0, -1)
-				gl.Vertex3d(xpos, m.layout.Actions.Y+s, 0)
-
-				gl.TexCoord2d(1, -1)
-				gl.Vertex3d(xpos+s, m.layout.Actions.Y+s, 0)
-
-				gl.TexCoord2d(1, 0)
-				gl.Vertex3d(xpos+s, m.layout.Actions.Y, 0)
-				gl.End()
-				gl.Disable(gl.TEXTURE_2D)
+				action.Icon().Data().Render(xpos, m.layout.Actions.Y, s, s)
 
 				ypos := int(m.layout.Actions.Y) - d.MaxHeight() - 2
 				d.RenderString(fmt.Sprintf("%d", i+1), gui.Point{X: int(xpos + s/2), Y: ypos}, d.MaxHeight(), gui.Center, shaderBank)
@@ -556,7 +513,6 @@ func (m *MainBar) Draw(region gui.Region, ctx gui.DrawingContext) {
 				x := m.layout.Actions.X + m.layout.Actions.Width/2
 				y := m.layout.ActionLeft.Y
 				str := fmt.Sprintf("%s:%dAP", m.state.Actions.selected.String(), m.state.Actions.selected.AP())
-				gl.Color4d(1, 1, 1, 1)
 				d.RenderString(str, gui.Point{X: int(x), Y: y}, d.MaxHeight(), gui.Center, shaderBank)
 			}
 		}
