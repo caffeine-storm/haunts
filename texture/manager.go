@@ -516,7 +516,6 @@ func (m *Manager) LoadFromPath(path string) (*Data, error) {
 	data.dx = config.Width
 	data.dy = config.Height
 
-	logging.Trace("texture manager: sending load request", "path", path)
 	m.load.requests <- loadRequest{path, data}
 	return data, nil
 }
