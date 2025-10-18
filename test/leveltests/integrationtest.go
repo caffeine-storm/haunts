@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"path"
 	"testing"
+	"time"
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
@@ -71,12 +72,25 @@ func (rt *renderingTester) Start() {
 	scenario := testScenario(rt.lvl)
 	gamePanel := gametest.GivenAGamePanelForScenario(scenario)
 
-	// TODO: Load the level
+	// TODO: let textures load
 
 	// TODO: Place units from the 'roster'
 
 	// Draw the UI
 	rt.renderQueue.Queue(func(render.RenderQueueState) {
+		gamePanel.Draw(rt.region, rt.drawingContext)
+	})
+	rt.renderQueue.Purge()
+
+	// Wait for textures to load
+	err := texture.BlockWithTimeboxUntilIdle(time.Second * 25)
+	if err != nil {
+		panic(fmt.Errorf("texture loading failed: %w", err))
+	}
+
+	// Blank the screen and draw the UI again now that textures are loaded.
+	rt.renderQueue.Queue(func(render.RenderQueueState) {
+		rendertest.ClearScreen()
 		gamePanel.Draw(rt.region, rt.drawingContext)
 	})
 }
