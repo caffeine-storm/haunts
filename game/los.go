@@ -389,10 +389,6 @@ func (g *Game) OnBegin() {
 	}
 }
 
-// TODO: DEPRECATED
-func (g *Game) PlaceInitialExplorers(ents []*Entity) {
-}
-
 func (g *Game) checkWinConditions() {
 	return
 	// Check for explorer win conditions
