@@ -7,7 +7,7 @@ import (
 )
 
 func TestLevel1(t *testing.T) {
-	leveltests.IntegrationTest(t, leveltests.Level1, leveltests.ModePassNPlay, func(tst leveltests.Tester) {
+	leveltests.EndToEndTest(t, leveltests.Level1, leveltests.ModePassNPlay, func(tst leveltests.Tester) {
 		tst.ValidateExpectations("initial")
 	})
 }
