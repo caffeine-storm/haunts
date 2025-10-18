@@ -1,7 +1,6 @@
 package house_test
 
 import (
-	"context"
 	"fmt"
 	"image/color"
 	"strings"
@@ -114,9 +113,7 @@ func TestRoom(t *testing.T) {
 					})
 					queue.Purge()
 
-					deadline, cancel := context.WithTimeout(context.Background(), time.Second*5)
-					defer cancel()
-					err := texture.BlockUntilIdle(deadline)
+					err := texture.BlockWithTimeboxUntilIdle(time.Second * 5)
 					if err != nil {
 						panic(fmt.Errorf("texture.BlockUntilIdle failed: %w", err))
 					}

@@ -375,6 +375,14 @@ func BlockUntilIdle(ctx context.Context) error {
 	return manager.BlockUntilIdle(ctx)
 }
 
+func BlockWithTimeboxUntilIdle(timespan time.Duration) error {
+	// TODO(tmckee): we ought to check that we're not running this on the render
+	// thread lest we block the render while expecting it to make progress 😅.
+	deadlineContext, cancel := context.WithTimeout(context.Background(), timespan)
+	defer cancel()
+	return BlockUntilIdle(deadlineContext)
+}
+
 // Returns a slice of the texture paths that are currently loading.
 func GetInFlightRequests() []string {
 	if manager == nil {
