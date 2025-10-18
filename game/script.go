@@ -489,6 +489,8 @@ func (gp *GamePanel) scriptThinkOnce() {
 	}
 }
 
+// TODO(tmckee:#34): I don't think this is actually used; it's referenced in a
+// .lua script that isn't itself referenced.
 func startScript(gp *GamePanel, player *Player) lua.LuaGoFunction {
 	return func(L *lua.State) int {
 		if !LuaCheckParamsOk(L, "StartScript", LuaString) {
