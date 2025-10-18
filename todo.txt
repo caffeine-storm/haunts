@@ -28,6 +28,9 @@
   through glop's sprite handling.
   At least manually testing, it seems gl.Color can be different for different calls to 'Render'/'RenderAdvanced'. ... need to find a way to correlate render calls to their entity/texture-id
 
+- bug#53: game/game.go is a thing... why is the game.Game struct defined in
+  game/los.go??? answer: it shouldn't be!
+
 - bug#52: house/spawn.go draws spawns as red squares when it should be using
   the 'box' shader.
 
