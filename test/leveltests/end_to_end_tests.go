@@ -94,7 +94,7 @@ func (rt *renderingTester) Start() {
 func (rt *renderingTester) End() {
 }
 
-func IntegrationTest(t *testing.T, level LevelChoice, mode ModeChoice, fn func(Tester)) {
+func EndToEndTest(t *testing.T, level LevelChoice, mode ModeChoice, fn func(Tester)) {
 	testname := fmt.Sprintf("%s end-to-end test", testLabel(level))
 	region := gui.MakeRegion(0, 0, 1024, 750)
 	testbuilder.WithSize(region.Dx, region.Dy, func(renderQueue render.RenderQueueInterface) {
