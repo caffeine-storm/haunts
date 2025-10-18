@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/MobRulesGames/haunts/base"
+	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/game/gametest"
 	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/registry"
@@ -38,6 +39,16 @@ func testLabel(lvl LevelChoice) string {
 	}[lvl]
 }
 
+func testScenario(lvl LevelChoice) game.Scenario {
+	return map[LevelChoice]game.Scenario{
+		// TODO(tmckee): hardcoding filesystem path and house name is sad-making
+		Level1: {
+			Script:    "Lvl01.lua",
+			HouseName: "Lvl_01_Haunted_House",
+		},
+	}[lvl]
+}
+
 type Tester interface {
 	ValidateExpectations(testcase string)
 }
@@ -57,7 +68,8 @@ func (rt *renderingTester) ValidateExpectations(testcase string) {
 
 func (rt *renderingTester) Start() {
 	// Build a game.Game and game.GamePanel
-	gamePanel := gametest.GivenAGamePanel()
+	scenario := testScenario(rt.lvl)
+	gamePanel := gametest.GivenAGamePanelForScenario(scenario)
 
 	// TODO: Load the level
 

@@ -29,8 +29,7 @@ func GivenAPlayer() *game.Player {
 	return &game.Player{}
 }
 
-func GivenAGamePanel() *game.GamePanel {
-	scenario := GivenAScenario()
+func GivenAGamePanelForScenario(scenario game.Scenario) *game.GamePanel {
 	player := GivenAPlayer()
 	noSpecialData := map[string]string{}
 	noGameKey := mrgnet.GameKey("")
@@ -42,6 +41,11 @@ func GivenAGamePanel() *game.GamePanel {
 	queue.Purge()
 
 	return ret
+}
+
+func GivenAGamePanel() *game.GamePanel {
+	scenario := GivenAScenario()
+	return GivenAGamePanelForScenario(scenario)
 }
 
 func GivenAGame() *game.Game {
