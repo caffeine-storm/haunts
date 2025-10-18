@@ -72,10 +72,6 @@ func (rt *renderingTester) Start() {
 	scenario := testScenario(rt.lvl)
 	gamePanel := gametest.GivenAGamePanelForScenario(scenario)
 
-	// TODO: let textures load
-
-	// TODO: Place units from the 'roster'
-
 	// Draw the UI
 	rt.renderQueue.Queue(func(render.RenderQueueState) {
 		gamePanel.Draw(rt.region, rt.drawingContext)
@@ -83,7 +79,7 @@ func (rt *renderingTester) Start() {
 	rt.renderQueue.Purge()
 
 	// Wait for textures to load
-	err := texture.BlockWithTimeboxUntilIdle(time.Second * 25)
+	err := texture.BlockWithTimeboxUntilIdle(time.Second * 5)
 	if err != nil {
 		panic(fmt.Errorf("texture loading failed: %w", err))
 	}
