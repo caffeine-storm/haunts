@@ -13,6 +13,7 @@ import (
 type GamePanel struct {
 	// TODO(tmckee:#38): hide this field from client code; too much coupling
 	// ensues when everyone is expected to manipulate this themselves.
+	// TODONE?: didn't see references to 'canvas' outside of this file.
 	canvas *gui.AnchorBox
 
 	main_bar *MainBar
