@@ -7,7 +7,13 @@ import (
 )
 
 func TestLevel1(t *testing.T) {
-	leveltests.EndToEndTest(t, leveltests.Level1, leveltests.ModePassNPlay, func(tst leveltests.Tester) {
-		tst.ValidateExpectations("initial")
+	leveltests.EndToEndTest(t, "level-01", func(tst leveltests.Planner) {
+		tst.PlanAndRun(
+			tst.StartApplication(),
+			tst.ChooseVersusMode(),
+			tst.ChooseLevel(leveltests.Level1),
+			tst.ChooseDenizens(),
+			tst.PlaceRoster(),
+		)
 	})
 }
