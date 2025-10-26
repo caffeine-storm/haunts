@@ -473,6 +473,8 @@ func (c *Chooser) Draw(region gui.Region, ctx gui.DrawingContext) {
 	c.region = region
 	render.WithColour(1, 1, 1, 1, func() {
 		c.layout.Background.Data().RenderNatural(region.X, region.Y)
+		// TODO(#54): what do we want to draw here? Perhaps a scroll bar? For now,
+		// it's goggles 🙃
 		tex := c.layout.Scroller.Texture.Data()
 		tex.RenderNatural(region.X+c.layout.Scroller.X, region.Y+c.layout.Scroller.Y)
 
