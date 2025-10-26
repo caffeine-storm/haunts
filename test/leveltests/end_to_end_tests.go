@@ -10,10 +10,11 @@ import (
 	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/game/gametest"
 	"github.com/MobRulesGames/haunts/globals"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
+	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
-	"github.com/runningwild/glop/gui/guitest"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
 	"github.com/runningwild/glop/system/systemtest"
@@ -168,9 +169,26 @@ type Planner interface {
 	ChooseDenizens() Step
 	PlaceRoster() Step
 }
+
+type rootWidget interface {
+	gui.Widget
+	gui.WidgetParent
+}
+
 type testPlanner struct {
 	window  systemtest.Window
-	stubGui *gui.Gui
+	rootGui *gui.Gui
+
+	windowRoot        rootWidget
+	startUiMenuConfig game.MenuConfig
+}
+
+func (tp *testPlanner) redrawRootGui() {
+	tp.window.GetQueue().Queue(func(render.RenderQueueState) {
+		rendertest.ClearScreen()
+		tp.rootGui.Draw()
+	})
+	tp.window.GetQueue().Purge()
 }
 
 func (tp *testPlanner) sanitizeSteps(plan []Step) {
@@ -193,36 +211,38 @@ func (tp *testPlanner) StartApplication() Step {
 			gameScreenRegion := gui.Region{}
 			gameScreenRegion.Dims = tp.window.GetDims()
 
-			box := &unAnchoredBox{
+			tp.windowRoot = &unAnchoredBox{
 				AnchorBox: gui.MakeAnchorBox(gameScreenRegion.Dims),
 			}
+			tp.rootGui.AddChild(tp.windowRoot)
 
+			// TODO(tmckee:clean): lifted from cmd/main.go; DRY it out
+			layout, err := game.LoadStartLayoutFromDatadir(base.GetDataDir())
+			if err != nil {
+				panic(fmt.Errorf("loading start layout failed: %w", err))
+			}
+
+			err = game.InsertStartMenu(tp.windowRoot, *layout)
+			if err != nil {
+				panic(fmt.Errorf("couldn't insert start menu: %w", err))
+			}
+
+			startUiMenu := tp.windowRoot.GetChildren()[0].(*game.StartMenu)
+			tp.startUiMenuConfig = startUiMenu.Layout.Menu
+			startUiMenu.SetOpacity(0.6)
+			tp.rootGui.Think(12)
 			queue.Queue(func(render.RenderQueueState) {
-				// TODO(tmckee:clean): lifted from cmd/main.go; DRY it out
-				layout, err := game.LoadStartLayoutFromDatadir(base.GetDataDir())
-				if err != nil {
-					panic(fmt.Errorf("loading start layout failed: %w", err))
-				}
-
-				err = game.InsertStartMenu(box, *layout)
-				if err != nil {
-					panic(fmt.Errorf("couldn't insert start menu: %w", err))
-				}
-
-				menu := box.GetChildren()[0]
-				menu.(*game.StartMenu).SetOpacity(0.6)
-				box.Think(tp.stubGui, 12)
-				box.Draw(gameScreenRegion, tp.stubGui)
+				tp.rootGui.Draw()
 			})
 			queue.Purge()
 
-			err := texture.BlockWithTimeboxUntilIdle(time.Second * 5)
+			err = texture.BlockWithTimeboxUntilIdle(time.Second * 5)
 			if err != nil {
 				panic(fmt.Errorf("couldn't wait for textures to load: %w", err))
 			}
 
 			queue.Queue(func(render.RenderQueueState) {
-				box.Draw(gameScreenRegion, tp.stubGui)
+				tp.windowRoot.Draw(gameScreenRegion, tp.rootGui)
 			})
 			queue.Purge()
 
@@ -232,10 +252,25 @@ func (tp *testPlanner) StartApplication() Step {
 	}
 }
 
-func (*testPlanner) ChooseVersusMode() Step {
+func (tp *testPlanner) ChooseVersusMode() Step {
 	return Step{
 		do: func() {
-			fmt.Println("ChooseVersusMode is stubbed!")
+			versusButton := tp.startUiMenuConfig.Versus
+			bx, by := versusButton.X, versusButton.Y
+			drv := tp.window.NewDriver()
+			drv.Click(bx, by)
+			drv.ProcessFrame()
+
+			tp.redrawRootGui()
+
+			if err := texture.BlockWithTimeboxUntilIdle(time.Second * 5); err != nil {
+				panic(fmt.Errorf("texture loading failed: %w", err))
+			}
+
+			tp.redrawRootGui()
+
+			levelSelectUi := rendertest.NewTestdataReference("level-select")
+			convey.So(tp.window.GetQueue(), rendertest.ShouldLookLikeFile, levelSelectUi, rendertest.Threshold(6))
 		},
 	}
 }
@@ -243,7 +278,7 @@ func (*testPlanner) ChooseVersusMode() Step {
 func (*testPlanner) ChooseLevel(LevelChoice) Step {
 	return Step{
 		do: func() {
-			fmt.Println("ChooseLevel is stubbed!")
+			fmt.Println("testPlanner.ChooseLevel is stubbed!")
 		},
 	}
 }
@@ -277,9 +312,14 @@ func EndToEndTest(t *testing.T, label string, testCase func(Planner)) {
 		})
 		renderQueue.Purge()
 
-		ctx := gametest.GivenADrawingContext(region.Dims)
+		inputObj := gin.MakeLogged(logging.DebugLogger())
+		rootGui, err := gui.MakeLogged(region.Dims, inputObj, logging.DebugLogger())
+		syswindow.AddInputListener(rootGui)
+		if err != nil {
+			panic(fmt.Errorf("gui.MakeLogged failed: %w", err))
+		}
 		registry.LoadAllRegistries()
-		base.InitDictionaries(ctx)
+		base.InitDictionaries(rootGui)
 		texture.Init(renderQueue)
 		base.InitShaders(renderQueue)
 		// TODO-end
@@ -287,7 +327,7 @@ func EndToEndTest(t *testing.T, label string, testCase func(Planner)) {
 		convey.Convey(testname, t, func(conveyContext convey.C) {
 			planner := &testPlanner{
 				window:  syswindow,
-				stubGui: guitest.MakeStubbedGui(syswindow.GetDims()),
+				rootGui: rootGui,
 			}
 
 			testCase(planner)
