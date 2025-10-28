@@ -8,7 +8,6 @@ import (
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
-	"github.com/MobRulesGames/haunts/game/gametest"
 	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/registry"
@@ -24,15 +23,19 @@ import (
 type LevelChoice int
 type ModeChoice int
 
-var (
-	Level1 LevelChoice = 1
+const (
+	LevelNone LevelChoice = iota
+	Level1
+)
 
+const (
 	ModePassNPlay ModeChoice = 1
 )
 
 func testdataDir(lvl LevelChoice) string {
 	return map[LevelChoice]string{
-		Level1: "level1",
+		LevelNone: "",
+		Level1:    "level1",
 	}[lvl]
 }
 
@@ -46,83 +49,6 @@ func testScenario(lvl LevelChoice) game.Scenario {
 	}[lvl]
 }
 
-type renderingTester struct {
-	lvl            LevelChoice
-	renderQueue    render.RenderQueueInterface
-	region         gui.Region
-	drawingContext gui.UpdateableDrawingContext
-}
-
-func (rt *renderingTester) ValidateExpectations(testcase string) {
-	expectedFile := rendertest.NewTestdataReference(path.Join(testdataDir(rt.lvl), testcase))
-
-	convey.So(rt.renderQueue, rendertest.ShouldLookLikeFile, expectedFile, rendertest.Threshold(6))
-}
-
-func (rt *renderingTester) Start() {
-	// Build a game.Game and game.GamePanel
-	scenario := testScenario(rt.lvl)
-	gamePanel := gametest.GivenAGamePanelForScenario(scenario)
-
-	// Draw the UI
-	rt.renderQueue.Queue(func(render.RenderQueueState) {
-		gamePanel.Draw(rt.region, rt.drawingContext)
-	})
-	rt.renderQueue.Purge()
-
-	// Wait for textures to load
-	err := texture.BlockWithTimeboxUntilIdle(time.Second * 5)
-	if err != nil {
-		panic(fmt.Errorf("texture loading failed: %w", err))
-	}
-
-	// Blank the screen and draw the UI again now that textures are loaded.
-	rt.renderQueue.Queue(func(render.RenderQueueState) {
-		rendertest.ClearScreen()
-		gamePanel.Draw(rt.region, rt.drawingContext)
-	})
-}
-
-func (rt *renderingTester) End() {
-}
-
-type Thener interface {
-	Then(any) Thener
-}
-
-type stubThener struct {
-}
-
-func (st *stubThener) Then(any) Thener {
-	fmt.Println("stub thener done did the then-en-ing")
-	return st
-}
-
-type StartUiTester interface {
-	VersusMode(func(VersusUiTester)) Thener
-}
-
-type VersusUiTester interface {
-	SelectLevel(LevelChoice) Thener
-}
-
-type SideUiTester interface {
-	SelectDenizens() Thener
-}
-
-type DeployUiTester interface {
-	DefaultDeployment() Thener
-}
-
-type RenderTester interface {
-	ValidateExpectations(testcase string)
-}
-
-type startUiTester struct {
-	window  systemtest.Window
-	stubGui *gui.Gui
-}
-
 type unAnchoredBox struct {
 	*gui.AnchorBox
 }
@@ -131,35 +57,12 @@ func (uab *unAnchoredBox) AddChild(w gui.Widget) {
 	uab.AnchorBox.AddChild(w, gui.Anchor{})
 }
 
-func (tst *startUiTester) Start() {
-}
-
-func (tst *startUiTester) RenderQueue() render.RenderQueueInterface {
-	return tst.window.GetQueue()
-}
-
-// Verifies startup ui against expectation file
-func (tst *startUiTester) ValidateStartupExpectations() {
-}
-
-func (*startUiTester) End() {}
-func (*startUiTester) VersusMode(nextStep func(VersusUiTester)) Thener {
-	// TODO: click the 'Versus' button
-	return &stubThener{}
-}
-
-type TestStarter interface{}
-type testStarter struct{}
-
 type Plan struct{}
 
 type Step struct {
 	do func()
 }
 
-type Runner interface {
-	Run()
-}
 type Planner interface {
 	PlanAndRun(...Step)
 
@@ -176,11 +79,18 @@ type rootWidget interface {
 }
 
 type testPlanner struct {
-	window  systemtest.Window
-	rootGui *gui.Gui
+	window    systemtest.Window
+	rootGui   *gui.Gui
+	timepoint uint64
 
 	windowRoot        rootWidget
 	startUiMenuConfig game.MenuConfig
+}
+
+func (tp *testPlanner) validateExpectations(lvl LevelChoice, testcase string) {
+	expectedFile := rendertest.NewTestdataReference(path.Join(testdataDir(lvl), testcase))
+
+	convey.So(tp.window.GetQueue(), rendertest.ShouldLookLikeFile, expectedFile, rendertest.Threshold(6))
 }
 
 func (tp *testPlanner) redrawRootGui() {
@@ -189,6 +99,12 @@ func (tp *testPlanner) redrawRootGui() {
 		tp.rootGui.Draw()
 	})
 	tp.window.GetQueue().Purge()
+}
+
+func (tp *testPlanner) thinkSeconds(seconds uint64) {
+	rendertest.AdvanceTimeMillis(tp.window.GetSystemInterface(), seconds*1000)
+	tp.timepoint += seconds * 1000
+	tp.rootGui.Think(int64(tp.timepoint))
 }
 
 func (tp *testPlanner) sanitizeSteps(plan []Step) {
@@ -207,7 +123,6 @@ func (tp *testPlanner) PlanAndRun(steps ...Step) {
 func (tp *testPlanner) StartApplication() Step {
 	return Step{
 		do: func() {
-			queue := tp.window.GetQueue()
 			gameScreenRegion := gui.Region{}
 			gameScreenRegion.Dims = tp.window.GetDims()
 
@@ -230,24 +145,16 @@ func (tp *testPlanner) StartApplication() Step {
 			startUiMenu := tp.windowRoot.GetChildren()[0].(*game.StartMenu)
 			tp.startUiMenuConfig = startUiMenu.Layout.Menu
 			startUiMenu.SetOpacity(0.6)
-			tp.rootGui.Think(12)
-			queue.Queue(func(render.RenderQueueState) {
-				tp.rootGui.Draw()
-			})
-			queue.Purge()
+			tp.thinkSeconds(5)
+			tp.redrawRootGui()
 
 			err = texture.BlockWithTimeboxUntilIdle(time.Second * 5)
 			if err != nil {
 				panic(fmt.Errorf("couldn't wait for textures to load: %w", err))
 			}
 
-			queue.Queue(func(render.RenderQueueState) {
-				tp.windowRoot.Draw(gameScreenRegion, tp.rootGui)
-			})
-			queue.Purge()
-
-			startupUi := rendertest.NewTestdataReference("startui")
-			convey.So(queue, rendertest.ShouldLookLikeFile, startupUi, rendertest.Threshold(6))
+			tp.redrawRootGui()
+			tp.validateExpectations(LevelNone, "startui")
 		},
 	}
 }
@@ -255,22 +162,27 @@ func (tp *testPlanner) StartApplication() Step {
 func (tp *testPlanner) ChooseVersusMode() Step {
 	return Step{
 		do: func() {
-			versusButton := tp.startUiMenuConfig.Versus
-			bx, by := versusButton.X, versusButton.Y
-			drv := tp.window.NewDriver()
-			drv.Click(bx, by)
-			drv.ProcessFrame()
+			logging.DebugBracket(func() {
+				versusButton := tp.startUiMenuConfig.Versus
+				bx, by := versusButton.X, versusButton.Y
+				drv := tp.window.NewDriver()
+				drv.Click(bx, by)
+				drv.ProcessFrame()
 
-			tp.redrawRootGui()
+				tp.redrawRootGui()
 
-			if err := texture.BlockWithTimeboxUntilIdle(time.Second * 5); err != nil {
-				panic(fmt.Errorf("texture loading failed: %w", err))
-			}
+				// At this point, the root widget will contain a map-select screen; we
+				// need to simulate some time passing so that it knows to be faded in.
+				tp.thinkSeconds(5)
 
-			tp.redrawRootGui()
+				if err := texture.BlockWithTimeboxUntilIdle(time.Second * 5); err != nil {
+					panic(fmt.Errorf("texture loading failed: %w", err))
+				}
 
-			levelSelectUi := rendertest.NewTestdataReference("level-select")
-			convey.So(tp.window.GetQueue(), rendertest.ShouldLookLikeFile, levelSelectUi, rendertest.Threshold(6))
+				tp.redrawRootGui()
+
+				tp.validateExpectations(LevelNone, "level-select")
+			})
 		},
 	}
 }
