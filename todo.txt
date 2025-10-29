@@ -1,4 +1,4 @@
-- bug#55: can't open doors; 'interact' action doesn't seem to run
+- bug#56: clicking a move on (x, y) targets (x, y - 1) T_T
 
 - bug#54: There's a stubbed gui element on the map-select screen. Presumably,
   it was supposed to be a scroll bar but *shrug*.
@@ -195,4 +195,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#56: <next>
+- bug#57: <next>
