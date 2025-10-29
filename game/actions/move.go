@@ -2,6 +2,7 @@ package actions
 
 import (
 	"encoding/gob"
+	"fmt"
 	"math"
 	"path/filepath"
 
@@ -10,6 +11,7 @@ import (
 	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/game/status"
 	"github.com/MobRulesGames/haunts/house"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/gin"
@@ -75,32 +77,28 @@ type moveExec struct {
 
 func (exec *moveExec) measureCost(ent *game.Entity, g *game.Game) int {
 	if len(exec.Path) == 0 {
-		base.DeprecatedError().Printf("Zero length path")
-		return -1
+		panic(fmt.Errorf("zero length path"))
 	}
 	entx, enty := ent.FloorPos()
-	v := g.ToVertex(entx, enty)
-	if v != exec.Path[0] {
-		base.DeprecatedError().Printf("Path doesn't begin at ent's position, %d != %d", v, exec.Path[0])
-		return -1
+	from := g.ToVertex(entx, enty)
+	if from != exec.Path[0] {
+		panic(fmt.Errorf("path doesn't begin at entity's position: start-pos: %v, path: %v", from, exec.Path))
 	}
 	graph := g.Graph(ent.Side(), true, nil)
 	cost := 0
 	for _, step := range exec.Path[1:] {
-		dsts, costs := graph.Adjacent(v)
+		dsts, costs := graph.Adjacent(from)
 		ok := false
-		prev := v
-		base.DeprecatedLog().Printf("Adj(%d):", v)
+		prev := from
 		for j := range dsts {
-			base.DeprecatedLog().Printf("Node %d", dsts[j])
 			if dsts[j] == step {
 				cost += int(costs[j])
-				v = dsts[j]
+				from = dsts[j]
 				ok = true
 				break
 			}
 		}
-		base.DeprecatedLog().Printf("%d -> %d: %t", prev, v, ok)
+		logging.Trace("measureCost walk", "from", prev, "step", step, "adjacents", dsts, "ok", ok)
 		if !ok {
 			return -1
 		}
@@ -177,7 +175,7 @@ func limitPath(ent *game.Entity, start int, path []int, max int) []int {
 			}
 		}
 		if !found {
-			base.DeprecatedLog().Printf("PATH: DIdn't find, %d / %d", last+1, len(path))
+			logging.Error("limitPath: didn't find next step in adjacency list", "step", last, "of", len(path), "from", start)
 			return path[0:last]
 		}
 	}
@@ -185,24 +183,25 @@ func limitPath(ent *game.Entity, start int, path []int, max int) []int {
 }
 
 func (a *Move) AiMoveToPos(ent *game.Entity, dst []int, max_ap int) game.ActionExec {
-	base.DeprecatedLog().Printf("PATH: Request move to %v", dst)
+	logger := logging.TraceLogger().WithAttrs("fn", "AiMoveToPos")
+	logger.Trace("request move", "target", dst)
 	graph := ent.Game().Graph(ent.Side(), false, nil)
 	ex, ey := ent.FloorPos()
 	src := []int{ent.Game().ToVertex(ex, ey)}
 	_, path := algorithm.Dijkstra(graph, src, dst)
-	base.DeprecatedLog().Printf("PATH: Found path of length %d", len(path))
-	ppx, ppy := ent.FloorPos()
+	logger.Trace("found path", "length", len(path))
 	if path == nil {
 		return nil
 	}
+	ppx, ppy := ent.FloorPos()
 	_, xx, yy := ent.Game().FromVertex(path[len(path)-1])
-	base.DeprecatedLog().Printf("PATH: %d,%d -> %d,%d", ppx, ppy, xx, yy)
+	logger.Trace("PATH: %d,%d -> %d,%d", ppx, ppy, xx, yy)
 	if ent.Stats.ApCur() < max_ap {
 		max_ap = ent.Stats.ApCur()
 	}
 	path = limitPath(ent, src[0], path, max_ap)
 	_, xx, yy = ent.Game().FromVertex(path[len(path)-1])
-	base.DeprecatedLog().Printf("PATH: (limited) %d,%d -> %d,%d", ppx, ppy, xx, yy)
+	logger.Trace("PATH: (limited) %d,%d -> %d,%d", ppx, ppy, xx, yy)
 	if len(path) <= 1 {
 		return nil
 	}
@@ -242,6 +241,7 @@ func (a *Move) drawPath(ent *game.Entity, g *game.Game, graph algorithm.Graph, s
 func (a *Move) findPath(ent *game.Entity, x, y house.BoardSpaceUnit) {
 	g := ent.Game()
 	dst := g.ToVertex(x, y)
+	logging.Info("Move.findPath", "ent", ent, "x,y", []any{x, y})
 	if dst != a.dst || !a.calculated {
 		a.dst = dst
 		a.calculated = true
@@ -316,42 +316,41 @@ func (a *Move) Cancel() {
 	a.calculated = false
 }
 func (a *Move) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.MaintenanceStatus {
-	if ae != nil {
-		exec := ae.(*moveExec)
-		a.ent = g.EntityById(ae.EntityId())
-		if len(exec.Path) == 0 {
-			base.DeprecatedError().Printf("Got a move exec with a path length of 0: %v", exec)
-			return game.Complete
-		}
-		a.cost = exec.measureCost(a.ent, g)
-		if a.cost > a.ent.Stats.ApCur() {
-			base.DeprecatedError().Printf("Got a move that required more ap than available: %v", exec)
-			base.DeprecatedError().Printf("Path: %v", exec.Path)
-			return game.Complete
-		}
-		if a.cost == -1 {
-			base.DeprecatedError().Printf("Got a move that followed an invalid path: %v", exec)
-			base.DeprecatedError().Printf("Path: %v", exec.Path)
-			if a.ent == nil {
-				base.DeprecatedError().Printf("ENT was Nil!")
-			} else {
-				x, y := a.ent.FloorPos()
-				v := g.ToVertex(x, y)
-				base.DeprecatedError().Printf("Ent pos: (%d, %d) -> (%d)", x, y, v)
-			}
-			return game.Complete
-		}
-		algorithm.Map(exec.Path, &a.path, func(v int) [2]house.BoardSpaceUnit {
-			_, x, y := g.FromVertex(v)
-			return [2]house.BoardSpaceUnit{x, y}
-		})
-		base.DeprecatedLog().Printf("Path Validated: %v", exec)
-		a.ent.Stats.ApplyDamage(-a.cost, 0, status.Unspecified)
-		ex, ey := a.ent.FloorPos()
-		src := g.ToVertex(ex, ey)
-		graph := g.Graph(a.ent.Side(), true, nil)
-		a.drawPath(a.ent, g, graph, src)
+	if ae == nil {
+		panic(fmt.Errorf("nil ActionExec T_T"))
 	}
+	exec := ae.(*moveExec)
+	a.ent = g.EntityById(ae.EntityId())
+	if len(exec.Path) == 0 {
+		logging.Error("got a move exec with an empty path", "exec", exec)
+		return game.Complete
+	}
+	a.cost = exec.measureCost(a.ent, g)
+	if a.cost > a.ent.Stats.ApCur() {
+		logging.Error("got a move exec for too much ap", "exec", exec)
+		return game.Complete
+	}
+	if a.cost == -1 {
+		logging.Error("got a move exec that had an invalid path", "exec", exec)
+		if a.ent == nil {
+			panic(fmt.Errorf("got a nil entity"))
+		}
+		x, y := a.ent.FloorPos()
+		v := g.ToVertex(x, y)
+		logging.Trace("negative cost move but ... we're forging ahead anyways?!", "(x, y, v)", []any{x, y, v})
+		return game.Complete
+	}
+	algorithm.Map(exec.Path, &a.path, func(v int) [2]house.BoardSpaceUnit {
+		_, x, y := g.FromVertex(v)
+		return [2]house.BoardSpaceUnit{x, y}
+	})
+	logging.Trace("move exec path validated", "exec", exec)
+	a.ent.Stats.ApplyDamage(-a.cost, 0, status.Unspecified)
+	ex, ey := a.ent.FloorPos()
+	src := g.ToVertex(ex, ey)
+	graph := g.Graph(a.ent.Side(), true, nil)
+	a.drawPath(a.ent, g, graph, src)
+
 	// Do stuff
 	factor := float32(math.Pow(2, a.ent.Walking_speed))
 	dist := a.ent.DoAdvance(factor*float32(dt)/200, a.path[0][0], a.path[0][1])
