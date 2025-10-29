@@ -1,3 +1,27 @@
+- bug#55: can't open doors; 'interact' action doesn't seem to run
+
+- bug#54: There's a stubbed gui element on the map-select screen. Presumably,
+  it was supposed to be a scroll bar but *shrug*.
+
+- end-to-end tests
+	- need to place units from roster and 'confirm'
+		- roster UI _might_ be coming from game/script.go:placeEntities()
+			- click a roster item -> set 'game.Game.new_ent'
+
+	- need to draw the 'main-bar'
+		- gets done through lua callbacks r.n. ... game/script.go:showMainBar
+
+	- need to not set "los mode 'ALL'" ... only show the things that would get
+	  shown if a real user was using it
+
+- tests are slow; optimize!!!
+	- lots of time spent in image.Draw for ./house tests
+		- looks like it happens, in large part, b/c of memory allocation when doing
+		  an 'image.NRGBA.At()' call; the returned color.Color gets malloc'd (needs
+		  more thorough investigation to prove this is indeed happening!)
+	- might be able to skip scanning for non-gray by type-switching on the image type
+	- need benchmarks for loading palletted, RGBA and NRGBA images
+
 - bug#50: some textures get rendered as white squares, others as the image with
   a white, opaque background while others render just fine. White squares seem
   to be possible whether the textures were loaded through ./texture/manager.go or
@@ -171,4 +195,4 @@
 - bug#5: Can have a door not connected to a room.
 	- needs repro
 
-- bug#53: <next>
+- bug#56: <next>
