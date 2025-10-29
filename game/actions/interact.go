@@ -332,19 +332,21 @@ func (a *Interact) Preppable(ent *game.Entity, g *game.Game) bool {
 	return len(a.targets) > 0 || len(a.doors) > 0
 }
 func (a *Interact) Prep(ent *game.Entity, g *game.Game) bool {
-	if a.Preppable(ent, g) {
-		a.ent = ent
-		room := g.House.Floors[0].Rooms[ent.CurrentRoom()]
-		for _, door := range a.doors {
-			_, other_door := g.House.Floors[0].FindMatchingDoor(room, door)
-			if other_door != nil {
-				door.HighlightThreshold(true)
-				other_door.HighlightThreshold(true)
-			}
-		}
-		return true
+	if !a.Preppable(ent, g) {
+		return false
 	}
-	return false
+
+	a.ent = ent
+	room := g.House.Floors[0].Rooms[ent.CurrentRoom()]
+	for _, door := range a.doors {
+		_, other_door := g.House.Floors[0].FindMatchingDoor(room, door)
+		if other_door != nil {
+			door.HighlightThreshold(true)
+			other_door.HighlightThreshold(true)
+		}
+	}
+
+	return true
 }
 func (a *Interact) HandleInput(ctx gui.EventHandlingContext, group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
 	if group.IsPressed(gin.AnyMouseLButton) {
