@@ -164,9 +164,7 @@ func makeHouseDataTab(house *HouseDef, viewer *HouseViewer) *houseDataTab {
 }
 func (hdt *houseDataTab) Think(ui *gui.Gui, t int64) {
 	if hdt.temp_room != nil {
-		// TODO(tmckee): need to ask the gui for cursor pos
-		// mx, my := gin.In().GetCursor("Mouse").Point()
-		mx, my := 0, 0
+		mx, my := ui.GetLastMousePosition().XY()
 		bx, by := hdt.viewer.WindowToBoard(mx, my)
 		cx, cy := hdt.temp_room.FloorPos()
 		hdt.temp_room.X = BoardSpaceUnit(bx - hdt.drag_anchor.x)
@@ -521,9 +519,7 @@ func (hdt *houseRelicsTab) markTempSpawnValidity() {
 
 func (hdt *houseRelicsTab) Think(ui *gui.Gui, t int64) {
 	defer hdt.VerticalTable.Think(ui, t)
-	// TODO(tmckee): need to ask the gui for cursor pos
-	// mx, my := gin.In().GetCursor("Mouse").Point()
-	mx, my := 0, 0
+	mx, my := ui.GetLastMousePosition().XY()
 	rbx, rby := hdt.viewer.WindowToBoard(mx, my)
 	bx := BoardSpaceUnit(roundDown(rbx - hdt.drag_anchor.x + 0.5))
 	by := BoardSpaceUnit(roundDown(rby - hdt.drag_anchor.y + 0.5))

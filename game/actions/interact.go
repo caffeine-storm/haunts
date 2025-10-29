@@ -350,9 +350,7 @@ func (a *Interact) Prep(ent *game.Entity, g *game.Game) bool {
 }
 func (a *Interact) HandleInput(ctx gui.EventHandlingContext, group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
 	if group.IsPressed(gin.AnyMouseLButton) {
-		// TODO(tmckee): need to ask the gui for a cursor pos
-		// bx, by := g.GetViewer().WindowToBoard(gin.In().GetCursor("Mouse").Point())
-		mx, my := 0, 0
+		mx, my := group.GetMousePosition().XY()
 		bx, by := g.GetViewer().WindowToBoard(mx, my)
 		room_num := a.ent.CurrentRoom()
 		room := g.House.Floors[0].Rooms[room_num]

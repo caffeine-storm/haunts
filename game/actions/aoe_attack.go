@@ -155,11 +155,6 @@ func (a *AoeAttack) Prep(ent *game.Entity, g *game.Game) bool {
 	}
 	a.ent = ent
 
-	// TODO(tmckee): need to ask the gui for a cursor pos
-	// bx, by := g.GetViewer().WindowToBoard(gin.In().GetCursor("Mouse").Point())
-	mx, my := 0, 0
-	bx, by := g.GetViewer().WindowToBoard(mx, my)
-	a.tx, a.ty = house.BoardSpaceUnitPair(bx, by)
 	return true
 }
 func (a *AoeAttack) HandleInput(ctx gui.EventHandlingContext, group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {

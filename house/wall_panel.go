@@ -139,9 +139,7 @@ func (w *WallPanel) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 
 func (w *WallPanel) Think(ui *gui.Gui, t int64) {
 	if w.decal != nil {
-		// TODO(tmckee): need to ask the gui for cursor pos
-		// px, py := gin.In().GetCursor("Mouse").Point()
-		px, py := 0, 0
+		px, py := ui.GetLastMousePosition().XY()
 		tx := float32(px) - w.drag_anchor.X
 		ty := float32(py) - w.drag_anchor.Y
 		bx, by := w.viewer.WindowToBoardf(tx, ty)

@@ -266,12 +266,6 @@ func (a *Move) Preppable(ent *game.Entity, g *game.Game) bool {
 }
 func (a *Move) Prep(ent *game.Entity, g *game.Game) bool {
 	a.ent = ent
-	// TODO(tmckee): need to ask the gui for a cursor pos
-	// fx, fy := g.GetViewer().WindowToBoard(gin.In().GetCursor("Mouse").Point())
-	mx, my := 0, 0
-	fx, fy := house.BoardSpaceUnitPair(g.GetViewer().WindowToBoard(mx, my))
-	a.findPath(ent, fx, fy)
-	a.threshold = a.ent.Stats.ApCur()
 	return true
 }
 func (a *Move) HandleInput(ctx gui.EventHandlingContext, group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
