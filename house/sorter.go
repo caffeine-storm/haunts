@@ -17,11 +17,13 @@ func firstPoint(r RectObject) (BoardSpaceUnit, BoardSpaceUnit) {
 	_, dy := r.Dims()
 	return x, y + dy
 }
+
 func lastPoint(r RectObject) (BoardSpaceUnit, BoardSpaceUnit) {
 	x, y := r.FloorPos()
 	dx, _ := r.Dims()
 	return x + dx, y
 }
+
 func firstAndLastPoints(r RectObject) (x1, y1, x2, y2 BoardSpaceUnit) {
 	x, y := r.FloorPos()
 	dx, dy := r.Dims()
@@ -33,6 +35,7 @@ type endpointArray []endpoint
 func (e endpointArray) Len() int {
 	return len(e)
 }
+
 func (e endpointArray) Less(i, j int) bool {
 	var ix, iy, jx, jy BoardSpaceUnit
 	if e[i].first {
@@ -50,6 +53,7 @@ func (e endpointArray) Less(i, j int) bool {
 	}
 	return ix-iy < jx-jy
 }
+
 func (e endpointArray) Swap(i, j int) {
 	e[i], e[j] = e[j], e[i]
 }
@@ -57,6 +61,7 @@ func (e endpointArray) Swap(i, j int) {
 func width(dx, dy BoardSpaceUnit) BoardSpaceUnit {
 	return dx + dy
 }
+
 func pos(x, y BoardSpaceUnit) BoardSpaceUnit {
 	return x - y
 }
@@ -66,6 +71,7 @@ type adag [][]int
 func (a adag) NumVertex() int {
 	return len(a)
 }
+
 func (a adag) Successors(n int) []int {
 	return a[n]
 }

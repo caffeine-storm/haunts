@@ -7,8 +7,10 @@ import (
 	"path/filepath"
 )
 
-var src = flag.String("src", "", "Source directory to soft copy.")
-var dst = flag.String("dst", "", "Destination for the copy.")
+var (
+	src = flag.String("src", "", "Source directory to soft copy.")
+	dst = flag.String("dst", "", "Destination for the copy.")
+)
 
 func main() {
 	flag.Parse()

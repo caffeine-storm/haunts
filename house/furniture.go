@@ -51,6 +51,7 @@ func (f *Furniture) SetAlpha(a float64) {
 	f.alpha = a
 	f.alpha_enabled = true
 }
+
 func (f *Furniture) Alpha() float64 {
 	return f.alpha
 }

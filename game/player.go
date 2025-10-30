@@ -7,12 +7,13 @@ import (
 	"bytes"
 	"encoding/gob"
 	"fmt"
-	"github.com/MobRulesGames/golua/lua"
-	"github.com/MobRulesGames/haunts/base"
 	"hash/fnv"
 	"io"
 	"os"
 	"path/filepath"
+
+	"github.com/MobRulesGames/golua/lua"
+	"github.com/MobRulesGames/haunts/base"
 )
 
 type Player struct {

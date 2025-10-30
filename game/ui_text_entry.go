@@ -8,8 +8,10 @@ import (
 	"github.com/runningwild/glop/gui"
 )
 
-var valid_keys map[byte]bool
-var shift_keys map[byte]byte
+var (
+	valid_keys map[byte]bool
+	shift_keys map[byte]byte
+)
 
 func init() {
 	valid_keys = make(map[byte]bool)

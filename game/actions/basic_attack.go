@@ -148,6 +148,7 @@ var results map[int]BasicAttackResult
 func init() {
 	results = make(map[int]BasicAttackResult)
 }
+
 func GetBasicAttackResult(e game.ActionExec) *BasicAttackResult {
 	res, ok := results[e.(*basicAttackExec).id]
 	if !ok {
@@ -170,24 +171,31 @@ func dist(x, y, x2, y2 house.BoardSpaceUnit) house.BoardSpaceUnit {
 	}
 	return dy
 }
+
 func (a *BasicAttack) AP() int {
 	return a.Ap
 }
+
 func (a *BasicAttack) FloorPos() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return 0, 0
 }
+
 func (a *BasicAttack) Dims() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return 0, 0
 }
+
 func (a *BasicAttack) String() string {
 	return a.Name
 }
+
 func (a *BasicAttack) Icon() *texture.Object {
 	return &a.Texture
 }
+
 func (a *BasicAttack) Readyable() bool {
 	return true
 }
+
 func (a *BasicAttack) validTarget(source, target *game.Entity) bool {
 	if source.Stats == nil || target.Stats == nil {
 		return false
@@ -211,6 +219,7 @@ func (a *BasicAttack) validTarget(source, target *game.Entity) bool {
 	}
 	return true
 }
+
 func (a *BasicAttack) findTargets(ent *game.Entity, g *game.Game) []*game.Entity {
 	var targets []*game.Entity
 	for _, target := range g.Ents {
@@ -220,9 +229,11 @@ func (a *BasicAttack) findTargets(ent *game.Entity, g *game.Game) []*game.Entity
 	}
 	return targets
 }
+
 func (a *BasicAttack) Preppable(ent *game.Entity, g *game.Game) bool {
 	return a.Current_ammo != 0 && ent.Stats.ApCur() >= a.Ap && len(a.findTargets(ent, g)) > 0
 }
+
 func (a *BasicAttack) Prep(ent *game.Entity, g *game.Game) bool {
 	if !a.Preppable(ent, g) {
 		return false
@@ -231,12 +242,14 @@ func (a *BasicAttack) Prep(ent *game.Entity, g *game.Game) bool {
 	a.targets = a.findTargets(ent, g)
 	return true
 }
+
 func (a *BasicAttack) AiAttackTarget(ent *game.Entity, target *game.Entity) game.ActionExec {
 	if !a.validTarget(ent, target) {
 		return nil
 	}
 	return a.makeExec(ent, target)
 }
+
 func (a *BasicAttack) makeExec(ent, target *game.Entity) *basicAttackExec {
 	var exec basicAttackExec
 	exec.id = exec_id
@@ -245,6 +258,7 @@ func (a *BasicAttack) makeExec(ent, target *game.Entity) *basicAttackExec {
 	exec.Target = target.Id
 	return &exec
 }
+
 func (a *BasicAttack) HandleInput(ctx gui.EventHandlingContext, group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
 	target := g.HoveredEnt()
 	if group.IsPressed(gin.AnyMouseLButton) {
@@ -255,6 +269,7 @@ func (a *BasicAttack) HandleInput(ctx gui.EventHandlingContext, group gui.EventG
 	}
 	return false, nil
 }
+
 func (a *BasicAttack) RenderOnFloor() {
 	gl.Disable(gl.TEXTURE_2D)
 	gl.Begin(gl.QUADS)
@@ -270,9 +285,11 @@ func (a *BasicAttack) RenderOnFloor() {
 	}
 	gl.End()
 }
+
 func (a *BasicAttack) Cancel() {
 	a.basicAttackTempData = basicAttackTempData{}
 }
+
 func (a *BasicAttack) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.MaintenanceStatus {
 	if ae != nil {
 		a.exec = ae.(*basicAttackExec)
@@ -322,11 +339,12 @@ func (a *BasicAttack) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.
 			results[a.exec.id] = BasicAttackResult{Hit: false}
 		}
 		sprites := []*sprite.Sprite{a.ent.Sprite(), a.target.Sprite()}
-		sprite.CommandSync(sprites, [][]string{[]string{a.Animation}, defender_cmds}, "hit")
+		sprite.CommandSync(sprites, [][]string{{a.Animation}, defender_cmds}, "hit")
 		return game.Complete
 	}
 	return game.InProgress
 }
+
 func (a *BasicAttack) Interrupt() bool {
 	return true
 }

@@ -77,6 +77,7 @@ func (sp *SpawnPoint) Render(pos mathgl.Vec2, width float32) {
 	gl.Vertex2f(pos.X+width/2, pos.Y)
 	gl.End()
 }
+
 func (sp *SpawnPoint) RenderOnFloor() {
 	re := topSpawnRegexp()
 	if !re.MatchString(sp.Name) {
@@ -134,5 +135,5 @@ func (sp *SpawnPoint) RenderOnFloor() {
 	gl.Enable(gl.TEXTURE_2D)
 	sp.Tex.ResetPath(base.Path(path.Join(base.GetDataDir(), "textures/pentagram_04_large_red.png")))
 	sp.Tex.Data().Render(float64(sp.X), float64(sp.Y), float64(sp.Dx), float64(sp.Dy))
-	//base.EnableShader("")
+	// base.EnableShader("")
 }

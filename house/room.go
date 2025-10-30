@@ -61,9 +61,11 @@ func (r *RoomSize) GetDy() BoardSpaceUnit {
 func (r RoomSize) String() string {
 	return fmt.Sprintf(r.format(), r.Name, r.Dx, r.Dy)
 }
+
 func (r *RoomSize) Scan(str string) {
 	fmt.Sscanf(str, r.format(), &r.Name, &r.Dx, &r.Dy)
 }
+
 func (r *RoomSize) format() string {
 	return "%s (%d, %d)"
 }
@@ -359,10 +361,12 @@ func alphaMult(a, b byte) byte {
 	return byte((int(a) * int(b)) >> 8)
 }
 
-var Num_rows float32 = 1150
-var Noise_rate float32 = 60
-var Num_steps float32 = 3
-var Foo int = 0
+var (
+	Num_rows   float32 = 1150
+	Noise_rate float32 = 60
+	Num_steps  float32 = 3
+	Foo        int     = 0
+)
 
 func (room *Room) getDecalState(decal *Decal) decalGlIDs {
 	result := room.decal_gl_map[decal]

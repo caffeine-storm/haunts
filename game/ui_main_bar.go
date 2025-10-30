@@ -131,14 +131,17 @@ func buttonFuncEndTurn(mbi interface{}) {
 	mb := mbi.(*MainBar)
 	mb.game.player_inactive = true
 }
+
 func buttonFuncActionLeft(mbi interface{}) {
 	mb := mbi.(*MainBar)
 	mb.state.Actions.scroll_target -= float64(mb.layout.Actions.Count)
 }
+
 func buttonFuncActionRight(mbi interface{}) {
 	mb := mbi.(*MainBar)
 	mb.state.Actions.scroll_target += float64(mb.layout.Actions.Count)
 }
+
 func buttonFuncUnitLeft(mbi interface{}) {
 	mb := mbi.(*MainBar)
 	if !mb.game.SetCurrentAction(nil) || len(mb.game.Ents) == 0 {
@@ -164,6 +167,7 @@ func buttonFuncUnitLeft(mbi interface{}) {
 		}
 	}
 }
+
 func buttonFuncUnitRight(mbi interface{}) {
 	mb := mbi.(*MainBar)
 	if !mb.game.SetCurrentAction(nil) || len(mb.game.Ents) == 0 {
@@ -221,6 +225,7 @@ func MakeMainBar(game *Game) (*MainBar, error) {
 	mb.game = game
 	return &mb, nil
 }
+
 func (m *MainBar) Requested() gui.Dims {
 	return gui.Dims{
 		Dx: m.layout.Background.Data().Dx(),
@@ -568,7 +573,6 @@ func (m *MainBar) Draw(region gui.Region, ctx gui.DrawingContext) {
 }
 
 func (m *MainBar) DrawFocused(region gui.Region, ctx gui.DrawingContext) {
-
 }
 
 func (m *MainBar) String() string {

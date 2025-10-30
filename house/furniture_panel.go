@@ -34,6 +34,7 @@ type FurniturePanel struct {
 func (w *FurniturePanel) Collapse() {
 	w.onEscape()
 }
+
 func (w *FurniturePanel) Expand() {
 	w.RoomViewer.SetEditMode(editFurniture)
 }

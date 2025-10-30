@@ -13,8 +13,10 @@ import (
 	"github.com/runningwild/glop/render"
 )
 
-const maxLines = 25
-const maxLineLength = 150
+const (
+	maxLines      = 25
+	maxLineLength = 150
+)
 
 // A simple gui element that will display the last several lines of text from
 // a log file (TODO: and also allow you to enter some basic commands).

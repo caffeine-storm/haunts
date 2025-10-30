@@ -118,7 +118,7 @@ func SelectExactlyOne(index int, selected map[int]bool, doit bool) (valid bool) 
 	}
 	if doit {
 		var other int
-		for k, _ := range selected {
+		for k := range selected {
 			other = k
 		}
 		delete(selected, other)
@@ -316,7 +316,6 @@ func (rc *RosterChooser) Draw(r gui.Region, ctx gui.DrawingContext) {
 }
 
 func (rc *RosterChooser) DrawFocused(gui.Region, gui.DrawingContext) {
-
 }
 
 func (rc *RosterChooser) String() string {

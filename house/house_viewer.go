@@ -390,6 +390,7 @@ func (o offsetDrawable) FPos() (float64, float64) {
 	x, y := o.Drawable.FPos()
 	return x + float64(o.dx), y + float64(o.dy)
 }
+
 func (o offsetDrawable) FloorPos() (BoardSpaceUnit, BoardSpaceUnit) {
 	x, y := o.Drawable.FloorPos()
 	return x + o.dx, y + o.dy

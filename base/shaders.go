@@ -25,9 +25,11 @@ type ShaderDef struct {
 
 // Mappings from vertex shader name, fragment shader name, and shader program
 // name to their respective opengl objects.
-var vertex_shaders map[string]gl.Shader
-var fragment_shaders map[string]gl.Shader
-var shader_progs map[string]gl.Program
+var (
+	vertex_shaders   map[string]gl.Shader
+	fragment_shaders map[string]gl.Shader
+	shader_progs     map[string]gl.Program
+)
 
 func EnableShader(name string) {
 	render.MustBeOnRenderThread()

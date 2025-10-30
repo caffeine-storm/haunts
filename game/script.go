@@ -33,6 +33,7 @@ type gameScript struct {
 func (gs *gameScript) syncStart() {
 	<-gs.sync
 }
+
 func (gs *gameScript) syncEnd() {
 	gs.sync <- struct{}{}
 }
@@ -1166,6 +1167,7 @@ func (c *iconWithText) Draw(hovered, selected, selectable bool, region gui.Regio
 		gl.End()
 	}
 }
+
 func (c *iconWithText) Think(dt int64) {
 }
 

@@ -9,10 +9,12 @@ import (
 	"github.com/runningwild/glop/render"
 )
 
-const LosMinVisibility = 32
-const LosVisibilityThreshold = 200
-const LosTextureSize = 128
-const LosTextureSizeSquared = LosTextureSize * LosTextureSize
+const (
+	LosMinVisibility       = 32
+	LosVisibilityThreshold = 200
+	LosTextureSize         = 128
+	LosTextureSizeSquared  = LosTextureSize * LosTextureSize
+)
 
 // A LosTexture is defined over a square portion of a grid, and if a pixel is
 // non-black it indicates that there is visibility to that pixel from the

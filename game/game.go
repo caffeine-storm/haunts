@@ -348,9 +348,11 @@ type orderEntsBigToSmall []*Entity
 func (o orderEntsBigToSmall) Len() int {
 	return len(o)
 }
+
 func (o orderEntsBigToSmall) Swap(i, j int) {
 	o[i], o[j] = o[j], o[i]
 }
+
 func (o orderEntsBigToSmall) Less(i, j int) bool {
 	return o[i].Dx*o[i].Dy > o[j].Dx*o[j].Dy
 }
@@ -360,9 +362,11 @@ type orderSpawnsSmallToBig []*house.SpawnPoint
 func (o orderSpawnsSmallToBig) Len() int {
 	return len(o)
 }
+
 func (o orderSpawnsSmallToBig) Swap(i, j int) {
 	o[i], o[j] = o[j], o[i]
 }
+
 func (o orderSpawnsSmallToBig) Less(i, j int) bool {
 	return o[i].Dx*o[i].Dy < o[j].Dx*o[j].Dy
 }
@@ -384,7 +388,7 @@ func spawnEnts(g *Game, ents []*Entity, spawns []*house.SpawnPoint) {
 		sanity--
 		places = places[0:0]
 		sort.Sort(orderEntsBigToSmall(ents))
-		//slightly shuffle the ents
+		// slightly shuffle the ents
 		for i := range ents {
 			j := i + rand.Intn(5) - 2
 			if j >= 0 && j < len(ents) {
@@ -435,6 +439,7 @@ func (g *Game) numVertex() int {
 	}
 	return total
 }
+
 func (g *Game) FromVertex(vv int) (room *house.Room, x, y house.BoardSpaceUnit) {
 	v := house.BoardSpaceUnit(vv)
 	for _, room := range g.House.Floors[0].Rooms {
@@ -532,6 +537,7 @@ func connected(r, r2 *house.Room, x, y, x2, y2 house.BoardSpaceUnit) bool {
 	}
 	return false
 }
+
 func (g *Game) RoomGraph() algorithm.Graph {
 	return &roomGraph{g}
 }
@@ -813,7 +819,6 @@ func (g *Game) SetLosMode(side Side, mode LosMode, rooms []*house.Room) {
 						pix[i][j] = house.LosVisibilityThreshold - 1
 					}
 				}
-
 			}
 		}
 	}

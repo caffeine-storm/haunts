@@ -219,6 +219,7 @@ type spriteContainer struct {
 func (sc *spriteContainer) Sprite() *sprite.Sprite {
 	return sc.sp
 }
+
 func (sc *spriteContainer) Load(path string, spriteManager *sprite.Manager) {
 	// TODO(tmckee:#30): this seems to be breaking :(
 	sc.sp, sc.err = spriteManager.LoadSprite(path)
@@ -309,6 +310,7 @@ func (ei *EntityDef) Side() Side {
 
 	return SideNone
 }
+
 func (ei *EntityDef) Dims() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	if ei.Dx <= 0 || ei.Dy <= 0 {
 		panic(fmt.Errorf("entity %q didn't have its Dims set properly", ei.Name))
@@ -377,54 +379,56 @@ type losData struct {
 	minx, miny, maxx, maxy int
 }
 
-type EntityId int
-type EntityInst struct {
-	// Used to keep track of entities across a save/load
-	Id EntityId
+type (
+	EntityId   int
+	EntityInst struct {
+		// Used to keep track of entities across a save/load
+		Id EntityId
 
-	X, Y float64
+		X, Y float64
 
-	sprite spriteContainer
+		sprite spriteContainer
 
-	los *losData
+		los *losData
 
-	// so we know if we should draw a reticle around it
-	hovered    bool
-	selected   bool
-	controlled bool
+		// so we know if we should draw a reticle around it
+		hovered    bool
+		selected   bool
+		controlled bool
 
-	// The width that this entity's sprite was rendered at the last time it was
-	// drawn.  User to determine what entity the cursor is over.
-	last_render_width float32
+		// The width that this entity's sprite was rendered at the last time it was
+		// drawn.  User to determine what entity the cursor is over.
+		last_render_width float32
 
-	// Some methods may require being able to access other entities, so each
-	// entity has a pointer to the game itself.
-	game *Game
+		// Some methods may require being able to access other entities, so each
+		// entity has a pointer to the game itself.
+		game *Game
 
-	// Actions that this entity currently has available to it for use.  This
-	// may not be a bijection of Actions mentioned in entityDef.Action_names.
-	Actions []Action
+		// Actions that this entity currently has available to it for use.  This
+		// may not be a bijection of Actions mentioned in entityDef.Action_names.
+		Actions []Action
 
-	// If this entity is currently executing an Action it will be stored here
-	// until the Action is complete.
-	current_action Action
+		// If this entity is currently executing an Action it will be stored here
+		// until the Action is complete.
+		current_action Action
 
-	Stats *status.Inst
+		Stats *status.Inst
 
-	// Ai stuff - the channels cannot be gobbed, so they need to be remade when
-	// loading an ent from a file
-	Ai               Ai
-	Ai_file_override base.Path
+		// Ai stuff - the channels cannot be gobbed, so they need to be remade when
+		// loading an ent from a file
+		Ai               Ai
+		Ai_file_override base.Path
 
-	Ai_data map[string]string
+		Ai_data map[string]string
 
-	// Info that may be of use to the Ai
-	Info Info
+		// Info that may be of use to the Ai
+		Info Info
 
-	// For inanimate objects - some of them need to be activated so we know when
-	// the players can interact with them.
-	Active bool
-}
+		// For inanimate objects - some of them need to be activated so we know when
+		// the players can interact with them.
+		Active bool
+	}
+)
 type aiStatus int
 
 const (
@@ -458,6 +462,7 @@ func makeInfo() Info {
 func (e *Entity) Game() *Game {
 	return e.game
 }
+
 func (e *Entity) Sprite() *sprite.Sprite {
 	return e.sprite.sp
 }
@@ -478,12 +483,15 @@ func (e *Entity) HasLos(x, y, dx, dy house.BoardSpaceUnit) bool {
 	}
 	return false
 }
+
 func (e *Entity) HasTeamLos(x, y, dx, dy house.BoardSpaceUnit) bool {
 	return e.game.TeamLos(e.Side(), x, y, dx, dy)
 }
+
 func DiscretizePoint32(x, y float32) (int, int) {
 	return DiscretizePoint64(float64(x), float64(y))
 }
+
 func DiscretizePoint64(x, y float64) (int, int) {
 	x += 0.5
 	y += 0.5
@@ -495,6 +503,7 @@ func DiscretizePoint64(x, y float64) (int, int) {
 	}
 	return int(x), int(y)
 }
+
 func (ei *EntityInst) FloorPos() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return house.BoardSpaceUnitPair(DiscretizePoint64(ei.X, ei.Y))
 }

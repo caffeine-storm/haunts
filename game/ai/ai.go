@@ -293,6 +293,7 @@ func (a *Ai) ActionExecs() <-chan game.ActionExec {
 func (a *Ai) GobDecode([]byte) error {
 	return nil
 }
+
 func (a *Ai) GobEncode() ([]byte, error) {
 	return nil, nil
 }

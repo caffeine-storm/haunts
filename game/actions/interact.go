@@ -2,6 +2,8 @@ package actions
 
 import (
 	"encoding/gob"
+	"path/filepath"
+
 	"github.com/MobRulesGames/golua/lua"
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
@@ -10,7 +12,6 @@ import (
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
-	"path/filepath"
 )
 
 func registerInteracts() map[string]func() game.Action {
@@ -89,6 +90,7 @@ func (exec interactExec) Push(L *lua.State, g *game.Game) {
 	}
 	L.SetTable(-3)
 }
+
 func (exec interactExec) getDoor(g *game.Game) *house.Door {
 	if exec.Floor < 0 || exec.Floor >= len(g.House.Floors) {
 		return nil
@@ -136,18 +138,23 @@ func (a *Interact) Push(L *lua.State) {
 func (a *Interact) AP() int {
 	return a.Ap
 }
+
 func (a *Interact) FloorPos() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return 0, 0
 }
+
 func (a *Interact) Dims() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return 0, 0
 }
+
 func (a *Interact) String() string {
 	return a.Display_name
 }
+
 func (a *Interact) Icon() *texture.Object {
 	return &a.Texture
 }
+
 func (a *Interact) Readyable() bool {
 	return false
 }
@@ -188,6 +195,7 @@ type frect struct {
 func makeIntFrect(x, y, x2, y2 house.BoardSpaceUnit) frect {
 	return frect{float64(x), float64(y), float64(x2), float64(y2)}
 }
+
 func (f frect) overlapX(f2 frect) bool {
 	if f2.x >= f.x && f2.x <= f.x2 {
 		return true
@@ -197,6 +205,7 @@ func (f frect) overlapX(f2 frect) bool {
 	}
 	return false
 }
+
 func (f frect) overlapY(f2 frect) bool {
 	if f2.y >= f.y && f2.y <= f.y2 {
 		return true
@@ -206,9 +215,11 @@ func (f frect) overlapY(f2 frect) bool {
 	}
 	return false
 }
+
 func (f frect) Overlaps(f2 frect) bool {
 	return (f.overlapX(f2) || f2.overlapX(f)) && (f.overlapY(f2) || f2.overlapY(f))
 }
+
 func (f frect) Contains(x, y float64) bool {
 	return f.Overlaps(frect{x, y, x, y})
 }
@@ -291,6 +302,7 @@ func (a *Interact) findDoors(ent *game.Entity, g *game.Game) []*house.Door {
 	}
 	return valid
 }
+
 func (a *Interact) findTargets(ent *game.Entity, g *game.Game) []*game.Entity {
 	var targets []*game.Entity
 	for _, e := range g.Ents {
@@ -323,6 +335,7 @@ func (a *Interact) findTargets(ent *game.Entity, g *game.Game) []*game.Entity {
 	}
 	return targets
 }
+
 func (a *Interact) Preppable(ent *game.Entity, g *game.Game) bool {
 	if a.Ap > ent.Stats.ApCur() {
 		return false
@@ -331,6 +344,7 @@ func (a *Interact) Preppable(ent *game.Entity, g *game.Game) bool {
 	a.doors = a.findDoors(ent, g)
 	return len(a.targets) > 0 || len(a.doors) > 0
 }
+
 func (a *Interact) Prep(ent *game.Entity, g *game.Game) bool {
 	if !a.Preppable(ent, g) {
 		return false
@@ -348,6 +362,7 @@ func (a *Interact) Prep(ent *game.Entity, g *game.Game) bool {
 
 	return true
 }
+
 func (a *Interact) HandleInput(ctx gui.EventHandlingContext, group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
 	if group.IsPressed(gin.AnyMouseLButton) {
 		mx, my := group.GetMousePosition().XY()
@@ -383,8 +398,10 @@ func (a *Interact) HandleInput(ctx gui.EventHandlingContext, group gui.EventGrou
 	}
 	return false, nil
 }
+
 func (a *Interact) RenderOnFloor() {
 }
+
 func (a *Interact) Cancel() {
 	room := a.ent.Game().House.Floors[0].Rooms[a.ent.CurrentRoom()]
 	for _, door := range a.doors {
@@ -399,6 +416,7 @@ func (a *Interact) Cancel() {
 	}
 	a.interactInst = interactInst{}
 }
+
 func (a *Interact) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.MaintenanceStatus {
 	if ae != nil {
 		exec := ae.(*interactExec)
@@ -479,6 +497,7 @@ func (a *Interact) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Mai
 	}
 	return game.Complete
 }
+
 func (a *Interact) Interrupt() bool {
 	return true
 }

@@ -45,9 +45,11 @@ func makeChooseVersusMetaMenu() (*Chooser, <-chan []Scenario, error) {
 	return makeChooserFromOptionBasicsFile(path)
 }
 
-type chooserMaker func() (*Chooser, <-chan []string, error)
-type replacer func(gui.WidgetParent) error
-type inserter func(gui.WidgetParent, replacer) error
+type (
+	chooserMaker func() (*Chooser, <-chan []string, error)
+	replacer     func(gui.WidgetParent) error
+	inserter     func(gui.WidgetParent, replacer) error
+)
 
 func doChooserMenu(ui gui.WidgetParent, cm chooserMaker, r replacer, i inserter) error {
 	chooser, done, err := cm()

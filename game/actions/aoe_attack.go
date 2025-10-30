@@ -2,6 +2,8 @@ package actions
 
 import (
 	"encoding/gob"
+	"path/filepath"
+
 	"github.com/MobRulesGames/golua/lua"
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
@@ -12,7 +14,6 @@ import (
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/util/algorithm"
-	"path/filepath"
 )
 
 func registerAoeAttacks() map[string]func() game.Action {
@@ -131,24 +132,31 @@ func (a *AoeAttack) Push(L *lua.State) {
 func (a *AoeAttack) AP() int {
 	return a.Ap
 }
+
 func (a *AoeAttack) FloorPos() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return a.tx, a.ty
 }
+
 func (a *AoeAttack) Dims() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return a.Diameter, a.Diameter
 }
+
 func (a *AoeAttack) String() string {
 	return a.Name
 }
+
 func (a *AoeAttack) Icon() *texture.Object {
 	return &a.Texture
 }
+
 func (a *AoeAttack) Readyable() bool {
 	return true
 }
+
 func (a *AoeAttack) Preppable(ent *game.Entity, g *game.Game) bool {
 	return a.Current_ammo != 0 && ent.Stats.ApCur() >= a.Ap
 }
+
 func (a *AoeAttack) Prep(ent *game.Entity, g *game.Game) bool {
 	if !a.Preppable(ent, g) {
 		return false
@@ -157,6 +165,7 @@ func (a *AoeAttack) Prep(ent *game.Entity, g *game.Game) bool {
 
 	return true
 }
+
 func (a *AoeAttack) HandleInput(ctx gui.EventHandlingContext, group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
 	if mpos, ok := ctx.UseMousePosition(group); ok {
 		bx, by := g.GetViewer().WindowToBoard(mpos.X, mpos.Y)
@@ -196,6 +205,7 @@ func (a *AoeAttack) RenderOnFloor() {
 	(&texture.Object{}).Data().Render(float64(x), float64(y), float64(a.Diameter), float64(a.Diameter))
 	base.EnableShader("")
 }
+
 func (a *AoeAttack) Cancel() {
 	a.aoeAttackTempData = aoeAttackTempData{}
 }
@@ -390,6 +400,7 @@ func (a *AoeAttack) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Ma
 	}
 	return game.Complete
 }
+
 func (a *AoeAttack) Interrupt() bool {
 	return true
 }

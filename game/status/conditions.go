@@ -2,8 +2,9 @@ package status
 
 import (
 	"encoding/gob"
-	"github.com/MobRulesGames/haunts/base"
 	"path/filepath"
+
+	"github.com/MobRulesGames/haunts/base"
 )
 
 // Conditions represent instantaneous or ongoing Conditions on an entity.
@@ -31,8 +32,10 @@ type Condition interface {
 	OnRound() (dmg *Damage, complete bool)
 }
 
-var condition_registerers []func()
-var condition_makers map[string]func() Condition
+var (
+	condition_registerers []func()
+	condition_makers      map[string]func() Condition
+)
 
 func RegisterAllConditions() {
 	condition_makers = make(map[string]func() Condition)

@@ -57,8 +57,10 @@ func DeprecatedError() logging.Logger {
 	return logging.ErrorLogger()
 }
 
-var drawing_context gui.UpdateableDrawingContext
-var dictionary_mutex sync.Mutex
+var (
+	drawing_context  gui.UpdateableDrawingContext
+	dictionary_mutex sync.Mutex
+)
 
 func InitDictionaries(ctx gui.UpdateableDrawingContext) {
 	drawing_context = ctx
@@ -110,6 +112,7 @@ var _ render.RenderQueueInterface = (*immediateQueue)(nil)
 func (q *immediateQueue) AddErrorCallback(fn func(_ render.RenderQueueInterface, e error)) {
 	panic(fmt.Errorf("immediateQueue doesn't support adding error callbacks"))
 }
+
 func (q *immediateQueue) Queue(f render.RenderJob) {
 	queue_state := globals.RenderQueueState()
 	f(queue_state)
@@ -120,6 +123,7 @@ func (q *immediateQueue) Purge()           {}
 func (q *immediateQueue) IsDefunct() bool {
 	return false
 }
+
 func (q *immediateQueue) IsPurging() bool {
 	return true
 }
@@ -247,17 +251,21 @@ type Path string
 func (p Path) String() string {
 	return string(p)
 }
+
 func (p Path) GobEncode() ([]byte, error) {
 	return []byte(TryRelative(datadir, string(p))), nil
 }
+
 func (p *Path) GobDecode(data []byte) error {
 	*p = Path(filepath.Join(datadir, string(data)))
 	return nil
 }
+
 func (p Path) MarshalJSON() ([]byte, error) {
 	val := filepath.ToSlash(TryRelative(datadir, string(p)))
 	return []byte("\"" + val + "\""), nil
 }
+
 func (p *Path) UnmarshalJSON(data []byte) error {
 	rel := filepath.FromSlash(string(data[1 : len(data)-1]))
 	*p = Path(filepath.Join(datadir, rel))

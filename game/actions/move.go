@@ -105,6 +105,7 @@ func (exec *moveExec) measureCost(ent *game.Entity, g *game.Game) int {
 	}
 	return cost
 }
+
 func (exec *moveExec) Push(L *lua.State, g *game.Game) {
 	exec.BasicActionExec.Push(L, g)
 	if L.IsNil(-1) {
@@ -120,9 +121,11 @@ func (exec *moveExec) Push(L *lua.State, g *game.Game) {
 	}
 	L.SetTable(-3)
 }
+
 func (exec *moveExec) GetPath() []int {
 	return exec.Path[1:]
 }
+
 func (exec *moveExec) TruncatePath(length int) {
 	exec.Path = exec.Path[0 : length+1]
 }
@@ -141,18 +144,23 @@ func (a *Move) Push(L *lua.State) {
 func (a *Move) AP() int {
 	return a.cost
 }
+
 func (a *Move) FloorPos() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return 0, 0
 }
+
 func (a *Move) Dims() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return house.LosTextureSize, house.LosTextureSize
 }
+
 func (a *Move) String() string {
 	return a.Name
 }
+
 func (a *Move) Icon() *texture.Object {
 	return &a.Texture
 }
+
 func (a *Move) Readyable() bool {
 	return false
 }
@@ -264,10 +272,12 @@ func (a *Move) findPath(ent *game.Entity, x, y house.BoardSpaceUnit) {
 func (a *Move) Preppable(ent *game.Entity, g *game.Game) bool {
 	return true
 }
+
 func (a *Move) Prep(ent *game.Entity, g *game.Game) bool {
 	a.ent = ent
 	return true
 }
+
 func (a *Move) HandleInput(ctx gui.EventHandlingContext, group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
 	if mpos, ok := ctx.UseMousePosition(group); ok {
 		fx, fy := house.BoardSpaceUnitPair(g.GetViewer().WindowToBoard(mpos.X, mpos.Y))
@@ -290,6 +300,7 @@ func (a *Move) HandleInput(ctx gui.EventHandlingContext, group gui.EventGroup, g
 	}
 	return false, nil
 }
+
 func (a *Move) RenderOnFloor() {
 	if a.ent == nil {
 		return
@@ -310,11 +321,13 @@ func (a *Move) RenderOnFloor() {
 	texture.RenderAdvanced(0, 0, house.LosTextureSize, house.LosTextureSize, 3.1415926535, false)
 	base.EnableShader("")
 }
+
 func (a *Move) Cancel() {
 	a.ent = nil
 	a.path = nil
 	a.calculated = false
 }
+
 func (a *Move) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.MaintenanceStatus {
 	if ae != nil {
 		exec := ae.(*moveExec)
@@ -366,6 +379,7 @@ func (a *Move) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.Mainten
 	}
 	return game.InProgress
 }
+
 func (a *Move) Interrupt() bool {
 	return true
 }

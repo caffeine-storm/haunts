@@ -45,9 +45,7 @@ import (
 // method named Load() that takes zero inputs and zero outputs then its Load
 // method will be called after all of its data has been loaded.
 
-var (
-	registry_registry map[string]reflect.Value
-)
+var registry_registry map[string]reflect.Value
 
 func init() {
 	registry_registry = make(map[string]reflect.Value)

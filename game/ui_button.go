@@ -57,8 +57,10 @@ type Button struct {
 	}
 }
 
-var _ ButtonLike = (*Button)(nil)
-var _ SetOpacityer = (*Button)(nil)
+var (
+	_ ButtonLike   = (*Button)(nil)
+	_ SetOpacityer = (*Button)(nil)
+)
 
 // If x,y is inside the button's region then it will run its function and
 // return true, otherwise it does nothing and returns false.

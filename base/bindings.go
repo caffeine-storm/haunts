@@ -7,16 +7,17 @@ import (
 	"github.com/runningwild/glop/gin"
 )
 
-type KeyBinds map[string]string
-type KeyMap map[string]gin.Key
-
-var (
-	default_map KeyMap
+type (
+	KeyBinds map[string]string
+	KeyMap   map[string]gin.Key
 )
+
+var default_map KeyMap
 
 func SetDefaultKeyMap(km KeyMap) {
 	default_map = km
 }
+
 func GetDefaultKeyMap() KeyMap {
 	return default_map
 }

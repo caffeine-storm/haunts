@@ -60,6 +60,7 @@ type Data struct {
 func (d *Data) Dx() int {
 	return d.dx
 }
+
 func (d *Data) Dy() int {
 	return d.dy
 }

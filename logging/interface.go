@@ -32,11 +32,13 @@ func (log *hauntsLogger) Printf(msg string, args ...interface{}) {
 
 var _ Logger = (*hauntsLogger)(nil)
 
-var traceLogger *hauntsLogger
-var debugLogger *hauntsLogger
-var infoLogger *hauntsLogger
-var warnLogger *hauntsLogger
-var errorLogger *hauntsLogger
+var (
+	traceLogger *hauntsLogger
+	debugLogger *hauntsLogger
+	infoLogger  *hauntsLogger
+	warnLogger  *hauntsLogger
+	errorLogger *hauntsLogger
+)
 
 func init() {
 	traceLogger = &hauntsLogger{
@@ -163,11 +165,13 @@ func Redirect(newOut io.Writer) func() {
 // TODO(tmckee): delegate logging from 'logger' to 'slogger' so that all logs
 // are structured/leveled conveniently.
 
-type gloggy = glog.Logger
-type baseLogger struct {
-	*log.Logger
-	gloggy
-}
+type (
+	gloggy     = glog.Logger
+	baseLogger struct {
+		*log.Logger
+		gloggy
+	}
+)
 
 func doLog(logger *hauntsLogger, lvl slog.Level, msg string, args ...interface{}) {
 	if !logger.Enabled(context.Background(), lvl) {

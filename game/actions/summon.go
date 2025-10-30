@@ -116,30 +116,36 @@ func (a *SummonAction) Push(L *lua.State) {
 		L.PushInteger(int64(a.Current_ammo))
 	}
 	L.SetTable(-3)
-
 }
 
 func (a *SummonAction) AP() int {
 	return a.Ap
 }
+
 func (a *SummonAction) FloorPos() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return a.cx, a.cy
 }
+
 func (a *SummonAction) Dims() (house.BoardSpaceUnit, house.BoardSpaceUnit) {
 	return 1, 1
 }
+
 func (a *SummonAction) String() string {
 	return a.Name
 }
+
 func (a *SummonAction) Icon() *texture.Object {
 	return &a.Texture
 }
+
 func (a *SummonAction) Readyable() bool {
 	return false
 }
+
 func (a *SummonAction) Preppable(ent *game.Entity, g *game.Game) bool {
 	return a.Current_ammo != 0 && ent.Stats.ApCur() >= a.Ap
 }
+
 func (a *SummonAction) Prep(ent *game.Entity, g *game.Game) bool {
 	if !a.Preppable(ent, g) {
 		return false
@@ -147,6 +153,7 @@ func (a *SummonAction) Prep(ent *game.Entity, g *game.Game) bool {
 	a.ent = ent
 	return true
 }
+
 func (a *SummonAction) HandleInput(ctx gui.EventHandlingContext, group gui.EventGroup, g *game.Game) (bool, game.ActionExec) {
 	if mpos, ok := ctx.UseMousePosition(group); ok {
 		bx, by := g.GetViewer().WindowToBoard(mpos.X, mpos.Y)
@@ -178,6 +185,7 @@ func (a *SummonAction) HandleInput(ctx gui.EventHandlingContext, group gui.Event
 	}
 	return false, nil
 }
+
 func (a *SummonAction) RenderOnFloor() {
 	if a.ent == nil {
 		return
@@ -195,9 +203,11 @@ func (a *SummonAction) RenderOnFloor() {
 	(&texture.Object{}).Data().Render(float64(a.cx), float64(a.cy), 1, 1)
 	base.EnableShader("")
 }
+
 func (a *SummonAction) Cancel() {
 	a.summonActionTempData = summonActionTempData{}
 }
+
 func (a *SummonAction) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.MaintenanceStatus {
 	if ae != nil {
 		exec := ae.(*summonExec)
@@ -223,6 +233,7 @@ func (a *SummonAction) Maintain(dt int64, g *game.Game, ae game.ActionExec) game
 	}
 	return game.InProgress
 }
+
 func (a *SummonAction) Interrupt() bool {
 	return true
 }

@@ -66,14 +66,12 @@ clean:
 		-or -name 'perftest' \
 	\) -exec rm "{}" +
 
-fmt:
-	go fmt ./...
+include build/gofumpt.mk
+fmt: gofmt
 	git diff --no-color --name-status -- data/ | grep '^[MA]' | sed 's,^.\s\+,,' \
 		| xargs -d '\n' go run ./tools/format-data-dir/
 
-checkfmt:
-	@# -l for 'list files'
-	@gofmt -l ./
+checkfmt: checkgofmt
 	@git diff --no-color --name-status -- data/ | grep '^[MA]' | sed 's,^.\s\+,,' \
 		| xargs -d '\n' go run ./tools/format-data-dir/ --check
 

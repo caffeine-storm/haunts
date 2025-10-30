@@ -32,7 +32,6 @@ var rawfloor = mathgl.Mat4{
 
 func TestModelviewToBoard(t *testing.T) {
 	t.Run("identity transform", func(t *testing.T) {
-
 		ident := &mathgl.Mat4{}
 		ident.Identity()
 		x, y, z := perspective.ModelviewToBoard(ident, 5, 7)

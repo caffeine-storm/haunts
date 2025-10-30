@@ -49,6 +49,7 @@ func (mo *MapOption) Draw(hovered, selected, selectable bool, region gui.Region)
 	shaderBank := globals.RenderQueueState().Shaders()
 	d.RenderString(mo.house_def.Name, region.Point, d.MaxHeight(), gui.Left, shaderBank)
 }
+
 func (mo *MapOption) Think(dt int64) {
 }
 

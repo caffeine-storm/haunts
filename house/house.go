@@ -162,6 +162,7 @@ func makeHouseDataTab(house *HouseDef, viewer *HouseViewer) *houseDataTab {
 	hdt.VerticalTable.AddChild(scroller)
 	return &hdt
 }
+
 func (hdt *houseDataTab) Think(ui *gui.Gui, t int64) {
 	if hdt.temp_room != nil {
 		mx, my := ui.GetLastMousePosition().XY()
@@ -332,9 +333,11 @@ func makeHouseDoorTab(house *HouseDef, viewer *HouseViewer) *houseDoorTab {
 	hdt.VerticalTable.AddChild(scroller)
 	return &hdt
 }
+
 func (hdt *houseDoorTab) Think(ui *gui.Gui, t int64) {
 	hdt.VerticalTable.Think(ui, t)
 }
+
 func (hdt *houseDoorTab) onEscape() {
 	if hdt.temp_door != nil {
 		if hdt.temp_room != nil {
@@ -352,6 +355,7 @@ func (hdt *houseDoorTab) onEscape() {
 		hdt.temp_room = nil
 	}
 }
+
 func (hdt *houseDoorTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 	if hdt.VerticalTable.Respond(ui, group) {
 		return true
@@ -426,11 +430,14 @@ func (hdt *houseDoorTab) Respond(ui *gui.Gui, group gui.EventGroup) bool {
 
 	return false
 }
+
 func (hdt *houseDoorTab) Collapse() {
 	hdt.onEscape()
 }
+
 func (hdt *houseDoorTab) Expand() {
 }
+
 func (hdt *houseDoorTab) Reload() {
 	hdt.onEscape()
 }
@@ -623,9 +630,11 @@ func (hdt *houseRelicsTab) Collapse() {
 	PopSpawnRegexp()
 	hdt.onEscape()
 }
+
 func (hdt *houseRelicsTab) Expand() {
 	PushSpawnRegexp(".*")
 }
+
 func (hdt *houseRelicsTab) Reload() {
 	hdt.onEscape()
 }

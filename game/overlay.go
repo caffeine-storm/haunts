@@ -38,15 +38,19 @@ func MakeOverlayWithTimer(g *Game, t Timer) gui.Widget {
 func (o *Overlay) Requested() gui.Dims {
 	return gui.Dims{Dx: 1024, Dy: 768}
 }
+
 func (o *Overlay) Expandable() (bool, bool) {
 	return false, false
 }
+
 func (o *Overlay) Rendered() gui.Region {
 	return o.region
 }
+
 func (o *Overlay) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	return false
 }
+
 func (o *Overlay) Think(g *gui.Gui, dt int64) {
 	var side Side
 	if o.game.viewer.Los_tex == o.game.los.intruders.tex {
@@ -133,9 +137,11 @@ func (o *Overlay) Draw(region gui.Region, ctx gui.DrawingContext) {
 		}
 	})
 }
+
 func (o *Overlay) DrawFocused(region gui.Region, ctx gui.DrawingContext) {
 	o.Draw(region, ctx)
 }
+
 func (o *Overlay) String() string {
 	return "overlay"
 }

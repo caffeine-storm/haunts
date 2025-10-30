@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/gob"
 	"fmt"
+
 	"github.com/MobRulesGames/golua/lua"
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/house"
@@ -55,8 +56,8 @@ const (
 	Complete
 )
 
-// All implementations of ActionExec will probably use exactly this setup,
-// so we just provide it here so we don't duplicate a ton of code everywhere.
+// All implementations of ActionExec will probably use exactly this setup, so
+// we just provide it here so we don't duplicate a ton of code everywhere.
 type BasicActionExec struct {
 	Ent   EntityId
 	Index int
@@ -65,9 +66,11 @@ type BasicActionExec struct {
 func (bae BasicActionExec) EntityId() EntityId {
 	return bae.Ent
 }
+
 func (bae BasicActionExec) ActionIndex() int {
 	return bae.Index
 }
+
 func (bae BasicActionExec) Push(L *lua.State, g *Game) {
 	ent := g.EntityById(bae.Ent)
 	if bae.Index < 0 || bae.Index >= len(ent.Actions) {
@@ -83,6 +86,7 @@ func (bae BasicActionExec) Push(L *lua.State, g *Game) {
 	LuaPushEntity(L, ent)
 	L.SetTable(-3)
 }
+
 func (bae BasicActionExec) GetPath() []int {
 	return nil
 }
@@ -100,8 +104,8 @@ func (bae *BasicActionExec) SetBasicData(ent *Entity, action Action) {
 	}
 }
 
-// When an entity commits to an action it will create an ActionExec.  This
-// will be passed to the Action
+// When an entity commits to an action it will create an ActionExec. This will
+// be passed to the Action.
 type ActionExec interface {
 	// Entity whose action created this ActionExec
 	EntityId() EntityId

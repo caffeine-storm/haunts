@@ -70,9 +70,11 @@ type entityDistSlice []entityDist
 func (e entityDistSlice) Len() int {
 	return len(e)
 }
+
 func (e entityDistSlice) Less(i, j int) bool {
 	return e[i].dist < e[j].dist
 }
+
 func (e entityDistSlice) Swap(i, j int) {
 	e[i], e[j] = e[j], e[i]
 }
@@ -657,7 +659,7 @@ func NearbyUnexploredRoomsFunc(a *Ai) lua.LuaGoFunction {
 		g := me.Game()
 		graph := g.RoomGraph()
 		var unexplored []int
-		for room_num, _ := range g.House.Floors[0].Rooms {
+		for room_num := range g.House.Floors[0].Rooms {
 			if !me.Info.RoomsExplored[room_num] {
 				adj, _ := graph.Adjacent(room_num)
 				for i := range adj {

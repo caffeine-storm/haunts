@@ -572,7 +572,6 @@ func (sm *OnlineMenu) Draw(region gui.Region, ctx gui.DrawingContext) {
 			d := base.GetDictionary(l.Size)
 			d.RenderString(fmt.Sprintf("ERROR: %s", l.err), gui.Point{X: l.X, Y: l.Y}, d.MaxHeight(), gui.Left, shaderBank)
 		}
-
 	})
 }
 

@@ -6,8 +6,10 @@ import (
 	"github.com/runningwild/glop/render"
 )
 
-var renderQueue render.RenderQueueInterface
-var renderQueueState render.RenderQueueState
+var (
+	renderQueue      render.RenderQueueInterface
+	renderQueueState render.RenderQueueState
+)
 
 func SetRenderQueue(queue render.RenderQueueInterface) {
 	renderQueue = queue

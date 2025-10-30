@@ -36,6 +36,7 @@ type colorOption struct {
 func (co *colorOption) String() string {
 	return fmt.Sprintf("ColorOption(%d, %d, %d, %d)", co.r, co.g, co.b, co.a)
 }
+
 func (co *colorOption) Think(hovered, selected, selectable bool, dt int64) {
 	var target byte
 	switch {
@@ -50,9 +51,11 @@ func (co *colorOption) Think(hovered, selected, selectable bool, dt int64) {
 	}
 	co.a = target
 }
+
 func (co *colorOption) Height() int {
 	return 125
 }
+
 func (co *colorOption) Draw(x, y, dx int) {
 	gl.Disable(gl.TEXTURE_2D)
 	gl.Color4ub(co.r, co.g, co.b, co.a)
@@ -63,6 +66,7 @@ func (co *colorOption) Draw(x, y, dx int) {
 	gl.Vertex2i(x+dx, y)
 	gl.End()
 }
+
 func (co *colorOption) DrawInfo(x, y, dx, dy int) {
 	gl.Disable(gl.TEXTURE_2D)
 	gl.Color4ub(co.r, co.g, co.b, co.a)
@@ -164,11 +168,13 @@ func (ob *OptionBasic) Scenario() Scenario {
 		ob.HouseName,
 	}
 }
+
 func (ob *OptionBasic) Draw(x, y, dx int) {
 	render.WithColour(1, 1, 1, float32(ob.alpha)/255.0, func() {
 		ob.Small.Data().RenderNatural(x, y)
 	})
 }
+
 func (ob *OptionBasic) DrawInfo(x, y, dx, dy int) {
 	shaderBank := globals.RenderQueueState().Shaders()
 	render.WithColour(1, 1, 1, 1, func() {
@@ -179,9 +185,11 @@ func (ob *OptionBasic) DrawInfo(x, y, dx, dy int) {
 		d.RenderParagraph(ob.Text, x, y+dy-ob.Large.Data().Dy()-d.MaxHeight(), dx, d.MaxHeight(), gui.Left, gui.Top, shaderBank)
 	})
 }
+
 func (ob *OptionBasic) Height() int {
 	return ob.Small.Data().Dy()
 }
+
 func (ob *OptionBasic) Think(hovered, selected, selectable bool, dt int64) {
 	if selectable && hovered && !ob.was_over {
 		sound.PlaySound("Haunts/SFX/UI/Tick", 0.75)
@@ -385,6 +393,7 @@ func (c *Chooser) doOnOptions(f func(index int, opt Option, data doOnOptionData)
 		f(i, option, data)
 	}
 }
+
 func assymptoticApproach(cur, target float64, dt int64) float64 {
 	dt = 16 // KLUDGE: makes it work even on windows, which doesn't work, who knows why
 	delta := target - cur
@@ -395,18 +404,22 @@ func assymptoticApproach(cur, target float64, dt int64) float64 {
 	}
 	return cur
 }
+
 func (c *Chooser) Requested() gui.Dims {
 	return gui.Dims{
 		Dx: 1024,
 		Dy: 768,
 	}
 }
+
 func (c *Chooser) Expandable() (bool, bool) {
 	return false, false
 }
+
 func (c *Chooser) Rendered() gui.Region {
 	return c.region
 }
+
 func (c *Chooser) Think(g *gui.Gui, t int64) {
 	if c.last_t == 0 {
 		c.last_t = t
@@ -427,6 +440,7 @@ func (c *Chooser) Think(g *gui.Gui, t int64) {
 		opt.Think(data.hovered, data.selected, data.selectable, dt)
 	})
 }
+
 func (c *Chooser) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	if mpos, ok := g.UseMousePosition(group); ok {
 		c.mx, c.my = mpos.X, mpos.Y
@@ -454,6 +468,7 @@ func (c *Chooser) Respond(g *gui.Gui, group gui.EventGroup) bool {
 	}
 	return false
 }
+
 func (c *Chooser) Draw(region gui.Region, ctx gui.DrawingContext) {
 	c.region = region
 	render.WithColour(1, 1, 1, 1, func() {
@@ -492,9 +507,11 @@ func (c *Chooser) Draw(region gui.Region, ctx gui.DrawingContext) {
 		c.info_region.PopClipPlanes()
 	})
 }
+
 func (c *Chooser) DrawFocused(region gui.Region, ctx gui.DrawingContext) {
 	c.Draw(region, ctx)
 }
+
 func (c *Chooser) String() string {
 	return "chooser"
 }

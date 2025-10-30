@@ -89,6 +89,7 @@ func (rv *roomViewer) makeMat() {
 func (rv *roomViewer) WindowToBoard(wx, wy int) (float32, float32) {
 	return rv.WindowToBoardf(float32(wx), float32(wy))
 }
+
 func (rv *roomViewer) WindowToBoardf(wx, wy float32) (float32, float32) {
 	fx, fy, fdist := rv.modelviewToBoard(wx, wy)
 	lbx, lby, ldist := rv.modelviewToLeftWall(wx, wy)
@@ -112,6 +113,7 @@ func (rv *roomViewer) BoardToWindow(bx, by float32) (int, int) {
 	x, y := rv.BoardToWindowf(bx, by)
 	return int(x), int(y)
 }
+
 func (rv *roomViewer) BoardToWindowf(bx, by float32) (float32, float32) {
 	fx, fy, fz := rv.boardToModelview(float32(bx), float32(by))
 	lbx, lby, lz := rv.leftWallToModelview(float32(bx), float32(by))

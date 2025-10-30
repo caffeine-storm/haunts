@@ -13,8 +13,10 @@ import (
 	"time"
 )
 
-type NetId int64
-type GameKey string
+type (
+	NetId   int64
+	GameKey string
+)
 
 // const Host_url = "http://mobrulesgames.appspot.com/"
 
@@ -76,11 +78,13 @@ type User struct {
 	Name string
 }
 
-type UpdateUserRequest User
-type UpdateUserResponse struct {
-	User
-	Err string
-}
+type (
+	UpdateUserRequest  User
+	UpdateUserResponse struct {
+		User
+		Err string
+	}
+)
 
 type NewGameRequest struct {
 	Id NetId

@@ -55,7 +55,7 @@ const (
 )
 
 func ensureDirectory(filePath string) error {
-	return os.MkdirAll(filepath.Dir(filePath), 0755)
+	return os.MkdirAll(filepath.Dir(filePath), 0o755)
 }
 
 func openLogFile(datadir string) (*os.File, error) {

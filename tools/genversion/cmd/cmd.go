@@ -41,7 +41,7 @@ func main() {
 
 	outpath := os.Args[2]
 	targetdir := filepath.Dir(outpath)
-	err = os.MkdirAll(targetdir, 0755)
+	err = os.MkdirAll(targetdir, 0o755)
 	if err != nil {
 		panic(fmt.Errorf("couldn't os.MkdirAll(%q): %w", targetdir, err))
 	}

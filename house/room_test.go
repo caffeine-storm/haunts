@@ -74,8 +74,10 @@ func loadRoom(roomName string, queue render.RenderQueueInterface) *house.Room {
 	return output
 }
 
-var transparent = color.RGBA{}
-var black = color.RGBA{A: 255}
+var (
+	transparent = color.RGBA{}
+	black       = color.RGBA{A: 255}
+)
 
 func TestRoom(t *testing.T) {
 	Convey("house.Room", t, func(c C) {
