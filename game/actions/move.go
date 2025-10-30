@@ -316,40 +316,39 @@ func (a *Move) Cancel() {
 	a.calculated = false
 }
 func (a *Move) Maintain(dt int64, g *game.Game, ae game.ActionExec) game.MaintenanceStatus {
-	if ae == nil {
-		panic(fmt.Errorf("nil ActionExec T_T"))
-	}
-	exec := ae.(*moveExec)
-	a.ent = g.EntityById(ae.EntityId())
-	if len(exec.Path) == 0 {
-		logging.Error("got a move exec with an empty path", "exec", exec)
-		return game.Complete
-	}
-	a.cost = exec.measureCost(a.ent, g)
-	if a.cost > a.ent.Stats.ApCur() {
-		logging.Error("got a move exec for too much ap", "exec", exec)
-		return game.Complete
-	}
-	if a.cost == -1 {
-		logging.Error("got a move exec that had an invalid path", "exec", exec)
-		if a.ent == nil {
-			panic(fmt.Errorf("got a nil entity"))
+	if ae != nil {
+		exec := ae.(*moveExec)
+		a.ent = g.EntityById(ae.EntityId())
+		if len(exec.Path) == 0 {
+			logging.Error("got a move exec with an empty path", "exec", exec)
+			return game.Complete
 		}
-		x, y := a.ent.FloorPos()
-		v := g.ToVertex(x, y)
-		logging.Trace("negative cost move but ... we're forging ahead anyways?!", "(x, y, v)", []any{x, y, v})
-		return game.Complete
+		a.cost = exec.measureCost(a.ent, g)
+		if a.cost > a.ent.Stats.ApCur() {
+			logging.Error("got a move exec for too much ap", "exec", exec)
+			return game.Complete
+		}
+		if a.cost == -1 {
+			logging.Error("got a move exec that had an invalid path", "exec", exec)
+			if a.ent == nil {
+				panic(fmt.Errorf("got a nil entity"))
+			}
+			x, y := a.ent.FloorPos()
+			v := g.ToVertex(x, y)
+			logging.Trace("negative cost move but ... we're forging ahead anyways?!", "(x, y, v)", []any{x, y, v})
+			return game.Complete
+		}
+		algorithm.Map(exec.Path, &a.path, func(v int) [2]house.BoardSpaceUnit {
+			_, x, y := g.FromVertex(v)
+			return [2]house.BoardSpaceUnit{x, y}
+		})
+		logging.Trace("move exec path validated", "exec", exec)
+		a.ent.Stats.ApplyDamage(-a.cost, 0, status.Unspecified)
+		ex, ey := a.ent.FloorPos()
+		src := g.ToVertex(ex, ey)
+		graph := g.Graph(a.ent.Side(), true, nil)
+		a.drawPath(a.ent, g, graph, src)
 	}
-	algorithm.Map(exec.Path, &a.path, func(v int) [2]house.BoardSpaceUnit {
-		_, x, y := g.FromVertex(v)
-		return [2]house.BoardSpaceUnit{x, y}
-	})
-	logging.Trace("move exec path validated", "exec", exec)
-	a.ent.Stats.ApplyDamage(-a.cost, 0, status.Unspecified)
-	ex, ey := a.ent.FloorPos()
-	src := g.ToVertex(ex, ey)
-	graph := g.Graph(a.ent.Side(), true, nil)
-	a.drawPath(a.ent, g, graph, src)
 
 	// Do stuff
 	factor := float32(math.Pow(2, a.ent.Walking_speed))
