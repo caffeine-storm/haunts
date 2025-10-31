@@ -95,7 +95,7 @@ func (o *Overlay) Draw(region gui.Region, ctx gui.DrawingContext) {
 	t := float32(o.timer.Now().UnixNano()%1e15) / 1.0e9
 	base.SetUniformF("waypoint", "time", t)
 
-	render.WithColour(200, 0, 0, 128, func() {
+	render.WithColour(1.0, 0.0, 0.0, 0.5, func() {
 		for _, wp := range o.game.Waypoints {
 			if !wp.Active || wp.drawn {
 				continue
