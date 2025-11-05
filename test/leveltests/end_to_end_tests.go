@@ -21,7 +21,7 @@ import (
 )
 
 type LevelChoice int
-type ModeChoice int
+type ModeChoice  int
 
 const (
 	LevelNone LevelChoice = iota
@@ -162,27 +162,25 @@ func (tp *testPlanner) StartApplication() Step {
 func (tp *testPlanner) ChooseVersusMode() Step {
 	return Step{
 		do: func() {
-			logging.DebugBracket(func() {
-				versusButton := tp.startUiMenuConfig.Versus
-				bx, by := versusButton.X, versusButton.Y
-				drv := tp.window.NewDriver()
-				drv.Click(bx, by)
-				drv.ProcessFrame()
+			versusButton := tp.startUiMenuConfig.Versus
+			bx, by := versusButton.X, versusButton.Y
+			drv := tp.window.NewDriver()
+			drv.Click(bx, by)
+			drv.ProcessFrame()
 
-				tp.redrawRootGui()
+			tp.redrawRootGui()
 
-				// At this point, the root widget will contain a map-select screen; we
-				// need to simulate some time passing so that it knows to be faded in.
-				tp.thinkSeconds(5)
+			// At this point, the root widget will contain a map-select screen; we
+			// need to simulate some time passing so that it knows to be faded in.
+			tp.thinkSeconds(5)
 
-				if err := texture.BlockWithTimeboxUntilIdle(time.Second * 5); err != nil {
-					panic(fmt.Errorf("texture loading failed: %w", err))
-				}
+			if err := texture.BlockWithTimeboxUntilIdle(time.Second * 5); err != nil {
+				panic(fmt.Errorf("texture loading failed: %w", err))
+			}
 
-				tp.redrawRootGui()
+			tp.redrawRootGui()
 
-				tp.validateExpectations(LevelNone, "level-select")
-			})
+			tp.validateExpectations(LevelNone, "level-select")
 		},
 	}
 }

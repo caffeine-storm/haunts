@@ -394,11 +394,15 @@ func (c *Chooser) doOnOptions(f func(index int, opt Option, data doOnOptionData)
 	}
 }
 
+func clampToNormalized(f float64) float64 {
+	return max(0.0, min(1.0, f))
+}
+
 func assymptoticApproach(cur, target float64, dt int64) float64 {
-	dt = 16 // KLUDGE: makes it work even on windows, which doesn't work, who knows why
 	delta := target - cur
 	delta *= math.Exp(-45.0 / float64(1+dt))
 	cur += delta
+	cur = clampToNormalized(cur)
 	if math.Abs(cur-target) < 1e-2 {
 		return target
 	}
