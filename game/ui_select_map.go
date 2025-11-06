@@ -7,6 +7,7 @@ import (
 	"github.com/MobRulesGames/haunts/game/hui"
 	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/house"
+	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/go-gl-legacy/gl"
 	"github.com/runningwild/glop/gui"
@@ -80,13 +81,14 @@ func MakeUiSelectMap(gp *GamePanel) (gui.Widget, <-chan string, error) {
 	out := make(chan string, 2)
 	chooser := hui.MakeRosterChooser(options, hui.SelectExactlyOne, func(m map[int]bool) {
 		var index int
-		base.DeprecatedLog().Printf("On complete: %v", m)
+		logging.Debug("on complete called", "selections", m)
 		for index = range m {
-			out <- options[index].(*MapOption).house_def.Name
-			base.DeprecatedLog().Printf("Sent '%s'", options[index].(*MapOption).house_def.Name)
+			houseDefName := options[index].(*MapOption).house_def.Name
+			out <- houseDefName
+			logging.Debug("sent house name", "houseDefName", houseDefName)
 			break
 		}
-		base.DeprecatedLog().Printf("Closing")
+		logging.Debug("closing")
 		close(out)
 	},
 		nil)
@@ -96,11 +98,11 @@ func MakeUiSelectMap(gp *GamePanel) (gui.Widget, <-chan string, error) {
 }
 
 func (ui *UiSelectMap) String() string {
-	return "ui start"
+	return "ui select map"
 }
 
 func (ui *UiSelectMap) Requested() gui.Dims {
-	return gui.Dims{1024, 768}
+	return gui.Dims{Dx: 1024, Dy: 768}
 }
 
 func (ui *UiSelectMap) Expandable() (bool, bool) {
