@@ -328,6 +328,8 @@ func MakeChooser(opts []Option) (*Chooser, <-chan []Scenario, error) {
 	done := make(chan []Scenario, 1)
 	ch.selected = make(map[int]bool)
 	ch.layout.Back.f = func(interface{}) {
+		// TODO(tmckee#42): this means clicking the 'back' button will send 'nil'
+		// for the scenario. This seems to be causing issue #42.
 		done <- nil
 		close(done)
 	}

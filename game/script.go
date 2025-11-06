@@ -765,13 +765,15 @@ func chooserFromFile(gp *GamePanel) lua.LuaGoFunction {
 		path := filepath.Join(base.GetDataDir(), L.ToString(-1))
 		chooser, done, err := makeChooserFromOptionBasicsFile(path)
 		if err != nil {
-			base.DeprecatedError().Printf("Error making chooser: %v", err)
+			logging.Error("chooserFromFile: making chooser failed", "err", err)
 			return 0
 		}
-		logging.Trace("chooserFromFile>abox-addchild>chooser")
-		gp.AddChild(chooser, gui.Anchor{0.5, 0.5, 0.5, 0.5})
+		gp.AddChild(chooser, gui.Anchor{Wx: 0.5, Wy: 0.5, Bx: 0.5, By: 0.5})
 		gp.script.syncEnd()
 
+		// TODO(tmckee#42): 'done' can yield nil if we click 'cancel'. If it does,
+		// we end up starting a game anyway :(. Need to find a way to plumb a 'go
+		// back' callback here.
 		res := <-done
 		L.NewTable()
 		for i, scenario := range res {
