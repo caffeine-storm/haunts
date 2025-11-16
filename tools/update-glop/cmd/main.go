@@ -16,7 +16,7 @@ func main() {
 	// - Use 'go mod edit -replace=$glop-repo=$glop-repo@new-ver' to edit Haunts'
 	// go.mod file
 
-	oldRepo := "github.com/runningwild/glop"
+	oldRepo := "github.com/caffeine-storm/glop"
 	cstormRepo := "github.com/caffeine-storm/glop"
 	cmd := exec.Command("go", "get", "-u", cstormRepo+"@latest")
 

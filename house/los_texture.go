@@ -6,7 +6,7 @@ import (
 
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/caffeine-storm/gl"
-	"github.com/runningwild/glop/render"
+	"github.com/caffeine-storm/glop/render"
 )
 
 const (

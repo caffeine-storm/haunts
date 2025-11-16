@@ -13,10 +13,10 @@ import (
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/caffeine-storm/gl"
+	"github.com/caffeine-storm/glop/debug"
+	"github.com/caffeine-storm/glop/gui"
+	"github.com/caffeine-storm/glop/render"
 	"github.com/caffeine-storm/mathgl"
-	"github.com/runningwild/glop/debug"
-	"github.com/runningwild/glop/gui"
-	"github.com/runningwild/glop/render"
 )
 
 func GetAllRoomNames() []string {

@@ -12,16 +12,18 @@ import (
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/runningwild/glop/gin"
-	"github.com/runningwild/glop/gui"
-	"github.com/runningwild/glop/render"
-	"github.com/runningwild/glop/render/rendertest"
-	"github.com/runningwild/glop/system/systemtest"
+	"github.com/caffeine-storm/glop/gin"
+	"github.com/caffeine-storm/glop/gui"
+	"github.com/caffeine-storm/glop/render"
+	"github.com/caffeine-storm/glop/render/rendertest"
+	"github.com/caffeine-storm/glop/system/systemtest"
 	"github.com/smartystreets/goconvey/convey"
 )
 
-type LevelChoice int
-type ModeChoice  int
+type (
+	LevelChoice int
+	ModeChoice  int
+)
 
 const (
 	LevelNone LevelChoice = iota

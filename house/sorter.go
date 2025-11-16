@@ -4,7 +4,7 @@ import (
 	"sort"
 
 	"github.com/MobRulesGames/GoLLRB/llrb"
-	"github.com/runningwild/glop/util/algorithm"
+	"github.com/caffeine-storm/glop/util/algorithm"
 )
 
 type endpoint struct {

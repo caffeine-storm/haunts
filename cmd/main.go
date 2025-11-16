@@ -28,12 +28,12 @@ import (
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/memory"
 	"github.com/caffeine-storm/gl"
-	glopdebug "github.com/runningwild/glop/debug"
-	"github.com/runningwild/glop/gin"
-	"github.com/runningwild/glop/gos"
-	"github.com/runningwild/glop/gui"
-	"github.com/runningwild/glop/render"
-	"github.com/runningwild/glop/system"
+	glopdebug "github.com/caffeine-storm/glop/debug"
+	"github.com/caffeine-storm/glop/gin"
+	"github.com/caffeine-storm/glop/gos"
+	"github.com/caffeine-storm/glop/gui"
+	"github.com/caffeine-storm/glop/render"
+	"github.com/caffeine-storm/glop/system"
 )
 
 //go:generate go run github.com/MobRulesGames/haunts/tools/genversion/cmd ../.git/HEAD ./gen/version.go

@@ -5,9 +5,9 @@ import (
 	"testing"
 
 	"github.com/MobRulesGames/haunts/logging"
-	"github.com/runningwild/glop/render"
-	"github.com/runningwild/glop/render/rendertest"
-	"github.com/runningwild/glop/render/rendertest/testbuilder"
+	"github.com/caffeine-storm/glop/render"
+	"github.com/caffeine-storm/glop/render/rendertest"
+	"github.com/caffeine-storm/glop/render/rendertest/testbuilder"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

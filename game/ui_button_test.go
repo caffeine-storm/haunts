@@ -8,9 +8,9 @@ import (
 	"github.com/MobRulesGames/haunts/game/gametest"
 	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/runningwild/glop/gui"
-	"github.com/runningwild/glop/render"
-	"github.com/runningwild/glop/render/rendertest/testbuilder"
+	"github.com/caffeine-storm/glop/gui"
+	"github.com/caffeine-storm/glop/render"
+	"github.com/caffeine-storm/glop/render/rendertest/testbuilder"
 )
 
 func TestButton(t *testing.T) {

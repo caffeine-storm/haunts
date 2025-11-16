@@ -7,7 +7,7 @@ import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/game/gametest"
-	"github.com/runningwild/glop/gui"
+	"github.com/caffeine-storm/glop/gui"
 
 	. "github.com/smartystreets/goconvey/convey"
 )

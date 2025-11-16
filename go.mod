@@ -11,10 +11,10 @@ require (
 	github.com/MobRulesGames/memory v0.0.0-20120626004817-db5bb35fd894
 	github.com/caffeine-storm/freetype v0.0.0-haunted
 	github.com/caffeine-storm/gl v0.0.0-haunted
+	github.com/caffeine-storm/glop v0.0.0-20251116153652-27437141fcc0
 	github.com/caffeine-storm/glu v0.0.0-haunted
 	github.com/caffeine-storm/mathgl v0.0.0-haunted
 	github.com/fsnotify/fsnotify v1.4.9
-	github.com/runningwild/glop v0.0.0-20130331194942-bcbcf4982510
 	github.com/smartystreets/goconvey v1.8.1
 	github.com/stretchr/testify v1.10.0
 )
@@ -31,7 +31,5 @@ require (
 	golang.org/x/sys v0.6.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace github.com/runningwild/glop => github.com/caffeine-storm/glop v0.0.0-20251114163553-01edb065de5c
 
 replace github.com/MobRulesGames/golua => github.com/caffeine-storm/golua v0.0.0-20240910150920-bb0104c032e4

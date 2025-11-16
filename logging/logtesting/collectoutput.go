@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/MobRulesGames/haunts/logging"
-	"github.com/runningwild/glop/gloptest"
+	"github.com/caffeine-storm/glop/gloptest"
 )
 
 // Like gloptest.CollectOuput but knows about the haunts.logging package and

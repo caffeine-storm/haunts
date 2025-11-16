@@ -17,10 +17,10 @@ import (
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/memory"
 	"github.com/caffeine-storm/gl"
+	"github.com/caffeine-storm/glop/imgmanip"
+	"github.com/caffeine-storm/glop/render"
 	"github.com/caffeine-storm/glu"
 	"github.com/caffeine-storm/mathgl"
-	"github.com/runningwild/glop/imgmanip"
-	"github.com/runningwild/glop/render"
 )
 
 type Object struct {

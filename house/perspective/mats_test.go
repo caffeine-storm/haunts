@@ -8,10 +8,10 @@ import (
 	"github.com/MobRulesGames/haunts/house/housetest"
 	"github.com/MobRulesGames/haunts/house/perspective"
 	"github.com/MobRulesGames/haunts/logging"
+	"github.com/caffeine-storm/glop/render"
+	"github.com/caffeine-storm/glop/render/rendertest"
+	"github.com/caffeine-storm/glop/render/rendertest/testbuilder"
 	"github.com/caffeine-storm/mathgl"
-	"github.com/runningwild/glop/render"
-	"github.com/runningwild/glop/render/rendertest"
-	"github.com/runningwild/glop/render/rendertest/testbuilder"
 	. "github.com/smartystreets/goconvey/convey"
 	"github.com/stretchr/testify/assert"
 )

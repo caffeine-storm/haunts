@@ -10,7 +10,7 @@ import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/logging/logtesting"
-	"github.com/runningwild/glop/glog"
+	"github.com/caffeine-storm/glop/glog"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

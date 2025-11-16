@@ -3,7 +3,7 @@ package globals
 import (
 	"fmt"
 
-	"github.com/runningwild/glop/render"
+	"github.com/caffeine-storm/glop/render"
 )
 
 var (

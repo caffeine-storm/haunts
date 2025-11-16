@@ -1,7 +1,7 @@
 package game
 
 import (
-	"github.com/runningwild/glop/gui"
+	"github.com/caffeine-storm/glop/gui"
 )
 
 // SUPER simple scrolling region

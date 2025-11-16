@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/runningwild/glop/gin"
+	"github.com/caffeine-storm/glop/gin"
 )
 
 type (

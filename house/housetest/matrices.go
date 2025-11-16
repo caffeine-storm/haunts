@@ -5,8 +5,8 @@ import (
 
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/house/perspective"
+	"github.com/caffeine-storm/glop/gui"
 	"github.com/caffeine-storm/mathgl"
-	"github.com/runningwild/glop/gui"
 )
 
 // mathgl is trading accuracy for speed but should at least be internally

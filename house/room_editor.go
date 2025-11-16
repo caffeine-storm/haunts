@@ -4,7 +4,7 @@ import (
 	"path/filepath"
 
 	"github.com/MobRulesGames/haunts/base"
-	"github.com/runningwild/glop/gui"
+	"github.com/caffeine-storm/glop/gui"
 )
 
 type RoomEditorPanel struct {

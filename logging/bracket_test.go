@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/MobRulesGames/haunts/logging"
-	"github.com/runningwild/glop/glog"
+	"github.com/caffeine-storm/glop/glog"
 	"github.com/stretchr/testify/assert"
 )
 

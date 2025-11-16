@@ -10,9 +10,9 @@ import (
 	"github.com/MobRulesGames/haunts/house/housetest"
 	"github.com/MobRulesGames/haunts/registry"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/runningwild/glop/cache"
-	"github.com/runningwild/glop/render/rendertest"
-	"github.com/runningwild/glop/sprite"
+	"github.com/caffeine-storm/glop/cache"
+	"github.com/caffeine-storm/glop/render/rendertest"
+	"github.com/caffeine-storm/glop/sprite"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )

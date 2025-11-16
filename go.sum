@@ -8,8 +8,8 @@ github.com/caffeine-storm/freetype v0.0.0-haunted h1:+Wc4Ry5M+Zk1o8+3qB06PTozSq1
 github.com/caffeine-storm/freetype v0.0.0-haunted/go.mod h1:8v3T4U+NrXpMTze2WJjyWVBwW33gTnjePagu9H1ssz4=
 github.com/caffeine-storm/gl v0.0.0-haunted h1:WnsPfQvFvUbebQQd7GAz0eNaP+GEecWN5itP+SV2DNI=
 github.com/caffeine-storm/gl v0.0.0-haunted/go.mod h1:GiE1+RHb0hbvCfdTsrpXJtB1cU7OS+lMs7DzreBArNE=
-github.com/caffeine-storm/glop v0.0.0-20251114163553-01edb065de5c h1:v6fc37OGY9tayYhzI85TWsRVGWSOSGurt9PIFH1Ci24=
-github.com/caffeine-storm/glop v0.0.0-20251114163553-01edb065de5c/go.mod h1:OLOfNmt9SS/Bq+NjgU7qMNAZyMqKFBwAXJL76K5UDBI=
+github.com/caffeine-storm/glop v0.0.0-20251116153652-27437141fcc0 h1:JiT6rScjPjIhZAtzqVKJJxLtkQmTGDMy7ABSoFRSdes=
+github.com/caffeine-storm/glop v0.0.0-20251116153652-27437141fcc0/go.mod h1:ktJs5wtyI2coS4lBpnmulPZimUnxLpQItS6oYySJURI=
 github.com/caffeine-storm/glu v0.0.0-haunted h1:Wjpub9fcbXSqz/mNX4zAggs+IK52XS3IF/3PGRTT6/U=
 github.com/caffeine-storm/glu v0.0.0-haunted/go.mod h1:Zsr4IbX9P07/+uEJhhDnA95muGmcl1XE8+n9GwvUYJE=
 github.com/caffeine-storm/golua v0.0.0-20240910150920-bb0104c032e4 h1:zTOKTYGNmZCZVDgvjsTEXhaFIcTWiccPHKBFaWQzo80=

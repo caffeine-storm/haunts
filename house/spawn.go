@@ -11,8 +11,8 @@ import (
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/caffeine-storm/gl"
+	"github.com/caffeine-storm/glop/debug"
 	"github.com/caffeine-storm/mathgl"
-	"github.com/runningwild/glop/debug"
 )
 
 var spawn_regex []*regexp.Regexp

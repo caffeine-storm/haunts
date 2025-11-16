@@ -2,8 +2,8 @@ package gametest
 
 import (
 	"github.com/MobRulesGames/haunts/logging"
-	"github.com/runningwild/glop/gui"
-	"github.com/runningwild/glop/render/rendertest"
+	"github.com/caffeine-storm/glop/gui"
+	"github.com/caffeine-storm/glop/render/rendertest"
 	"github.com/smartystreets/goconvey/convey"
 )
 

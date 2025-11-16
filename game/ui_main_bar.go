@@ -8,8 +8,8 @@ import (
 	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/caffeine-storm/gl"
-	"github.com/runningwild/glop/gin"
-	"github.com/runningwild/glop/gui"
+	"github.com/caffeine-storm/glop/gin"
+	"github.com/caffeine-storm/glop/gui"
 )
 
 type Center struct {

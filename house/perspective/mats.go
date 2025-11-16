@@ -4,9 +4,9 @@ import (
 	"math"
 
 	"github.com/MobRulesGames/haunts/logging"
+	"github.com/caffeine-storm/glop/gui"
+	"github.com/caffeine-storm/glop/render"
 	"github.com/caffeine-storm/mathgl"
-	"github.com/runningwild/glop/gui"
-	"github.com/runningwild/glop/render"
 )
 
 // Container for helpful transformations to move back and forth between Board

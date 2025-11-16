@@ -9,9 +9,9 @@ import (
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/runningwild/glop/render"
-	"github.com/runningwild/glop/render/rendertest"
-	"github.com/runningwild/glop/render/rendertest/testbuilder"
+	"github.com/caffeine-storm/glop/render"
+	"github.com/caffeine-storm/glop/render/rendertest"
+	"github.com/caffeine-storm/glop/render/rendertest/testbuilder"
 	"github.com/stretchr/testify/assert"
 )
 

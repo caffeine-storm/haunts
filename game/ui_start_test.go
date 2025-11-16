@@ -8,9 +8,9 @@ import (
 	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/game/gametest"
 	"github.com/MobRulesGames/haunts/logging"
-	"github.com/runningwild/glop/gin"
-	"github.com/runningwild/glop/gui"
-	"github.com/runningwild/glop/gui/guitest"
+	"github.com/caffeine-storm/glop/gin"
+	"github.com/caffeine-storm/glop/gui"
+	"github.com/caffeine-storm/glop/gui/guitest"
 	. "github.com/smartystreets/goconvey/convey"
 )
 

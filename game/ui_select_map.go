@@ -10,7 +10,7 @@ import (
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/caffeine-storm/gl"
-	"github.com/runningwild/glop/gui"
+	"github.com/caffeine-storm/glop/gui"
 )
 
 type UiSelectMap struct {

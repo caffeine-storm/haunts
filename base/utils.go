@@ -17,8 +17,8 @@ import (
 	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/caffeine-storm/freetype/truetype"
-	"github.com/runningwild/glop/gui"
-	"github.com/runningwild/glop/render"
+	"github.com/caffeine-storm/glop/gui"
+	"github.com/caffeine-storm/glop/render"
 )
 
 var datadir string

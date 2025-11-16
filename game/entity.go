@@ -13,11 +13,11 @@ import (
 	"github.com/MobRulesGames/haunts/sound"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/caffeine-storm/gl"
+	"github.com/caffeine-storm/glop/debug"
+	"github.com/caffeine-storm/glop/render"
+	"github.com/caffeine-storm/glop/sprite"
+	"github.com/caffeine-storm/glop/util/algorithm"
 	"github.com/caffeine-storm/mathgl"
-	"github.com/runningwild/glop/debug"
-	"github.com/runningwild/glop/render"
-	"github.com/runningwild/glop/sprite"
-	"github.com/runningwild/glop/util/algorithm"
 )
 
 type Ai interface {

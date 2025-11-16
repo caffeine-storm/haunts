@@ -5,8 +5,8 @@ import (
 
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/house/housetest"
+	"github.com/caffeine-storm/glop/render"
 	"github.com/caffeine-storm/mathgl"
-	"github.com/runningwild/glop/render"
 )
 
 func TestRoomMatricesHelpers(t *testing.T) {

@@ -15,9 +15,9 @@ import (
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/house/housetest"
 	"github.com/MobRulesGames/haunts/registry"
-	"github.com/runningwild/glop/gin"
-	"github.com/runningwild/glop/gui"
-	"github.com/runningwild/glop/gui/guitest"
+	"github.com/caffeine-storm/glop/gin"
+	"github.com/caffeine-storm/glop/gui"
+	"github.com/caffeine-storm/glop/gui/guitest"
 	. "github.com/smartystreets/goconvey/convey"
 	"github.com/stretchr/testify/assert"
 )

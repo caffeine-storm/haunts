@@ -7,8 +7,8 @@ import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/caffeine-storm/gl"
-	"github.com/runningwild/glop/gui"
-	"github.com/runningwild/glop/render"
+	"github.com/caffeine-storm/glop/gui"
+	"github.com/caffeine-storm/glop/render"
 )
 
 type Timer interface {

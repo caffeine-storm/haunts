@@ -10,7 +10,7 @@ import (
 	"github.com/MobRulesGames/haunts/game"
 	"github.com/MobRulesGames/haunts/game/actions"
 	"github.com/MobRulesGames/haunts/house"
-	"github.com/runningwild/glop/util/algorithm"
+	"github.com/caffeine-storm/glop/util/algorithm"
 )
 
 func (a *Ai) addEntityContext() {

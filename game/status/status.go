@@ -7,7 +7,7 @@ import (
 	"fmt"
 
 	"github.com/MobRulesGames/haunts/house"
-	"github.com/runningwild/glop/util/algorithm"
+	"github.com/caffeine-storm/glop/util/algorithm"
 )
 
 type Kind string

@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 
 	"github.com/caffeine-storm/gl"
-	"github.com/runningwild/glop/render"
+	"github.com/caffeine-storm/glop/render"
 )
 
 type Shader struct {

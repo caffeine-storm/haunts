@@ -6,9 +6,9 @@ import (
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/sound"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/runningwild/glop/gin"
-	"github.com/runningwild/glop/gui"
-	"github.com/runningwild/glop/render"
+	"github.com/caffeine-storm/glop/gin"
+	"github.com/caffeine-storm/glop/gui"
+	"github.com/caffeine-storm/glop/render"
 )
 
 type ButtonLike interface {

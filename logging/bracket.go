@@ -3,7 +3,7 @@ package logging
 import (
 	"log/slog"
 
-	"github.com/runningwild/glop/glog"
+	"github.com/caffeine-storm/glop/glog"
 )
 
 // Run 'fn' in a context where log messages at 'lvl' and above are propagated.

@@ -7,10 +7,10 @@ import (
 
 	"github.com/MobRulesGames/haunts/house/perspective"
 	"github.com/MobRulesGames/haunts/logging"
+	"github.com/caffeine-storm/glop/gin"
+	"github.com/caffeine-storm/glop/gui"
+	"github.com/caffeine-storm/glop/util/algorithm"
 	"github.com/caffeine-storm/mathgl"
-	"github.com/runningwild/glop/gin"
-	"github.com/runningwild/glop/gui"
-	"github.com/runningwild/glop/util/algorithm"
 )
 
 // This structure is used for temporary doors (that are being dragged around in

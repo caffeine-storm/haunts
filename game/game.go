@@ -14,9 +14,9 @@ import (
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/runningwild/glop/cache"
-	"github.com/runningwild/glop/sprite"
-	"github.com/runningwild/glop/util/algorithm"
+	"github.com/caffeine-storm/glop/cache"
+	"github.com/caffeine-storm/glop/sprite"
+	"github.com/caffeine-storm/glop/util/algorithm"
 )
 
 type Game struct {

@@ -9,7 +9,7 @@ import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/runningwild/glop/gui"
+	"github.com/caffeine-storm/glop/gui"
 )
 
 var action_map map[string]func() Action

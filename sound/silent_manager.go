@@ -7,7 +7,7 @@
 package sound
 
 import (
-	"github.com/runningwild/glop/sprite"
+	"github.com/caffeine-storm/glop/sprite"
 )
 
 func Init()                                 {}

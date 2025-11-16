@@ -1,6 +1,6 @@
 package gametest
 
-import "github.com/runningwild/glop/gui"
+import "github.com/caffeine-storm/glop/gui"
 
 type wrapper struct {
 	fn func(gui.Region, gui.DrawingContext)

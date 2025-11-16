@@ -10,7 +10,7 @@ import (
 	"runtime"
 	"time"
 
-	"github.com/runningwild/glop/glog"
+	"github.com/caffeine-storm/glop/glog"
 )
 
 type stdLogInterceptor interface {
