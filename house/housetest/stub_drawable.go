@@ -3,8 +3,8 @@ package housetest
 import (
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/logging"
-	"github.com/MobRulesGames/mathgl"
-	"github.com/go-gl-legacy/gl"
+	"github.com/caffeine-storm/gl"
+	"github.com/caffeine-storm/mathgl"
 )
 
 type StubDraw struct {

@@ -5,7 +5,7 @@ import (
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/MobRulesGames/mathgl"
+	"github.com/caffeine-storm/mathgl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/util/algorithm"

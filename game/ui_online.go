@@ -9,7 +9,7 @@ import (
 	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/mrgnet"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/go-gl-legacy/gl"
+	"github.com/caffeine-storm/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"

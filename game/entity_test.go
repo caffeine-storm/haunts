@@ -8,7 +8,7 @@ import (
 	_ "github.com/MobRulesGames/haunts/game/actions"
 	"github.com/MobRulesGames/haunts/game/gametest"
 	"github.com/MobRulesGames/haunts/registry"
-	"github.com/MobRulesGames/mathgl"
+	"github.com/caffeine-storm/mathgl"
 	"github.com/runningwild/glop/gui"
 	. "github.com/smartystreets/goconvey/convey"
 )

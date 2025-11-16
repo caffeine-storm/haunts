@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/MobRulesGames/haunts/house/perspective"
-	"github.com/MobRulesGames/mathgl"
+	"github.com/caffeine-storm/mathgl"
 )
 
 const rightAngle = math.Pi / 2

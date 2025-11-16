@@ -6,7 +6,7 @@ import (
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/logging"
-	"github.com/go-gl-legacy/gl"
+	"github.com/caffeine-storm/gl"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
 )

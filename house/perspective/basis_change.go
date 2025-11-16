@@ -1,6 +1,6 @@
 package perspective
 
-import "github.com/MobRulesGames/mathgl"
+import "github.com/caffeine-storm/mathgl"
 
 func BoardToModelview(transform *mathgl.Mat4, vx, vy float32) (float32, float32, float32) {
 	r := mathgl.Vec4{X: vx, Y: vy, Z: 0, W: 1}

@@ -1,8 +1,8 @@
 package texture
 
 import (
-	"github.com/go-gl-legacy/gl"
-	"github.com/go-gl-legacy/glu"
+	"github.com/caffeine-storm/gl"
+	"github.com/caffeine-storm/glu"
 )
 
 var error_texture gl.Texture

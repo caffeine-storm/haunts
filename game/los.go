@@ -9,7 +9,7 @@ import (
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/mrgnet"
-	"github.com/go-gl-legacy/gl"
+	"github.com/caffeine-storm/gl"
 )
 
 type Purpose int

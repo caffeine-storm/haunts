@@ -4,7 +4,7 @@ import (
 	"math"
 
 	"github.com/MobRulesGames/haunts/logging"
-	"github.com/MobRulesGames/mathgl"
+	"github.com/caffeine-storm/mathgl"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
 )

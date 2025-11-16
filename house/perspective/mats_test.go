@@ -8,7 +8,7 @@ import (
 	"github.com/MobRulesGames/haunts/house/housetest"
 	"github.com/MobRulesGames/haunts/house/perspective"
 	"github.com/MobRulesGames/haunts/logging"
-	"github.com/MobRulesGames/mathgl"
+	"github.com/caffeine-storm/mathgl"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
 	"github.com/runningwild/glop/render/rendertest/testbuilder"

@@ -7,8 +7,8 @@ import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/logging"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/MobRulesGames/mathgl"
-	"github.com/go-gl-legacy/gl"
+	"github.com/caffeine-storm/gl"
+	"github.com/caffeine-storm/mathgl"
 )
 
 func LoadDecal(name string) *Decal {

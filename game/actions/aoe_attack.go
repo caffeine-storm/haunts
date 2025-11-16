@@ -10,7 +10,7 @@ import (
 	"github.com/MobRulesGames/haunts/game/status"
 	"github.com/MobRulesGames/haunts/house"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/go-gl-legacy/gl"
+	"github.com/caffeine-storm/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/util/algorithm"

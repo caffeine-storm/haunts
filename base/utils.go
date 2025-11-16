@@ -14,9 +14,9 @@ import (
 	"strings"
 	"sync"
 
-	"code.google.com/p/freetype-go/freetype/truetype"
 	"github.com/MobRulesGames/haunts/globals"
 	"github.com/MobRulesGames/haunts/logging"
+	"github.com/caffeine-storm/freetype/truetype"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"
 )

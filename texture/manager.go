@@ -15,10 +15,10 @@ import (
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/logging"
-	"github.com/MobRulesGames/mathgl"
 	"github.com/MobRulesGames/memory"
-	"github.com/go-gl-legacy/gl"
-	"github.com/go-gl-legacy/glu"
+	"github.com/caffeine-storm/gl"
+	"github.com/caffeine-storm/glu"
+	"github.com/caffeine-storm/mathgl"
 	"github.com/runningwild/glop/imgmanip"
 	"github.com/runningwild/glop/render"
 )

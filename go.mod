@@ -1,17 +1,19 @@
 module github.com/MobRulesGames/haunts
 
-go 1.23.0
+go 1.24.0
+
+toolchain go1.24.10
 
 require (
-	code.google.com/p/freetype-go v0.0.0-20120725121025-28cc5fbc5d0b
 	github.com/MobRulesGames/GoLLRB v0.0.0-20121115013357-10dddd6fc70e
 	github.com/MobRulesGames/fmod v0.0.0-20121207023041-90f897047d59
 	github.com/MobRulesGames/golua v0.0.0-00010101000000-000000000000
-	github.com/MobRulesGames/mathgl v0.0.0-20120424214601-79bd4ce3042d
 	github.com/MobRulesGames/memory v0.0.0-20120626004817-db5bb35fd894
+	github.com/caffeine-storm/freetype v0.0.0-haunted
+	github.com/caffeine-storm/gl v0.0.0-haunted
+	github.com/caffeine-storm/glu v0.0.0-haunted
+	github.com/caffeine-storm/mathgl v0.0.0-haunted
 	github.com/fsnotify/fsnotify v1.4.9
-	github.com/go-gl-legacy/gl v0.0.0-20150223033340-df25b1fe668d
-	github.com/go-gl-legacy/glu v0.0.0-20150315173544-b54aa06bc77a
 	github.com/runningwild/glop v0.0.0-20130331194942-bcbcf4982510
 	github.com/smartystreets/goconvey v1.8.1
 	github.com/stretchr/testify v1.10.0
@@ -25,18 +27,11 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/runningwild/yedparse v0.0.0-20120306014153-f7df1db2f9d9 // indirect
 	github.com/smarty/assertions v1.15.0 // indirect
+	golang.org/x/image v0.32.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
-replace code.google.com/p/freetype-go => github.com/golang/freetype v0.0.0-20120725121025-28cc5fbc5d0b
-
-replace github.com/MobRulesGames/mathgl => github.com/caffeine-storm/mathgl v0.0.0-20250501161438-e2d066155663
-
-replace github.com/runningwild/glop => github.com/caffeine-storm/glop v0.0.0-20251031191527-e696ef375661
-
-replace github.com/go-gl-legacy/gl => github.com/caffeine-storm/gl v0.0.0-20250506174032-5994dccd6839
-
-replace github.com/go-gl-legacy/glu => github.com/caffeine-storm/glu v0.0.0-20240828152149-38a5ac65629c
+replace github.com/runningwild/glop => github.com/caffeine-storm/glop v0.0.0-20251114163553-01edb065de5c
 
 replace github.com/MobRulesGames/golua => github.com/caffeine-storm/golua v0.0.0-20240910150920-bb0104c032e4

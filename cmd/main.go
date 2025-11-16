@@ -27,7 +27,7 @@ import (
 	"github.com/MobRulesGames/haunts/sound"
 	"github.com/MobRulesGames/haunts/texture"
 	"github.com/MobRulesGames/memory"
-	"github.com/go-gl-legacy/gl"
+	"github.com/caffeine-storm/gl"
 	glopdebug "github.com/runningwild/glop/debug"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gos"

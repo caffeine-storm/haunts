@@ -7,7 +7,7 @@ import (
 	"unicode"
 
 	"github.com/MobRulesGames/haunts/base"
-	"github.com/go-gl-legacy/gl"
+	"github.com/caffeine-storm/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 	"github.com/runningwild/glop/render"

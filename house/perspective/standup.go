@@ -3,7 +3,7 @@ package perspective
 import (
 	"math"
 
-	"github.com/MobRulesGames/mathgl"
+	"github.com/caffeine-storm/mathgl"
 )
 
 // Returns a matrix to transform entities from "floor space" to one that is

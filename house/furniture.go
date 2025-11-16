@@ -3,7 +3,7 @@ package house
 import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/MobRulesGames/mathgl"
+	"github.com/caffeine-storm/mathgl"
 )
 
 func MakeFurniture(name string) *Furniture {

@@ -4,7 +4,7 @@ import (
 	"testing"
 	"unsafe"
 
-	"github.com/go-gl-legacy/gl"
+	"github.com/caffeine-storm/gl"
 	"github.com/runningwild/glop/render"
 	"github.com/runningwild/glop/render/rendertest"
 	"github.com/runningwild/glop/render/rendertest/testbuilder"

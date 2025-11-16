@@ -5,7 +5,7 @@ import (
 	"runtime"
 
 	"github.com/MobRulesGames/haunts/texture"
-	"github.com/go-gl-legacy/gl"
+	"github.com/caffeine-storm/gl"
 	"github.com/runningwild/glop/render"
 )
 

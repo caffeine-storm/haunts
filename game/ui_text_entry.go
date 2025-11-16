@@ -3,7 +3,7 @@ package game
 import (
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/globals"
-	"github.com/go-gl-legacy/gl"
+	"github.com/caffeine-storm/gl"
 	"github.com/runningwild/glop/gin"
 	"github.com/runningwild/glop/gui"
 )
