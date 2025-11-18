@@ -1,8 +1,3 @@
-- bug#56: clicking a move on (x, y) targets (x, y - 1) T_T
-
-- bug#54: There's a stubbed gui element on the map-select screen. Presumably,
-  it was supposed to be a scroll bar but *shrug*.
-
 - end-to-end tests
 	- need to place units from roster and 'confirm'
 		- roster UI _might_ be coming from game/script.go:placeEntities()
@@ -21,6 +16,11 @@
 		  more thorough investigation to prove this is indeed happening!)
 	- might be able to skip scanning for non-gray by type-switching on the image type
 	- need benchmarks for loading palletted, RGBA and NRGBA images
+
+- bug#56: clicking a move on (x, y) targets (x, y - 1) T_T
+
+- bug#54: There's a stubbed gui element on the map-select screen. Presumably,
+  it was supposed to be a scroll bar but *shrug*.
 
 - bug#50: some textures get rendered as white squares, others as the image with
   a white, opaque background while others render just fine. White squares seem
