@@ -27,7 +27,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/runningwild/yedparse v0.0.0-20120306014153-f7df1db2f9d9 // indirect
 	github.com/smarty/assertions v1.15.0 // indirect
-	golang.org/x/image v0.32.0 // indirect
+	golang.org/x/image v0.33.0 // indirect
 	golang.org/x/sys v0.6.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
