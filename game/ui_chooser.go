@@ -226,7 +226,7 @@ type Chooser struct {
 	last_t int64
 }
 
-func InsertMapChooser(ui gui.WidgetParent, chosen func(Scenario), resert func(ui gui.WidgetParent) error) error {
+func InsertMapChooser(ui gui.WidgetParent, chosen func(Scenario), revert func(ui gui.WidgetParent) error) error {
 	var bops []OptionBasic
 	datadir := base.GetDataDir()
 	err := base.LoadAndProcessObject(filepath.Join(datadir, "ui", "start", "versus", "map_select.json"), "json", &bops)
@@ -264,7 +264,7 @@ func InsertMapChooser(ui gui.WidgetParent, chosen func(Scenario), resert func(ui
 	ch.selected = make(map[int]bool)
 	ch.layout.Back.f = func(interface{}) {
 		ui.RemoveChild(&ch)
-		err := resert(ui)
+		err := revert(ui)
 		if err != nil {
 			logging.Error("InsertMapChooser", "resert failed", err)
 			return
@@ -352,16 +352,12 @@ func MakeChooser(opts []Option) (*Chooser, <-chan []Scenario, error) {
 	} else {
 		ch.selector = SelectInRange(ch.min, ch.max)
 	}
-	ch.info_region = gui.Region{
-		Point: gui.Point{
-			X: ch.layout.Info.X,
-			Y: ch.layout.Info.Y,
-		},
-		Dims: gui.Dims{
-			Dx: ch.layout.Info.Dx,
-			Dy: ch.layout.Info.Dy,
-		},
-	}
+	ch.info_region = gui.MakeRegion(
+		ch.layout.Info.X,
+		ch.layout.Info.Y,
+		ch.layout.Info.Dx,
+		ch.layout.Info.Dy,
+	)
 	return &ch, done, nil
 }
 
