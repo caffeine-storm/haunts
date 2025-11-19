@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"path/filepath"
+	"strings"
 
 	"github.com/MobRulesGames/haunts/base"
 	"github.com/MobRulesGames/haunts/globals"
@@ -369,27 +370,38 @@ func (c *Chooser) optionsHeight() int {
 	return h
 }
 
-type doOnOptionData struct {
-	hovered      bool
-	selected     bool
-	selectable   bool
-	x, y, dx, dy int
+type ForEachOptionData struct {
+	Hovered      bool
+	Selected     bool
+	Selectable   bool
+	X, Y, Dx, Dy int
 }
 
-func (c *Chooser) doOnOptions(f func(index int, opt Option, data doOnOptionData)) {
-	var data doOnOptionData
-	data.x = c.layout.Options.X + c.region.X
-	data.y = c.region.Y + c.layout.Options.Top()
-	data.dx = c.layout.Options.Dx
+func (c *Chooser) ForEachOption(f func(index int, opt Option, data ForEachOptionData)) {
+	data := ForEachOptionData{
+		X:  c.layout.Options.X + c.region.X,
+		Y:  c.region.Y + c.layout.Options.Top(),
+		Dx: c.layout.Options.Dx,
+	}
 	in_box := pointInsideRect(c.mx, c.my, c.layout.Options.X, c.layout.Options.Y, c.layout.Options.Dx, c.layout.Options.Dy)
 	for i, option := range c.options {
-		data.dy = option.Height()
-		data.y -= data.dy
-		data.hovered = in_box && pointInsideRect(c.mx, c.my, data.x, data.y, data.dx, data.dy)
-		data.selected = c.selected[i]
-		data.selectable = c.selector(i, c.selected, false)
+		data.Dy = option.Height()
+		data.Y -= data.Dy
+		data.Hovered = in_box && pointInsideRect(c.mx, c.my, data.X, data.Y, data.Dx, data.Dy)
+		data.Selected = c.selected[i]
+		data.Selectable = c.selector(i, c.selected, false)
 		f(i, option, data)
 	}
+}
+
+func (c *Chooser) FindButton(label string) (ButtonLike, int, int) {
+	for _, btn := range c.buttons {
+		if strings.HasSuffix(btn.Texture.Path.String(), label) {
+			return btn, btn.X, btn.Y
+		}
+	}
+
+	panic(fmt.Errorf("couldn't find button for label %q", label))
 }
 
 func assymptoticApproach(cur, target float64, dt int64) float64 {
@@ -413,6 +425,18 @@ func (c *Chooser) Expandable() (bool, bool) {
 	return false, false
 }
 
+func (c *Chooser) FindOption(predicate func(Option) bool) Option {
+	var ret Option
+	c.ForEachOption(func(idx int, opt Option, data ForEachOptionData) {
+		if predicate(opt) {
+			if ret == nil {
+				ret = opt
+			}
+		}
+	})
+	return ret
+}
+
 func (c *Chooser) Rendered() gui.Region {
 	return c.region
 }
@@ -433,8 +457,8 @@ func (c *Chooser) Think(g *gui.Gui, t int64) {
 	for _, button := range buttons {
 		button.Think(c.region.X, c.region.Y, c.mx, c.my, dt)
 	}
-	c.doOnOptions(func(index int, opt Option, data doOnOptionData) {
-		opt.Think(data.hovered, data.selected, data.selectable, dt)
+	c.ForEachOption(func(index int, opt Option, data ForEachOptionData) {
+		opt.Think(data.Hovered, data.Selected, data.Selectable, dt)
 	})
 }
 
@@ -452,11 +476,11 @@ func (c *Chooser) Respond(g *gui.Gui, group gui.EventGroup) bool {
 				return true
 			}
 			clicked := false
-			c.doOnOptions(func(index int, opt Option, data doOnOptionData) {
+			c.ForEachOption(func(index int, opt Option, data ForEachOptionData) {
 				if clicked {
 					return
 				}
-				if data.hovered {
+				if data.Hovered {
 					c.selector(index, c.selected, true)
 					clicked = true
 				}
@@ -485,11 +509,11 @@ func (c *Chooser) Draw(region gui.Region, ctx gui.DrawingContext) {
 
 		c.layout.Options.Region().PushClipPlanes()
 		hovered := -1
-		c.doOnOptions(func(index int, opt Option, data doOnOptionData) {
-			if data.hovered {
+		c.ForEachOption(func(index int, opt Option, data ForEachOptionData) {
+			if data.Hovered {
 				hovered = index
 			}
-			opt.Draw(data.x, data.y, data.dx)
+			opt.Draw(data.X, data.Y, data.Dx)
 		})
 		c.layout.Options.Region().PopClipPlanes()
 		c.info_region.PushClipPlanes()

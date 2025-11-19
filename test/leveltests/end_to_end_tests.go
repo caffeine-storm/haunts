@@ -89,6 +89,77 @@ type testPlanner struct {
 	startUiMenuConfig game.MenuConfig
 }
 
+func (tp *testPlanner) getLevelChooser() *game.Chooser {
+	tp.windowRoot.GetChildren()
+	unanchored := tp.windowRoot.(*unAnchoredBox)
+	return unanchored.GetChildren()[0].(*game.Chooser)
+}
+
+func scenarioForLevel(lvl LevelChoice) game.Scenario {
+	switch lvl {
+	case Level1:
+		return game.Scenario{
+			Script:    "Lvl01.lua",
+			HouseName: "Lvl_01_Haunted_House",
+		}
+	default:
+		panic(fmt.Errorf("couldn't get scenario for level choice %v", lvl))
+	}
+}
+
+func (tp *testPlanner) scrollChooserToTarget(driver systemtest.Driver, chooser *game.Chooser, lvl LevelChoice) (game.Option, game.ForEachOptionData) {
+	// Get a reference to the Option, 'ret' for 'lvl'
+	targetScenario := scenarioForLevel(lvl)
+
+	// TODO: make a better API for what we need
+	var targetData game.ForEachOptionData
+	var ret game.Option
+
+	getTargetData := func() {
+		chooser.ForEachOption(func(_ int, o game.Option, data game.ForEachOptionData) {
+			if o.Scenario() != targetScenario {
+				return
+			}
+			ret = o
+			targetData = data
+		})
+		if ret == nil {
+			panic(fmt.Errorf("couldn't find option for scenario %v", targetScenario))
+		}
+	}
+	getTargetData()
+
+	downCount := 0
+
+	// It's counter-intuitive but clicking the 'down' button scrolls each item
+	// 'up', thereby increasing the y-offset.
+	_, downX, downY := chooser.FindButton("down_arrow.png")
+	for targetData.Y < 0 {
+		driver.Click(downX, downY)
+		driver.ProcessFrame()
+		getTargetData()
+		downCount++
+	}
+
+	maxHeight := tp.window.GetDims().Dy
+	_, upX, upY := chooser.FindButton("up_arrow.png")
+	for targetData.Y > maxHeight {
+		if downCount > 0 {
+			panic(fmt.Errorf("shouldn't have to go back up after having gone down"))
+		}
+		driver.Click(upX, upY)
+		driver.ProcessFrame()
+		getTargetData()
+	}
+
+	// Return a reference to 'ret'
+	return ret, targetData
+}
+
+func (tp *testPlanner) getNextButton(chooser *game.Chooser) (game.ButtonLike, int, int) {
+	return chooser.FindButton("arrow_rf.png")
+}
+
 func (tp *testPlanner) validateExpectations(lvl LevelChoice, testcase string) {
 	expectedFile := rendertest.NewTestdataReference(path.Join(testdataDir(lvl), testcase))
 
@@ -101,6 +172,15 @@ func (tp *testPlanner) redrawRootGui() {
 		tp.rootGui.Draw()
 	})
 	tp.window.GetQueue().Purge()
+}
+
+func (tp *testPlanner) redrawRootGuiWithNewTextures() {
+	tp.redrawRootGui()
+	err := texture.BlockWithTimeboxUntilIdle(time.Second * 5)
+	if err != nil {
+		panic(fmt.Errorf("texture.BlockWithTimeboxUntilIdle(5s) failed: %w", err))
+	}
+	tp.redrawRootGui()
 }
 
 func (tp *testPlanner) thinkSeconds(seconds uint64) {
@@ -143,19 +223,15 @@ func (tp *testPlanner) StartApplication() Step {
 			if err != nil {
 				panic(fmt.Errorf("couldn't insert start menu: %w", err))
 			}
+			// TODO(till-here)
 
 			startUiMenu := tp.windowRoot.GetChildren()[0].(*game.StartMenu)
 			tp.startUiMenuConfig = startUiMenu.Layout.Menu
 			startUiMenu.SetOpacity(0.6)
 			tp.thinkSeconds(5)
-			tp.redrawRootGui()
 
-			err = texture.BlockWithTimeboxUntilIdle(time.Second * 5)
-			if err != nil {
-				panic(fmt.Errorf("couldn't wait for textures to load: %w", err))
-			}
+			tp.redrawRootGuiWithNewTextures()
 
-			tp.redrawRootGui()
 			tp.validateExpectations(LevelNone, "startui")
 		},
 	}
@@ -176,21 +252,55 @@ func (tp *testPlanner) ChooseVersusMode() Step {
 			// need to simulate some time passing so that it knows to be faded in.
 			tp.thinkSeconds(5)
 
-			if err := texture.BlockWithTimeboxUntilIdle(time.Second * 5); err != nil {
-				panic(fmt.Errorf("texture loading failed: %w", err))
-			}
-
-			tp.redrawRootGui()
+			tp.redrawRootGuiWithNewTextures()
 
 			tp.validateExpectations(LevelNone, "level-select")
 		},
 	}
 }
 
-func (*testPlanner) ChooseLevel(LevelChoice) Step {
+func (tp *testPlanner) ChooseLevel(lvl LevelChoice) Step {
 	return Step{
 		do: func() {
-			fmt.Println("testPlanner.ChooseLevel is stubbed!")
+			// Scroll if needed
+			levelChooser := tp.getLevelChooser()
+			driver := tp.window.NewDriver()
+			_, optionData := tp.scrollChooserToTarget(driver, levelChooser, lvl)
+
+			// Hover over LevelChoice's button
+			driver.MoveMouse(optionData.X, optionData.Y)
+			driver.ProcessFrame()
+			tp.thinkSeconds(5)
+			tp.redrawRootGuiWithNewTextures()
+			tp.validateExpectations(lvl, "map-chooser-hover-choice")
+
+			// Click
+			driver.Click(optionData.X, optionData.Y)
+			driver.ProcessFrame()
+			tp.thinkSeconds(5)
+			tp.redrawRootGuiWithNewTextures()
+			tp.validateExpectations(lvl, "map-chooser-clicked-choice")
+
+			// Hover Next
+			_, nextX, nextY := tp.getNextButton(levelChooser)
+			driver.MoveMouse(nextX, nextY)
+			driver.ProcessFrame()
+			tp.thinkSeconds(5)
+			tp.redrawRootGuiWithNewTextures()
+			tp.validateExpectations(lvl, "map-chooser-hover-next")
+
+			// Click
+			driver.Click(nextX, nextY)
+			driver.ProcessFrame()
+			tp.thinkSeconds(5)
+			tp.redrawRootGuiWithNewTextures()
+			tp.thinkSeconds(5)
+			tp.redrawRootGuiWithNewTextures()
+			// right now, there's a game.Chooser that gets added to the
+			// GamePanel during the lua Script (side_choices =
+			// Script.ChooserFromFile("ui/start/versus/side.json")).
+			// it doesn't seem to be drawing right now :-/
+			tp.validateExpectations(lvl, "side-choice-start")
 		},
 	}
 }
