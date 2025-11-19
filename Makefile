@@ -31,9 +31,11 @@ game/side_string.go:
 debug: devhaunts ${DATADIR}
 	./$^
 
+GLOPLOC?=../glop
 dev.go.mod: go.mod
 	# dev.go.mod is just go.mod but patched to look at a local glop
-	cat $^ | sed -e 's,\(runningwild/glop =>\).*,\1 ../deps-for-haunts/glop,' > $@
+	cp $^ $@
+	echo "replace github.com/caffeine-storm/glop => ${GLOPLOC}" >> $@
 
 dev.go.sum: go.sum
 	# dev.go.sum is just go.sum

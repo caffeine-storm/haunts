@@ -21,3 +21,4 @@ dev.go.sum
 perftest
 perf.data
 perf.data.old
+dev.go.mod
