@@ -17,8 +17,6 @@
 	- might be able to skip scanning for non-gray by type-switching on the image type
 	- need benchmarks for loading palletted, RGBA and NRGBA images
 
-- bug#57: get rid of ./tools/scr
-
 - bug#56: clicking a move on (x, y) targets (x, y - 1) T_T
 
 - bug#54: There's a stubbed gui element on the map-select screen. Presumably,
