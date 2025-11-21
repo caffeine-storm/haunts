@@ -55,10 +55,10 @@ haunts: main.go
 	go build -x -o $@ -tags nosound main.go
 
 profile-haunts: haunts ${DATADIR}
-	${PERF} record -g ./$^
+	${PERF} record --call-graph fp -- ./$^
 
 profile-dev-haunts: devhaunts ${DATADIR}
-	${PERF} record -g ./$^
+	${PERF} record --call-graph fp -- ./$^
 
 clean:
 	rm -f devhaunts haunts
@@ -93,7 +93,7 @@ include build/testing-env.mk
 .PRECIOUS: %/perf.data
 %/perf.data: %/perftest
 	cd $(dir $^) && \
-	${PERF} record -g -o perf.data ./perftest
+	${PERF} record --callgraph fp -o perf.data ./perftest
 
 test-dev: dev.go.mod dev.go.sum
 	${testing_env} go test ${testrunargs} -modfile dev.go.mod -tags nosound ./...
