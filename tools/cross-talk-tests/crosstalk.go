@@ -47,13 +47,14 @@ func hasCrossTalk(victim, suite []string) bool {
 	})
 
 	testpattern := strings.Join(append(victim, suite...), "\\|")
+	testpattern = strings.ReplaceAll(testpattern, "'", "\\'")
 	testrunargs := fmt.Sprintf("testrunargs=-run %s", testpattern)
 
-	// TODO: if we care, we can make the "run-the-tests" command a parameter.
+	// TODO: if we care, we can make the "test-*" recipe a parameter.
 	cmd := exec.Command("make", testrunargs, "test-nocache")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	slog.Info("wut", "testrunargs", testrunargs, "cmd", cmd)
+	slog.Info("going to run 'make' command", "cmd", cmd)
 	err := cmd.Run()
 	return err != nil
 }
@@ -63,7 +64,7 @@ func showTest(parts []string) string {
 }
 
 func reportCrossTalk(victim, suite []string) {
-	fmt.Printf("cross talk reduction: %q coupled with %q still fails\n", showTest(victim), showTest(suite))
+	fmt.Printf("cross talk reduction: %q (%d) coupled with %q (%d) still fails\n", showTest(victim), len(victim), showTest(suite), len(suite))
 }
 
 func main() {
@@ -76,10 +77,11 @@ func main() {
 
 	victimTests := readTestList(victim)
 	suiteTests := readTestList(suite)
+	fmt.Printf("attempting cross-talk reduction between %d victims and %d suite-mates\n", len(victimTests), len(suiteTests))
 
 	// Run 'suiteTests' and 'victimTests'
 	// if tests fail, assume it's because of cross talk
-	//   try again with first half of sweet
+	//   try again with first half of suite
 	//		 fail => first-half again
 	//		 success => second-half
 
